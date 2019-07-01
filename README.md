@@ -13,3 +13,5 @@ Team Members:
 > * 邓公淯 dgyhateyou@sjtu.edu.cn
 > * 沈小洲 shenxiaozhousjtu@sjtu.edu.cn
 > * 芮召普 chris.561@sjtu.edu.cn
+
+CI/CD: Drone(http://212.64.27.71/)
