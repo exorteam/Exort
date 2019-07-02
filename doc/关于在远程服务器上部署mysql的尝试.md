@@ -3,10 +3,10 @@
 1. deploy as docker image
 2. deploy by apt installation
 
-Except for specific preparation for current way (eg. 'apt install mysql.server' or 'docker pull mysql'),
+Except for specific preparation for current way (eg. `apt install mysql.server` or `docker pull mysql`),
 there are the same steps for both ways after installation:
 
-1. Create an user like `'test'@'%"` and grant permission for the user.
+1. Create an user like `'test'@'%'` and grant permission for the user.
 2. Insert contents to `my.cnf` (or `my.ini` for Windows)
 
 ```
