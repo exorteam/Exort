@@ -319,6 +319,7 @@
 
 ## 用户权限管理
 - **Scope** 域
+
    |属性|说明|
    |---|---|
    |int id |
@@ -337,6 +338,7 @@
    Scope GetScope(int scope_id)
 
 - **Permission** 权限
+
    |属性|说明|
    |---|---|
    |int id |
