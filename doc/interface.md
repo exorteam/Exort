@@ -369,6 +369,7 @@
   void UpdatePermission(int permission_id, string name, string category, string description)
 
 - **Role** 角色
+
    |属性|说明|
    |---|---|
    |int id |
