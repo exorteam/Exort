@@ -77,7 +77,8 @@
             <BreadcrumbItem>Layout</BreadcrumbItem>
           </Breadcrumb>
           <Card>
-            <div style="height: 600px">
+            <div style="height: 100%;
+  display: table;">
               <router-view/>
             </div>
           </Card>
