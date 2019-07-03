@@ -1,228 +1,85 @@
 <template>
   <div id="AssoList">
-    <Row>
-      <Col span="8">
-        <Tree :data="trees" :render="renderContent"></Tree>
-      </Col>
-      <Col span="16">
-        <Table border ref="selection" :columns="columns" :data="rows">
-          <template slot-scope="{ row }" slot="name">
-            <strong>{{ row.name }}</strong>
-          </template>
-          <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
-            <Button type="error" size="small" @click="remove(index)">Delete</Button>
-          </template>
-        </Table>
-      </Col>
-    </Row>
+    <div id=SearchAsso>
+      <Input v-model="value" placeholder="请输入社团名称" style="width: 300px" />
+      <Button type="info">搜索</Button>
+      <Button type="info" style="  position:relative ;right:-600px;">创建社团</Button>
+    </div>
+    <div id="Divide">
+       <Divider />
+    </div>
+    <div id="CardList" v-for="item in AssoList">
+      <Card style="width:350px;">
+        <p slot="title">
+            <Icon type="ios-film-outline"></Icon>
+            {{item.name}}
+        </p>
+        <a href="#" slot="extra" @click.prevent="changeLimit">
+            <Icon type="ios-loop-strong"></Icon>
+            Edit
+        </a>
+        <ul>
+            <li>
+              <img src="item.logo">
+            </li>
+            <li>
+                <p>{{ item.description }}</p>
+            </li>
+        </ul>
+        <ul v-for="tag in item.tags" style="color:#5cadff">
+
+            <li>
+                <p>{{ tag }}</p>
+            </li>
+        </ul>
+      </Card>
+    </div>
+
   </div>
 </template>
-
 <script>
-  export default {
-    name:"AssoList",
-    data () {
-      return {
-        trees: [
-          {
-            title: 'parent 1',
-            expand: true,
-            render: (h, { root, node, data }) => {
-              return h('span', {
-                style: {
-                  display: 'inline-block',
-                  width: '100%'
-                }
-              }, [
-                h('span', [
-                  h('Icon', {
-                    props: {
-                      type: 'ios-folder-outline'
+    export default {
+        data () {
+            return {
+                AssoList: [
+                    {
+                        name: 'Team Liquid',
+                        description: "欧洲老牌战队，成立于2012年12月。直到2015年开始随着Kuroky的加入，Liquid慢慢走进世界舞台中，成为欧洲一支强劲的战队。在2016年在2016 Shanghai Major和2016ESL ONE这两项赛事中都取得了亚军。紧接着队伍人员进行调整，引进了Miracle-等数名天梯9000高分选手。在 2017 年成為 TI 冠軍。",
+                        logo: "",
+                        tags:[
+                          "Dota2",
+                          "Ti冠军"
+                        ]
                     },
-                    style: {
-                      marginRight: '8px'
-                    }
-                  }),
-                  h('span', data.title)
-                ]),
-                h('span', {
-                  style: {
-                    display: 'inline-block',
-                    float: 'right',
-                    marginRight: '32px'
-                  }
-                }, [
-                  h('Button', {
-                    props: Object.assign({}, this.buttonProps, {
-                      icon: 'ios-add',
-                      type: 'primary'
-                    }),
-                    style: {
-                      width: '64px'
-                    },
-                    on: {
-                      click: () => { this.append(data) }
-                    }
-                  })
-                ])
-              ]);
-            },
-            children: [
-              {
-                title: 'child 1-1',
-                expand: true,
-                children: [
-                  {
-                    title: 'leaf 1-1-1',
-                    expand: true
-                  },
-                  {
-                    title: 'leaf 1-1-2',
-                    expand: true
-                  }
-                ]
-              },
-              {
-                title: 'child 1-2',
-                expand: true,
-                children: [
-                  {
-                    title: 'leaf 1-2-1',
-                    expand: true
-                  },
-                  {
-                    title: 'leaf 1-2-1',
-                    expand: true
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        buttonProps: {
-          type: 'default',
-          size: 'small',
-        },
-        columns: [
-          {
-            title: 'Name',
-            slot: 'name'
-          },
-          {
-            title: 'Age',
-            key: 'age'
-          },
-          {
-            title: 'Address',
-            key: 'address'
-          },
-          {
-            title: 'Action',
-            slot: 'action',
-            width: 150,
-            align: 'center'
-          }
-        ],
-        rows: [
-          {
-            name: 'John Brown',
-            age: 18,
-            address: 'New York No. 1 Lake Park'
-          },
-          {
-            name: 'Jim Green',
-            age: 24,
-            address: 'London No. 1 Lake Park'
-          },
-          {
-            name: 'Joe Black',
-            age: 30,
-            address: 'Sydney No. 1 Lake Park'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park'
-          }
-        ]
-      }
-    },
-    methods: {
-      renderContent (h, { root, node, data }) {
-        return h('span', {
-          style: {
-            display: 'inline-block',
-            width: '100%'
-          }
-        }, [
-          h('span', [
-            h('Icon', {
-              props: {
-                type: 'ios-paper-outline'
-              },
-              style: {
-                marginRight: '8px'
-              }
-            }),
-            h('span', data.title)
-          ]),
-          h('span', {
-            style: {
-              display: 'inline-block',
-              float: 'right',
-              marginRight: '32px'
-            }
-          }, [
-            h('Button', {
-              props: Object.assign({}, this.buttonProps, {
-                icon: 'ios-add'
-              }),
-              style: {
-                marginRight: '8px'
-              },
-              on: {
-                click: () => { this.append(data) }
-              }
-            }),
-            h('Button', {
-              props: Object.assign({}, this.buttonProps, {
-                icon: 'ios-remove'
-              }),
-              on: {
-                click: () => { this.removeNode(root, node, data) }
-              }
-            })
-          ])
-        ]);
-      },
-      append (data) {
-        const children = data.children || [];
-        children.push({
-          title: 'appended node',
-          expand: true
-        });
-        this.$set(data, 'children', children);
-      },
-      removeNode (root, node, data) {
-        const parentKey = root.find(el => el === node).parent;
-        const parent = root.find(el => el.nodeKey === parentKey).node;
-        const index = parent.children.indexOf(data);
-        parent.children.splice(index, 1);
-      },
-      show (index) {
-        this.$Modal.info({
-          title: 'User Info',
-          content: `Name：${this.rows[index].name}<br>Age：${this.rows[index].age}<br>Address：${this.rows[index].address}`
-        })
-      },
-      remove (index) {
-        this.rows.splice(index, 1);
-      }
-    }
-  }
-</script>
+                    {
+                      name: "Team Solid",
+                      description: "B神、龙神、跳刀、二冰他们和yyf一起组建的Ti9海选战队。",
+                      logo: "",
+                      tags:[
+                        "Dota2",
+                        "2届Ti冠军("
 
+                      ]
+                    },
+
+                    {
+                      name: 'Team Gas',
+                      description: "气体战队成员为：一号位：ZSMJ 二号位：水瓶座（之前担任固体战队的工具人中单） 三号位：Axx 四号位：Ch 五号位：狗哥SanSheng",
+                      logo: "",
+                      tags:[
+                        "Dota2"
+                      ]
+                    }
+                ],
+                randomMovieList: []
+            }
+        },
+
+        mounted () {
+            this.changeLimit();
+        }
+    }
+</script>
 <style>
 
 </style>
