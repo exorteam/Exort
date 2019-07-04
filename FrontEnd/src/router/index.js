@@ -6,6 +6,7 @@ import ManaAsso from '../components/association_management/sys_manage_associatio
 import CreateAsso from '../components/association_management/create_association'
 import EditAsso from '../components/association_management/edit_association'
 import AssoList from '../components/association_management/association_list'
+import Test from '../components/association_management/create_Test'
 
 import AssociaMemManage from '../components/association_member_management/member_management._table'
 import AppliManagement from '../components/association_member_management/application_management_table'
@@ -21,6 +22,11 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Index
+    },
+    {
+      path:'/test',
+      name:'Test',
+      component:Test
     },
     {
       path: '/asso_list',
