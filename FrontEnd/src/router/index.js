@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Index from '../components/index'
+import Index from '@/components/index'
+import Activity from '../components/activity/Activity.vue'
+import About from '../components/activity/about.vue'
+
 import ManaAsso from '../components/association_management/sys_manage_association'
 import CreateAsso from '../components/association_management/create_association'
 import EditAsso from '../components/association_management/edit_association'
@@ -10,6 +13,7 @@ import Test from '../components/association_management/create_Test'
 
 import AssociaMemManage from '../components/association_member_management/member_management._table'
 import AppliManagement from '../components/association_member_management/application_management_table'
+
 
 
 Vue.use(Router);
@@ -24,9 +28,14 @@ export default new Router({
       component: Index
     },
     {
-      path:'/test',
-      name:'Test',
-      component:Test
+      path: '/activity',
+      name: 'activity',
+      component: Activity
+    },
+    {
+      path: '/activity/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/asso_list',
