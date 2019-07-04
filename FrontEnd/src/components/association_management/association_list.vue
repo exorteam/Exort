@@ -8,8 +8,10 @@
     <div id="Divide">
        <Divider />
     </div>
-    <div id="CardList" v-for="item in AssoList">
-      <Card style="width:350px;">
+
+
+    <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
+      <Card v-for="item in AssoList" style="width:350px;height:300px">
         <p slot="title">
             <Icon type="ios-film-outline"></Icon>
             {{item.name}}
@@ -20,7 +22,7 @@
         </a>
         <ul>
             <li>
-              <img src="item.logo">
+              <img src="../../assets/Liquid.png">
             </li>
             <li>
                 <p>{{ item.description }}</p>
@@ -35,6 +37,7 @@
       </Card>
     </div>
 
+
   </div>
 </template>
 <script>
@@ -45,7 +48,7 @@
                     {
                         name: 'Team Liquid',
                         description: "欧洲老牌战队，成立于2012年12月。直到2015年开始随着Kuroky的加入，Liquid慢慢走进世界舞台中，成为欧洲一支强劲的战队。在2016年在2016 Shanghai Major和2016ESL ONE这两项赛事中都取得了亚军。紧接着队伍人员进行调整，引进了Miracle-等数名天梯9000高分选手。在 2017 年成為 TI 冠軍。",
-                        logo: "",
+                        logo: "../../assets/Liquid.png",
                         tags:[
                           "Dota2",
                           "Ti冠军"
@@ -69,15 +72,22 @@
                       tags:[
                         "Dota2"
                       ]
+                    },
+                    {
+                      name: 'Exort',
+                      description: "",
+                      logo: "",
+                      tags:[
+                        "Dota2"
+                      ]
                     }
                 ],
-                randomMovieList: []
             }
         },
 
-        mounted () {
-            this.changeLimit();
-        }
+        // mounted () {
+        //     this.changeLimit();
+        // }
     }
 </script>
 <style>
