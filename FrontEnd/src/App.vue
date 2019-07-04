@@ -60,7 +60,7 @@
           </MenuItem>
           <MenuItem name="1-2">
             <Icon type="search"></Icon>
-            <span>Option 2</span>
+            <span @click="GetList">社团管理</span>
           </MenuItem>
           <MenuItem name="1-3">
             <Icon type="settings"></Icon>
@@ -102,6 +102,22 @@
           this.isCollapsed ? 'collapsed-menu' : ''
         ]
       }
+    },
+    methods: {
+          GetList(){
+            this.$router.push({
+              path: '/asso_list',
+              name: 'AssoList',
+              // params: {
+              //     key: 'key',
+              //     msgKey: this.msg
+              // }
+              /*query: {
+                  key: 'key',
+                  msgKey: this.msg
+              }*/
+            })
+          },
     }
   }
 </script>

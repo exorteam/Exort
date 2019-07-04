@@ -3,6 +3,7 @@
     <div id=SearchAsso>
       <Input v-model="value" placeholder="请输入社团名称" style="width: 300px" />
       <Button type="info">搜索</Button>
+      <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
 
     <b-form-group label="筛选条件">
       <b-form-checkbox-group
@@ -11,15 +12,12 @@
         switches
       ></b-form-checkbox-group>
     </b-form-group>
-
-      <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button>
+      <!-- <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button> -->
     </div>
 
-    
     <div id="Divide">
        <Divider />
     </div>
-
 
     <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
       <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:300px" >
@@ -27,30 +25,25 @@
             <Icon type="ios-film-outline"></Icon>
             {{item.name}}
         </p>
-        <a href="#" slot="extra" @click.prevent="changeLimit">
+        <a href="#" slot="extra" @click.prevent="EditAsso">
             <Icon type="ios-loop-strong"></Icon>
             Edit
         </a>
         <div style="text-align: center;">
             <img :src="item.logo" style="width:80px;height:80px;"/>
         </div>
-        
         <ul>
-       
             <li>
                 <p>{{ item.description }}</p>
             </li>
         </ul>
         <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
-
             <li>
                 <p>{{ tag }}</p>
             </li>
         </ul>
       </Card>
     </div>
-
-
   </div>
 </template>
 <script>
@@ -58,13 +51,14 @@ import Liquid from '../../assets/Liquid.png'
 import Solid from '../../assets/solid.jpg'
 import Gas from '../../assets/Gas.jpg'
 import Exort from '../../assets/1.png'
+
     export default {
         data () {
             return {
                 selected: ['active','blocked'], // Must be an array reference!
             options: [
-            { text: '已激活', value: 'active' },
-            { text: '未激活', value: 'blocked' },
+            { text: '已激活的社团', value: 'active' },
+            { text: '未激活的社团', value: 'blocked' },
             ],
                 AssoList: [
                     {
@@ -106,6 +100,36 @@ import Exort from '../../assets/1.png'
                     }
                 ],
             }
+        },
+        methods: {
+          StartCreate(){
+            this.$router.push({
+              path: '/create_asso',
+              name: 'CreateAsso',
+              // params: {
+              //     key: 'key',
+              //     msgKey: this.msg
+              // }
+              /*query: {
+                  key: 'key',
+                  msgKey: this.msg
+              }*/
+            })
+          },
+          EditAsso(){
+            this.$router.push({
+              path: '/mana_asso',
+              name: 'ManaAsso',
+              // params: {
+              //     key: 'key',
+              //     msgKey: this.msg
+              // }
+              /*query: {
+                  key: 'key',
+                  msgKey: this.msg
+              }*/
+            })
+          }
         },
 
         // mounted () {
