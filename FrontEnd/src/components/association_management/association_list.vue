@@ -4,20 +4,18 @@
       <Input v-model="value" placeholder="请输入社团名称" style="width: 300px" />
       <Button type="info">搜索</Button>
 
-        <Radio-group :model.sync="type">
-            <Radio value="apple" style="position:relative ;right:-40px;">
-                <span>全部</span>
-            </Radio>
-            <Radio value="android" style="position:relative ;right:-40px;">
-                <span>已激活</span>
-            </Radio>
-            <Radio value="windows" style="position:relative ;right:-40px;">
-                <span>未激活</span>
-            </Radio>
-        </Radio-group>
+    <b-form-group label="筛选条件">
+      <b-form-checkbox-group
+        v-model="selected"
+        :options="options"
+        switches
+      ></b-form-checkbox-group>
+    </b-form-group>
 
       <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button>
     </div>
+
+    
     <div id="Divide">
        <Divider />
     </div>
@@ -63,8 +61,11 @@ import Exort from '../../assets/1.png'
     export default {
         data () {
             return {
-                type: 'apple',
-                
+                selected: ['active','blocked'], // Must be an array reference!
+            options: [
+            { text: '已激活', value: 'active' },
+            { text: '未激活', value: 'blocked' },
+            ],
                 AssoList: [
                     {
                         name: 'Team Liquid',
