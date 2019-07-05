@@ -47,6 +47,7 @@
                 }
             }
         },
+
         methods: {
           ReturnIndex(){
             this.$router.push({
