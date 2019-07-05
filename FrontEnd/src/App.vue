@@ -27,9 +27,7 @@
             <BreadcrumbItem>Layout</BreadcrumbItem>
           </Breadcrumb>
           <Card>
-
             <div style="height: 100%;">
-
               <router-view/>
             </div>
           </Card>
