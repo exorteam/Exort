@@ -10,7 +10,7 @@
           </MenuItem>
           <MenuItem name="1-2">
             <Icon type="search"></Icon>
-            <span >Option 2</span>
+            <span>Option 2</span>
           </MenuItem>
           <MenuItem name="1-3">
             <Icon type="settings"></Icon>
@@ -28,7 +28,7 @@
           </Breadcrumb>
           <Card>
 
-            <div style="height: 100%;display: table;">
+            <div style="height: 100%;">
 
               <router-view/>
             </div>
