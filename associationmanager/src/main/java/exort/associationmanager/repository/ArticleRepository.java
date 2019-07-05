@@ -1,8 +1,8 @@
-package exort.articlemanager.repository;
+package exort.associationmanager.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import exort.articlemanager.entity.Article;
+import exort.associationmanager.entity.Article;
 
 public interface ArticleRepository extends MongoRepository<Article,Integer> {
 

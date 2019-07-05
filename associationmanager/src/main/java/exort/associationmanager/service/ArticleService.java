@@ -1,9 +1,9 @@
-package exort.articlemanager.service;
+package exort.associationmanager.service;
 
 import java.util.List;
 
-import exort.articlemanager.entity.Article;
-import exort.articlemanager.entity.ArticleFilterParams;
+import exort.associationmanager.entity.Article;
+import exort.associationmanager.entity.ArticleFilterParams;
 
 public interface ArticleService {
 
