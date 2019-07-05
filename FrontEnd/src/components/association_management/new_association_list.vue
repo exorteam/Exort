@@ -71,7 +71,29 @@
             </div>
         </div>
     </b-tab>
-    <b-tab title="已处理"><p>I'm the second tab</p></b-tab>
+    <b-tab title="已处理">
+
+        <div id="AssoAppList">
+          <div id=SearchAsso>
+            <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
+            <Button type="info">搜索</Button>
+          </div>
+          <div>
+            <div id="Divide">
+              <Divider />
+            </div>
+            <b-form-checkbox-group v-model="selected3" :options="options3" switches>
+            </b-form-checkbox-group>
+          </div>
+          <div id="Divide">
+            <Divider />
+          </div>
+          <div>
+            <i-table :columns="columns2" :data="data2"></i-table>
+            </div>
+        </div>
+
+    </b-tab>
 
       </b-tabs>
       </Tab-pane>
@@ -116,7 +138,8 @@ import Exort from '../../assets/AssociationLogo/exort.png'
                         key: 'operate',
                     }
                 ],
-                data1: [
+
+            data1: [
                     {
                         applicant_Id: 'wangxiaoming',
                         aoolicant_name: '王小明',
@@ -159,26 +182,104 @@ import Exort from '../../assets/AssociationLogo/exort.png'
                     },
                 ],
 
+
+
+               columns2: [
+                    {
+                        title: '申请人Id',
+                        key: 'applicant_Id'
+                    },
+                    {
+                        title: '申请人',
+                        key: 'applicant_name'
+                    },
+                    {
+                        title: '社团名称',
+                        key: 'asso_name'
+                    },
+                    {
+                        title: '提交时间',
+                        key: 'submit_time'
+                    },
+                    {
+                        title: '申请类型',
+                        key: 'apply_type'
+                    },
+                    {
+                        title: '处理时间',
+                        key: 'operate_time',
+                    },
+                    {
+                        title: '处理结果',
+                        key: 'operate_result',
+                    }
+                ],
+
+            data2: [
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        aoolicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        aoolicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        aoolicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        aoolicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        aoolicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                ],
+
             selected1: ['active','blocked'], // Must be an array reference!
             options1: [
             { text: '已激活', value: 'active' },
             { text: '已锁定', value: 'blocked' },
-            { text: '已删除', value: 'deleted' },
+            { text: '已封禁', value: 'deleted' },
             ],
             selected2:['applying','applying_unblocked'],
             options2: [
-            { text: '申请创建中', value: 'applying' },
-            { text: '申请取消锁定中', value: 'applying_unblocked' }
+            { text: '申请创建社团', value: 'applying' },
+            { text: '申请取消锁定', value: 'applying_unblocked' }
             ],
 
-            selected3:[],
+            selected3:['pass','canceled','refused'],
             options3: [
-            { text: '激活中', value: 'active' },
-            { text: '申请中', value: 'applying' },
-            { text: '已被锁定', value: 'blocked' },
+              { text: '已通过申请', value: 'pass' },
             { text: '已取消申请', value: 'canceled' },
-            { text: '已被删除', value: 'deleted' },
-            { text: '已被拒绝申请创建', value: 'deleted' }
+            { text: '已拒绝申请', value: 'refused' },
             ],
             default_value : "",
 
