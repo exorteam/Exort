@@ -18,6 +18,32 @@
 1. https://se-cloud.gitbook.io/openstack/
 2. https://veiasai.github.io/2019/04/17/kubespray-%E8%B6%85%E5%BF%AB%E4%B9%90%E7%9A%84offline%E5%AE%89%E8%A3%85k8s/
 
+步骤：
+1. 拉取所需资源
+```
+	wget 10.0.0.26/kube-1.14.1/kube-1.14.1.tar
+	wget 10.0.0.26/kube-1.14.1/kubespray-2.10.0.tar.gz
+	wget 10.0.0.26/kube-1.14.1/releases/calicoctl
+	wget 10.0.0.26/kube-1.14.1/releases/hyperkube
+	wget 10.0.0.26/kube-1.14.1/releases/kubeadm
+	wget 10.0.0.26/kube-1.14.1/releases/cni-plugins-amd64-v0.6.0.tgz
+```
+2. 配置ssh，安装docker，分发资源
+3. 去掉`all.yml`中的proxy配置，注释掉`cluster.yml`中的container-engine和download部分
+```
+	- hosts: k8s-cluster:etcd:calico-rr
+	any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+	roles:
+		- { role: kubespray-defaults}
+		- { role: kubernetes/preinstall, tags: preinstall }
+		# - { role: "container-engine", tags: "container-engine", when: deploy_container_engine|default(true) }
+		# - { role: download, tags: download, when: "not skip_downloads" }
+	environment: "{{proxy_env}}"
+```
+4. 调整`hosts.ini`，指向生产环境机器
+5. 执行部署
+`ansible-playbook -i inventory/mycluster/hosts.ini --become --become-user=root cluster.yml`
+
 ## 方式三：VPS代理
 参考：
 1. https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-setup-guide-cn.md
