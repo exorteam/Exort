@@ -10,9 +10,9 @@
             <i-input :value.sync="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
         </Form-item>
         <Form-item label="社团标签">
-            <Tag v-for="item in formItem.tags" :key="item.key" closable>{{ item  }}</Tag>
-            <i-input :value.sync="newtag" placeholder="请输入"></i-input>
-            <i-button icon="ios-plus-empty" type="dashed" size="small" @click="NewTag">添加标签</i-button>
+            <Tag v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue">{{ item  }}</Tag>
+            <i-input v-model="newtag" placeholder="请输入"></i-input>
+            <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
         </Form-item>
 
         <Form-item label="状态管理">
@@ -27,7 +27,7 @@
             action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
             <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                <p>点击或将社团logo拖拽到这里上传</p>
+                <p>点击或拖拽将社团logo放到这里上传</p>
             </div>
         </Upload>
         <Form-item>
@@ -59,9 +59,6 @@
     export default {
         data () {
             return {
-              checked: false,
-              ok:"已激活",
-              no:"未激活",
               newtag:'',
               formItem: {
                   name:this.$route.params.name,
@@ -91,16 +88,21 @@
                     {
                         value: '4',
                         label: '已删除'
+                    },
+                    {
+                        value: '5',
+                        label: '已拒绝'
                     }
                 ],
 
             }
         },
+
         methods: {
           ReturnList(){
             this.$router.push({
-              path: '/asso_list',
-              name: 'AssoList',
+              path: '/sys_asso_list',
+              name: 'SysAssoList',
               // params: {
               //     key: 'key',
               //     msgKey: this.msg
@@ -111,8 +113,8 @@
               }*/
             })
           },
-          NewTag(){
-            this.formItem.tags.append(this.newtag);
+          AddNewTag(){
+            this.formItem.tags.push(this.newtag);
           }
         }
     }
