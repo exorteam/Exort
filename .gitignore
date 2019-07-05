@@ -4,6 +4,9 @@ target/
 mvnw
 mvnw.cmd
 .DS_Store
+<<<<<<< HEAD
+Exort
+=======
 !**/src/main/**
 !**/src/test/**
 
@@ -32,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+>>>>>>> d7bccc7aa998a9d03362ce446c19ac42b8c73f3b
