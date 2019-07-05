@@ -5,6 +5,10 @@ import CreateAsso from '../components/association_management/create_association'
 import EditAsso from '../components/association_management/edit_association'
 import AssoList from '../components/association_management/association_list'
 
+import AssociaMemManage from '../components/association_member_management/member_management._table'
+import AppliManagement from '../components/association_member_management/application_management_table'
+
+
 import Activity from '../components/activity/Activity.vue'
 import About from '../components/activity/about.vue'
 
