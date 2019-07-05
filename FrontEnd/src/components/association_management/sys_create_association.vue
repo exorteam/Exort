@@ -16,13 +16,19 @@
             <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
         </Form-item>
 
+        <Form-item label="状态管理">
+              <i-select :model.sync="formItem.state" style="width:200px">
+                  <i-option v-for="item in cityList" :key="item.Id" :value="item.value">{{ item.label }}</i-option>
+              </i-select>
+        </Form-item>
+
         <Upload
             multiple
             type="drag"
             action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
             <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                <p>点击或将社团logo及申请材料拖拽到这里上传</p>
+                <p>点击或拖拽将社团logo放到这里上传</p>
             </div>
         </Upload>
         <Form-item>
@@ -58,19 +64,30 @@
                   tags:[],
 
               },
+              cityList: [
+                    {
+                        value: '0',
+                        label: '已锁定'
+                    },
+                    {
+                        value: '1',
+                        label: '已激活'
+                    }
+                ],
+
             }
         },
         methods: {
           ReturnList(){
             this.$router.push({
-              path: '/asso_list',
-              name: 'AssoList',
+              path: '/sys_asso_list',
+              name: 'SysAssoList',
             })
           },
           ReturnThis(){
             this.$router.push({
-              path: '/create_asso',
-              name: 'CreateAsso',
+              path: '/sys_create_asso',
+              name: 'SysCreateAsso',
             })
           },
           AddNewTag(){

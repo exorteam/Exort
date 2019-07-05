@@ -4,7 +4,8 @@
       <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
       <Button type="info">搜索</Button>
       <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
-      <!-- <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button> -->
+
+
     </div>
     <div>
   <div id="Divide">
@@ -56,12 +57,12 @@ import Exort from '../../assets/AssociationLogo/exort.png'
             return {
                 selected: ['active','blocked','applying'], // Must be an array reference!
             options: [
-            { text: '激活中', value: 'active' },
+            { text: '已激活', value: 'active' },
             { text: '申请中', value: 'applying' },
-            { text: '已被锁定', value: 'blocked' },
-            { text: '已取消申请', value: 'canceled' },
-            { text: '已被删除', value: 'deleted' },
-            { text: '已被拒绝申请创建', value: 'deleted' }
+            { text: '已锁定', value: 'blocked' },
+            { text: '已取消', value: 'canceled' },
+            { text: '已删除', value: 'deleted' },
+            { text: '已拒绝申请', value: 'refused' },
             ],// 已激活 1
               // 已锁定 0
               // 申请中 2
@@ -129,7 +130,7 @@ import Exort from '../../assets/AssociationLogo/exort.png'
                       name: 'Exort',
                       description: "使用微服务架构独立开发的在线社团管理与社交工具",
                       logo: Exort,
-                      state:4,
+                      state:5,
                       tags:[
                         "社团管理",
                         "实用"
@@ -141,8 +142,8 @@ import Exort from '../../assets/AssociationLogo/exort.png'
         methods: {
           StartCreate(){
             this.$router.push({
-              path: '/create_asso',
-              name: 'CreateAsso',
+              path: '/sys_create_asso',
+              name: 'SysCreateAsso',
               // params: {
               //     key: 'key',
               //     msgKey: this.msg
@@ -156,18 +157,19 @@ import Exort from '../../assets/AssociationLogo/exort.png'
           StateList(state){
               switch(state)
               {
-                case 0:return "已被锁定";
-                case 1:return "激活中";
+                case 0:return "已锁定";
+                case 1:return "已激活";
                 case 2:return "申请中";
-                case 3:return "已取消申请";
-                case 4:return "已被删除";
-                case 5:return "已被拒绝申请创建";
+                case 3:return "已取消";
+                case 4:return "已删除";
+                case 5:return "已拒绝";
+
               }
           },
           EditAsso(){
             this.$router.push({
-              path: '/edit_asso',
-              name: 'EditAsso',
+              path: '/sys_mana_asso',
+              name: 'SysManaAsso',
               params: {
                   name: this.name,
 
