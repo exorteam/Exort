@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo locale-gen zh_CN.UTF-8
 
 sudo apt update
