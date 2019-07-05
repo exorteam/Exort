@@ -10,7 +10,7 @@
           </MenuItem>
           <MenuItem name="1-2">
             <Icon type="search"></Icon>
-            <span >社团管理</span>
+            <span >Option 2</span>
           </MenuItem>
           <MenuItem name="1-3">
             <Icon type="settings"></Icon>
