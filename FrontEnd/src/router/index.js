@@ -71,7 +71,6 @@ export default new Router({
       path:'/application_management',
       name:'AppliManagement',
       component:AppliManagement
->>>>>>> 74447e276e700bbd6382bfc362a38809881edffd
     }
   ]
 })
