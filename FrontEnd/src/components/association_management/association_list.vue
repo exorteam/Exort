@@ -47,10 +47,10 @@
   </div>
 </template>
 <script>
-import Liquid from '../../assets/Liquid.png'
-import Solid from '../../assets/solid.jpg'
-import Gas from '../../assets/Gas.jpg'
-import Exort from '../../assets/1.png'
+import Liquid from '../../assets/AssociationLogo/solid.jpg'
+import Solid from '../../assets/AssociationLogo/solid.jpg'
+import Gas from '../../assets/AssociationLogo/solid.jpg'
+import Exort from '../../assets/AssociationLogo/solid.jpg'
 
     export default {
         data () {
