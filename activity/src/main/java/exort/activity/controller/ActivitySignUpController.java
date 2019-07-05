@@ -36,13 +36,13 @@ public class ActivitySignUpController {
 
     @ResponseBody
     @PostMapping(value = "/refuse_signup")
-    public void refuseSignup(int activity_signup_id){
+    public void refuseSignup(Long activity_signup_id){
         ass.refuseSignUp(activity_signup_id);
     }
 
     @ResponseBody
     @PostMapping(value = "/cancel_signup")
-    public void cancelSignup(int activity_signup_id){
+    public void cancelSignup(Long activity_signup_id){
         ass.cancelSignUp(activity_signup_id);
     }
 
@@ -54,8 +54,8 @@ public class ActivitySignUpController {
 
     @ResponseBody
     @PostMapping(value = "/get_activity_signups")
-    public List<ActivitySignUp> ListActivitySignups(Long user_id, Long activity_id, int state){
-        return ass.getActivitySignUps(user_id, activity_id, state);
+    public List<ActivitySignUp> listActivitySignups(Long activity_id, int state){
+        return ass.getActivitySignUps(activity_id, state);
     }
 }
 
