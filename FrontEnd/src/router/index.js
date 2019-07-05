@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Index from '@/components/index'
 import Activity from '../components/activity/Activity.vue'
 import About from '../components/activity/about.vue'
+import Build from '../components/activity/build.vue'
 
 import ManaAsso from '../components/association_management/sys_manage_association'
 import CreateAsso from '../components/association_management/create_association'
@@ -37,6 +38,11 @@ export default new Router({
       component: About
     },
     {
+      path: '/activity/build',
+      name: 'build',
+      component: Build
+    },
+    {
       path: '/asso_list',
       name: 'AssoList',
       component: AssoList
@@ -65,6 +71,7 @@ export default new Router({
       path:'/application_management',
       name:'AppliManagement',
       component:AppliManagement
+>>>>>>> 74447e276e700bbd6382bfc362a38809881edffd
     }
   ]
 })
