@@ -1,4 +1,4 @@
-package main.java.exort.associationmanager.entity;
+package exort.associationmanager.entity;
 
 
 import java.util.List;

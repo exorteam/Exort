@@ -1,17 +1,12 @@
 package exort.associationmanager.controller;
 
-import java.util.List;
-
+import exort.associationmanager.entity.Article;
+import exort.associationmanager.entity.ArticleFilterParams;
+import exort.associationmanager.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
-import exort.associationmanager.service.AssociationService;
+import java.util.List;
 
 @RestController
 public class ArticleController {

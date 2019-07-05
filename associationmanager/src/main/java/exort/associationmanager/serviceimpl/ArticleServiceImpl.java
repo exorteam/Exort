@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import exort.articlemanager.entity.Article;
-import exort.articlemanager.entity.ArticleFilterParams;
-import exort.articlemanager.repository.ArticleRepository;
-import exort.articlemanager.service.ArticleService;
+import exort.associationmanager.entity.Article;
+import exort.associationmanager.entity.ArticleFilterParams;
+import exort.associationmanager.repository.ArticleRepository;
+import exort.associationmanager.service.ArticleService;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {

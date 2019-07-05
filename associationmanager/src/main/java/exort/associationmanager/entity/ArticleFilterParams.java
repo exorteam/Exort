@@ -1,4 +1,4 @@
-package exort.articlemanager.entity;
+package exort.associationmanager.entity;
 
 import java.util.Date;
 
