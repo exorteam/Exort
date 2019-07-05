@@ -1,4 +1,34 @@
-*.swp
+HELP.md
+target/
+.mvn/**
+mvnw
+mvnw.cmd
 .DS_Store
+!**/src/main/**
+!**/src/test/**
 
-.vscode
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
