@@ -1,12 +1,6 @@
 HELP.md
 target/
-.mvn/**
-mvnw
-mvnw.cmd
-.DS_Store
-<<<<<<< HEAD
-Exort
-=======
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
 
@@ -35,4 +29,3 @@ build/
 
 ### VS Code ###
 .vscode/
->>>>>>> d7bccc7aa998a9d03362ce446c19ac42b8c73f3b
