@@ -15,6 +15,21 @@
                     placeholder="输入名称"
                 ></b-form-input>
             </b-form-group>
+            
+            <b-form-group
+                id="input-group-1"
+                label="活动简介:"
+                label-for="input-1"
+            >
+                <b-form-input
+                    id="input-1"
+                    v-model="form.content"
+                    type="text"
+                    required
+                    style="width: 500px; height: 200px"
+                    placeholder="输入简介"
+                ></b-form-input>
+            </b-form-group>
 
             <b-form-group id="input-group-2" label="报名时间:" label-for="input-2">
                 <b-form-input
