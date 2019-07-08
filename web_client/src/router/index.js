@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ManaAsso from '../components/association_management/sys_manage_association'
-import CreateAsso from '../components/association_management/create_association'
 
 import Index from '@/components/index'
 import Activity from '../components/activity/Activity.vue'
@@ -14,22 +12,15 @@ import EditAsso from '../components/association_management/edit_association'
 import SysAssoList from '../components/association_management/sys_association_list'
 import AssoList from '../components/association_management/association_list'
 import CreateAsso from '../components/association_management/create_association'
-import Test from '../components/association_management/new_association_list'
-
 
 import AssociaMemManage from '../components/association_member_management/member_management._table'
 import AppliManagement from '../components/association_member_management/application_management_table'
-
-
-import Activity from '../components/activity/Activity.vue'
-import About from '../components/activity/about.vue'
 
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
-
     {
       path: '/',
       name: 'Index',
@@ -50,11 +41,6 @@ export default new Router({
       path: '/asso_list',
       name: 'AssoList',
       component: AssoList
-    },
-    {
-      path: '/test',
-      name: 'Test',
-      component: Test
     },
     {
       path: '/sys_asso_list',
