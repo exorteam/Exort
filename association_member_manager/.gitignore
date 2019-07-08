@@ -1,9 +1,6 @@
 HELP.md
 target/
-.mvn/**
-mvnw
-mvnw.cmd
-.DS_Store
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
 
@@ -21,7 +18,6 @@ mvnw.cmd
 *.iws
 *.iml
 *.ipr
-*.png
 
 ### NetBeans ###
 /nbproject/private/
