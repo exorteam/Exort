@@ -1,18 +1,21 @@
 <template>
-  <div id="AssoList">
+    <Tabs active-key="key1">
+        <Tab-pane label="社团管理" key="key1">
+<div id="AssoList">
     <div id=SearchAsso>
       <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
       <Button type="info">搜索</Button>
       <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
       <!-- <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button> -->
     </div>
+
     <div>
   <div id="Divide">
        <Divider />
     </div>
       <b-form-checkbox-group
-        v-model="selected"
-        :options="options"
+        v-model="selected1"
+        :options="options1"
         switches
       ></b-form-checkbox-group>
     </div>
@@ -44,30 +47,243 @@
       </Card>
     </div>
   </div>
+    </Tab-pane>
+    <Tab-pane label="社团申请管理" key="key1">
+        <b-tabs content-class="mt-3">
+    <b-tab title="已提交" active>
+    <div id="AssoAppList">
+          <div id=SearchAsso>
+            <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
+            <Button type="info">搜索</Button>
+             <Button type="info" @click="StartApp" style="  position:relative ;right:-400px;">创建申请</Button>
+          </div>
+          <div>
+            <div id="Divide">
+              <Divider />
+            </div>
+            <b-form-checkbox-group v-model="selected2" :options="options2" switches>
+            </b-form-checkbox-group>
+          </div>
+          <div id="Divide">
+            <Divider />
+          </div>
+          <div>
+            <i-table :columns="columns1" :data="data1"></i-table>
+            </div>
+        </div>
+    </b-tab>
+    <b-tab title="已处理">
+
+        <div id="AssoAppList">
+          <div id=SearchAsso>
+            <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
+            <Button type="info">搜索</Button>
+            <Button type="info" @click="StartApp" style="  position:relative ;right:-400px;">创建申请</Button>
+          </div>
+          <div>
+            <div id="Divide">
+              <Divider />
+            </div>
+            <b-form-checkbox-group v-model="selected3" :options="options3" switches>
+            </b-form-checkbox-group>
+          </div>
+          <div id="Divide">
+            <Divider />
+          </div>
+          <div>
+            <i-table :columns="columns2" :data="data2"></i-table>
+            </div>
+        </div>
+
+    </b-tab>
+
+      </b-tabs>
+      </Tab-pane>
+
+
+    </Tabs>
 </template>
+
 <script>
-import Liquid from '../../assets/AssociationLogo/exort.png'
-import Solid from '../../assets/AssociationLogo/exort.png'
-import Gas from '../../assets/AssociationLogo/exort.png'
-import Exort from '../../assets/AssociationLogo/exort.png'
+
+import Liquid from '../../assets/AssociationLogo/solid.jpg'
+import Solid from '../../assets/AssociationLogo/solid.jpg'
+import Gas from '../../assets/AssociationLogo/solid.jpg'
+import Exort from '../../assets/AssociationLogo/solid.jpg'
 
     export default {
         data () {
             return {
-                selected: ['active','blocked','applying'], // Must be an array reference!
-            options: [
-            { text: '激活中', value: 'active' },
-            { text: '申请中', value: 'applying' },
-            { text: '已被锁定', value: 'blocked' },
+              columns1: [
+                    {
+                        title: '申请人Id',
+                        key: 'applicant_Id'
+                    },
+                    {
+                        title: '申请人',
+                        key: 'applicant_name'
+                    },
+                    {
+                        title: '社团名称',
+                        key: 'asso_name'
+                    },
+                    {
+                        title: '提交时间',
+                        key: 'submit_time'
+                    },
+                    {
+                        title: '申请类型',
+                        key: 'apply_type'
+                    },
+                    {
+                        title: '取消申请',
+                        key: 'operate',
+                    }
+                ],
+
+            data1: [
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate:'取消'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate:'取消'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate:'取消'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate:'取消'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate:'取消'
+                    },
+                ],
+
+
+
+               columns2: [
+                    {
+                        title: '申请人Id',
+                        key: 'applicant_Id'
+                    },
+                    {
+                        title: '申请人',
+                        key: 'applicant_name'
+                    },
+                    {
+                        title: '社团名称',
+                        key: 'asso_name'
+                    },
+                    {
+                        title: '提交时间',
+                        key: 'submit_time'
+                    },
+                    {
+                        title: '申请类型',
+                        key: 'apply_type'
+                    },
+                    {
+                        title: '处理时间',
+                        key: 'operate_time',
+                    },
+                    {
+                        title: '处理结果',
+                        key: 'operate_result',
+                    }
+                ],
+
+            data2: [
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                    {
+                        applicant_Id: 'wangxiaoming',
+                        applicant_name: '王小明',
+                        asso_name: '坚强的学习小组',
+                        submit_time:'2019/7/5 17:17',
+                        apply_type:'请求解除封禁',
+                        operate_time:'2019/7/5 17:25',
+                        operate_result:'未通过'
+                    },
+                ],
+
+            selected1: ['active','blocked'], // Must be an array reference!
+            options1: [
+            { text: '已激活', value: 'active' },
+            { text: '已锁定', value: 'blocked' },
+            { text: '已封禁', value: 'deleted' },
+            { text: '申请中', value: 'created' },
+            ],
+            selected2:['applying','applying_unblocked'],
+            options2: [
+            { text: '申请创建社团', value: 'applying' },
+            { text: '申请取消锁定', value: 'applying_unblocked' }
+            ],
+
+            selected3:['pass','canceled','refused'],
+            options3: [
+              { text: '已通过申请', value: 'pass' },
             { text: '已取消申请', value: 'canceled' },
-            { text: '已被删除', value: 'deleted' },
-            { text: '已被拒绝申请创建', value: 'deleted' }
-            ],// 已激活 1
-              // 已锁定 0
-              // 申请中 2
-              // 已取消 3
-              // 已删除 4
-              //
+            { text: '已拒绝申请', value: 'refused' },
+            ],
             default_value : "",
 
 
@@ -153,15 +369,29 @@ import Exort from '../../assets/AssociationLogo/exort.png'
               }*/
             })
           },
+          StartApp(){
+            this.$router.push({
+              path: '/create_app',
+              name: 'CreateApp',
+              // params: {
+              //     key: 'key',
+              //     msgKey: this.msg
+              // }
+              /*query: {
+                  key: 'key',
+                  msgKey: this.msg
+              }*/
+            })
+          },
           StateList(state){
               switch(state)
               {
-                case 0:return "已被锁定";
-                case 1:return "激活中";
+                case 0:return "已锁定";
+                case 1:return "已激活";
                 case 2:return "申请中";
                 case 3:return "已取消申请";
-                case 4:return "已被删除";
-                case 5:return "已被拒绝申请创建";
+                case 4:return "已删除";
+                case 5:return "已拒绝申请";
               }
           },
           EditAsso(){

@@ -67,6 +67,7 @@ export default new Router({
       name: 'CreateAsso',
       component: CreateAsso
     },
+
     {
       path:'/sys_mana_asso',
       name:'SysManaAsso',
