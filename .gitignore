@@ -4,9 +4,6 @@ target/
 mvnw
 mvnw.cmd
 .DS_Store
-<<<<<<< HEAD
-Exort
-=======
 !**/src/main/**
 !**/src/test/**
 
@@ -35,7 +32,6 @@ build/
 
 ### VS Code ###
 .vscode/
->>>>>>> d7bccc7aa998a9d03362ce446c19ac42b8c73f3b
 FrontEnd/src/assets/AssociationLogo/frontend_files/0.17cd57661467a142980d.hot-update.js.下载
 FrontEnd/src/assets/AssociationLogo/frontend_files/0.3f9b04a064d5bd5c006f.hot-update.js.下载
 FrontEnd/src/assets/AssociationLogo/frontend_files/0.442c3ab14c8fdad18287.hot-update.js.下载
