@@ -104,10 +104,10 @@
 
 <script>
 
-import Liquid from '../../assets/AssociationLogo/exort.png'
-import Solid from '../../assets/AssociationLogo/exort.png'
-import Gas from '../../assets/AssociationLogo/exort.png'
-import Exort from '../../assets/AssociationLogo/exort.png'
+import Liquid from '../../assets/AssociationLogo/solid.jpg'
+import Solid from '../../assets/AssociationLogo/solid.jpg'
+import Gas from '../../assets/AssociationLogo/solid.jpg'
+import Exort from '../../assets/AssociationLogo/solid.jpg'
 
     export default {
         data () {
