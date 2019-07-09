@@ -10,13 +10,13 @@
    |string description | 社团描述 |
    |string logo | 社团图标 |
    |string[] tags | 社团标签 |
-   |int state|社团封禁状态|
+   |int[] block_id | 社团封禁id |
 2. 封禁处理(BolckList)
 |属性|说明|
 |---|---|
-|int id| |
-|int asso_Id|封禁社团|
-|string description|封禁描述|
+|int id | |
+|int asso_Id | 封禁社团 |
+|string description | 封禁描述 |
 
 ## 接口
 
@@ -65,7 +65,20 @@
    - 输出 
       - 是否成功
 
-7. 社团创建申请处理
+7. 查询封禁记录
+   - 输入
+      - 社团id
+   - 输出
+      - 社团的被封禁记录列表
+8. 查询被封禁社团
+   - 输入
+      - 封禁id
+   - 输出
+      - 被封禁的社团信息
+      - 封禁理由
+
+
+8. 社团创建申请处理
    - 输入
       - 操作者ID   
       - 动作  
@@ -83,7 +96,7 @@
    - 输出 
       - 是否操作成功
 
-8. 社团解禁申请处理
+9. 社团解禁申请处理
    - 输入
       - 操作者ID
       - 动作
