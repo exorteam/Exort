@@ -47,13 +47,14 @@ spec:
   selector:
     app: mysql
 ---
-apiVersion: apps/v1beta1
-kind: StatefulSet
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: mysql
 spec:
-  serviceName: mysql-service
-  replicas: 3
+  selector:
+    matchLabels:
+      app: mysql
   template:
     metadata:
       labels:
