@@ -11,7 +11,11 @@
    |string logo | 社团图标 |
    |string[] tags | 社团标签 |
    |int state|社团封禁状态|
-
+2. 封禁处理(BolckList)
+|属性|说明|
+|---|---|
+|int id| |
+|string description|封禁描述|
 
 ## 接口
 
