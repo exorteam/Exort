@@ -8,10 +8,10 @@ import lombok.Data;
 public class AssociationFilterParams {
 
 	private String keyword;
-	private int authorId;
-	private Date startTime;
-	private Date endTime;
-	private int state;
-	private int createMethod;
+	private String name;
+	private String description;
+	private String tags[];
+	private Integer state;
+
 
 }

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AssociatuionManagerApplication {
+public class AssociationManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AssociatuionManagerApplication.class, args);
+        SpringApplication.run(AssociationManagerApplication.class, args);
     }
 
 }

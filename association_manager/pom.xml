@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>exort</groupId>
-	<artifactId>articlemanager</artifactId>
+	<artifactId>associationmanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>articlemanager</name>
 	<description>Demo project for Spring Boot</description>
@@ -30,7 +30,23 @@
 		<dependency>                            
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>     
-		</dependency>   
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

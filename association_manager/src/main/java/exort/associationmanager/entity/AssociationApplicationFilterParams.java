@@ -9,6 +9,6 @@ public class AssociationApplicationFilterParams {
 
 	private int id;
 	private Association asso;
-	private Integer state;
+	private int state;
 
 }

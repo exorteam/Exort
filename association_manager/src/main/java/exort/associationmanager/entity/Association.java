@@ -10,14 +10,12 @@ import lombok.Data;
 @Data
 public class Association {
 	@Id
-	private int id;
+	private Integer id;
 	private String name;
     private String description;
     private String logo;
 	private List<String> tags;
-	private int state; //blocked,active
+	private Integer state; //blocked,active
 
-	public void name() {
-		
-	}
+
 }
