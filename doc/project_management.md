@@ -298,9 +298,9 @@ TODO: 确定该步骤应该交付的内容
    git pull
    ```
 
-2. 基于 `dev` 创建开发分支 `{feature-or-bug-fix}`，并切换到新分支
+2. 基于 `dev` 创建新的开发分支 `{feature-or-bug-fix}`，并切换到新分支
    ```
-   git checkout -b {feature-or-bug-fix} origin/{feature-or-bug-fix}
+   git checkout -b {feature-or-bug-fix}
    ```
 
 3. 仔细检查并提交开发成果到本地
@@ -323,7 +323,7 @@ TODO: 确定该步骤应该交付的内容
 
 6. 提交到远端 (进行CI/CD，若其中的测试未通过则回到第 `3` 步)
    ```
-   git push
+   git push --set-upstream origin {feature-or-bug-fix}
    ```
 
 7. 将成果合并到 `dev` 中
