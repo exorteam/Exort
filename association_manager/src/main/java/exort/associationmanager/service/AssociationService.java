@@ -15,22 +15,24 @@ public interface AssociationService{
 
     public Association createAssociation(String name,String description,String tags[],String logo);
 
-    public boolean deleteAssociation(Integer assoId );
+    public boolean deleteAssociation(int assoId );
 
-    public  boolean blockAssociation(Integer assoId,String reason);
+    public boolean editAssociation(int assoId, String name,String description,String tags[],String logo);
 
-    public boolean editAssociation(Integer assoId, String name,String description,String tags[],String logo);
+    public  boolean blockAssociation(int assoId,String reason);
+
+    public  boolean unblockAssciation(int assId);
 
     public  boolean createAssociationApplication(String name,String description,String tags[],String logo,String materials[]);
 
+    public  boolean applyUnblockAssociation(int assoId,String reason,int applicantId);
+
     public  List<AssociationApplication> listAssociationApplication(AssociationApplicationFilterParams params);
 
-    public  boolean createUnblockApplication(Integer assoId,String reason,Integer applicantId);
+    public  boolean approveApplication(int appId);
 
-    public boolean setAssociationActive(Integer assoId);
+    public  boolean refuseApplication(int appId);
 
-    public boolean refuseUnblockApplication(int assoId);
-
-
+    public  boolean cancelApplication(int appId);
 
 }
