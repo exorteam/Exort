@@ -2,6 +2,10 @@
 ## 活动管理
 - **Activity**
 
+    - 活动时间范围 NewDateTime
+        - 范围类型 int timeType
+        - 时间范围 String time, String[] time...
+
    |属性|说明|
    |---|---|
    |int id | |
@@ -13,10 +17,8 @@
    |string title | 活动标题 |
    |string content | 活动内容 |
    |int state | 活动状态, unpublished, published |
-   |Datetime signup_begin_time | 活动开始报名时间 |
-   |Datetime signup_end_time | 活动结束报名时间 |
-   |Datetime begin_time | 活动开始时间 |
-   |Datetime end_time | 活动结束时间 |
+   |NewDateTime signup_time | 活动报名时间范围 |
+   |NewDateTime time | 活动时间范围 |
    |int state | 活动状态(preparing, signup, doing, done) |
    |bool need_review | 报名是否需要审核 |
    |bool only_members | 是否只有社团成员可以报名 |
@@ -29,10 +31,8 @@
         - 社团IDs
         - 标题
         - 内容（简介）
-        - 报名起始时间
-        - 报名截止时间
-        - 活动开始时间
-        - 活动结束时间
+        - 报名时间范围
+        - 活动时间范围
         - 报名是否需要审核
         - 活动是否仅社团成员课参加
         - 最大参与人数
@@ -47,10 +47,8 @@
         - 活动ID
         - 标题
         - 内容（简介）
-        - 报名开始时间
-        - 报名截止时间
-        - 活动开始时间
-        - 活动截止时间
+        - 报名时间范围
+        - 活动时间范围
         - 报名是否需要审核
         - 活动是否仅社团成员参加
         - 最大参与人数
@@ -61,32 +59,35 @@
 
 3. 查询所有活动
     - 输入
+        - keyword
+        - 社团
+        - 活动进度，活动报名进度
+        - 报名是否需要审核
+        - 活动是否仅社团成员可参加
+        - 创建时间
+        - 报名时间
+        - 开始时间
+        - 每页数量、页号
+        - 排序方式 (创建时间、报名时间、开始时间)
     - 输出
-        - 所有活动
+        - 对应的活动列表
    <!-- Activity[] GetActivities() -->
 
-4. 针对单个社团查询多个活动
-    - 输入
-        - 社团ID
-    - 输出
-        - 所有活动
-   <!-- Activity[] ListActivities(int association_id) -->
-
-5. 发布活动
+4. 发布活动
     - 输入
         - 活动ID
     - 输出
         - 考虑输出bool
    <!-- void PublishActivity(int activity_id) -->
 
-6. 撤回活动
+5. 撤回活动
     - 输入
         - 活动ID
     - 输出
         - 考虑输出bool
    <!-- void WithdrawActivity(int activity_id) -->
 
-7. 添加参加者
+6. 添加参加者
     - 输入
         - 活动ID
         - 要加入的参加者的IDs
@@ -94,7 +95,7 @@
         - 暂无，可考虑输出bool
    <!-- void AddParticipants(int activity_id, int[] participant_ids) -->
 
-8. 移除参加者
+7. 移除参加者
     - 输入
         - 活动ID
         - 要移除的参加者的IDs
@@ -153,13 +154,12 @@
 
 6. 查询报名（用户）
     - 输入
-        - 用户ID
-        - 活动ID
+        - 报名ID
     - 输出
         - 报名（详细信息）
    <!-- ActivitySignup GetActivitySignup(int user_id, int activity_id) -->
 
-7. 查询所以报名（用户）
+7. 查询所有报名（用户）
     - 输入
         - 用户ID
     - 输出
