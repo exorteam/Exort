@@ -1,9 +1,9 @@
 package exort.associationmanager.controller;
 
-import exort.associationmanager.entity.Article;
-import exort.associationmanager.entity.ArticleFilterParams;
+import exort.associationmanager.entity.Association;
+import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.AssociationApplication;
-import exort.associationmanager.service.ArticleService;
+import exort.associationmanager.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

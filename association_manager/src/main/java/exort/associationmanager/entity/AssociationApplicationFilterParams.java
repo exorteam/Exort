@@ -7,10 +7,8 @@ import lombok.Data;
 @Data
 public class AssociationApplicationFilterParams {
 
-	private Int id
+	private int id;
 	private Association asso;
-
-
 	private Integer state;
 
 }

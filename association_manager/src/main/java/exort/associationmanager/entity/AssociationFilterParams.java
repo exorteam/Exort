@@ -5,13 +5,13 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class ArticleFilterParams {
+public class AssociationFilterParams {
 
 	private String keyword;
-	private Integer authorId;
+	private int authorId;
 	private Date startTime;
 	private Date endTime;
-	private Integer state;
-	private Integer createMethod;
+	private int state;
+	private int createMethod;
 
 }

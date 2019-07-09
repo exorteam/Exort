@@ -14,8 +14,5 @@ public class AssociationApplication{
     private Date apply_time;
     private int state; //unhandled,accepted,refused,canceled
 
-    public  name() {
-        
-    }
     
 }
