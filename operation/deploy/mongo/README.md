@@ -5,3 +5,8 @@ Reference:
 
 To generate ssl key: `openssl rand -base64 745 > internal-auth-mongodb-keyfile`
 
+To deploy:
+
+1. `kubectl apply -f storageClass-manual.yaml`
+2. `kubectl apply -f mongo-secret.yaml`
+3. `kubectl apply -f mongo-deploy.yaml`
