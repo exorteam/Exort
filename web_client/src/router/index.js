@@ -16,6 +16,9 @@ import CreateAsso from '../components/association_management/create_association'
 import AssociaMemManage from '../components/association_member_management/member_management._table'
 import AppliManagement from '../components/association_member_management/application_management_table'
 
+import UserList from '../components/user_management/UserList.vue'
+import PermList from '../components/user_management/PermList.vue'
+
 Vue.use(Router);
 
 export default new Router({
@@ -83,6 +86,16 @@ export default new Router({
       path:'/application_management',
       name:'AppliManagement',
       component:AppliManagement
+    },
+    {
+      path:'/user_list',
+      name: 'UserList',
+      component:UserList
+    },
+    {
+      path:'/perm_list',
+      name: 'PermList',
+      component:PermList
     }
   ]
 })
