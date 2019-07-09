@@ -12,24 +12,6 @@
    |string[] tags | 社团标签 |
    |int state|社团封禁状态|
 
-2. 社团申请(AssociationApplication)
-   |属性|说明|
-   |---|---|
-   |int id | |
-   |int user_id | 申请者 |
-   |Association asso | 社团名 |
-   |Datetime apply_time | 提交时间 |
-   |int state | 申请状态, unhandled, accepted, refused, canceled |
-   |int type | 申请类型（创建，解禁） |
-   |string description | 申请说明 |
-3. 社团封禁（AssociationBlock）
-   |属性|说明|
-   |---|---|
-   |int id| |
-   |int asso_id|社团id|
-   |string description|封禁理由|
-   |string unblockDescription|解禁理由，为空表示未解禁|
-
 
 ## 接口
 
@@ -65,11 +47,9 @@
       - 社团Logo
    - 输出
       - 编辑后的社团对象 
-
 5. 封禁社团
    - 输入
       - 社团id
-      - 封禁理由
    - 输出
       - 是否成功
 
@@ -79,42 +59,40 @@
    - 输出 
       - 是否成功
 
-7. 申请创建社团
+7. 社团创建申请处理
    - 输入
-      - 社团名称
-      - 社团描述
-      - 社团标签
-      - 社团Logo
-      - 申请材料
-   - 输出
-      - 是否提交成功
-8. 申请解除封禁
-      - 社团id
-      - 理由
-      - 申请人id
-   - 输出
-      - 是否成功 
-9. 查询申请
+      - 操作者ID   
+      - 动作  
+      - 申请
+         - 申请ID
+         - 申请者ID
+         - 申请类型
+         - Association
+            -社团id 
+            -...
+         - 材料列表
+         - 申请时间
+         - 处理时间
+         - 申请状态
+   - 输出 
+      - 是否操作成功
+
+8. 社团解禁申请处理
    - 输入
-      - 申请id
-      - 申请人id
-      - 社团id
-      - 申请时间
-      - 申请状态
-   - 输出
-      - 符合筛选条件的申请列表
-10. 批准申请
-   - 输入
-      - 申请id
-   - 输出
-      - 是否成功
-11. 拒绝申请
-   - 输入
-      - 申请id
-   - 输出
-      - 是否成功
-12. 取消申请
-   - 输入
-      - 申请id
-   - 输出
-      - 是否成功
+      - 操作者ID
+      - 动作
+      - 申请
+         - 申请ID
+         - 申请者ID
+         - 申请类型
+         - Association
+            -社团id 
+            -...
+         - 材料列表
+         - 申请时间
+         - 处理时间
+         - 申请状态
+   - 输出 
+      - 是否操作成功
+
+
