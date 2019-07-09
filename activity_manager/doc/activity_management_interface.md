@@ -25,6 +25,7 @@
    |int max_participants | 最大参与人数 |
    |int[] material_template_ids | 报名材料模板 |
    |int[] participant_ids | 参与者 |
+   |String[] tags| 标签s |
 
 1. 创建活动（社团管理员）
     - 输入
@@ -37,6 +38,7 @@
         - 活动是否仅社团成员课参加
         - 最大参与人数
         - 材料模板
+        - 标签
     - 输出
         - 活动
 
@@ -53,6 +55,7 @@
         - 活动是否仅社团成员参加
         - 最大参与人数
         - 材料模板
+        - 标签
     - 输出
         - 暂无，可考虑输出bool
    <!-- void UpdateActivity(int activity_id, string title, string content, string title, string content, Datetime signup_begin_time, Datetime signup_end_time, Datetime begin_time, Datetime end_time, bool need_review, bool only_members, int max_participants, int[] material_template_ids) -->
@@ -60,6 +63,7 @@
 3. 查询所有活动
     - 输入
         - keyword
+        - 标签
         - 社团
         - 活动进度，活动报名进度
         - 报名是否需要审核
@@ -102,6 +106,20 @@
     - 输出
         - 暂无，可考虑输出bool
    <!-- void RemoveParticipants(int activity_id, int[] participant_ids) -->
+
+8. 查询参加者
+    - 输入
+        - 活动ID
+        - 页码
+        - 每页大小
+    - 输出
+        - 参加者列表
+
+9. 查询参加者数量
+    - 输入
+        - 活动ID
+    - 输出
+        - 参加者数量
 
 - **ActivitySighup** 活动报名申请
 
