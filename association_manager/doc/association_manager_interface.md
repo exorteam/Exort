@@ -15,6 +15,7 @@
 |属性|说明|
 |---|---|
 |int id| |
+|int asso_Id|封禁社团|
 |string description|封禁描述|
 
 ## 接口
