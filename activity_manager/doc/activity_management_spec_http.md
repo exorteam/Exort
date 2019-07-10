@@ -390,7 +390,7 @@
 9. 查询实际参加者
 
    - Http Request  
-   **GET** `/activities/{activityid}/real_participants`
+   **GET** `/activities/{activityid}/realparticipants`
 
    - Query Parameters
 
@@ -420,7 +420,7 @@
 10. 活动报名申请回调
 
    - Http Request  
-   **POST** `/callback/accept_signup`
+   **POST** `/callback/acceptsignup`
 
    - Body Parameters
 
