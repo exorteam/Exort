@@ -347,16 +347,21 @@
 
   **GET** `/association-member-manager/members`
 
+- Query Parameters
+
+  | Parameter      | Description                                                  |
+  | -------------- | ------------------------------------------------------------ |
+  | `pageNum` int  | 页码, 默认为0                                                |
+  | `pageSize` int | 每页数量, 默认为20                                           |
+  | `sortBy`       | 排序方式, 可以为 _createdTime_, _handledTime_, _object.userDefinedField_, 默认为 _createdTime_ |
+
 - Body Parameters
 
-  | Parameter           | Description                                                  |
-  | ------------------- | ------------------------------------------------------------ |
-  | `associationId` int | 社团ID                                                       |
-  | `departmentId` int  | 部门ID                                                       |
-  | `pageNum` int       | 页码, 默认为0                                                |
-  | `pageSize` int      | 每页数量, 默认为20                                           |
-  | `sortBy`            | 排序方式, 可以为 _createdTime_, _handledTime_, _object.userDefinedField_, 默认为 _createdTime_ |
-
+  | Parameter           | Description |
+  | ------------------- | ----------- |
+  | `associationId` int | 社团ID      |
+  | `departmentId` int  | 部门ID      |
+  
 - Response
 
   | Code                 | Description                                |
@@ -367,19 +372,27 @@
 - Example
 
   ```json
-  >>> GET /association-member-manager/members?associationId=1&departmentId=2&pageSize=2&pageNum=0&sortBy=createdTime
+  >>> GET /association-member-manager/members?pageSize=2&pageNum=0&sortBy=createdTime
+  {
+  	"associationI":1,
+  	"departmentI":2,
+  }
+  
   
   <<< 200
   {
-    "data":[5,65,78],
+  "data":[5,65,78],
     "error":"",
     "message":"",
   }
   ```
-
-  ```json
-  >>> GET /association-member-manager/members?associationId=1&departmentId=3
   
+  ```json
+  >>> GET /association-member-manager/members
+  {
+  	"associationI":1,
+  	"departmentI":3,
+}
   <<< 200
   {
     "data":[],
@@ -387,9 +400,13 @@
     "message":"",
   }
   ```
-
+  
   ```json
-  >>> GET /association-member-manager/members?associationId=1&departmentId=312
+  >>> GET /association-member-manager/members
+  {
+  	"associationI":1,
+  	"departmentI":22141,
+  }
   
   <<< 404
   {
@@ -549,7 +566,7 @@
 
   **GET** `/association-member-manager/permissions`
 
-- Path Parameters
+- Query Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
@@ -606,7 +623,7 @@
 
   **GET** `/association-member-manager/get-user-associations`
 
-- Body Parameters
+- Query Parameters
 
   | Parameter    | Description |
   | ------------ | ----------- |
@@ -660,7 +677,7 @@
 
   **GET** `/association-member-manager/get-user-departments`
 
-- Body Parameters
+- Query Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
