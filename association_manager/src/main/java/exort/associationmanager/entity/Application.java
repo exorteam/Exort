@@ -16,9 +16,9 @@ public class Application {
     Integer Id;
     Integer applicantId;
     Integer type;
-    Association asso;
+    Association association;
     String materials[];
     Date createTime;
     Date handleTime;
-    Integer state;
+    Integer state;//0 unhandled,1 accept,2 refused,3 canceled
 }
