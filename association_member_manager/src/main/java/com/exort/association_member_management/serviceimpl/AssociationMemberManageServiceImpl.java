@@ -1,103 +1,198 @@
 package com.exort.association_member_management.serviceimpl;
 
+import com.exort.association_member_management.dto.ResponseCode;
 import com.exort.association_member_management.entity.Application;
 import com.exort.association_member_management.entity.Department;
-import com.exort.association_member_management.service.ApplicationService;
+import com.exort.association_member_management.repository.ApplicationRepository;
+import com.exort.association_member_management.repository.DepartmentRepository;
+import com.exort.association_member_management.service.AssociationMemberManageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.*;
 
 @Service
-public class ApplicationServiceImpl implements ApplicationService {
+public class AssociationMemberManageServiceImpl implements AssociationMemberManageService {
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     @Override
-    public Application getSpecApplication(int applyId) {
-        return null;
+    public ResponseCode getSpecApplication(int applyId) {
+        ResponseCode responseCode=new ResponseCode();
+
+        responseCode.setMsg("Success.");
+        HashMap<String,Application> data=new HashMap<>();
+        data.put("application",applicationRepository.findById(applyId).get());
+        responseCode.setData(data);
+
+        return responseCode;
+    }
+
+    //条件拼接
+    @Override
+    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime,int page,int size) {
+        ResponseCode responseCode=new ResponseCode();
+
+        Specification<Application> specification=new Specification<Application>() {
+            @Override
+            public Predicate toPredicate(Root<Application> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+
+                if(userId.isPresent()){
+                    list.add(criteriaBuilder.equal(root.get("userId").as(Integer.class),userId.get()));
+                }
+                if(associationId.isPresent() && departmentId.isPresent()){
+                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class),associationId.get()));
+                    list.add(criteriaBuilder.equal(root.get("departmentId").as(Integer.class),departmentId.get()));
+                }
+
+                if(associationId.isPresent()){
+                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class),associationId.get()));
+                }
+
+                if(startTime.isPresent() && endTime.isPresent()){
+                    list.add(criteriaBuilder.between(root.get("applyTime").as(Date.class),startTime.get(),endTime.get()));
+                }
+
+                criteriaQuery.where(criteriaBuilder.and(list.toArray(new Predicate[list.size()])));
+
+                return criteriaQuery.getRestriction();
+            }
+        };
+
+      Pageable pageable=PageRequest.of(page,size);
+
+        Page<Application> applications=applicationRepository.findAll(specification,pageable);
+
+
+        HashMap<String,Page<Application>> data=new HashMap<>();
+        data.put("application",applications);
+        responseCode.setData(data);
+
+        return responseCode;
     }
 
     @Override
-    public List<Application> getSomeApplications(int userId, int associationId, int departmentId, Date startTime, Date endTime, int numInOnePage) {
-        return null;
+    public ResponseCode adoptApplication(int applyId) {
+        ResponseCode responseCode=new ResponseCode();
+
+        Application application= applicationRepository.findById(applyId).get();
+        application.setState(Application.ACCEPTED);
+        applicationRepository.save(application);
+
+        responseCode.setMsg("Success Adopt");
+
+        return responseCode;
     }
 
     @Override
-    public boolean adoptApplication(int applyId) {
-        return false;
+    public ResponseCode refuseApplication(int applyId) {
+        ResponseCode responseCode=new ResponseCode();
+
+        Application application= applicationRepository.findById(applyId).get();
+        application.setState(Application.REFUSED);
+        applicationRepository.save(application);
+
+        responseCode.setMsg("Success Refuse");
+        return responseCode;
     }
 
     @Override
-    public boolean refuseApplication(int applyId) {
-        return false;
+    public ResponseCode getDepartmentTree(int associationId) {
+        ResponseCode responseCode=new ResponseCode();
+
+
+
+        return responseCode;
     }
 
     @Override
-    public List<Department> getDepartmentTree(int associationId) {
-        return null;
+    public ResponseCode getSpecDepartmentInfo(int associationId, int departmentId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public Department getSpecDepartmentInfo(int associationId, int departmentId) {
-        return null;
+    public ResponseCode createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
-        return false;
+    public ResponseCode deleteDepartment(int associationId, int departmentId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean deleteDepartment(int associationId, int departmentId) {
-        return false;
+    public ResponseCode editDepartment(int departmentId, String departmentName, String departmentDesc, int parentId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean editDepartment(int departmentId, String departmentName, String departmentDesc, int parentId) {
-        return false;
+    public ResponseCode getSpecMemberList(int associationId, int departmentId, int numInOnePage) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public List<Integer> getSpecMemberList(int associationId, int departmentId, int numInOnePage) {
-        return null;
+    public ResponseCode removeOneFromDepartment(int associationId, int departmentId, int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean removeOneFromDepartment(int associationId, int departmentId, int userId) {
-        return false;
+    public ResponseCode addOneToDepartment(int associationId, int departmentId, int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean addOneToDepartment(int associationId, int departmentId, int userId) {
-        return false;
+    public ResponseCode changeOneToDepartment(int associationId, int directionDepartmentId, int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean changeOneToDepartment(int associationId, int directionDepartmentId, int userId) {
-        return false;
+    public ResponseCode checkUserPermissionInAssociation(int associationId, int userId, int permission) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean checkUserPermissionInAssociation(int associationId, int userId, int permission) {
-        return false;
+    public ResponseCode getUserAssociation(int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public List<Integer> getUserAssociation(int userId) {
-        return null;
+    public ResponseCode getUserDepartment(int associationId, int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public List<Department> getUserDepartment(int associationId, int userId) {
-        return null;
+    public ResponseCode deleteOneInAssociation(int associationId, int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 
     @Override
-    public boolean deleteOneInAssociation(int associationId, int userId) {
-        return false;
-    }
-
-    @Override
-    public boolean addOneToAssociation(int assciationId, int userId) {
-        return false;
+    public ResponseCode addOneToAssociation(int associationId, int userId) {
+        ResponseCode responseCode=new ResponseCode();
+        return responseCode;
     }
 }
