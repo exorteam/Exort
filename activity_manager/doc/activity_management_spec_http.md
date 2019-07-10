@@ -33,7 +33,7 @@
 
    - example
       - 200 
-         ```
+         ```json
          {
              "id"： 21，
              "associationIds": [1,2,...],
@@ -53,11 +53,11 @@
                  "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
              },
              "state": 0/1/2/3, (preparing, signup, doing, done)
-             "ifReview: true,
+             "ifReview": true,
              "onlyMembers": true,
              "maxParticipants":30,
              "materialTemplateIds": [1,2,3],
-             "participantIds: [1,2,3,...],
+             "participantIds": [1,2,3,...],
              "actualParticipantIds": [1,2,3,...], 
              "tags": ["tag1", "tag2", ...]
          }
@@ -94,7 +94,7 @@
    
    - example
       - 200
-         ```
+         ```json
          {
              "id"： 21，
              "associationIds": [1,2,...],
@@ -114,11 +114,11 @@
                  "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
              },
              "state": 0/1/2/3, (preparing, signup, doing, done)
-             "ifReview: true,
+             "ifReview": true,
              "onlyMembers": true,
              "maxParticipants":30,
              "materialTemplateIds": [1,2,3],
-             "participantIds: [1,2,3,...],
+             "participantIds": [1,2,3,...],
              "actualParticipantIds": [1,2,3,...], 
              "tags": ["tag1", "tag2", ...]
          }
@@ -159,7 +159,7 @@
    
    - example
       - 200
-         ```
+         ```json
             {
                [
                   {
@@ -181,11 +181,11 @@
                         "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
                      },
                      "state": 0/1/2/3, (preparing, signup, doing, done)
-                     "ifReview: true,
+                     "ifReview": true,
                      "onlyMembers": true,
                      "maxParticipants":30,
                      "materialTemplateIds": [1,2,3],
-                     "participantIds: [1,2,3,...],
+                     "participantIds": [1,2,3,...],
                      "actualParticipantIds": [1,2,3,...], 
                      "tags": ["tag1", "tag2", ...]
                   },
@@ -208,11 +208,11 @@
                         "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
                      },
                      "state": 0/1/2/3, (preparing, signup, doing, done)
-                     "ifReview: true,
+                     "ifReview": true,
                      "onlyMembers": true,
                      "maxParticipants":30,
                      "materialTemplateIds": [1,2,3],
-                     "participantIds: [1,2,3,...],
+                     "participantIds": [1,2,3,...],
                      "actualParticipantIds": [1,2,3,...], 
                      "tags": ["tag1", "tag2", ...]
                   }
@@ -244,7 +244,7 @@
 
    - example
       - 200
-         ```
+         ```json
             {
                "id"： 21，
                "associationIds": [1,2,...],
@@ -263,11 +263,11 @@
                   "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
                },
                "state": 0/1/2/3, (preparing, signup, doing, done)
-               "ifReview: true,
+               "ifReview": true,
                "onlyMembers": true,
                "maxParticipants":30,
                "materialTemplateIds": [1,2,3],
-               "participantIds: [1,2,3,...],
+               "participantIds": [1,2,3,...],
                "actualParticipantIds": [1,2,3,...], 
                "tags": ["tag1", "tag2", ...]
             }
@@ -296,7 +296,7 @@
 
    - example
       - 200
-         ```
+         ```json
             activity实例，见上
          ```
       - 400
@@ -323,8 +323,8 @@
 
    - example
       - 200
-         ```
-            activity实例，见上
+         ```json
+         activity实例，见上
          ```
       - 400
          - error: "invalid " + 实际错误信息
@@ -350,8 +350,8 @@
 
    - example
       - 200
-         ```
-            activity实例，见上
+         ```json
+         activity实例，见上
          ```
       - 400
          - error: "invalid " + 实际错误信息
@@ -379,12 +379,13 @@
 
    - example
       - 200
-         ```
+         ```json
          [1,2,3,...]
          ```
       - 400
-         - error: "invalid " + 实际错误信息
-         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
+         ```
+         []
+         ```
 
 10. 查询实际参加者
 
@@ -408,13 +409,13 @@
 
    - example
       - 200
-         ```
+         ```json
          [1,2,3,...]
          ```
       - 400
-         - error: "invalid " + 实际错误信息
-         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
-
+         ```json
+         []
+         ```
 
 14. 活动报名申请回调
 
