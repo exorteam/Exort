@@ -135,9 +135,9 @@
 
    - Query Parameters
 
-      |Parameter|Description|
-      |---|---|
-      |associationId| 社团ID |
+      |Parameter|Description|default|
+      |---|---|---|
+      |associationId| 社团ID |创建者|
       |tags|标签|
       |keyword|内容（简介）|
       |createTime|创建时间|
@@ -374,15 +374,13 @@
 
       |code|description|
       |---|---|
-      |200-（参加者列表）|查询成功|
+      |200-（参加者ID列表）|查询成功|
       |400|查询失败|
 
    - example
       - 200
          ```
-            {
-               "participantIds": [1,2,3,...]
-            }
+         [1,2,3,...]
          ```
       - 400
          - error: "invalid " + 实际错误信息
@@ -411,9 +409,7 @@
    - example
       - 200
          ```
-            {
-               "real_participantIds": [1,2,3,...]
-            }
+         [1,2,3,...]
          ```
       - 400
          - error: "invalid " + 实际错误信息
