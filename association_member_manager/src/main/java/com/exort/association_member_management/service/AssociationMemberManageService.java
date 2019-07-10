@@ -15,8 +15,8 @@ public interface AssociationMemberManageService {
     public ResponseCode getSpecDepartmentInfo(int associationId,int departmentId);
     public ResponseCode createDepartment(int associationId,String departmentName,String departmentDesc,int parentId);
     public ResponseCode deleteDepartment(int associationId,int departmentId);
-    public ResponseCode editDepartment(int departmentId,String departmentName,String departmentDesc,int parentId);
-    public ResponseCode getSpecMemberList(int associationId,int departmentId,int numInOnePage);
+    public ResponseCode editDepartment(int associationId,int departmentId,String departmentName,String departmentDesc,int parentId);
+    public ResponseCode getSpecMemberList(int associationId,int departmentId,int page,int size);
     public ResponseCode removeOneFromDepartment(int associationId,int departmentId,int userId);
     public ResponseCode addOneToDepartment(int associationId,int departmentId,int userId);
     public ResponseCode changeOneToDepartment(int associationId,int directionDepartmentId,int userId);

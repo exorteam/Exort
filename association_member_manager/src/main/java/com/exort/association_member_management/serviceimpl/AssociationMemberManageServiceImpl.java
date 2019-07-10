@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -113,7 +112,12 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     public ResponseCode getDepartmentTree(int associationId) {
         ResponseCode responseCode=new ResponseCode();
 
+        List<Department>departments=departmentRepository.findAllByAssociationId(associationId);
 
+        responseCode.setMsg("ok");
+        HashMap<String,List<Department>> departmentTree=new HashMap<>();
+        departmentTree.put("departmentTree",departments);
+        responseCode.setData(departmentTree);
 
         return responseCode;
     }
@@ -121,29 +125,64 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Override
     public ResponseCode getSpecDepartmentInfo(int associationId, int departmentId) {
         ResponseCode responseCode=new ResponseCode();
+
+        List<Department>departments=departmentRepository.findAllByAssociationIdAndDepartmentId(associationId,departmentId);
+
+        responseCode.setMsg("ok");
+        HashMap<String,List<Department>> ret=new HashMap<>();
+        ret.put("SpecDepartmentInfo",departments);
+        responseCode.setData(ret);
+
         return responseCode;
     }
 
     @Override
     public ResponseCode createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
         ResponseCode responseCode=new ResponseCode();
+
+        Department department=new Department(associationId,departmentName,departmentDesc,parentId);
+        departmentRepository.save(department);
+
+        responseCode.setMsg("Success Create Department");
+        HashMap<String,Integer> ret=new HashMap<>();
+        ret.put("associationId",associationId);
+        ret.put("departmentId",department.getDepartmentId());
+
+        responseCode.setData(ret);
+
         return responseCode;
     }
 
     @Override
     public ResponseCode deleteDepartment(int associationId, int departmentId) {
         ResponseCode responseCode=new ResponseCode();
+
+        Department department=departmentRepository.findByAssociationIdAndDepartmentId(associationId,departmentId);
+        departmentRepository.delete(department);
+
+        responseCode.setMsg("Success Delete Department");
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode editDepartment(int departmentId, String departmentName, String departmentDesc, int parentId) {
+    public ResponseCode editDepartment(int associationId,int departmentId, String departmentName, String departmentDesc, int parentId) {
         ResponseCode responseCode=new ResponseCode();
+
+        Department department=departmentRepository.findByAssociationIdAndDepartmentId(associationId,departmentId);
+        department.setName(departmentName);
+        department.setDescription(departmentDesc);
+        department.setParentId(parentId);
+
+        departmentRepository.save(department);
+
+        responseCode.setMsg("Success Edit Department");
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode getSpecMemberList(int associationId, int departmentId, int numInOnePage) {
+    public ResponseCode getSpecMemberList(int associationId, int departmentId, int page,int size) {
         ResponseCode responseCode=new ResponseCode();
         return responseCode;
     }
@@ -151,6 +190,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Override
     public ResponseCode removeOneFromDepartment(int associationId, int departmentId, int userId) {
         ResponseCode responseCode=new ResponseCode();
+
         return responseCode;
     }
 

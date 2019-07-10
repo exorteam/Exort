@@ -31,19 +31,19 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getSpecApplication(@RequestParam(value = "applyId")int applyId) {
+    public ResponseCode getSpecApplication(@RequestParam(value = "applyId") int applyId) {
         return associationMemberManageService.getSpecApplication(applyId);
     }
 
     @GetMapping(value = "get-some-applis", produces = "application/json")
     @ApiOperation(value = "查找某些申请")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "申请人ID",dataType = "int"),
+            @ApiImplicitParam(name = "userId", value = "申请人ID", dataType = "int"),
             @ApiImplicitParam(name = "associationId", value = "社团ID", dataType = "int"),
             @ApiImplicitParam(name = "departmentId", value = "部门ID", dataType = "int"),
             @ApiImplicitParam(name = "startTime", value = "起始时间", dataType = "Date"),
             @ApiImplicitParam(name = "endTime", value = "终止时间", dataType = "Date"),
-            @ApiImplicitParam(name = "page", value = "第几页",dataType = "int"),
+            @ApiImplicitParam(name = "page", value = "第几页", dataType = "int"),
             @ApiImplicitParam(name = "size", value = "单页条数", dataType = "int")
     })
     @ApiResponses({
@@ -53,8 +53,8 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getSomeApplications(@RequestParam(value = "userId") Optional<Integer> userId, @RequestParam(value = "associationId")Optional<Integer> associationId, @RequestParam(value = "departmentId")Optional<Integer> departmentId, @RequestParam(value = "startTime")@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")Optional<Date> startTime, @RequestParam(value = "endTime")@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")Optional<Date> endTime,@RequestParam(value = "page",defaultValue = "0")int page,@RequestParam(value ="size",defaultValue = "20") int size) {
-        return associationMemberManageService.getSomeApplications(userId, associationId, departmentId, startTime, endTime,page,size);
+    public ResponseCode getSomeApplications(@RequestParam(value = "userId") Optional<Integer> userId, @RequestParam(value = "associationId") Optional<Integer> associationId, @RequestParam(value = "departmentId") Optional<Integer> departmentId, @RequestParam(value = "startTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Optional<Date> startTime, @RequestParam(value = "endTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Optional<Date> endTime, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "20") int size) {
+        return associationMemberManageService.getSomeApplications(userId, associationId, departmentId, startTime, endTime, page, size);
     }
 
     @PutMapping(value = "adopt-appli", produces = "application/json")
@@ -96,7 +96,7 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getDepartmentTree(@RequestParam(value = "associationId")int associationId) {
+    public ResponseCode getDepartmentTree(@RequestParam(value = "associationId") int associationId) {
         return associationMemberManageService.getDepartmentTree(associationId);
     }
 
@@ -114,7 +114,7 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getSpecDepartmentInfo(@RequestParam(value = "associationId")int associationId, @RequestParam(value = "departmentId")int departmentId) {
+    public ResponseCode getSpecDepartmentInfo(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "departmentId") int departmentId) {
         return associationMemberManageService.getSpecDepartmentInfo(associationId, departmentId);
     }
 
@@ -172,8 +172,8 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode editDepartment(int departmentId, String departmentName, String departmentDesc, int parentId) {
-        return associationMemberManageService.editDepartment(departmentId, departmentName, departmentDesc, parentId);
+    public ResponseCode editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId) {
+        return associationMemberManageService.editDepartment(associationId, departmentId, departmentName, departmentDesc, parentId);
     }
 
 
@@ -182,7 +182,8 @@ public class AssociationMemberManageController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
             @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "numInOnePage", value = "单页多少条信息", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "size", value = "单页几条", required = true, dataType = "int"),
     })
     @ApiResponses({
             @ApiResponse(code = 200, message = "请求成功，返回部门成员ID列表"),
@@ -191,8 +192,8 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getSpecMemberList(@RequestParam(value = "associationId")int associationId, @RequestParam(value = "departmentId")int departmentId, @RequestParam(value = "numInOnePage")int numInOnePage) {
-        return associationMemberManageService.getSpecMemberList(associationId, departmentId, numInOnePage);
+    public ResponseCode getSpecMemberList(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "departmentId") int departmentId, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
+        return associationMemberManageService.getSpecMemberList(associationId, departmentId, page, size);
     }
 
 
@@ -267,7 +268,7 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode checkUserPermissionInAssociation(@RequestParam(value = "associationId")int associationId, @RequestParam(value = "userId")int userId, @RequestParam(value = "permission")int permission) {
+    public ResponseCode checkUserPermissionInAssociation(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "userId") int userId, @RequestParam(value = "permission") int permission) {
         return associationMemberManageService.checkUserPermissionInAssociation(associationId, userId, permission);
     }
 
@@ -282,7 +283,7 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getUserAssociation(@RequestParam(value = "userId")int userId) {
+    public ResponseCode getUserAssociation(@RequestParam(value = "userId") int userId) {
         return associationMemberManageService.getUserAssociation(userId);
     }
 
@@ -300,7 +301,7 @@ public class AssociationMemberManageController {
             @ApiResponse(code = 403, message = "用户没有权限这样做"),
             @ApiResponse(code = 404, message = "请求路径没有或页面跳转路径不对")
     })
-    public ResponseCode getUserDepartment(@RequestParam(value = "associationId")int associationId, @RequestParam(value = "userId")int userId) {
+    public ResponseCode getUserDepartment(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "userId") int userId) {
         return associationMemberManageService.getUserDepartment(associationId, userId);
     }
 
