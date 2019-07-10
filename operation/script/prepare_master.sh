@@ -3,7 +3,7 @@
 offline_pkg_ip="10.0.0.26"
 offline_pkg_version="kube-1.14.1"
 user="ubuntu"
-node_ips=("10.0.0.11","10.0.0.99","10.0.0.69")
+node_ips=("10.0.0.11" "10.0.0.99" "10.0.0.69")
 
 sudo locale-gen zh_CN.UTF-8
 
@@ -28,11 +28,18 @@ sudo chmod u+x ./kubeadm
 sudo cp ./kubeadm /usr/local/bin
 sudo docker load -i kube-1.14.1.tar
 
-sh ./append_host.sh
+chmod u+x ./append_host.sh
+sudo ./append_host.sh
 
-for ip in ${node_ips[*]} do
+for ip in ${node_ips[*]}
+do
+	echo ">>> Now deploying [$ip]"
 	ssh $user@$ip -C "/bin/bash" < ./append_host.sh
 	scp ./kube-1.14.1.tar $user@$ip:/home/ubuntu/kube.tar
+	scp ./kubeadm $user@$ip:/home/ubuntu/kube.tar
+	scp ./calicoctl $user@$ip:/home/ubuntu/kube.tar
+	scp ./hyperkube $user@$ip:/home/ubuntu/kube.tar
+	scp ./cni-plugins-amd64-v0.6.0.tgz $user@$ip:/home/ubuntu/kube.tar
 	ssh $user@$ip -C "/bin/bash" < ./prepare_node.sh
 done
 
