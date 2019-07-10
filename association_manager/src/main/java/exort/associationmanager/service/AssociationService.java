@@ -22,8 +22,6 @@ public interface AssociationService{
 
     public  boolean unblockAssciation(Integer assoId);
 
-    public  boolean handleCreateAsoociationApplication(Integer user_id, Integer type, Application app );
-
-    public  boolean handleUnblockAsoociationApplication(Integer user_id, Integer type, Application app );
+    public  boolean handleAsoociationApplication(Integer user_id, Integer type, Application app );
 
 }
