@@ -1,309 +1,468 @@
 ## 活动管理
 - **Activity**
 
-    - 活动时间范围 NewDateTime
-        - 范围类型 int timeType
-        - 时间范围 String time, String[] time...
+   - 活动时间范围 NewDateTime
+      - 范围类型 int timeType
+      - 时间范围 String time, String[] time...
 
 1. 创建活动（社团管理员）
-    - Http Request  
-    POST /activityManagement/createNewActivity
+   - Http Request  
+   **POST** `/activities`
 
-    - Body Parameters
+   - Body Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |int[] associationIds| 社团IDS |
-    |string title|标题|
-    |string content|内容（简介）|
-    |NewDateTime signupTime|报名时间范围|
-    |NewDateTime time|活动时间范围|
-    |bool ifReview|报名是否需要审核|
-    |bool ifOnlyAsso|是否仅社团成员参加|
-    |int numberOfPeople|最大参加人数|
-    |int[] materialTemplateIds|材料模板|
-    |string[] tags|标签|
-    
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200|创建成功|
-    |400|创建失败|
+      |Parameter|Description|
+      |---|---|
+      |int[] associationIds| 社团IDs |
+      |string title|标题|
+      |string content|内容（简介）|
+      |NewDateTime signupTime|报名时间范围|
+      |NewDateTime time|活动时间范围|
+      |bool ifReview|报名是否需要审核|
+      |bool ifOnlyAsso|是否仅社团成员参加|
+      |int numberOfParticipants|最大参加人数|
+      |int[] materialTemplateIds|材料模板|
+      |string[] tags|标签|
+
+   - Response  
+   
+      |code|description|
+      |---|---|
+      |200-(活动对象)|创建成功|
+      |400|创建失败|
+
+   - example
+      - 200 
+         ```
+         {
+             "id"： 21，
+             "associationIds": [1,2,...],
+             "createTime": "yyyy-mm-dd",
+             "publishTime": "yyyy-mm-dd",
+             "lastPublishTime": "yyyy-mm-dd",
+             "lastModifyTime": "yyyy-mm-dd",
+             "title": "abc",
+             "content": "qewretrytretyjdhgeewfwqdw",
+             "state": 0/1, (unpublished, published)
+             "signupTime": {
+                 "timeType": 0/1/2,
+                 "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+             },
+             "time": {
+                 "timeType": 0/1/2,
+                 "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+             },
+             "state": 0/1/2/3, (preparing, signup, doing, done)
+             "ifReview: true,
+             "onlyMembers": true,
+             "maxParticipants":30,
+             "materialTemplateIds": [1,2,3],
+             "participantIds: [1,2,3,...],
+             "actualParticipantIds": [1,2,3,...], 
+             "tags": ["tag1", "tag2", ...]
+         }
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
 2. 修改活动
-    - Http Request  
-    POST /activityManagement/modifyActivity
+   - Http Request
+      **PUT** `/activities/{activityid}`
 
-    - Body Parameters
+   - Body Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |int[] associationIds| 社团IDS |
-    |string title|标题|
-    |string content|内容（简介）|
-    |NewDateTime signupTime|报名时间范围|
-    |NewDateTime time|活动时间范围|
-    |bool ifReview|报名是否需要审核|
-    |bool ifOnlyAsso|是否仅社团成员参加|
-    |int numberOfPeople|最大参加人数|
-    |int[] materialTemplateIds|材料模板|
-    |string[] tags|标签|
+      |Parameter|Description|
+      |---|---|
+      |int[] associationIds| 社团IDS |
+      |string title|标题|
+      |string content|内容（简介）|
+      |NewDateTime signupTime|报名时间范围|
+      |NewDateTime time|活动时间范围|
+      |bool ifReview|报名是否需要审核|
+      |bool ifOnlyAsso|是否仅社团成员参加|
+      |int numberOfParticipants|最大参加人数|
+      |int[] materialTemplateIds|材料模板|
+      |string[] tags|标签|
     
-    - Response  
+   - Response  
     
-    |code|description|
-    |---|---|
-    |200|修改成功|
-    |400|修改失败|
+      |code|description|
+      |---|---|
+      |200|修改成功|
+      |400|修改失败|
+   
+   - example
+      - 200
+         ```
+         {
+             "id"： 21，
+             "associationIds": [1,2,...],
+             "createTime": "yyyy-mm-dd",
+             "publishTime": "yyyy-mm-dd",
+             "lastPublishTime": "yyyy-mm-dd",
+             "lastModifyTime": "yyyy-mm-dd",
+             "title": "abc",
+             "content": "qewretrytretyjdhgeewfwqdw",
+             "state": 0/1, (unpublished, published)
+             "signupTime": {
+                 "timeType": 0/1/2,
+                 "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+             },
+             "time": {
+                 "timeType": 0/1/2,
+                 "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+             },
+             "state": 0/1/2/3, (preparing, signup, doing, done)
+             "ifReview: true,
+             "onlyMembers": true,
+             "maxParticipants":30,
+             "materialTemplateIds": [1,2,3],
+             "participantIds: [1,2,3,...],
+             "actualParticipantIds": [1,2,3,...], 
+             "tags": ["tag1", "tag2", ...]
+         }
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
 3. 查询所有活动
-    将筛选条件作为参数传进函数，将符合的所有活动作为结果输出  
+   将筛选条件作为参数传进函数，将符合的所有活动作为结果输出  
 
-    - Http Request  
-    POST /activityManagement/getActivities
+   - Http Request  
+      **GET** `/activities`
 
-    - Body Parameters
+   - Query Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |associationId| 社团ID |
-    |tags|标签|
-    |keyword|内容（简介）|
-    |createTime|创建时间|
-    |signupTime|报名时间|
-    |startTime|开始时间|
-    |numberForEachPage|每页数量|
-    |pageNumber|页号|
-    |string[]|大小为2的列表[活动进度，活动报名进度]|
-    |int sort|排序方式|
-    |bool ifReview|报名是否需要审核|
-    |bool ifOnlyAsso|活动是否仅社团成员可参加|
+      |Parameter|Description|
+      |---|---|
+      |associationId| 社团ID |
+      |tags|标签|
+      |keyword|内容（简介）|
+      |createTime|创建时间|
+      |signupTime|报名时间|
+      |start_time|开始时间|
+      |page_size|每页数量|
+      |page_num|页号|
+      |string[]|大小为2的列表[活动进度，活动报名进度]|
+      |int sort|排序方式|
+      |bool ifReview|报名是否需要审核|
+      |bool ifOnlyAsso|活动是否仅社团成员可参加|
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200-(对应的活动列表)|创建成功|
-    |400-(空列表)|创建失败|
+   - Response  
 
-4. 发布活动
-    即修改活动的发布状态
+      |code|description|
+      |---|---|
+      |200-(对应的活动列表)|创建成功|
+      |400-(空列表)|创建失败|
+   
+   - example
+      - 200
+         ```
+            {
+               [
+                  {
+                     "id"： 21，
+                     "associationIds": [1,2,...],
+                     "createTime": "yyyy-mm-dd",
+                     "publishTime": "yyyy-mm-dd",
+                     "lastPublishTime": "yyyy-mm-dd",
+                     "lastModifyTime": "yyyy-mm-dd",
+                     "title": "abc",
+                     "content": "qewretrytretyjdhgeewfwqdw",
+                     "state": 0/1, (unpublished, published)
+                     "signupTime": {
+                        "timeType": 0/1/2,
+                        "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+                     },
+                     "time": {
+                        "timeType": 0/1/2,
+                        "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+                     },
+                     "state": 0/1/2/3, (preparing, signup, doing, done)
+                     "ifReview: true,
+                     "onlyMembers": true,
+                     "maxParticipants":30,
+                     "materialTemplateIds": [1,2,3],
+                     "participantIds: [1,2,3,...],
+                     "actualParticipantIds": [1,2,3,...], 
+                     "tags": ["tag1", "tag2", ...]
+                  },
+                  {
+                     "id"： 21，
+                     "associationIds": [1,2,...],
+                     "createTime": "yyyy-mm-dd",
+                     "publishTime": "yyyy-mm-dd",
+                     "lastPublishTime": "yyyy-mm-dd",
+                     "lastModifyTime": "yyyy-mm-dd",
+                     "title": "abc",
+                     "content": "qewretrytretyjdhgeewfwqdw",
+                     "state": 0/1, (unpublished, published)
+                     "signupTime": {
+                        "timeType": 0/1/2,
+                        "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+                     },
+                     "time": {
+                        "timeType": 0/1/2,
+                        "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+                     },
+                     "state": 0/1/2/3, (preparing, signup, doing, done)
+                     "ifReview: true,
+                     "onlyMembers": true,
+                     "maxParticipants":30,
+                     "materialTemplateIds": [1,2,3],
+                     "participantIds: [1,2,3,...],
+                     "actualParticipantIds": [1,2,3,...], 
+                     "tags": ["tag1", "tag2", ...]
+                  }
+               ]
+            }
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
-    - Http Request
-    POST /activityManagement/publishActivity
+4. 发布、撤回活动
+   即修改活动的状态
 
-    - Body Parameters
+   - Http Request
+      **PATCH** `/activities/{activityid}`
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
+   - Body Parameters
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200|创建成功|
-    |400|创建失败|
+      |Parameter|Description|
+      |---|---|
+      |string type| 修改类型（publish，withdraw） |
 
-5. 撤回活动
-    - Http Request
-    POST /activityManagement/cancelActivity
+   - Response  
 
-    - Body Parameters
+      |code|description|
+      |---|---|
+      |200|操作成功|
+      |400|操作失败|
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
+   - example
+      - 200
+         ```
+            {
+               "id"： 21，
+               "associationIds": [1,2,...],
+               "createTime": "yyyy-mm-dd",
+               "publishTime": "yyyy-mm-dd",
+               "lastPublishTime": "yyyy-mm-dd",
+               "lastModifyTime": "yyyy-mm-dd",
+               "title": "abc",
+               "content": "qewretrytretyjdhgeewfwqdw",
+               "state": 0/1, (unpublished, published)             "signupTime": {
+                  "timeType": 0/1/2,
+                  "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+               },
+               "time": {
+                  "timeType": 0/1/2,
+                  "time": "yyyy-mm-dd hh:mm - yyyy-mm-dd hh:mm"
+               },
+               "state": 0/1/2/3, (preparing, signup, doing, done)
+               "ifReview: true,
+               "onlyMembers": true,
+               "maxParticipants":30,
+               "materialTemplateIds": [1,2,3],
+               "participantIds: [1,2,3,...],
+               "actualParticipantIds": [1,2,3,...], 
+               "tags": ["tag1", "tag2", ...]
+            }
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "修改失败，请再次尝试。"
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200|撤回成功|
-    |400|撤回失败|
+5. 添加参加者
 
-6. 添加参加者
+   - Http Request
+      **POST** `/activities/{activityid}/participants`
 
-    - Http Request
-    POST /activityManagement/addParticipants
+   - Body Parameters
 
-    - Body Parameters
+      |Parameter|Description|
+      |---|---|
+      |int[] participantsIds|待参加者列表|
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
-    |int[] participantsIds|待参加者列表|
+   - Response  
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200|添加成功|
-    |400|添加失败|
+      |code|description|
+      |---|---|
+      |200|添加成功|
+      |400|添加失败|
 
-7. 添加实际参加者
+   - example
+      - 200
+         ```
+            activity实例，见上
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "添加失败，请再次尝试。"
 
-    - Http Request
-    POST /activityManagement/addRealParticipants
+6. 添加实际参加者
 
-    - Body Parameters
+   - Http Request
+      **POST** `/activities/{activityid}/real_participants`
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
-    |int[] realParticipantsIds|待加入的实际参加者列表|
+   - Body Parameters
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200|添加成功|
-    |400|添加失败|
+      |Parameter|Description|
+      |---|---|
+      |int[] realParticipantsIds|待加入的实际参加者列表|
+
+   - Response
+
+      |code|description|
+      |---|---|
+      |200|添加成功|
+      |400|添加失败|
+
+   - example
+      - 200
+         ```
+            activity实例，见上
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "添加失败，请再次尝试。"
 
 8. 移除参加者
 
-    - Http Request
-    POST /activityManagement/removeParticipants
+   - Http Request
+      **DELETE** `/activities/{activityid}/participants`
 
-    - Body Parameters
+   - Body Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
-    |int[] participantsIds|待移除参加者列表|
+      |Parameter|Description|
+      |---|---|
+      |int[] participantsIds|待移除参加者列表|
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200|移除成功|
-    |400|移除失败|
+   - Response  
+
+      |code|description|
+      |---|---|
+      |200|移除成功|
+      |400|移除失败|
+
+   - example
+      - 200
+         ```
+            activity实例，见上
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
 9. 查询参加者
 
-    - Http Request
-    POST /activityManagement/getParticipants
+   - Http Request
+      **GET** `/activities/{activityid}/participants`
 
-    - Body Parameters
+   - Query Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
+      |Parameter|Description|
+      |---|---|
+      |user_id|用户ID|
+      |page_num|页码|
+      |page_size|每页数量|
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200-（参加者列表）|查询成功|
-    |400-（空列表）|查询失败|
+   - Response  
+
+      |code|description|
+      |---|---|
+      |200-（参加者列表）|查询成功|
+      |400|查询失败|
+
+   - example
+      - 200
+         ```
+            {
+               "participantIds": [1,2,3,...]
+            }
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
 10. 查询实际参加者
 
-    - Http Request
-    POST /activityManagement/getRealParticipants
+   - Http Request  
+   **GET** `/activities/{activityid}/real_participants`
 
-    - Body Parameters
+   - Query Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
+      |Parameter|Description|
+      |---|---|
+      |user_id|用户ID|
+      |page_num|页码|
+      |page_size|每页数量|
 
-    - Response  
-    
-    |code|description|
-    |---|---|
-    |200-（实际参加者列表）|查询成功|
-    |400-（空列表）|查询失败|
+   - Response  
 
-11. 查询参加者数量
-    - Http Request
-    POST /activityManagement/getParticipantsNumber
+      |code|description|
+      |---|---|
+      |200-（实际参加者列表）|查询成功|
+      |400-（空列表）|查询失败|
 
-    - Body Parameters
+   - example
+      - 200
+         ```
+            {
+               "real_participantIds": [1,2,3,...]
+            }
+         ```
+      - 400
+         - error: "invalid " + 实际错误信息
+         - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
-
-    - Response  
-
-    |code|description|
-    |---|---|
-    |200-（数量）|查询成功|
-    |400-（-1）|查询失败|
-
-12. 是否是参加者
-    - Http Request
-    POST /activityManagement/ifParticipant
-
-    - Body Parameters
-
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
-    |int userId| 用户ID |
-
-    - Response  
-
-    |code|description|
-    |---|---|
-    |200-（是否）|查询成功|
-    |400-（-1）|查询失败|
-
-13. 是否是实际参加者
-    - Http Request
-    POST /activityManagement/ifRealParticipant
-
-    - Body Parameters
-
-    |Parameter|Description|
-    |---|---|
-    |int activityId| 活动ID |
-    |int userId| 用户ID |
-
-    - Response  
-
-    |code|description|
-    |---|---|
-    |200-（是否）|查询成功|
-    |400-（-1）|查询失败|
 
 14. 活动报名申请回调
 
-    - Http Request
-    POST /activityManagement/acceptSignUp
+   - Http Request  
+   **POST** `/callback/accept_signup`
 
-    - Body Parameters
+   - Body Parameters
 
-    |Parameter|Description|
-    |---|---|
-    |int operatorId| 操作者ID |
-    |string action| 操作 |
-    |SignUp signup|申请|
+      |Parameter|Description|
+      |---|---|
+      |int operatorId| 操作者ID |
+      |string action| 操作 |
+      |SignUp signup|申请|
 
-    - Response  
+   - Response
 
-    |code|description|
-    |---|---|
-    |200|回调成功|
-    |400|回调失败|
+      |code|description|
+      |---|---|
+      |200|回调成功|
+      |400|回调失败|
 
-    - 输入
-        - 操作者ID
-        - 操作
-        - 申请
-            - 申请ID
-            - 申请者ID
-            - 申请类型
-            - Object
-                - 活动ID
-            - 材料列表
-            - 申请时间
-            - 处理时间
-            - 申请状态   
-    - 输出
-        - 200
-        - 403
-            - error: "ywe"
-            - message: "操作者没有权限"
+   - example
+      - 200
+         - 
+      - 403
+         - error: "ywe"
+         - message: "操作者没有权限"
+
+   - 输入
+      - 操作者ID
+      - 操作
+      - 申请
+         - 申请ID
+         - 申请者ID
+         - 申请类型
+         - Object
+            - 活动ID
+         - 材料列表
+         - 申请时间
+         - 处理时间
+         - 申请状态   
+   - 输出
+      - 200
+         - 
+      - 403
+         - error: "ywe"
+         - message: "操作者没有权限"
