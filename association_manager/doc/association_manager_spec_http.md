@@ -12,7 +12,7 @@
       |`logo` string  | 社团图标 |
       |`tags` List<string> | 社团标签 |
 		
-      |`block_state` int | 社团是否封禁 |
+      |`blockState` int | 社团是否封禁 |
       |`reason` string | 封禁理由 | 
 
 
@@ -38,12 +38,12 @@
    |Parameter | Description |
    |---|---|
    |`keyword` string| 搜索关键词 |
-	|`tags` string[] | 社团标签 |
-   |`block_state` int| 封禁状态 |
+   |`tags` string[] | 社团标签 |
+   |`blockState` int| 封禁状态 |
     
 - Response  
 
-	|Code|Description|
+   |Code|Description|
    |--|--|
    |200 [_Association_](#Association)|成功|
    |400 [_ErrorResponse_](#ErrorResponse)|_invalid_format_: 无效的格式|
