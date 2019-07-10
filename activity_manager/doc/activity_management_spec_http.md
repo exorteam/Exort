@@ -285,9 +285,9 @@
 
       |Parameter|Description|
       |---|---|
-      |int[] participantsIds|待参加者列表|
+      |int[] participantIds|待参加者列表|
 
-   - Response  
+   - Response
 
       |code|description|
       |---|---|
@@ -341,7 +341,7 @@
       |---|---|
       |int[] participantsIds|待移除参加者列表|
 
-   - Response  
+   - Response
 
       |code|description|
       |---|---|
@@ -366,9 +366,14 @@
 
       |Parameter|Description|
       |---|---|
-      |user_id|用户ID|
-      |page_num|页码|
-      |page_size|每页数量|
+      |pageNum|页码|
+      |pageSize|每页数量|
+
+   - Body Parameters
+
+      |Parameter|Description|
+      |---|---|
+      |userId|用户ID|
 
    - Response  
 
@@ -396,15 +401,20 @@
 
       |Parameter|Description|
       |---|---|
-      |user_id|用户ID|
-      |page_num|页码|
-      |page_size|每页数量|
+      |pageNum|页码|
+      |pageSize|每页数量|
+
+   - Body Parameters
+
+      |Parameter|Description|
+      |---|---|
+      |userId|用户ID|
 
    - Response  
 
       |code|description|
       |---|---|
-      |200-（实际参加者列表）|查询成功|
+      |200-（实际参加者ID列表）|查询成功|
       |400-（空列表）|查询失败|
 
    - example
