@@ -135,20 +135,20 @@
 
    - Query Parameters
 
-      |Parameter|Description|default|
+      |Parameter|Description|default Value|
       |---|---|---|
       |associationId| 社团ID |创建者|
-      |tags|标签|
-      |keyword|内容（简介）|
-      |createTime|创建时间|
-      |signupTime|报名时间|
-      |start_time|开始时间|
-      |page_size|每页数量|
-      |page_num|页号|
-      |string[]|大小为2的列表[活动进度，活动报名进度]|
-      |int sort|排序方式|
-      |bool ifReview|报名是否需要审核|
-      |bool ifOnlyAsso|活动是否仅社团成员可参加|
+      |tags|标签|[](空列表)|
+      |keyword|内容（简介）|""|
+      |createTime|创建时间|""|
+      |signupTime|报名时间|""|
+      |start_time|开始时间|""|
+      |page_size|每页数量|10|
+      |page_num|页号|1|
+      |string[]|大小为2的列表[活动进度，活动报名进度]|["",""]|
+      |int sort|排序方式|0|
+      |bool ifReview|报名是否需要审核|true|
+      |bool ifOnlyAsso|活动是否仅社团成员可参加|false|
 
    - Response  
 
@@ -306,7 +306,7 @@
 6. 添加实际参加者
 
    - Http Request
-      **POST** `/activities/{activityid}/real_participants`
+      **POST** `/activities/{activityid}/realparticipants`
 
    - Body Parameters
 
@@ -330,7 +330,7 @@
          - error: "invalid " + 实际错误信息
          - message: "yyyy/mm/dd" + "添加失败，请再次尝试。"
 
-8. 移除参加者
+7. 移除参加者
 
    - Http Request
       **DELETE** `/activities/{activityid}/participants`
@@ -357,7 +357,7 @@
          - error: "invalid " + 实际错误信息
          - message: "yyyy/mm/dd" + "参数时间设置错误，请修改时间参数后重新操作。"
 
-9. 查询参加者
+8. 查询参加者
 
    - Http Request
       **GET** `/activities/{activityid}/participants`
@@ -387,7 +387,7 @@
          []
          ```
 
-10. 查询实际参加者
+9. 查询实际参加者
 
    - Http Request  
    **GET** `/activities/{activityid}/real_participants`
@@ -417,7 +417,7 @@
          []
          ```
 
-14. 活动报名申请回调
+10. 活动报名申请回调
 
    - Http Request  
    **POST** `/callback/accept_signup`
