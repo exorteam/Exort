@@ -3,6 +3,7 @@ package exort.associationmanager.serviceimpl;
 import java.util.Date;
 import java.util.List;
 
+import exort.associationmanager.entity.Application;
 import exort.associationmanager.repository.AssociationApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,67 +64,23 @@ public class AssociationServiceImpl implements AssociationService{
 
     };
 
-    public  boolean createAssociationApplication(String name,String description,String tags[],String logo,String materials[]){
+    public List<Association> listAllBlockedAssociation(){
 
     };
 
-    public  boolean applyUnblockAssociation(int assoId,String reason,int applicantId){
+    public List<Association> listAllUnblockedAssociation(){
 
     };
 
-    public  List<AssociationApplication> listAssociationApplication(AssociationApplicationFilterParams params){
-        List<Association> articles = assoRepository.findAll();
-
-        Integer state = params.getState();
-        if(state != null){
-            articles.removeIf(article -> !state.equals(article.getState()));
-            if(articles.isEmpty())return articles;
-        }
-
-        Integer createMethod = params.getCreateMethod();
-        if(createMethod != null){
-            articles.removeIf(article -> !createMethod.equals(article.getCreateMethod()));
-            if(articles.isEmpty())return articles;
-        }
-
-        Date startTime = params.getStartTime();
-        if(startTime != null){
-            articles.removeIf(article -> startTime.after(article.getLastPublishTime()));
-            if(articles.isEmpty())return articles;
-        }
-
-        Date endTime = params.getEndTime();
-        if(endTime != null){
-            articles.removeIf(article -> endTime.before(article.getLastPublishTime()));
-            if(articles.isEmpty())return articles;
-        }
-
-        String keyword = params.getKeyword();
-        if(keyword != null){
-            articles.removeIf(article -> !article.getTitle().contains(keyword)||!article.getContent().contains(keyword));
-            if(articles.isEmpty())return articles;
-        }
-
-        Integer authorId = params.getAuthorId();
-        if(authorId != null){
-            articles.removeIf(article -> !article.getAuthors().contains(authorId));
-            if(articles.isEmpty())return articles;
-        }
-
-        return articles;
-    };
-
-    public  boolean approveApplication(int appId){
+    public  boolean handleCreateAsoociationApplication(Integer user_id, Integer type, Application app ){
 
     };
 
-    public  boolean refuseApplication(int appId){
-
+    public  boolean handleUnblockAsoociationApplication(Integer user_id, Integer type, Application app ){
+        
     };
 
-    public  boolean cancelApplication(int appId){
 
-    };
 
 
 }

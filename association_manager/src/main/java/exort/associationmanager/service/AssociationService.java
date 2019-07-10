@@ -5,6 +5,7 @@ import java.util.List;
 
 //import ......Materials
 
+import exort.associationmanager.entity.Application;
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
 
@@ -21,5 +22,12 @@ public interface AssociationService{
 
     public  boolean unblockAssciation(int assoId);
 
-    public boolen
+    public List<Association> listAllBlockedAssociation();
+
+    public List<Association> listAllUnblockedAssociation();
+
+    public  boolean handleCreateAsoociationApplication(Integer user_id, Integer type, Application app );
+
+    public  boolean handleUnblockAsoociationApplication(Integer user_id, Integer type, Application app );
+
 }
