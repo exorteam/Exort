@@ -17,5 +17,9 @@ public class Association {
 	private List<String> tags;
 	private Integer state; //blocked,active
 
+	public boolean hasTags(List<String> in_tags){
+
+	};
+
 
 }

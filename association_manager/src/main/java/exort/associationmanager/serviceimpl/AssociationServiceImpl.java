@@ -20,28 +20,28 @@ public class AssociationServiceImpl implements AssociationService{
     private AssociationApplicationRepository assoAppRepository;
 
     public List<Association> listAssociation(AssociationFilterParams params){
-        List<Association> articles = assoRepository.findAll();
+        List<Association> associations = assoRepository.findAll();
 
         Integer state = params.getState();
 
         if(state != null){
-            articles.removeIf(article -> !state.equals(article.getState()));
-            if(articles.isEmpty())return articles;
+            associations.removeIf(association -> !state.equals(association.getState()));
+            if(associations.isEmpty())return associations;
         }
 
         String keyword = params.getKeyword();
         if(keyword != null){
-            articles.removeIf(article -> !article.getTitle().contains(keyword)||!article.getContent().contains(keyword));
-            if(articles.isEmpty())return articles;
+            associations.removeIf(association -> !association.getName().contains(keyword)||!association.getDescription().contains(keyword));
+            if(associations.isEmpty())return associations;
         }
 
-        Integer authorId = params.getAuthorId();
-        if(authorId != null){
-            articles.removeIf(article -> !article.getAuthors().contains(authorId));
-            if(articles.isEmpty())return articles;
+        List<String> tags = params.getTags();
+        if(tags != null){
+            associations.removeIf(association -> haveTags(tags));
+            if(associations.isEmpty())return associations;
         }
 
-        return articles;
+        return associations;
     };
 
     public Association createAssociation(String name,String description,String tags[],String logo){

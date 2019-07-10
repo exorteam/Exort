@@ -3,13 +3,13 @@ package exort.associationmanager.entity;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class AssociationFilterParams {
 
 	private String keyword;
-	private String name;
-	private String description;
-	private String tags[];
+	private List<String> tags;
 	private Integer state;
 
 
