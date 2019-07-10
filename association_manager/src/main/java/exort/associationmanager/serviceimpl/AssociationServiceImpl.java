@@ -3,8 +3,6 @@ package exort.associationmanager.serviceimpl;
 import java.util.Date;
 import java.util.List;
 
-import exort.associationmanager.entity.AssociationApplication;
-import exort.associationmanager.entity.AssociationApplicationFilterParams;
 import exort.associationmanager.repository.AssociationApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

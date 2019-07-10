@@ -2,7 +2,6 @@ package exort.associationmanager.controller;
 
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
-import exort.associationmanager.entity.AssociationApplication;
 import exort.associationmanager.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,6 @@ public class AssociationController{
     @PostMapping("/create")
     public Association createArticle(@RequestBody Association asso){
         return service.createAssociation(asso);
-    }
-
-    @PostMapping("/create_application")
-    public Association CreateAssociationApplication(@RequestBody AssociationApplication assoApp){
-        return service.CreateAssociationApplication(assoApp);
     }
 
     @GetMapping("/delete")

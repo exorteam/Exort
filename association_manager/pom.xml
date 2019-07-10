@@ -11,7 +11,7 @@
 	<groupId>exort</groupId>
 	<artifactId>associationmanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>articlemanager</name>
+	<name>associationmanager</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
