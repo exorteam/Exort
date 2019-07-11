@@ -28,7 +28,7 @@
 
 - HTTP Request
 
-  **GET** `/association-member-manager/departments/{applicationId}`
+  **GET** `/associations/{associationId}/departments`
 
 - Path Parameters
 
@@ -38,14 +38,14 @@
 
 - Reponse
 
-  | Code                              | Description                |
-  | --------------------------------- | -------------------------- |
-  | 200 [*Department[]*](#Department) | 查询成功, 返回列表可能为空 |
+  | Code                              | Description                                        |
+  | --------------------------------- | -------------------------------------------------- |
+  | 200 [*Department[]*](#Department) | 查询成功, 返回列表(至少有两个，有管理层和普通成员) |
 
 - Examples
 
   ```json
-  >>> GET /association-member-manager/departments/271
+  >>> GET /associations/271/departments
   
   <<< 200
   {
@@ -70,22 +70,12 @@
   }
   ```
 
-  ```json
-  >>> GET /association-member-manager/departments/7810212
-  
-  <<< 200
-  {
-    "data": [],
-    "error": "",
-    "message": ""
-  }
-  ```
 
 ### 得到某个部门的信息
 
 - HTTP Request
 
-  **GET** `/association-member-manager/departments/{applicationId}/{departmentId}`
+  **GET** `/associations/{associationId}/departments/{departmentId}`
 
 - Path Parameters
 
@@ -99,12 +89,12 @@
   | Code                            | Description  |
   | ------------------------------- | ------------ |
   | 200 [_Department_](#Department) | 查询成功     |
-  | 404 "notFound"                  | 不存在该部门 |
+  | 404 "departmentNotFound"        | 不存在该部门 |
 
 - Examples
 
   ```json
-  >>> GET /association-member-manager/departments/271/1
+  >>> GET /associations/271/departments/1
   
   <<< 200
   {
@@ -121,12 +111,12 @@
   ```
 
   ```json
-  >>> GET /association-member-manager/departments/271/100
+  >>> GET /associations/271/departments/1
   
   <<< 404
   {
       "data":null,
-      "error":"notFound",
+      "error":"departmentNotFound",
     	"message":"不存在该申请"
   }
   ```
@@ -135,30 +125,34 @@
 
 - HTTP Request
 
-  **POST** `/association-member-manager/departments`
+  **POST** `/associations/{associationId}/departments`
 
+- Path Parameters
+
+  | Parameter           | Description                                 |
+  | ------------------- | ------------------------------------------- |
+  | `associationId` int | 社团ID (应为已存在社团ID，否则为BadRequest) |
+  
 - Body Parameters
 
   | Parameter            | Description                                     |
   | -------------------- | ----------------------------------------------- |
-  | `associationId` int  | 社团ID (应为已存在社团ID，否则为BadRequest)     |
   | `name` string        | 部门名称                                        |
   | `description` string | 部门描述                                        |
   | `parentId` int       | 部门父节点 (应为已存在部门ID，否则为BadRequest) |
-
+  
 - Response
 
   | Code                            | Description        |
   | ------------------------------- | ------------------ |
   | 201 [_Department_](#Department) | 成功               |
-  | 400 "BadRequest"                | 部门创建信息不合法 |
+  | 400 "InvalidDepatment"          | 部门创建信息不合法 |
 
 - Examples
 
   ```json
-  >>> POST /association-member-manager/departments
+  >>> POST /associations/26/departments
   {
-    	"applicantId": 26,
     	"name": "asfaasd",
     	"description": "asfqwd",
       "parentId":2
@@ -178,11 +172,10 @@
     "message": ""
   }
   ```
-
-  ```json
-  >>> POST /association-member-manager/departments
+  
+```json
+  >>> POST /associations/26/departments
   {
-    "applicantId": 26,
     "name": "asfaasd",
     "description": "asfqwd",
     "parentId":100
@@ -201,9 +194,9 @@
 
 - HTTP Request
 
-  **DELETE** `/association-member-manager/departments`
+  **DELETE** `/associations/{associationId}/departments/{departmentId}`
 
-- Body Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
@@ -215,16 +208,13 @@
   | Code                            | Description                  |
   | ------------------------------- | ---------------------------- |
   | 200 [_Department_](#Department) | 删除成功，返回删除的部门信息 |
-  | 404 "notFound"                  | 不存在该部门                 |
+  | 404 "DepartmentNotFound"        | 不存在该部门                 |
 
 - Examples
 
   ```
-  >>> Delete /association-member-manager/departments
-  {
-  	"associationId":1,
-  	"departmentId":2
-  }
+  >>> Delete /associations/1/departments/2
+  
   
   <<< 200
   {
@@ -239,18 +229,15 @@
     "message":"",
   }
   ```
-
+  
   ```json
-  >>> POST /association-member-manager/departments
-  {
-  	"associationId":1,
-  	"departmentId":23165
-  }
+  >>> POST /associations/1/departments/23156
+
   
   <<< 404
   {
     "data": null,
-    "error": "notFound",
+    "error": "DepartmentNotFound",
     "message": "该部门不存在"
   }
   ```
@@ -259,33 +246,37 @@
 
 - HTTP Request
 
-  **PUT** `/association-member-manager/departments`
+  **PUT** `/associations/{associationId}/departments/{departmentId}`
+
+- Path Parameters
+
+  | Parameter           | Description |
+  | ------------------- | ----------- |
+  | `associationId` int | 社团ID      |
+  | `departmentId` int  | 部门ID      |
 
 - Body Parameters
 
   | Parameter            | Description                      |
   | -------------------- | -------------------------------- |
-  | `associationId` int  | 社团ID                           |
-  | `departmentId` int   | 部门ID                           |
   | `name` string        | 部门名称                         |
   | `description` string | 部门描述                         |
   | `parentId` int       | 父节点部门ID（应为已存在部门ID） |
-
+  
 - Response
 
   | Code                            | Description                    |
   | ------------------------------- | ------------------------------ |
   | 200 [_Department_](#Department) | 编辑成功，返回编辑后的部门信息 |
-  | 400 "BadRequest"                | 修改的部门信息不合法           |
-  | 404 "notFound"                  | 不存在该部门                   |
+  | 400 "InvalidDepartment"         | 修改的部门信息不合法           |
+  | 400 "InvalidParentId"           | 无效父节点                     |
+  | 404 "DepartmentNotFound"        | 不存在该部门                   |
 
 - Example
 
   ```json
-  >>> PUT /association-member-manager/departments
+  >>> PUT /associations/1/departments/2
   {
-  	"associationId":1,
-  	"departmentId":2,
       "name":"asfawd",
       "description":"asfqwdw",
       "parentId":0
@@ -304,12 +295,10 @@
     "message":"",
   }
   ```
-
+  
   ```json
-  >>> PUT /association-member-manager/departments
+>>> PUT /associations/1/departments/23515
   {
-  	"associationId":1,
-  	"departmentId":23515,
       "name":"asfawd",
       "description":"asfqwdw",
       "parentId":0
@@ -318,17 +307,15 @@
   <<< 404
   {
     "data":null,
-    "error":"notFound",
+    "error":"DepartmentNotFound",
     "message":"不存在该部门",
   }
   ```
-
+  
   ```json
-  >>> PUT /association-member-manager/departments
+  >>> PUT /associations/1/departments/2
   {
-  	"associationId":1,
-  	"departmentId":2,
-      "name":"asfawd",
+    "name":"asfawd",
       "description":"asfqwdw",
       "parentId":321515
   }
@@ -336,26 +323,36 @@
   <<< 400
   {
     "data":null,
-    "error":"BadRequest",
+    "error":"InvalidParentId",
+    "message":"无效父节点",
+  }
+  ```
+  
+  ```json
+  >>> PUT /associations/1/departments/2213124
+  {
+      "name":"asfawd",
+      "description":"asfqwdw",
+      "parentId":2
+  }
+  
+  <<< 400
+  {
+    "data":null,
+    "error":"InvalidDepartment",
     "message":"修改的部门信息不合法",
   }
   ```
+  
+  
 
 ### 得到某个部门的成员列表
 
 - HTTP Request
 
-  **GET** `/association-member-manager/members`
+  **GET** `/asssociations/{associationId}/departments/{departmentId}/members`
 
-- Query Parameters
-
-  | Parameter      | Description                                                  |
-  | -------------- | ------------------------------------------------------------ |
-  | `pageNum` int  | 页码, 默认为0                                                |
-  | `pageSize` int | 每页数量, 默认为20                                           |
-  | `sortBy`       | 排序方式, 可以为 _createdTime_, _handledTime_, _object.userDefinedField_, 默认为 _createdTime_ |
-
-- Body Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
@@ -364,20 +361,15 @@
   
 - Response
 
-  | Code                 | Description                                |
-  | -------------------- | ------------------------------------------ |
-  | 200 `userId[]` int[] | 请求成功，返回用户ID列表(用户列表可能为空) |
-  | 404 "notFound"       | 不存在该部门                               |
+  | Code                     | Description                                  |
+  | ------------------------ | -------------------------------------------- |
+  | 200 `userId[]` int[]     | 请求成功，返回用户ID列表(用户列表不可能为空) |
+  | 404 "DepartmentNotFound" | 不存在该部门                                 |
 
 - Example
 
   ```json
-  >>> GET /association-member-manager/members?pageSize=2&pageNum=0&sortBy=createdTime
-  {
-  	"associationI":1,
-  	"departmentI":2,
-  }
-  
+  >>> GET /asssociations/1/departments/2/members
   
   <<< 200
   {
@@ -388,31 +380,13 @@
   ```
   
   ```json
-  >>> GET /association-member-manager/members
-  {
-  	"associationI":1,
-  	"departmentI":3,
-}
-  <<< 200
-  {
-    "data":[],
-    "error":"",
-    "message":"",
-  }
-  ```
-  
-  ```json
-  >>> GET /association-member-manager/members
-  {
-  	"associationI":1,
-  	"departmentI":22141,
-  }
+  >>> GET /asssociations/1/departments/31412/members
   
   <<< 404
   {
     "data":null,
-    "error":"notFound",
-    "message":"不存在该部门或者社团",
+    "error":"DepartmentNotFound",
+    "message":"不存在该部门",
   }
   ```
 
@@ -420,9 +394,9 @@
 
 - HTTP Request
 
-  **DELETE** `/association-member-manager/members`
+  **DELETE** `/associations/{assoicationId}/departments/{departmentId}/members/{userId}`
 
-- Body Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
@@ -432,21 +406,19 @@
 
 - Response
 
-  | Code                | Description                |
-  | ------------------- | -------------------------- |
-  | 200 true            | 请求成功，并且成功删除用户 |
-  | 400 “InvalidUserId” | 部门中不存在该用户         |
-  | 404 "notFound"      | 不存在该部门或者社团       |
+  | Code                      | Description                |
+  | ------------------------- | -------------------------- |
+  | 200 true                  | 请求成功，并且成功删除用户 |
+  | 400 “InvalidUserId”       | 不存在该用户               |
+  | 404 "DepartmentNotFound"  | 不存在该部门               |
+  | 404 "AssociationNotFound" | 不存在该社团               |
+  | 404 "UserNotFound"        | 社团中不存在该用户         |
 
 - Example
 
   ```json
-  >>> DELETE /association-member-manager/members
-  {
-      "associationId":1,
-      "departmentId":2,
-      "userId":20
-  }
+  >>> DELETE /associations/1/departments/2/members/20
+  
   
   <<< 200
   {
@@ -455,68 +427,86 @@
       "message":""
   }
   ```
-
-  ```json
-  >>> DELETE /association-member-manager/members
-  {
-      "associationId":1,
-      "departmentId":2,
-      "userId":20151
-  }
   
-  <<< 400
+  ```json
+  >>> DELETE /associations/1/departments/2/members/205186
+  
+<<< 400
   {
       "data":null,
       "error":"InvalidUserId",
       "message":"部门中不存在该用户"
   }
   ```
-
+  
   ```json
-  >>> DELETE /association-member-manager/members
-  {
-      "associationId":1,
-      "departmentId":23561,
-      "userId":20
-  }
+  >>> DELETE /associations/1/departments/2516651/members/20
   
   <<< 404
   {
       "data":null,
-      "error":"notFound",
-      "message":"不存在该部门或者社团"
+      "error":"DepartmentNotFound",
+      "message":"不存在该部门"
+}
+  ```
+  
+  ```json
+  >>> DELETE /associations/1123123/departments/2/members/20
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"AssociationNotFound",
+      "message":"不存在该社团"
   }
   ```
+  
+  ```json
+  >>> DELETE /associations/1/departments/2/members/22
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"UserNotFound",
+      "message":"社团中不存在该用户"
+  }
+  ```
+  
+  
 
 ### 为某个部门添加成员
 
 - HTTP Request
 
-  **POST** `/association-member-manager/members`
+  **POST** `/associations/{associationId}/departments/{departmentId}/members`
 
-- Body Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
   | `associationId` int | 社团ID      |
   | `departmentId` int  | 部门ID      |
-  | `userId` int        | 用户ID      |
+  
+- Body Parameters
 
+  | Parameter    | Description |
+  | ------------ | ----------- |
+  | `userId` int | 用户ID      |
+  
 - Response
 
-  | Code                | Description                        |
-  | ------------------- | ---------------------------------- |
-  | 200 true            | 请求成功，并且成功在部门中添加用户 |
-  | 400 “InvalidUserId” | 部门中不存在该用户                 |
-  | 404 "notFound"      | 不存在该部门或者社团               |
+  | Code                      | Description                        |
+  | ------------------------- | ---------------------------------- |
+  | 200 true                  | 请求成功，并且成功在部门中添加用户 |
+  | 400 “InvalidUserId”       | 不存在该用户                       |
+  | 404 "AssociationNotFound" | 不存在该社团                       |
+  | 404 "DepartmentNotFound"  | 不存在该部门                       |
 
 - Example
 
   ```json
-  >>> POST /association-member-manager/members
+  >>> POST /associations/1/departments/2/members
   {
-      "associationId":1,
-      "departmentId":2,
       "userId":20
   }
   
@@ -527,29 +517,42 @@
       "message":""
   }
   ```
-
+  
   ```json
-  >>> POST /association-member-manager/members
+>>> POST /associations/123/departments/2/members
   {
-      "associationId":1,
-      "departmentId":3515,
       "userId":20
   }
   
   <<< 404
   {
       "data":null,
-      "error":"notFound",
-      "message":"不存在该部门或者社团"
+      "error":"AssociationNotFound",
+      "message":"不存在该社团"
   }
   ```
-
+  
   ```json
-  >>> POST /association-member-manager/members
+  >>> POST /associations/1/departments/21412/members
   {
-      "associationId":1,
-      "departmentId":2,
-      "userId":20151
+    "userId":20
+  }
+  
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"DepartmentNotFound",
+      "message":"不存在该部门"
+  }
+  ```
+  
+  
+  
+  ```json
+  >>> POST /associations/1/departments/21412/members
+  {
+      "userId":202312
   }
   
   <<< 400
@@ -564,28 +567,30 @@
 
 - HTTP Request
 
-  **GET** `/association-member-manager/permissions`
+  **GET** `/associations/{associationId}/members/{userId}/permissions/{permission}`
 
-- Query Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
   | `associationId` int | 社团ID      |
   | `userId` int        | 用户ID      |
-  | `permissionId` int  | 用户权限    |
+  | `permission` string | 用户权限    |
 
 - Response
 
-  | Code                | Description                    |
-  | ------------------- | ------------------------------ |
-  | 200 true/false      | 请求成功，返回是否拥有这个权限 |
-  | 400 “InvalidUserId” | 不存在该用户                   |
-  | 404 "notFound"      | 不存在该社团                   |
+  | Code                      | Description      |
+  | ------------------------- | ---------------- |
+  | 200 true                  | 请求成功         |
+  | 400 “InvalidUserId”       | 不存在该用户     |
+  | 404 "AssociationNotFound" | 不存在该社团     |
+  | 404 "UserNotFound"        | 用户不在该社团中 |
+  | 404 "PermissionNotFound"  | 没有该权限       |
 
 - Example
 
   ```json
-  >>> GET /association-member-manager/permissions?associationId=1&userId=20&permissionId=2
+  >>> GET /associations/1/members/2/permissions/read
   
   <<< 200
   {
@@ -596,18 +601,42 @@
   ```
 
   ```json
-  >>> GET /association-member-manager/permissions?associationId=656151&userId=20&permissionId=2
+  >>> GET associations/1322/members/2/permissions/read
   
   <<< 404
   {
       "data":null,
-      "error":"notFound",
+      "error":"AssociationNotFound",
       "message":"不存在该社团"
   }
   ```
 
   ```json
-  >>> GET /association-member-manager/permissions?associationId=1&userId=10521526&permissionId=2
+  >>> GET associations/1/members/22/permissions/read
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"UserNotFound",
+      "message":"用户不在该社团中"
+  }
+  ```
+  
+  ```json
+  >>> GET associations/1/members/2/permissions/read
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"PermissionNotFound",
+      "message":"没有该权限"
+  }
+  ```
+  
+  
+  
+  ```json
+  >>> GET associations/1/members/2214/permissions/read
   
   <<< 400
   {
@@ -621,9 +650,9 @@
 
 - HTTP Request
 
-  **GET** `/association-member-manager/get-user-associations`
+  **GET** `/users/{userId}/associations`
 
-- Query Parameters
+- Path Parameters
 
   | Parameter    | Description |
   | ------------ | ----------- |
@@ -631,15 +660,15 @@
 
 - Response
 
-  | Code                        | Description                        |
-  | --------------------------- | ---------------------------------- |
-  | 200 `associationId[]` int[] | 请求成功，返回社团ID列表(可能为空) |
-  | 400 “InvalidUserId”         | 不存在该用户                       |
+  | Code                        | Description  |
+  | --------------------------- | ------------ |
+  | 200 `associationId[]` int[] | 请求成功     |
+  | 400 “InvalidUserId”         | 不存在该用户 |
 
 - Example
 
   ```json
-  >>> GET /association-member-manager/permissions?userId=20
+  >>> GET /users/20/associations
   
   <<< 200
   {
@@ -650,18 +679,7 @@
   ```
 
   ```json
-  >>> GET /association-member-manager/permissions?userId=12
-  
-  <<< 200
-  {
-      "data":[],
-      "error":"",
-      "message":""
-  }
-  ```
-
-  ```json
-  >>> GET /association-member-manager/permissions?userId=20000
+  >>> GET /users/200000/associations
   
   <<< 400
   {
@@ -675,9 +693,9 @@
 
 - HTTP Request
 
-  **GET** `/association-member-manager/get-user-departments`
+  **GET** `/users/{userId}/associations/{associationId}/departments`
 
-- Query Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
@@ -686,29 +704,30 @@
 
 - Response
 
-  | Code                              | Description                        |
-  | --------------------------------- | ---------------------------------- |
-  | 200 [*Department[]*](#Department) | 请求成功，返回社团ID列表(可能为空) |
-  | 400 “InvalidUserId”               | 不存在该用户                       |
-  | 404 "notFound"                    | 不存在该社团                       |
+  | Code                              | Description        |
+  | --------------------------------- | ------------------ |
+  | 200 [*Department[]*](#Department) | 请求成功           |
+  | 400 “InvalidUserId”               | 不存在该用户       |
+  | 400 "InvalidAssociationId"        | 不存在该社团       |
+  | 404 "UserNotFound"                | 用户没有参与该社团 |
 
 - Example
 
   ```json
-  >>> GET /association-member-manager/get-user-departments?userId=20&associationId=271
+  >>> GET /users/1/associations/21/departments
   
   <<< 200
   {
       "data":[
         {
-            "associationId":271,
+            "associationId":21,
             "departmentId":1,
             "name":"asda",
             "description":"safda",
             "parentId":0
         },
         {
-            "associationId":271,
+            "associationId":21,
             "departmentId":2,
             "name":"sfas",
             "description":"asfe",
@@ -721,18 +740,7 @@
   ```
 
   ```json
-  >>> GET /association-member-manager/get-user-departments?userId=20&associationId=272
-  
-  <<< 200
-  {
-      "data":[],
-      "error":"",
-      "message":""
-  }
-  ```
-
-  ```json
-  >>> GET /association-member-manager/get-user-departments?userId=212220&associationId=2
+  >>> GET /users/112312/associations/21/departments
   
   <<< 400
   {
@@ -743,23 +751,36 @@
   ```
 
   ```json
-  >>> GET /association-member-manager/get-user-departments?userId=20&associationId=21231
+  >>> GET /users/1/associations/2123123/departments
+  
+  <<< 400 
+  {
+      "data":null,
+      "error":"AssociationNotFound",
+      "message":"不存在该社团"
+  }
+  ```
+
+  ```json
+  >>> GET /users/1/associations/2/departments
   
   <<< 404
   {
       "data":null,
-      "error":"notFound",
-      "message":"不存在该社团"
+      "error":"UserNotFound",
+      "message":"用户没有参与该社团"
   }
   ```
+  
+  
 
 ### 将成员从社团中删除
 
 - HTTP Request
 
-  **DELETE** `/association-member-manager/delete-association-user`
+  **DELETE** `/associations/{associationId}/members/{userId}`
 
-- Body Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
@@ -768,86 +789,93 @@
 
 - Response
 
-  | Code                | Description                |
-  | ------------------- | -------------------------- |
-  | 200 true            | 请求成功，并且成功删除用户 |
-  | 400 “InvalidUserId” | 社团中不存在该用户         |
-  | 404 "notFound"      | 不存在该社团               |
+  | Code                      | Description                |
+  | ------------------------- | -------------------------- |
+  | 200 {}                    | 请求成功，并且成功删除用户 |
+  | 400 “InvalidUserId”       | 不存在该用户               |
+  | 404 "UserNotFound"        | 社团中不存在该用户         |
+  | 404 "AssociationNotFound" | 不存在该社团               |
 
 - Example
 
   ```json
-  >>> DELETE /association-member-manager/delete-association-user
-  {
-      "associationId":1,
-      "userId":20
-  }
+  >>> DELETE /associations/1/members/20
+  
   
   <<< 200
   {
-      "data":true,
+      "data":{},
       "error":"",
       "message":""
   }
   ```
-
-  ```json
-  >>> DELETE /association-member-manager/delete-association-user
-  {
-      "associationId":1,
-      "userId":20151
-  }
   
+  ```json
+  >>> DELETE /associations/1/members/201231
+
   <<< 400
   {
       "data":null,
       "error":"InvalidUserId",
+      "message":"不存在该用户"
+  }
+  ```
+  
+  ```json
+  >>> DELETE /associations/1231/members/20
+  
+  <<< 404
+  {
+      "data":null,
+    "error":"AssociationNotFound",
+      "message":"不存在该社团"
+  }
+  ```
+  
+  
+  
+  ```json
+  >>> DELETE /associations/1/members/20
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"UserNotFound",
       "message":"社团中不存在该用户"
   }
   ```
 
-  ```json
-  >>> DELETE /association-member-manager/delete-association-user
-  {
-      "associationId":1,
-      "userId":20
-  }
-  
-  <<< 404
-  {
-      "data":null,
-      "error":"notFound",
-      "message":"不存在该社团"
-  }
-  ```
-
-### 将成员从社团中删除
+### 将用户添加到社团中
 
 - HTTP Request
 
-  **POST** `/association-member-manager/create-association-user`
+  **POST** `/associations/{associationId}/members`
 
-- Body Parameters
+- Path Parameters
 
   | Parameter           | Description |
   | ------------------- | ----------- |
   | `associationId` int | 社团ID      |
-  | `userId` int        | 用户ID      |
 
+- Body Parameters
+
+  | Parameter    | Description |
+  | ------------ | ----------- |
+  | `userId` int | 用户ID      |
+  
 - Response
 
-  | Code                | Description                |
-  | ------------------- | -------------------------- |
-  | 200 true            | 请求成功，并且成功删除用户 |
-  | 400 “InvalidUserId” | 不存在该用户               |
-  | 404 "notFound"      | 不存在该社团               |
+  | Code                      | Description                |
+  | ------------------------- | -------------------------- |
+  | 200 true                  | 请求成功，并且成功删除用户 |
+  | 400 “InvalidUserId”       | 不存在该用户               |
+  | 404 "AssociationNotFound" | 不存在该社团               |
 
 - Example
 
   ```json
-  >>> POST /association-member-manager/create-association-user
+  >>> POST /associations/1/members
   {
-      "associationId":1,
       "userId":20
   }
   
@@ -858,11 +886,10 @@
       "message":""
   }
   ```
-
-  ```json
-  >>> POST /association-member-manager/create-association-user
+  
+```json
+  >>> POST /associations/1/members
   {
-      "associationId":1,
       "userId":20151
   }
   
@@ -873,21 +900,62 @@
       "message":"不存在该用户"
   }
   ```
-
+  
   ```json
-  >>> POST /association-member-manager/create-association-user
+>>> POST /associations/111/members
   {
-      "associationId":1,
       "userId":20
   }
   
   <<< 404
   {
       "data":null,
-      "error":"notFound",
+      "error":"AssociationNotFound",
       "message":"不存在该社团"
   }
   ```
 
-### 
+### 得到社团成员列表
 
+- HTTP Request
+
+  **GET** `/associations/{associationId}/members`
+
+- Path Parameters
+
+  | Parameter           | Description |
+  | ------------------- | ----------- |
+  | `associationId` int | 社团ID      |
+
+- Response
+
+  | Code                      | Description            |
+  | ------------------------- | ---------------------- |
+  | 200 `userId[]` int[]      | 请求成功，返回用户列表 |
+  | 404 "AssociationNotFound" | 不存在该社团           |
+
+- Example
+
+  ```json
+  >>> GET /associations/1/members
+  
+  <<< 200
+  {
+      "data":[1,2,3],
+      "error":"",
+      "message":""
+  }
+  ```
+
+  ```json
+  >>> GET /associations/2000/members
+  
+  <<< 404
+  {
+      "data":null,
+      "error":"AssociationNotFound",
+      "message":"不存在该社团"
+  }
+  ```
+
+  
