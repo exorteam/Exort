@@ -60,8 +60,6 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.2.0</version>
                 <configuration>
-					<serverId>docker-hub</serverId>
-					<registryUrl>https://index.docker.io/v1/</registryUrl>
 					<imageName>exort/api-server</imageName>
                     <baseImage>java</baseImage>
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
