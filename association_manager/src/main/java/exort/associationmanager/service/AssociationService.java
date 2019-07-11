@@ -8,20 +8,21 @@ import java.util.List;
 import exort.associationmanager.entity.Application;
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
+import exort.associationmanager.entity.ResponseBody;
 
 public interface AssociationService{
-    public List<Association> listAssociation(AssociationFilterParams params);
+    public  ResponseBody getAssociation(Integer assoId);
 
-    public Association createAssociation(String name,String description,List<String> tags,String logo);
+    public ResponseBody listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize);
 
-    public boolean deleteAssociation(Integer assoId );
+    public ResponseBody createAssociation(String name, String description, List<String> tags, String logo);
 
-    public Association editAssociation(Integer assoId, String name,String description,List<String> tags,String logo);
+    public ResponseBody deleteAssociation(Integer assoId );
 
-    public  boolean blockAssociation(Integer assoId,String reason);
+    public ResponseBody editAssociation(Integer assoId, String name,String description,List<String> tags,String logo);
 
-    public  boolean unblockAssociation(Integer assoId);
+    public  ResponseBody patchAssociation(Integer assoId,String type,String descripion);
 
-    public  boolean handleAsoociationApplication(Integer user_id, String type, Application app );
+    public  ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app );
 
 }
