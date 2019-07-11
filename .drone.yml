@@ -23,7 +23,7 @@ steps:
   commands:
   - cat settings.xml
   - cd ./api_server
-  - mvn clean package docker:removeImage -DimageName=exort/api-server docker:build -DpushImage -s ../settings.xml
+  - mvn clean package 
   when:
     branch:
     - api-server
