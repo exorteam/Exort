@@ -55,6 +55,15 @@ public class UserServiceImpl implements UserService {
 		return id;
 	}
 
+	public boolean updateUser(UserInfo info){
+		if(!userRepository.existsById(info.getId())){
+			return false;
+		}
+
+		userRepository.save(info);
+		return true;
+	}
+
 	public boolean removeUserById(int id){
 		userRepository.deleteById(id);
 		return true;

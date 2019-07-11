@@ -33,6 +33,11 @@ public class UserServiceController {
 		return service.getCurrentUser();
 	}
 
+	@PostMapping("/update")
+	public boolean updateUser(@RequestBody UserInfo info){
+		return service.updateUser(info);
+	}
+
 	@PostMapping("/delete")
 	public boolean deleteUserById(@RequestParam int id){
 		return service.removeUserById(id);
