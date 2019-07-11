@@ -46,4 +46,18 @@ public class UserServiceImpl implements UserService {
 		userRepository.deleteById(id);
 		return true;
 	}
+
+	public int auth(String username,String password){
+		if(!userRepository.existsByUsername(username)){
+			return -1;
+		}
+
+		UserInfo user = userRepository.findByUsername(username);
+		String pwd = user.getPassword();
+		if(!pwd.equals(password)){
+			return -1;
+		}
+
+		return user.getType();
+	}
 }
