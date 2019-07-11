@@ -15,12 +15,13 @@
    |Datetime lastModifyTime | 最后一次修改时间 |
    |string title | 活动标题 |
    |string content | 活动内容 |
-   |int state | 活动状态, unpublished, published |
+   |int publishState | 活动状态, unpublished, published |
    |NewDateTime signupTime | 活动报名时间范围 |
    |NewDateTime time | 活动时间范围 |
-   |int state | 活动状态(preparing, signup, doing, done) |
+   |int signupState| 报名状态(0报名未开始，1报名中，2报名已结束) |
+   |int state | 活动状态(0未开始，1进行中，2已结束) |
    |bool ifReview | 报名是否需要审核 |
-   |bool onlyMembers | 是否只有社团成员可以报名 |
+   |bool ifOnlyMem | 是否只有社团成员可以报名 |
    |int maxParticipants | 最大参与人数 |
    |int[] materialTemplateIds | 报名材料模板 |
    |int[] participantIds | 参与者ID列表 |
@@ -41,7 +42,7 @@
       |NewDateTime signupTime|报名时间范围|
       |NewDateTime time|活动时间范围|
       |bool ifReview|报名是否需要审核|
-      |bool ifOnlyAsso|是否仅社团成员参加|
+      |bool ifOnlyMem|是否仅社团成员参加|
       |int numberOfParticipants|最大参加人数|
       |int[] materialTemplateIds|材料模板|
       |string[] tags|标签|
@@ -54,11 +55,38 @@
       |400-(错误信息)|创建失败|
 
    - example
-      - 200 
-         ```json
+      ```json
+      >>> POST /activities
+      {
+         "associationIds": [432,424],
+         "title": "abv",
+         "content": "qwujyshdg",
+         "signupTime": {
+             "timeType": 0,
+             "time":{
+                 "start": "2019-07-11 09:31",
+                 "end": "2019-07-11 09:31"
+             }
+         },
+         "time": {
+             "timeType": 0,
+             "time":{
+                 "start": "2019-07-11 09:31",
+                 "end": "2019-07-11 09:31"
+             }
+         },
+         "ifReview": true,
+         "ifOnlyMem": false,
+         "numberOfParticipants": 30,
+         "materialTemplateIds": [3,4,5,6],
+         "tags": ["运动"]
+      }
+      ```
+      ```json   
+      <<< 200
          {
              "data": {
-                 "id"： 21，
+                 "id": 21,
                  "associationIds": [1,2,...],
                  "createTime": "2019-07-11",
                  "publishTime": "2019-07-11",
@@ -66,18 +94,25 @@
                  "lastModifyTime": "2019-07-11",
                  "title": "abc",
                  "content": "qewretrytretyjdhgeewfwqdw",
-                 "state": 0,
+                 "publishState": 0,
                  "signupTime": {
-                     "timeType": 0/1/2,
-                     "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                      "timeType": 0/1/2,
+                      "time":{
+                          "start": "2019-07-11 09:31",
+                          "end": "2019-07-11 09:31"
+                      }
                  },
                  "time": {
-                     "timeType": 0/1/2,
-                     "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                      "timeType": 0/1/2,
+                      "time": {
+                          "start": "2019-07-11 09:31",
+                          "end": "2019-07-11 09:31"
+                      }
                  },
+                 "signupState": 0,
                  "state": 0,
                  "ifReview": true,
-                 "onlyMembers": true,
+                 "ifOnlyMem": true,
                  "maxParticipants":30,
                  "materialTemplateIds": [1,2,3],
                  "participantIds": [1,2,3,...],
@@ -87,15 +122,15 @@
              "error":"",
              "message":""
          }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 2. 修改活动
    - Http Request
@@ -111,7 +146,7 @@
       |NewDateTime signupTime|报名时间范围|
       |NewDateTime time|活动时间范围|
       |bool ifReview|报名是否需要审核|
-      |bool ifOnlyAsso|是否仅社团成员参加|
+      |bool ifOnlyMem|是否仅社团成员参加|
       |int numberOfParticipants|最大参加人数|
       |int[] materialTemplateIds|材料模板|
       |string[] tags|标签|
@@ -123,12 +158,38 @@
       |200-(活动对象)|修改成功|
       |400-(错误信息)|修改失败|
    
-   - example
-      - 200
-         ```json
+      ```json
+      >>> PUT /activities
+      {
+         "associationIds": [432,424],
+         "title": "abv",
+         "content": "qwujyshdg",
+         "signupTime": {
+             "timeType": 0,
+             "time":{
+                 "start": "2019-07-11 09:31",
+                 "end": "2019-07-11 09:31"
+             }
+         },
+         "time": {
+             "timeType": 0,
+             "time":{
+                 "start": "2019-07-11 09:31",
+                 "end": "2019-07-11 09:31"
+             }
+         },
+         "ifReview": true,
+         "ifOnlyMem": false,
+         "numberOfParticipants": 30,
+         "materialTemplateIds": [3,4,5,6],
+         "tags": ["运动"]
+      }
+      ```
+      ```json
+      <<< 200
          {
              "data":{
-                 "id"： 21，
+                 "id": 21,
                  "associationIds": [1,2,...],
                  "createTime": "2019-06-11",
                  "publishTime": "2019-07-11",
@@ -136,7 +197,7 @@
                  "lastModifyTime": "2019-07-11",
                  "title": "abc",
                  "content": "qewretrytretyjdhgeewfwqdw",
-                 "state": 0,
+                 "publishState": 0,
                  "signupTime": {
                      "timeType": 0,
                      "time": "2019-07-11 09:31 - 2019-07-11 09:31"
@@ -145,9 +206,10 @@
                      "timeType": 0,
                      "time": "2019-07-11 09:31 - 2019-07-11 09:31"
                  },
+                 "signupState": 0,
                  "state": 0,
                  "ifReview": true,
-                 "onlyMembers": true,
+                 "ifOnlyMem": true,
                  "maxParticipants":30,
                  "materialTemplateIds": [1,2,3],
                  "participantIds": [1,2,3,...],
@@ -157,15 +219,15 @@
              "error": "",
              "message": ""
          }
-         ```
-      - 400
-         ```json
+      ```
+      ```json
+      <<< 400
          {
              "data": null,
              "error": "invalid " + 实际错误信息,
              "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
          }
-         ```
+      ```
 
 3. 查询所有活动
    将筛选条件作为参数传进函数，将符合的所有活动作为结果输出  
@@ -177,8 +239,8 @@
 
       |Parameter|Description|default Value|
       |---|---|---|
-      |pageSize|每页数量|10|
-      |pageNum|页号|1|
+      |pageSize|每页数量|8|
+      |pageNum|页号|0|
       |int sortBy|排序方式|0|
 
    - Body Parameters
@@ -187,13 +249,15 @@
       |---|---|---|
       |associationId| 社团ID |创建者|
       |tags|标签|[](空列表)|
-      |keyword|内容（简介）|""|
-      |createTime|创建时间|""|
-      |signupTime|报名时间|""|
-      |startTime|开始时间|""|
-      |string[]|大小为2的列表[活动进度，活动报名进度]|["",""]|
-      |bool ifReview|报名是否需要审核|true|
-      |bool ifOnlyAsso|活动是否仅社团成员可参加|false|
+      |keyword|内容（简介）| null |
+      |createTime|创建时间| null |
+      |signupTime|报名时间| null |
+      |startTime|开始时间| null |
+      |int publishState | 活动状态(0/unpublished, 1/published)| -1 |
+      |int signupState| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
+      |int state | 活动状态(0未开始，1进行中，2已结束) | -1 |
+      |bool ifReview|报名是否需要审核| -1 |
+      |bool ifOnlyMem|活动是否仅社团成员可参加| -1 |
 
    - Response  
 
@@ -202,13 +266,29 @@
       |200-(对应的活动列表)|创建成功|
       |400-(错误信息)|创建失败|
    
-   - example
-      - 200
-         ```json
+      ```json
+      >>> GET /activitiespagesize=10&pagenum=2&osrtby=1
+      {
+          "associationId":[2,3],
+          "tags":["运动"],
+          "keyword":"jhsd",
+          "createTime": "2019-07-11 00:00",
+          "signupTime": "2019-07-11 00:00",
+          "startTime": "2019-07-11 00:00",
+          "publishState": 0,
+          "signupState": 0,
+          "state": 0,
+          "ifReview": true,
+          "ifOnlyMem": true
+      }
+      ```
+
+      ```json
+      <<< 200
          {
             "data": [
                 {
-                    "id"： 21，
+                    "id": 21,
                     "associationIds": [1,2,...],
                     "createTime": "2019-07-11",
                     "publishTime": "2019-07-11",
@@ -216,34 +296,7 @@
                     "lastModifyTime": "2019-07-11",
                     "title": "abc",
                     "content": "qewretrytretyjdhgeewfwqdw",
-                    "state": 0/1, (unpublished, published)
-                    "signupTime": {
-                        "timeType": 0/1/2,
-                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
-                },
-                "time": {
-                    "timeType": 0/1/2,
-                    "time": "2019-07-11 09:31 - 2019-07-11 09:31"
-                },
-                    "state": 0/1/2/3, (preparing, signup, doing, done)
-                    "ifReview": true,
-                    "onlyMembers": true,
-                    "maxParticipants":30,
-                    "materialTemplateIds": [1,2,3],
-                    "participantIds": [1,2,3,...],
-                    "actualParticipantIds": [1,2,3,...], 
-                    "tags": ["tag1", "tag2", ...]
-                },
-                {
-                    "id"： 21，
-                    "associationIds": [1,2,...],
-                    "createTime": "2019-07-11",
-                    "publishTime": "2019-07-11",
-                    "lastPublishTime": "2019-07-11",
-                    "lastModifyTime": "2019-07-11",
-                    "title": "abc",
-                    "content": "qewretrytretyjdhgeewfwqdw",
-                    "state": 0,
+                    "publishState": 0,
                     "signupTime": {
                         "timeType": 0,
                         "time": "2019-07-11 09:31 - 2019-07-11 09:31"
@@ -252,9 +305,38 @@
                         "timeType": 0,
                         "time": "2019-07-11 09:31 - 2019-07-11 09:31"
                     },
+                    "signupState": 0, 
                     "state": 0,
                     "ifReview": true,
-                    "onlyMembers": true,
+                    "ifOnlyMem": true,
+                    "maxParticipants":30,
+                    "materialTemplateIds": [1,2,3],
+                    "participantIds": [1,2,3,...],
+                    "actualParticipantIds": [1,2,3,...], 
+                    "tags": ["tag1", "tag2", ...]
+                },
+                {
+                    "id": 21,
+                    "associationIds": [1,2,...],
+                    "createTime": "2019-07-11",
+                    "publishTime": "2019-07-11",
+                    "lastPublishTime": "2019-07-11",
+                    "lastModifyTime": "2019-07-11",
+                    "title": "abc",
+                    "content": "qewretrytretyjdhgeewfwqdw",
+                    "publishState": 0,
+                    "signupTime": {
+                        "timeType": 0,
+                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                    },
+                    "time": {
+                        "timeType": 0,
+                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                    },
+                    "signupState": 0, 
+                    "state": 0,
+                    "ifReview": true,
+                    "ifOnlyMem": true,
                     "maxParticipants":30,
                     "materialTemplateIds": [1,2,3],
                     "participantIds": [1,2,3,...],
@@ -265,14 +347,15 @@
             "error": "",
             "message": ""
          }
-         ```
-      - 400
-         ```json
+      ```
+      ```json
+      <<< 400
          {
              "data": null,
              "error": "invalid " + 实际错误信息,
              "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
          }
+      ```
 
 4. 发布、撤回活动
    即修改活动的状态
@@ -292,24 +375,28 @@
       |---|---|
       |200-(无实际返回值)|操作成功|
       |400-(错误信息)|操作失败|
-
-   - example
-      - 200
-         ```json
-         {
-             "data": 1,
-             "error": "",
-             "massage": "",
-         }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+   ```json
+   >>> PATCH /activities/32
+   {
+      "type":"publish"
+   }
+   ```
+   ```json
+   <<< 200
+      {
+          "data": {},
+          "error": "",
+          "massage": "",
+      }
+   ```
+   ```json
+   <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+   ```
 
 5. 添加参加者
 
@@ -329,23 +416,28 @@
       |200-(无实际返回值)|添加成功|
       |400-(错误信息)|添加失败|
 
-   - example
-      - 200
-         ```json
-         {
-             "data": 1,
-             "error": "",
-             "massage": "",
-         }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+      ```json
+      >>> POST /activities/32/participants
+      {
+          "participantIds":[1,2,3]
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {},
+          "error": "",
+          "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 6. 添加实际参加者
 
@@ -365,23 +457,28 @@
       |200-(无实际返回值)|添加成功|
       |400-(错误信息)|添加失败|
 
-   - example
-      - 200
-         ```json
-         {
-             "data": 1,
-             "error": "",
-             "massage": "",
-         }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+      ```json
+      >>> POST /activities/32/realParticipants
+      {
+         "realParticipantsIds":[1,2,3]
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {},
+          "error": "",
+          "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 7. 移除参加者
 
@@ -401,23 +498,28 @@
       |200-(无实际返回值)|移除成功|
       |400-(错误信息)|移除失败|
 
-   - example
-      - 200
-         ```json
-         {
-             "data": 1,
-             "error": "",
-             "massage": "",
-         }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+      ```json
+      >>> DELETE /activities/32/participants
+      {
+         "participantsIds":[1,2,3]
+      }
+      ```
+      ```json
+      <<< 200         
+      {
+          "data": {},
+          "error": "",
+          "massage": "",
+      }
+      ```
+      ```json
+      <<< 400         
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 8. 查询参加者
 
@@ -444,23 +546,28 @@
       |200-（参加者ID列表）|查询成功|
       |400|查询失败|
 
-   - example
-      - 200
-         ```json
-         {
-             "data": [1,2,3,...],
-             "error": "",
-             "massage": "",
-         }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+      ```json
+      >>> GET /activities/32/participants?pagenum=32&pagesize=12
+      {
+          "userId": 21
+      }   
+      ```
+      ```json
+      <<< 200
+      {
+          "data": [1,2,3,...],
+          "error": "",
+           "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+           "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 9. 查询实际参加者
 
@@ -487,23 +594,28 @@
       |200-（实际参加者ID列表）|查询成功|
       |400-（空列表）|查询失败|
 
-   - example
-      - 200
-         ```json
-         {
-             "data": [1,2,3,...],
-             "error": "",
-             "massage": "",
-         }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-         }
-         ```
+      ```json
+      >>> GET /activities/32/realparticipants?pagenum=32&pagesize=12
+      {
+         "userId": 21
+      }   
+      ```
+      ```json
+      <<< 200
+      {
+          "data": [1,2,3,...],
+          "error": "",
+           "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+           "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 10. 活动报名申请回调
 
@@ -525,38 +637,39 @@
       |200-(无实际返回值)|回调成功|
       |400-(错误信息)|回调失败|
 
-   - example
-      - 200
-         ```json
-         {
-             "data": 1,
-             "error": "",
-             "massage": "",
+      ```json
+      >>> POST /callback/acceptsignup
+      {
+          "operatorId": 32,
+          "action": "accept",
+          "signup": {
+              "id": 271,
+              "applicantId": 111,
+              "type": "signupActivity",
+              "object": {
+                  "activityId": 55
+              },
+              "materialIds": [],
+              "createdTime": "2019-07-10T03:19:06.618Z",
+              "handledTime": "2019-07-10T03:24:49.797Z",
+              "state": "accepted"
+           }
          }
-         ```
-      - 400
-         ```json
-         {
-             "data": null,
-             "error": "invalid " + 实际错误信息,
-             "message": "yyyy/mm/dd" + "操作者没有权限"
-         }
-         ```
-
-   - 输入
-      - 操作者ID
-      - 操作
-      - 申请
-         - 申请ID
-         - 申请者ID
-         - 申请类型
-         - Object
-            - 活动ID
-         - 材料列表
-         - 申请时间
-         - 处理时间
-         - 申请状态   
-   - 输出
-      - 403
-         - error: "ywe"
-         - message: "操作者没有权限"
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {},
+          "error": "",
+          "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "操作者没有权限"
+      }
+      ```
