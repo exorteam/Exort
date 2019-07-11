@@ -27,17 +27,9 @@
 
 步骤：
 1. 拉取所需资源
-```
-	wget 10.0.0.26/kube-1.14.1/kube-1.14.1.tar
-	wget 10.0.0.26/kube-1.14.1/kubespray-2.10.0.tar.gz
-	wget 10.0.0.26/kube-1.14.1/releases/calicoctl
-	wget 10.0.0.26/kube-1.14.1/releases/hyperkube
-	wget 10.0.0.26/kube-1.14.1/releases/kubeadm
-	wget 10.0.0.26/kube-1.14.1/releases/cni-plugins-amd64-v0.6.0.tgz
-```
 2. 配置ssh，安装docker，分发资源
 3. 去掉`all.yml`中的proxy配置，注释掉`cluster.yml`中的container-engine和download部分
-```
+	```
 	- hosts: k8s-cluster:etcd:calico-rr
 	any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
 	roles:
@@ -46,23 +38,23 @@
 		# - { role: "container-engine", tags: "container-engine", when: deploy_container_engine|default(true) }
 		# - { role: download, tags: download, when: "not skip_downloads" }
 	environment: "{{proxy_env}}"
-```
+	```
 4. 调整`hosts.ini`，指向生产环境机器
 5. 执行部署
-`ansible-playbook -i inventory/mycluster/hosts.ini --become --become-user=root cluster.yml`
+	`ansible-playbook -i inventory/mycluster/hosts.ini --become --become-user=root cluster.yml`
 
-我将完整的部署步骤写入了脚本文件，文件位于[script](../script)目录下
+完整的部署步骤写入了脚本文件，文件位于[script](../script)目录下
 
 可能会出现的问题：
 
 1. The connection to the server localhost:8080 was refused
 
 参考github上kubernetes的issue(https://github.com/kubernetes/kubernetes/issues/44665)
-```
+	```
 	sudo cp /etc/kubernetes/admin.conf $HOME/
 	sudo chown $(id -u):$(id -g) $HOME/admin.conf
 	export KUBECONFIG=$HOME/admin.conf
-```
+	```
 
 ## 最终结果
 ![screenshot](./images/k8s_screenshot.png)
