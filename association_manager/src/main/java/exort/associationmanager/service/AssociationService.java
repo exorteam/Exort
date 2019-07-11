@@ -16,12 +16,12 @@ public interface AssociationService{
 
     public boolean deleteAssociation(Integer assoId );
 
-    public boolean editAssociation(Integer assoId, String name,String description,List<String> tags,String logo);
+    public Association editAssociation(Integer assoId, String name,String description,List<String> tags,String logo);
 
     public  boolean blockAssociation(Integer assoId,String reason);
 
-    public  boolean unblockAssciation(Integer assoId);
+    public  boolean unblockAssociation(Integer assoId);
 
-    public  boolean handleAsoociationApplication(Integer user_id, Integer type, Application app );
+    public  boolean handleAsoociationApplication(Integer user_id, String type, Application app );
 
 }

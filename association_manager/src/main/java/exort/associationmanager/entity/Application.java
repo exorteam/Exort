@@ -15,10 +15,10 @@ public class Application {
     @Id
     Integer Id;
     Integer applicantId;
-    Integer type;
+    String type;
     Association association;
     String materials[];
     Date createTime;
     Date handleTime;
-    Integer state;//0 unhandled,1 accept,2 refused,3 canceled
+    String state;//0 unhandled,1 accept,2 refused,3 canceled
 }

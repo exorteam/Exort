@@ -3,8 +3,8 @@ package exort.associationmanager.serviceimpl;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import exort.associationmanager.entity.Application;
-import exort.associationmanager.repository.AssociationApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,8 +72,8 @@ public class AssociationServiceImpl implements AssociationService{
         return true;
     };
 
-    public boolean editAssociation(Integer assoId, String name,String description,List<String> tags,String logo){
-        if(!assoRepository.existsById(assoId)) return false;
+    public Association editAssociation(Integer assoId, String name, String description, List<String> tags, String logo){
+        if(!assoRepository.existsById(assoId)) return null;
 
         Association association = assoRepository.findById(assoId).get();
         association.setDescription(description);
@@ -81,7 +81,7 @@ public class AssociationServiceImpl implements AssociationService{
         association.setName(name);
         association.setLogo(logo);
         assoRepository.save(association);
-        return true;
+        return association;
     };
 
     public  boolean blockAssociation(Integer assoId,String reason){
@@ -94,7 +94,7 @@ public class AssociationServiceImpl implements AssociationService{
         return true;
     };
 
-    public  boolean unblockAssciation(Integer assoId){
+    public  boolean unblockAssociation(Integer assoId){
         if(!assoRepository.existsById(assoId)) return false;
 
         Association association = assoRepository.findById(assoId).get();
@@ -103,27 +103,72 @@ public class AssociationServiceImpl implements AssociationService{
         return true;
     };
 
-    public  boolean handleCreateAsoociationApplication(Integer user_id, Integer type, Application app ){
+    public  boolean handleAsoociationApplication(Integer user_id, String type, Application app ){
+//        public static final int UNHANDLED = 0 ;
+//        public static final int ACCEPT = 1 ;
+//        public static final int REFUSED = 2 ;
+//        public static final int CANCELED = 3 ;
+//        public static final int CANCELED = 3 ;
 
         switch (type){
-            case 1: //create association
-                if(!hasAuth(user_id,)) return false;
-                Association association=app.getAssociation();
-                app.setState(1);
-                assoRepository.save(association);
-                return app;
-            case  2: //unblock association
-                app.setState(2);
-                return false;
+            case "accept": //create association
+                switch (app.getType()){
+                    case "create":
+                        if(true){    //有权限，待修改
+                             assoRepository.save(app.getAssociation());
+                             app.setState("accepted");
+                             return true;
+                        }
+                        app.setState("accept_app_refused");
+                        return false;
+                    case "unblock":
+                        if(true){
+                            Association asso = app.getAssociation();
+                            asso.setState(1);
+                            assoRepository.save(asso);
+                            app.setState("accepted");
+                        }
+                        app.setState("accept_app_refused");
+                        return false;
+                }
 
-
-        }
+            case  "refuse": //unblock association
+                switch (app.getType()){
+                    case "create":
+                        if(true){    //有权限，待修改
+                            app.setState("refused");
+                            return true;
+                        }
+                        app.setState("refuse_app_refused");
+                        return false;
+                    case "unblock":
+                        if(true){
+                            app.setState("refused");
+                            return true;
+                        }
+                        app.setState("refuse_app_refused");
+                        return false;
+                }
+            case  "cancel":
+                switch (app.getType()){
+                    case "create":
+                        if(true){    //有权限，待修改
+                            app.setState("canceled");
+                            return true;
+                        }
+                        app.setState("cancel_app_refused");
+                        return false;
+                    case "unblock":
+                        if(true){
+                            app.setState("canceled");
+                            return true;
+                        }
+                        app.setState("cancel_app_refused");
+                        return false;
+                };
+        };
+        return false;
     };
-
-    public  boolean handleUnblockAsoociationApplication(Integer user_id, Integer type, Application app ){
-        
-    };
-
 
 
 
