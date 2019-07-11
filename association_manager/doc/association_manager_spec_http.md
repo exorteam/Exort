@@ -280,16 +280,18 @@
 	**DELETE** `/assocoation`
 
 - Body Parameters
+
    |Parameter | Description |
    |---|---|
    |`associationId` string | 社团id |
 
 - Response
+
    |code|description|
    |---|---|
    |200 `true` | 删除成功 |
    |400  [_ErrorResponse_](#ErrorResponse)| 无效的社团id |
-	|404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
+   |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
 
 - example
 	``` json
@@ -450,11 +452,12 @@
    |`reason` string | 封禁理由 |
 
 - Response
+
    |code|description|
    |---|---|
    |200 [_Association_](#Association) | 封禁成功 |
    |400  [_ErrorResponse_](#ErrorResponse)| 无效的格式 |
-	|404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
+   |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
 
 - example
    ``` json
@@ -518,6 +521,7 @@
    |`associationId` string | 社团id |
 
 - Response
+
    |code|description|
    |---|---|
    |200 [_Association_](#Association) | 封禁成功 |
