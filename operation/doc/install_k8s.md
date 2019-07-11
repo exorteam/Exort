@@ -53,6 +53,3 @@
 	sudo chown $(id -u):$(id -g) $HOME/admin.conf
 	export KUBECONFIG=$HOME/admin.conf
 	```
-
-## 最终结果
-![screenshot](./images/k8s_screenshot.png)
