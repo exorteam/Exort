@@ -7,12 +7,13 @@ import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.service.AssociationService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = {"/association_manager"})
+@RequestMapping
 
 public class AssociationManagerController{
     @Autowired
@@ -79,5 +80,12 @@ public class AssociationManagerController{
     public boolean handleAssociationApplication(@RequestBody ApplicationAssoRequestInfo body){
         return service.handleAsoociationApplication(body.getUserId(),body.getOperation(),body.getApp());
     };
-
+    @RequestMapping("/test")
+    public String handleAssociationApplication() {
+        return "Hello world!";
+    };
+    @GetMapping("/test1")
+    public String AssociationApplication() {
+        return "Hello world!";
+    }
 }

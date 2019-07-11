@@ -1,9 +1,7 @@
 package exort.associationmanager.serviceimpl;
 
-import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import exort.associationmanager.entity.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,19 +114,16 @@ public class AssociationServiceImpl implements AssociationService{
                     case "create":
                         if(true){    //有权限，待修改
                              assoRepository.save(app.getAssociation());
-                             app.setState("accepted");
+
                              return true;
                         }
-                        app.setState("accept_app_refused");
                         return false;
                     case "unblock":
                         if(true){
                             Association asso = app.getAssociation();
                             asso.setState(1);
                             assoRepository.save(asso);
-                            app.setState("accepted");
                         }
-                        app.setState("accept_app_refused");
                         return false;
                 }
 
@@ -136,34 +131,26 @@ public class AssociationServiceImpl implements AssociationService{
                 switch (app.getType()){
                     case "create":
                         if(true){    //有权限，待修改
-                            app.setState("refused");
                             return true;
                         }
-                        app.setState("refuse_app_refused");
                         return false;
                     case "unblock":
                         if(true){
-                            app.setState("refused");
                             return true;
                         }
-                        app.setState("refuse_app_refused");
                         return false;
                 }
             case  "cancel":
                 switch (app.getType()){
                     case "create":
                         if(true){    //有权限，待修改
-                            app.setState("canceled");
                             return true;
                         }
-                        app.setState("cancel_app_refused");
                         return false;
                     case "unblock":
                         if(true){
-                            app.setState("canceled");
                             return true;
                         }
-                        app.setState("cancel_app_refused");
                         return false;
                 };
         };
