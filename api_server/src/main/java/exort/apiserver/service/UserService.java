@@ -6,6 +6,7 @@ public interface UserService {
 
 	public UserInfo getUserById(int id);
 	public UserInfo getUserByUsername(String username);
+	public UserInfo getCurrentUser();
 	public int createUser(UserInfo user);
 	public boolean removeUserById(int id);
 

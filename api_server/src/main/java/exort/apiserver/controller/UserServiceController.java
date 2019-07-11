@@ -29,8 +29,8 @@ public class UserServiceController {
 	}
 
 	@GetMapping("/info")
-	public UserInfo getUserById(@RequestParam int id){
-		return service.getUserById(id);
+	public UserInfo getCurrentUser(){
+		return service.getCurrentUser();
 	}
 
 	@PostMapping("/delete")

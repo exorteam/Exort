@@ -1,6 +1,8 @@
 package exort.apiserver.serviceimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import exort.apiserver.entity.UserInfo;
@@ -27,6 +29,13 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 		return userRepository.findByUsername(username);
+	}
+
+	public UserInfo getCurrentUser(){
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+			.getAuthentication()
+			.getPrincipal();
+		return getUserByUsername(userDetails.getUsername());
 	}
 
 	public int createUser(UserInfo user){
