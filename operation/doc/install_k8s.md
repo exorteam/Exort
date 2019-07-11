@@ -45,7 +45,7 @@
 
 完整的部署步骤写入了脚本文件，文件位于[script](../script)目录下
 
-可能会出现的问题：
+## 可能会出现的问题：
 
 1. [The connection to the server localhost:8080 was refused](https://github.com/kubernetes/kubernetes/issues/44665)
 	```
