@@ -1,0 +1,48 @@
+kind: pipeline
+name: exort-api-server
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  commands:
+  - cd ./api_server
+  - mvn clean package
+  - docker build -t exort/api-server .
+  when:
+    branch:
+    - api-server
+
+- name: scp
+  image: appleboy/drone-scp
+  settings:
+    host: 202.120.40.8
+    port: 30720
+    username: ubuntu
+    secrets:
+    - source: deploy_key
+      target: scp_key
+    target: /home/ubuntu/deploy/${DRONE_REPO}/
+    source:
+        - api_server/apiserver.yaml
+  when:
+    branch:
+    - api-server
+
+- name: ssh
+  image: appleboy/drone-ssh
+  settings:
+    host: 202.120.40.8
+    port: 30720
+    username: ubuntu
+    secrets:
+    - source: deploy_key
+      target: ssh_key
+    script:
+        - cd /home/ubuntu/deploy/${DRONE_REPO}/api_server
+        - kubectl apply -f apiserver.yaml
+  when:
+    branch:
+    - api-server
