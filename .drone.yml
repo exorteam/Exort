@@ -34,11 +34,11 @@ steps:
     host: 202.120.40.8
     port: 30720
     username: ubuntu
-    secrets:
-    - source: deploy_key
-      target: scp_key
+    key:
+        from_secret: deploy_key
     target: /home/ubuntu/deploy/${DRONE_REPO}/
     source:
+        - api_server/target/apiserver-0.1.jar
         - api_server/apiserver.yaml
   when:
     branch:
@@ -50,11 +50,11 @@ steps:
     host: 202.120.40.8
     port: 30720
     username: ubuntu
-    secrets:
-    - source: deploy_key
-      target: ssh_key
+    key:
+        from_secret: deploy_key
     script:
         - cd /home/ubuntu/deploy/${DRONE_REPO}/api_server
+        - docker build -t exort/api-server . 
         - kubectl apply -f apiserver.yaml
   when:
     branch:
