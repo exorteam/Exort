@@ -206,11 +206,17 @@
                  "publishState": 0,
                  "signupTime": {
                      "timeType": 0,
-                     "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                     "time": {
+                         "start": "2019-07-11 09:31",
+                         "end":"2019-07-11 09:31"
+                     },
                  },
                  "time": {
                      "timeType": 0,
-                     "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                     "time": {
+                         "start": "2019-07-11 09:31",
+                         "end":"2019-07-11 09:31"
+                     },
                  },
                  "signupState": 0,
                  "state": 0,
@@ -309,11 +315,17 @@
                         "publishState": 0,
                         "signupTime": {
                             "timeType": 0,
-                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                            "time": {
+                                "start": "2019-07-11 09:31",
+                                "end":"2019-07-11 09:31"
+                            },
                         },
                         "time": {
                             "timeType": 0,
-                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                            "time": {
+                                "start": "2019-07-11 09:31",
+                                "end":"2019-07-11 09:31"
+                            },
                         },
                         "signupState": 0, 
                         "state": 0,
@@ -341,7 +353,10 @@
                         },
                         "time": {
                             "timeType": 0,
-                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                            "time": {
+                                "start": "2019-07-11 09:31",
+                                "end":"2019-07-11 09:31"
+                            },
                         },
                         "signupState": 0, 
                         "state": 0,
@@ -725,3 +740,66 @@
       ```
 
 11. 查询单个活动
+
+   - Http Request  
+   **GET** `/activities/{activityid}`
+
+   - Response
+
+       |code|description|
+       |---|---|
+       |200-(活动)|回调成功|
+       |400-(错误信息)|回调失败|
+
+      ```json
+      >>> POST /activities/{32}
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {
+              "id": 21,
+              "associationIds": [1,2,...],
+              "createTime": "2019-07-11",
+              "publishTime": "2019-07-11",
+              "lastPublishTime": "2019-07-11",
+              "lastModifyTime": "2019-07-11",
+              "title": "abc",
+              "content": "qewretrytretyjdhgeewfwqdw",
+              "publishState": 0,
+              "signupTime": {
+                  "timeType": 0,
+                  "time": {
+                      "start": "2019-07-11 09:31",
+                      "end":"2019-07-11 09:31"
+                  },
+              },
+              "time": {
+                  "timeType": 0,
+                  "time": {
+                      "start": "2019-07-11 09:31",
+                      "end":"2019-07-11 09:31"
+                  },
+              },
+              "signupState": 0, 
+              "state": 0,
+              "ifReview": true,
+              "ifOnlyMem": true,
+              "maxParticipants":30,
+              "materialTemplateIds": [1,2,3],
+              "participantIds": [1,2,3,...],
+              "actualParticipantIds": [1,2,3,...], 
+              "tags": ["tag1", "tag2", ...]
+          },
+          "error": "",
+          "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "操作者没有权限"
+      }
+      ```
