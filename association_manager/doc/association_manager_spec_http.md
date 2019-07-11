@@ -12,6 +12,17 @@
    |`error` _string_|错误码|
    |`message` _string_|人类友好的错误信息|
 
+## 社团列表
+
+- <a id='AssociationList'></a>**AssociationList**
+   |Field|Description|
+   |--|--|
+   |`pageNum` _int_|所返回的列表的实际的页码|
+   |`pageSize` _int_|所返回的列表的实际的申请数量|
+   |`totalSize` _int_|总的申请数量|
+   |`content` [_Association[]_](#Association)|申请列表|
+
+
 ## 社团
 
 - <a id='Association'></a> **Association**
@@ -24,7 +35,7 @@
     |`logo` _string_  | 社团图标 |
     |`tags` _string_[] | 社团标签 |
     |`blockState` int | 社团是否封禁 0表示已封紧 |
-    |`reason` _string_ | 封禁理由 | 
+    |`reason` _string_ | 封禁理由 |
 
 ## 接口
 
@@ -93,7 +104,7 @@
 
 - HTTP Request  
 
-   **GET** `/associations?pageNum=value1&pageSize=value2`
+   **GET** `/associations`
 
 - Query Parameters
 
