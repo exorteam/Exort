@@ -7,6 +7,8 @@ steps:
   volumes:
   - name: cache
     path: /root/.m2
+  - name: cache2
+    path: /tmp/maven
   commands:
   - cd ./api_server
   - mvn clean package 
@@ -46,3 +48,12 @@ steps:
   when:
     branch:
     - api-server
+
+ volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: cache2
+    host:
+      path: /home/ubuntu/mvn_tmp
+
