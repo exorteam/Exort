@@ -2,7 +2,6 @@ package exort.activity.controller;
 
 import exort.activity.entity.Activity;
 import exort.activity.service.ActivityService;
-import exort.activity.service.ActivitySignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
