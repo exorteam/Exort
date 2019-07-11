@@ -146,56 +146,61 @@
 
    <<< 200
 	{
-		"data":[
-		{
-			"id":1,
-			"name":"Association1",
-			"description":"nothing to say",
-			"logo":"image1(base64)",
-			"tags":[
-				"T1",
-				"T2",
-			],
-			"block_state":1,
-			"reason":"18+"
-		},
-		{
-			"id":3,
-			"name":"Association1",
-			"description":"nothing to say",
-			"logo":"image1(base64)",
-			"tags":[
-				"T1",
-				"T2",
-			],
-			"block_state":1,
-			"reason":"18+"
-		},
-		{
-			"id":4,
-			"name":"Association1",
-			"description":"nothing to say",
-			"logo":"image1(base64)",
-			"tags":[
-				"T1",
-				"T2",
-			],
-			"block_state":1,
-			"reason":"18+"
-		},
-		{
-			"id":2,
-			"name":"Association2",
-			"description":"nothing to say,too",
-			"logo":"image2(base64)",
-			"tags":[
-				"T3",
-				"T4",
-			],
-			"block_state":0,
-			"reason":""
-		},
-      ],
+		"data":{
+         "pageNum":1,
+         "pageSize":12,
+         "totalSize":123,
+         "associations":[
+            {
+               "id":1,
+               "name":"Association1",
+               "description":"nothing to say",
+               "logo":"image1(base64)",
+               "tags":[
+                  "T1",
+                  "T2",
+               ],
+               "block_state":1,
+               "reason":"18+"
+            },
+            {
+               "id":3,
+               "name":"Association1",
+               "description":"nothing to say",
+               "logo":"image1(base64)",
+               "tags":[
+                  "T1",
+                  "T2",
+               ],
+               "block_state":1,
+               "reason":"18+"
+            },
+            {
+               "id":4,
+               "name":"Association1",
+               "description":"nothing to say",
+               "logo":"image1(base64)",
+               "tags":[
+                  "T1",
+                  "T2",
+               ],
+               "block_state":1,
+               "reason":"18+"
+            },
+            {
+               "id":2,
+               "name":"Association2",
+               "description":"nothing to say,too",
+               "logo":"image2(base64)",
+               "tags":[
+                  "T3",
+                  "T4",
+               ],
+               "block_state":0,
+               "reason":""
+            },
+         ],
+      }
       "error":null,
       "message":null
 	}
