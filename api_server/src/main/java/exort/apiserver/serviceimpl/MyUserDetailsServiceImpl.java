@@ -25,11 +25,21 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
     public UserDetails loadUserByUsername(String usr) throws UsernameNotFoundException{
-		String pwd = repository.findByUsername(usr).getPassword();
+//	    System.out.println(usr);
+//	    System.out.println(repository.findByUsername(usr));
+        String pwd="";
+        try{
+            pwd = repository.findByUsername(usr).getPassword();
+        }catch (Exception e){
+            return null;
+        }
+
 
         if (pwd == null) {
             throw new UsernameNotFoundException(usr);
         }
+
+//        System.out.println(pwd);
 
 		log.info("loaded user by username: "+usr);
         return new User(usr, passwordEncoder().encode(pwd), Collections.singletonList(new SimpleGrantedAuthority("User")));

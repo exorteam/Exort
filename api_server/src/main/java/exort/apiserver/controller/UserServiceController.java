@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import exort.apiserver.entity.UserInfo;
 import exort.apiserver.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path="/user")
 public class UserServiceController {
@@ -41,5 +43,10 @@ public class UserServiceController {
 	@PostMapping("/delete")
 	public boolean deleteUserById(@RequestParam int id){
 		return service.removeUserById(id);
+	}
+
+	@GetMapping("/all")
+	public List<UserInfo> getall(){
+		return service.getall();
 	}
 }

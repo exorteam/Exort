@@ -10,6 +10,8 @@ import exort.apiserver.repository.UserRepository;
 import exort.apiserver.service.UserService;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.List;
+
 @Service
 @Log4j2
 public class UserServiceImpl implements UserService {
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public UserInfo getCurrentUser(){
+		System.out.println(SecurityContextHolder.getContext());
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
 			.getAuthentication()
 			.getPrincipal();
@@ -67,6 +70,11 @@ public class UserServiceImpl implements UserService {
 	public boolean removeUserById(int id){
 		userRepository.deleteById(id);
 		return true;
+	}
+
+	@Override
+	public List<UserInfo> getall() {
+		return userRepository.findAll();
 	}
 
 	//public int auth(String username,String password){
