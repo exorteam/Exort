@@ -25,21 +25,6 @@
     |`tags` _string_[] | 社团标签 |
     |`blockState` int | 社团是否封禁 0表示已封紧 |
     |`reason` _string_ | 封禁理由 | 
-## 申请
-
-- <a id='Application'></a>**Application**
-
-   |Field|Description|
-   |--|--|
-   |`id` _int_|申请ID|
-   |`applicantId` _int_|申请者ID|
-   |`type` _string_|申请类型|
-   |`object` _any_|自定义json对象|
-   |`materialIds` _int[]_|申请材料ID列表|
-   |`createdTime` _string_|申请时间|
-   |`handledTime` _string_|处理时间|
-   |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
-
 
 ## 接口
 
@@ -49,7 +34,7 @@
 
 - HTTP Request
 	
-	   **GET** `/association/{associationId}`
+	   **GET** `/associations/{associationId}`
 	
 - Path Parameters
 	
@@ -108,15 +93,20 @@
 
 - HTTP Request  
 
-   **GET** `/associations`
+   **GET** `/associations?pageNum=value1&pageSize=value2`
+
+- Query Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`pageNum` _int_|页码，默认为0|
+   |`pageSize` _int_|每页数量，默认为20|
 
 - Body Parameters
 
    |Parameter | Description |
    |---|---|
    |`keyword` _string_| 搜索关键词 |
-   |`pageNum` _int_|页码，默认为0|
-   |`pageSize` _int_|每页数量，默认为20|
    |`tags` _string[]_ | 社团标签 |
    |`blockState` _int_| 封禁状态 |
     
@@ -130,11 +120,10 @@
 - Examples
 
    ``` json
-   >>> GET /associations
+   >>> GET /associations?pageNum=3&pageSize=4
+
    {
 	 "keyword":"asso",
-	 "pageSize":4,
-	 "pageNum":3,
      "tags":[
 		  "T1",
 		  "T2"
@@ -144,7 +133,7 @@
 
    <<< 200
 	{
-		"associations":[
+		"data":[
 		{
 			"id":1,
 			"name":"Association1",
@@ -193,12 +182,14 @@
 			"block_state":0,
 			"reason":""
 		},
-		]
+      ],
+      "error":null,
+      "message":null
 	}
    ```
 
    ```json
-   >>> GET /associations
+   >>> GET /associations?pageNum=3&pageSize=4
 	{
 		"id":2,
 		"name":"Association2",
@@ -225,7 +216,7 @@
 
 - HTTP Request    
 
-   **POST** `/association`
+   **POST** `/associations`
 
 - Body Parameters
 
@@ -246,7 +237,7 @@
 - example
 
    ``` json
-   >>> POST /association
+   >>> POST /associations
    {
       "name":"Association1",
       "description":"lalala",
@@ -254,11 +245,12 @@
          "T1",
          "T2",
          "T3"
-      ]
+      ],
       "logo":"image(base64)"
    }
 	<<< 200
    {
+      {
       "id":1,
       "name":"Association1",
       "description":"nothing to say",
@@ -266,11 +258,13 @@
       "tags":[
          "T1",
          "T2",
-      ],
+         ],
       "block_state":1,
       "reason":"18+"
-   },
-
+      },
+      "error":null,
+      "message":null
+   }
    ```
 
 ### 删除社团
@@ -278,9 +272,9 @@
 	根据社团id删除指定社团
 
 - HTTP Request  
-	**DELETE** `/assocoation`
+	**DELETE** `/assocoations/{associationId}`
 
-- Body Parameters
+- Path Parameters
 
    |Parameter | Description |
    |---|---|
@@ -290,30 +284,34 @@
 
    |code|description|
    |---|---|
-   |200 `true` | 删除成功 |
+   |200 {} | 删除成功 |
    |400  [_ErrorResponse_](#ErrorResponse)| 无效的社团id |
    |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
 
 - example
 	``` json
-	>>> DELETE /association
-	{
-		"associationId":"123"
-	}
-	<<< 200
-	{
-		"ture"
+	>>> DELETE /associations/123
+
+   <<< 200
+   {
+	   "data":{
+		   "ture"
+         },
+      "error":null,
+      "message":null
    }
-	>>> DELETE /association
-	{
-		"associationId":"123"
-	}
+   
+	>>> DELETE /association/qweqwx
+
 	<<< 400
 	{
 		"data":null,
 		"error": "invalidFormat",
    		"message": "无效的社团id"
-	}
+   }
+
+   >>> DELETE /association/123999
+
 	<<< 404
 	{
 		"data":null,
@@ -322,25 +320,6 @@
 	}
 	```
 
-   ```json
-   >>> POST /association		
-   {
-	 "keyword":"asso",
-	 "pageSize":4,
-	 "pageNum":3,
-     "tags":[
-		  "T1",
-		  "T2"
-	  ],
-     "block_state":1,
-   }
-   <<< 400
-   {
-	 "data":null ,
-	 "error": "invalidFormat",
-	 "message": "无效的格式"
-   }
-   ```
 
 ### 编辑社团信息
 
@@ -348,13 +327,18 @@
 
 - HTTP Request
 
-   **PUT** `/association`
+   **PUT** `/association/{associationId}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`associationId` string | 社团id |
 
 - Body Parameters
 
    |Parameter | Description |
    |---|---|
-   |`associationId` string | 社团id |
    |`name` string | 社团名称 |
    |`description` string | 社团描述 |
    |`tags` string[] | 社团标签 |
@@ -369,9 +353,8 @@
 
 - example
    ``` json
-	>>> PUT /association
+	>>> PUT /association/123
 	{
-		"associationId":"123",
 		"name":"qwe",
 		"description":"asd",
 		"tags":[
@@ -384,21 +367,24 @@
 	}
 	<<< 200
 	{
-		"id":1,
-		"name":"Association1",
-		"description":"nothing to say",
-		"logo":"image1(base64)",
-		"tags":[
-			"T1",
-			"T2",
-		],
-		"block_state":1,
-		"reason":"18+"
-	},
+      "data":{
+         "id":123,
+         "name":"Association1",
+         "description":"nothing to say",
+         "logo":"image1(base64)",
+         "tags":[
+            "T1",
+            "T2",
+         ],
+         "block_state":1,
+         "reason":"18+"
+      },
+      "error":null,
+      "message":null
+   }
 	```
    ```json
-   >>> PUT association
-
+   >>> PUT /association/111
    {
 	 "keyword":"asso",
 	 "pageSize":4,
@@ -418,70 +404,72 @@
    }
 
    ```json
-   >>> POST /association
+   >>> POST /association/12312312
    {
-	 "keyword":"asso",
-	 "pageSize":4,
-	 "pageNum":3,
-     "tags":[
+	   "keyword":"asso",
+	   "pageSize":4,
+	   "pageNum":3,
+      "tags":[
 		  "T1",
 		  "T2"
-	  ],
-     "block_state":1,
+	   ],
+      "block_state":1,
    }
    <<< 404
    {
-	 "data": null,
-	 "error": "notFound",
-	 "message": "请求更新的社团不存在"
+	   "data": null,
+	   "error": "notFound",
+	   "message": "请求更新的社团不存在"
    }
    ```
 
-### 封禁社团
-
-	封禁指定社团
+### 封禁或解禁社团
 
 - HTTP Request
 
-   **PUT** `/illegal_association`
+   **PATCH** `/associations/{applicantId}`
 
 - Body Parameters
 
    |Parameter | Description |
    |---|---|
-   |`associationId` string | 社团id |
-   |`reason` string | 封禁理由 |
+   |`type` _string_|操作类型,"block"表示封禁，"unblock"表示解禁|
+   |`description` string | 操作描述 |
 
 - Response
 
    |code|description|
    |---|---|
-   |200 [_Association_](#Association) | 封禁成功 |
+   |200 [_Association_](#Association) | 操作成功 |
    |400  [_ErrorResponse_](#ErrorResponse)| 无效的格式 |
    |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
 
 - example
    ``` json
-	>>> PUT /illegal_association
+	>>> PUT /associations/123
 	{
-		"associationId":"123",
-		"reason":"asd",
+      "type":"block",
+		"description":"asd",
 	}
 	<<< 200
 	{
-		"id":1,
-		"name":"Association1",
-		"description":"nothing to say",
-		"logo":"image1(base64)",
-		"tags":[
-			"T1",
-			"T2",
-		],
-		"block_state":1,
-		"reason":"18+"
-	},
+      "data":{
+         "id":1,
+         "name":"Association1",
+         "description":"nothing to say",
+         "logo":"image1(base64)",
+         "tags":[
+            "T1",
+            "T2",
+         ],
+         "block_state":1,
+         "reason":"18+"
+      },
+      "error":null,
+      "message":null
+   }
    ```json
-   >>> PUT /illegal_association
+   >>> PUT /associations/123
 	{
 		"id":1,
 		"name":"Association1",
@@ -493,10 +481,16 @@
 		],
 		"block_state":1,
 		"reason":"18+"
-	},
+   },
+   <<< 400	
+   {
+	 "data":null ,
+	 "error": "invalidFormat",
+	 "message": "无效的格式"
+   }
 	```
 	```json
-	>>> PUT /illegal_association
+	>>> PUT /associations/123
 	{
 		"associationId":"123999",
 		"reason":"asd",
@@ -504,92 +498,39 @@
 	<<< 404
 	{
 		"data":null,
-        "error": "notFound",
-        "message": "社团id不存在"
-    }
+      "error": "notFound",
+      "message": "社团id不存在"
+   }
 	```
 
-### 解封社团
-
-- HTTP Request
-
-   **PUT** `/legal_association/{associationId}`
-
-- Path Parameters
-
-   |Parameter | Description |
-   |---|---|
-   |`associationId` string | 社团id |
-
-- Response
-
-   |code|description|
-   |---|---|
-   |200 [_Association_](#Association) | 封禁成功 |
-   |400  [_ErrorResponse_](#ErrorResponse)| 无效的格式 |
-   |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
-
-- example
-   ``` json
-	>>> PUT /legalAssociation
-	{
-		"associationId":"123",
-	}
-	<<< 200
-	{
-		"id":1,
-		"name":"Association1",
-		"description":"nothing to say",
-		"logo":"image1(base64)",
-		"tags":[
-			"T1",
-			"T2",
-		],
-		"block_state":1,
-		"reason":"18+"
-	},
-	```
-	``` json
-	>>> PUT /legalAssociation
-	{
-		"tags":[
-			"T1",
-			"T2",
-		],
-		"block_state":1,
-		"reason":"18+"
-	}
-	<<< 400
-   {
-	   "data":null,
-       "error": "invalidFormat",
-       "message": "无效的申请格式"
-   }
-   ```
-   ``` json
-   >>> PUT /legalAssociation
-   {
-   	"associationId":"123",
-   }
-   <<< 404
-   {
-	   "data":null,	   
-       "error": "notFound",
-       "message": "社团id不存在"
-   }
-   ```
 ### 社团申请处理
+
 - HTTP Request
 
-	**POST** `/association_application`
+	**POST** `/association_applications`
 
 - Body Parameters
 
    |Parameter | Description |
    |---|---|
-   |`userId` string | 社团id |
+   |`userId` string | 操作者id |
    |`operation` string| 申请操作（创建申请，解禁申请）|
-   |`application`  [_Association_](#Association) |申请对象| 
+   |`application`  [_Association_](#Association) | 申请对象 | 
+
+#### 申请
+
+- <a id='Application'></a>**Application**
+
+   |Field|Description|
+   |--|--|
+   |`id` _int_|申请ID|
+   |`applicantId` _int_|申请者ID|
+   |`type` _string_|申请类型|
+   |`association` [_Association_](#Association)|自定义json对象|
+   |`materialIds` _int[]_|申请材料ID列表|
+   |`createdTime` _string_|申请时间|
+   |`handledTime` _string_|处理时间|
+   |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
 
 - Response
 
@@ -603,10 +544,10 @@
 
 - example
    ``` json
-	>>> POST /association_application
+	>>> POST /association_applications
 
 	{
-		"userId":"123",
+		"userId":123,
 		"operation":"_createAsso_",
 		"application":{
 			"id":"123",
@@ -650,7 +591,7 @@
 	}
    ```
    ```json
-   >>> POST /association_application
+   >>> POST /association_applications
    {
 	 "data":null,
      "error": "invalidFormat",
@@ -666,7 +607,7 @@
    ```
 
    ```json
-   >>> POST /association_application
+   >>> POST /association_applications
 	{
 		"userId":"12399999",
 		"operation":"_createAsso_",
@@ -704,7 +645,7 @@
 	}
    ```
    ```json
-   >>> POST /association_application
+   >>> POST /association_applications
 	{
 		"userId":"12399999",
 		"operation":"_createAsso_",
@@ -743,7 +684,7 @@
    ```
 
    ```json
-   >>> POST /association_application
+   >>> POST /association_applications
 	{
 		"userId":"122",
 		"operation":"_createAsso_",
