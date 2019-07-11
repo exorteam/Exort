@@ -8,7 +8,6 @@ steps:
   - name: cache
     path: /root/.m2
   commands:
-  - cat settings.xml
   - cd ./api_server
   - mvn clean package 
   when:
