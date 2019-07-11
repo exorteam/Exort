@@ -18,9 +18,9 @@
    |Field|Description|
    |--|--|
    |`pageNum` _int_|所返回的列表的实际的页码|
-   |`pageSize` _int_|所返回的列表的实际的申请数量|
-   |`totalSize` _int_|总的申请数量|
-   |`content` [_Association[]_](#Association)|申请列表|
+   |`pageSize` _int_|所返回的列表的实际的社团数量|
+   |`totalSize` _int_|总的社团数量|
+   |`content` [_Association[]_](#Association)|社团列表|
 
 
 ## 社团
@@ -58,8 +58,8 @@
 	|Code|Description|
 	|--|--|
 	|200 [_Association_](#Association)|查询成功|
-	|404 "notFound"|不存在的申请|
-	
+	|404  "notFound" | 社团不存在 |
+
 - Examples
 
    ```json
@@ -125,8 +125,10 @@
 
    |Code|Description|
    |--|--|
-   |200 [_Association_](#Association)[] | 查询成功成功|
-   |400  [_ErrorResponse_](#ErrorResponse)| 创建失败,无效的格式 |
+   |200 [_AssociationList_](#AssociationList)||
+   |400 "invalidBlockState"| 无效的封禁状态  |
+   |400 "invalidTags"|无效的标签 |
+   
 
 - Examples
 
@@ -242,8 +244,8 @@
 
    |code|description|
    |---|---|
-   |200 [_Association_](#Association) | 创建成功 |
-   |400  [_ErrorResponse_](#ErrorResponse)| 创建失败,无效的格式 |
+   |200 Association | 创建成功 |
+   |400 invalidFormat| 创建失败,无效的格式 |
 
 - example
 
@@ -296,8 +298,8 @@
    |code|description|
    |---|---|
    |200 {} | 删除成功 |
-   |400  [_ErrorResponse_](#ErrorResponse)| 无效的社团id |
-   |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
+   |400  invalidAssociationId | 无效的社团id |
+   |404  notFound | 社团id不存在 |
 
 - example
 	``` json
@@ -358,9 +360,9 @@
 - Response
    |code|description|
    |---|---|
-   |200 [_Association_](#Association) | 更新成功 |
-   |400  [_ErrorResponse_](#ErrorResponse)| 无效的格式 |
-	|404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
+   |200 Association | 更新成功 |
+   |400  invalidFormat | 无效的格式 |
+	|404  notFound| 社团id不存在 |
 
 - example
    ``` json
@@ -451,9 +453,9 @@
 
    |code|description|
    |---|---|
-   |200 [_Association_](#Association) | 操作成功 |
-   |400  [_ErrorResponse_](#ErrorResponse)| 无效的格式 |
-   |404  [_ErrorResponse_](#ErrorResponse)| 社团id不存在 |
+   |200 {} | 操作成功 |
+   |400 invalidFormat| 无效的格式 |
+   |404 notFound| 社团id不存在 |
 
 - example
    ``` json
@@ -547,11 +549,11 @@
 
    |code|description|
    |---|---|
-   |200 [_Association_](#Association) | 申请成功 |
-   |400  [_ErrorResponse_](#ErrorResponse)| 无效的格式 |
-   |401 [_ErrorResponse_](#ErrorResponse)|用户未提供身份验证凭据，或者没有通过身份验证|
-   |403 [_ErrorResponse_](#ErrorResponse)|用户通过了身份验证，但是不具有访问资源所需的权限|
-   |404  [_ErrorResponse_](#ErrorResponse)| 社团不存在 |
+   |200 {} | 申请成功 |
+   |400  invalidFormat| 无效的格式 |
+   |401 noAuthorized|用户未提供身份验证凭据，或者没有通过身份验证|
+   |403 noAuthorized|用户通过了身份验证，但是不具有访问资源所需的权限|
+   |404  notFoundFound| 社团不存在 |
 
 - example
    ``` json
