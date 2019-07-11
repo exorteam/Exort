@@ -49,7 +49,7 @@ steps:
     branch:
     - api-server
 
- volumes:
+volumes:
   - name: cache
     host:
       path: /home/ubuntu/repo
