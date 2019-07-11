@@ -1,4 +1,4 @@
-# Helm & Tiller & Istio
+# Install Istio with Helm
 
 References:
 
