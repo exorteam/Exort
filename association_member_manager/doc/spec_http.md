@@ -187,8 +187,8 @@
     "error": "BadRequest",
     "message": "部门创建信息不合法"
   }
-  ```
-  
+```
+
 
 ### 删除部门
 
@@ -297,19 +297,23 @@
   ```
   
   ```json
->>> PUT /associations/1/departments/23515
+  PUT /associations/1/departments/23515
   {
-      "name":"asfawd",
-      "description":"asfqwdw",
-      "parentId":0
+        "name":"asfawd",
+        "description":"asfqwdw",
+        "parentId":0
   }
   
   <<< 404
   {
-    "data":null,
-    "error":"DepartmentNotFound",
-    "message":"不存在该部门",
+      "data":null,
+      "error":"DepartmentNotFound",
+      "message":"不存在该部门",
   }
+  ```
+
+
+
   ```
   
   ```json
@@ -327,7 +331,7 @@
     "message":"无效父节点",
   }
   ```
-  
+
   ```json
   >>> PUT /associations/1/departments/2213124
   {
@@ -343,7 +347,7 @@
     "message":"修改的部门信息不合法",
   }
   ```
-  
+
   
 
 ### 得到某个部门的成员列表
@@ -431,6 +435,8 @@
   ```json
   >>> DELETE /associations/1/departments/2/members/205186
   
+  ```
+
 <<< 400
   {
       "data":null,
@@ -449,7 +455,7 @@
       "message":"不存在该部门"
 }
   ```
-  
+
   ```json
   >>> DELETE /associations/1123123/departments/2/members/20
   
@@ -460,7 +466,7 @@
       "message":"不存在该社团"
   }
   ```
-  
+
   ```json
   >>> DELETE /associations/1/departments/2/members/22
   
@@ -471,7 +477,7 @@
       "message":"社团中不存在该用户"
   }
   ```
-  
+
   
 
 ### 为某个部门添加成员
@@ -519,36 +525,36 @@
   ```
   
   ```json
->>> POST /associations/123/departments/2/members
+  >>> POST /associations/123/departments/2/members
   {
-      "userId":20
+         "userId":20
   }
   
   <<< 404
   {
-      "data":null,
-      "error":"AssociationNotFound",
-      "message":"不存在该社团"
+        "data":null,
+        "error":"AssociationNotFound",
+        "message":"不存在该社团"
   }
   ```
   
   ```json
   >>> POST /associations/1/departments/21412/members
   {
-    "userId":20
+      "userId":20
   }
-  
-  
+    
+    
   <<< 404
   {
-      "data":null,
-      "error":"DepartmentNotFound",
-      "message":"不存在该部门"
-  }
+       "data":null,
+       "error":"DepartmentNotFound",
+       "message":"不存在该部门"
+  } 	
   ```
+
   
-  
-  
+
   ```json
   >>> POST /associations/1/departments/21412/members
   {
@@ -811,7 +817,7 @@
   ```
   
   ```json
-  >>> DELETE /associations/1/members/201231
+  >>> DELETE /associations/1/members/200231
 
   <<< 400
   {
@@ -890,7 +896,7 @@
 ```json
   >>> POST /associations/1/members
   {
-      "userId":20151
+      "userId":20051
   }
   
   <<< 400
@@ -899,8 +905,8 @@
       "error":"InvalidUserId",
       "message":"不存在该用户"
   }
-  ```
-  
+```
+
   ```json
 >>> POST /associations/111/members
   {
