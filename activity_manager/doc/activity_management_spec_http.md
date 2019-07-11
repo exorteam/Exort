@@ -1,7 +1,7 @@
 ## 活动管理
 - **Activity**
 
-   - 活动时间范围 NewDateTime
+   - **NewDateTime** 活动时间范围
       - 范围类型 int timeType
       - 时间范围 String time, String[] time...
 
@@ -140,19 +140,19 @@
 
       |Parameter|Description|
       |---|---|
-      |int[] associationIds| 社团IDS |
-      |string title|标题|
-      |string content|内容（简介）|
-      |NewDateTime signupTime|报名时间范围|
-      |NewDateTime time|活动时间范围|
-      |bool ifReview|报名是否需要审核|
-      |bool ifOnlyMem|是否仅社团成员参加|
-      |int numberOfParticipants|最大参加人数|
-      |int[] materialTemplateIds|材料模板|
-      |string[] tags|标签|
-    
-   - Response  
-    
+      |`associationIds`_int[]_| 社团IDS |
+      |`title`_string_|标题|
+      |`content`_string_|内容（简介）|
+      |`signupTime`_NewDateTime_|报名时间范围|
+      |`time`_NewDateTime_|活动时间范围|
+      |`ifReview`_bool_|报名是否需要审核|
+      |`ifOnlyMem`_bool_|是否仅社团成员参加|
+      |`numberOfParticipants`_int_|最大参加人数|
+      |`materialTemplateIds`_int[]_|材料模板|
+      |`tags`_string[]_|标签|
+
+   - Response
+
       |code|description|
       |---|---|
       |200-(活动对象)|修改成功|
@@ -247,17 +247,17 @@
 
       |Parameter|Description|default Value|
       |---|---|---|
-      |associationId| 社团ID |创建者|
-      |tags|标签|[](空列表)|
-      |keyword|内容（简介）| null |
-      |createTime|创建时间| null |
-      |signupTime|报名时间| null |
-      |startTime|开始时间| null |
-      |int publishState | 活动状态(0/unpublished, 1/published)| -1 |
-      |int signupState| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
-      |int state | 活动状态(0未开始，1进行中，2已结束) | -1 |
-      |bool ifReview|报名是否需要审核| -1 |
-      |bool ifOnlyMem|活动是否仅社团成员可参加| -1 |
+      |`associationId`_int_| 社团ID |创建者|
+      |`tags`_string[\]_|标签|[](空列表)|
+      |`keyword`_string_|内容（简介）| null |
+      |`createTime`_string_|创建时间| null |
+      |`signupTime`_string_|报名时间| null |
+      |`startTime`_string_|开始时间| null |
+      |`publishState`_int_| 活动状态(0/unpublished, 1/published)| -1 |
+      |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
+      |`state`_int_| 活动状态(0未开始，1进行中，2已结束) | -1 |
+      |`ifReview`_bool_|报名是否需要审核| -1 |
+      |`ifOnlyMem`_bool_|活动是否仅社团成员可参加| -1 |
 
    - Response  
 
@@ -367,7 +367,7 @@
 
       |Parameter|Description|
       |---|---|
-      |string type| 修改类型（publish，withdraw） |
+      |`type`_string_| 修改类型（publish，withdraw） |
 
    - Response  
 
@@ -407,7 +407,7 @@
 
       |Parameter|Description|
       |---|---|
-      |int[] participantIds|待参加者列表|
+      |`participantIds`_int[]_|待参加者列表|
 
    - Response
 
@@ -448,7 +448,7 @@
 
       |Parameter|Description|
       |---|---|
-      |int[] realParticipantsIds|待加入的实际参加者列表|
+      |`realParticipantsIds`_int[]_|待加入的实际参加者列表|
 
    - Response
 
@@ -489,7 +489,7 @@
 
       |Parameter|Description|
       |---|---|
-      |int[] participantsIds|待移除参加者列表|
+      |`participantsIds`_int[]_|待移除参加者列表|
 
    - Response
 
@@ -530,14 +530,14 @@
 
       |Parameter|Description|
       |---|---|
-      |pageNum|页码|
-      |pageSize|每页数量|
+      |`pagenum`_int_|页码|
+      |`pagesize`_int_|每页数量|
 
    - Body Parameters
 
       |Parameter|Description|
       |---|---|
-      |userId|用户ID|
+      |`userId`_int_|用户ID|
 
    - Response  
 
@@ -578,14 +578,14 @@
 
       |Parameter|Description|
       |---|---|
-      |pageNum|页码|
-      |pageSize|每页数量|
+      |`pagenum`_int_|页码|
+      |`pagesize`_int_|每页数量|
 
    - Body Parameters
 
       |Parameter|Description|
       |---|---|
-      |userId|用户ID|
+      |`userId`_int_|用户ID|
 
    - Response  
 
@@ -618,24 +618,38 @@
       ```
 
 10. 活动报名申请回调
+    - **Application**
+       |Field|Description|
+       |--|--|
+       |`id`_int_|申请ID|
+       |`applicantId`_int_|申请者ID|
+       |`type`_string_|申请类型|
+       |`object`_Signup_| 加入活动申请信息|
+       |`materialIds`_int[]_|申请材料ID列表|
+       |`createdTime`_string_|申请时间|
+       |`handledTime`_string_|处理时间|
+       |`state`_string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
+
+   - **Signup**
+       |`activityId`_int_|活动ID|
 
    - Http Request  
    **POST** `/callback/acceptsignup`
 
    - Body Parameters
 
-      |Parameter|Description|
-      |---|---|
-      |int operatorId| 操作者ID |
-      |string action| 操作 |
-      |SignUp signup|申请|
+       |Parameter|Description|
+       |---|---|
+       |`operatorId`_int_| 操作者ID |
+       |`action`_string_| 操作 |
+       |`application`_Application_|申请|
 
    - Response
 
-      |code|description|
-      |---|---|
-      |200-(无实际返回值)|回调成功|
-      |400-(错误信息)|回调失败|
+       |code|description|
+       |---|---|
+       |200-(无实际返回值)|回调成功|
+       |400-(错误信息)|回调失败|
 
       ```json
       >>> POST /callback/acceptsignup
