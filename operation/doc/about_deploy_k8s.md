@@ -50,6 +50,7 @@
 1. The connection to the server localhost:8080 was refused
 
 参考github上kubernetes的issue(https://github.com/kubernetes/kubernetes/issues/44665)
+	
 	```
 	sudo cp /etc/kubernetes/admin.conf $HOME/
 	sudo chown $(id -u):$(id -g) $HOME/admin.conf
