@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import exort.apiserver.entity.UserInfo;
 import exort.apiserver.repository.UserRepository;
 import exort.apiserver.service.UserService;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -39,6 +41,8 @@ public class UserServiceImpl implements UserService {
 		user.setId(id);
 
 		userRepository.save(user);
+		log.info("created user: "+user.getUsername()+":"+user.getPassword());
+
 		return id;
 	}
 
@@ -47,17 +51,17 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 
-	public int auth(String username,String password){
-		if(!userRepository.existsByUsername(username)){
-			return -1;
-		}
+	//public int auth(String username,String password){
+	//    if(!userRepository.existsByUsername(username)){
+	//        return -1;
+	//    }
 
-		UserInfo user = userRepository.findByUsername(username);
-		String pwd = user.getPassword();
-		if(!pwd.equals(password)){
-			return -1;
-		}
+	//    UserInfo user = userRepository.findByUsername(username);
+	//    String pwd = user.getPassword();
+	//    if(!pwd.equals(password)){
+	//        return -1;
+	//    }
 
-		return user.getType();
-	}
+	//    return user.getType();
+	//}
 }
