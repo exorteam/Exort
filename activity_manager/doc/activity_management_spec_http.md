@@ -2,31 +2,37 @@
 - **Activity**
 
    - **NewDateTime** 活动时间范围
-      - 范围类型 int timeType
-      - 时间范围 String time, String[] time...
+      - 范围类型 _int_ `timeType`
+      - 时间范围 _String_ `time`, _String[]_ `time`...
 
    |属性|说明|
    |---|---|
-   |int id | |
-   |int[] associationIds | 组织者|
-   |Datetime createTime | 创建时间 |
-   |Datetime publishTime | 第一次发布时间 |
-   |Datetime lastPublishTime | 最后一次发布时间 |
-   |Datetime lastModifyTime | 最后一次修改时间 |
-   |string title | 活动标题 |
-   |string content | 活动内容 |
-   |int publishState | 活动状态, unpublished, published |
-   |NewDateTime signupTime | 活动报名时间范围 |
-   |NewDateTime time | 活动时间范围 |
-   |int signupState| 报名状态(0报名未开始，1报名中，2报名已结束) |
-   |int state | 活动状态(0未开始，1进行中，2已结束) |
-   |bool ifReview | 报名是否需要审核 |
-   |bool ifOnlyMem | 是否只有社团成员可以报名 |
-   |int maxParticipants | 最大参与人数 |
-   |int[] materialTemplateIds | 报名材料模板 |
-   |int[] participantIds | 参与者ID列表 |
-   |int[] actualParticipantIds | 实际参加者ID列表 |
-   |String[] tags| 标签列表 |
+   |`id`_int_| |
+   |`associationIds`_int[]_| 组织者|
+   |`createTime`_Datetime_| 创建时间 |
+   |`publishTime`_Datetime_| 第一次发布时间 |
+   |`lastPublishTime`_Datetime_| 最后一次发布时间 |
+   |`lastModifyTime`_Datetime_| 最后一次修改时间 |
+   |`title`_string_| 活动标题 |
+   |`content`_string_| 活动内容 |
+   |`publishState`_int_| 活动状态, unpublished, published |
+   |`signupTime`_NewDateTime_| 活动报名时间范围 |
+   |`time`_NewDateTime_| 活动时间范围 |
+   |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束) |
+   |`state`_int_| 活动状态(0未开始，1进行中，2已结束) |
+   |`ifReview`_bool_| 报名是否需要审核 |
+   |`ifOnlyMem`_bool_| 是否只有社团成员可以报名 |
+   |`maxParticipants`_int_| 最大参与人数 |
+   |`materialTemplateIds`_int[]_| 报名材料模板 |
+   |`participantIds`_int[]_| 参与者ID列表 |
+   |`actualParticipantIds`_int[]_| 实际参加者ID列表 |
+   |`tags`__String[]__| 标签列表 |
+
+   - **AvtivityList** 活动列表
+      - `pagenum` _int_  实际的页码
+      - `pagesize` _int_   min(MaxPageSize, 请求的pageSize)
+      - `totalsize` _int_  总的活动数量
+      - `content` _Activity[]_  实际活动内容列表 
 
 1. 创建活动（社团管理员）
    - Http Request  
@@ -36,16 +42,16 @@
 
       |Parameter|Description|
       |---|---|
-      |int[] associationIds| 社团IDs |
-      |string title|标题|
-      |string content|内容（简介）|
-      |NewDateTime signupTime|报名时间范围|
-      |NewDateTime time|活动时间范围|
-      |bool ifReview|报名是否需要审核|
-      |bool ifOnlyMem|是否仅社团成员参加|
-      |int numberOfParticipants|最大参加人数|
-      |int[] materialTemplateIds|材料模板|
-      |string[] tags|标签|
+      |`associationIds`_int[]_| 社团IDs |
+      |`title`_string_|标题|
+      |`content`_string_|内容（简介）|
+      |`signupTime`_NewDateTime_|报名时间范围|
+      |`time`_NewDateTime_|活动时间范围|
+      |`ifReview`_bool_|报名是否需要审核|
+      |`ifOnlyMem`_bool_|是否仅社团成员参加|
+      |`numberOfParticipants`_int_|最大参加人数|
+      |`materialTemplateIds`_int[]_|材料模板|
+      |`tags`_string[]_|标签|
 
    - Response  
    
@@ -239,9 +245,9 @@
 
       |Parameter|Description|default Value|
       |---|---|---|
-      |pageSize|每页数量|8|
-      |pageNum|页号|0|
-      |int sortBy|排序方式|0|
+      |`pagesize`|每页数量|8|
+      |`pagenum`|页号|0|
+      |`sortby`|排序方式|0|
 
    - Body Parameters
 
@@ -286,64 +292,69 @@
       ```json
       <<< 200
          {
-            "data": [
-                {
-                    "id": 21,
-                    "associationIds": [1,2,...],
-                    "createTime": "2019-07-11",
-                    "publishTime": "2019-07-11",
-                    "lastPublishTime": "2019-07-11",
-                    "lastModifyTime": "2019-07-11",
-                    "title": "abc",
-                    "content": "qewretrytretyjdhgeewfwqdw",
-                    "publishState": 0,
-                    "signupTime": {
-                        "timeType": 0,
-                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+            "data": {
+                "pagenum": 8,
+                "pagesize":1,
+                "totalnum":1,
+                "content":[
+                    {
+                        "id": 21,
+                        "associationIds": [1,2,...],
+                        "createTime": "2019-07-11",
+                        "publishTime": "2019-07-11",
+                        "lastPublishTime": "2019-07-11",
+                        "lastModifyTime": "2019-07-11",
+                        "title": "abc",
+                        "content": "qewretrytretyjdhgeewfwqdw",
+                        "publishState": 0,
+                        "signupTime": {
+                            "timeType": 0,
+                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                        },
+                        "time": {
+                            "timeType": 0,
+                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                        },
+                        "signupState": 0, 
+                        "state": 0,
+                        "ifReview": true,
+                        "ifOnlyMem": true,
+                        "maxParticipants":30,
+                        "materialTemplateIds": [1,2,3],
+                        "participantIds": [1,2,3,...],
+                        "actualParticipantIds": [1,2,3,...], 
+                        "tags": ["tag1", "tag2", ...]
                     },
-                    "time": {
-                        "timeType": 0,
-                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
-                    },
-                    "signupState": 0, 
-                    "state": 0,
-                    "ifReview": true,
-                    "ifOnlyMem": true,
-                    "maxParticipants":30,
-                    "materialTemplateIds": [1,2,3],
-                    "participantIds": [1,2,3,...],
-                    "actualParticipantIds": [1,2,3,...], 
-                    "tags": ["tag1", "tag2", ...]
-                },
-                {
-                    "id": 21,
-                    "associationIds": [1,2,...],
-                    "createTime": "2019-07-11",
-                    "publishTime": "2019-07-11",
-                    "lastPublishTime": "2019-07-11",
-                    "lastModifyTime": "2019-07-11",
-                    "title": "abc",
-                    "content": "qewretrytretyjdhgeewfwqdw",
-                    "publishState": 0,
-                    "signupTime": {
-                        "timeType": 0,
-                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
-                    },
-                    "time": {
-                        "timeType": 0,
-                        "time": "2019-07-11 09:31 - 2019-07-11 09:31"
-                    },
-                    "signupState": 0, 
-                    "state": 0,
-                    "ifReview": true,
-                    "ifOnlyMem": true,
-                    "maxParticipants":30,
-                    "materialTemplateIds": [1,2,3],
-                    "participantIds": [1,2,3,...],
-                    "actualParticipantIds": [1,2,3,...], 
-                    "tags": ["tag1", "tag2", ...]
-                }
-            ],
+                    {
+                        "id": 21,
+                        "associationIds": [1,2,...],
+                        "createTime": "2019-07-11",
+                        "publishTime": "2019-07-11",
+                        "lastPublishTime": "2019-07-11",
+                        "lastModifyTime": "2019-07-11",
+                        "title": "abc",
+                        "content": "qewretrytretyjdhgeewfwqdw",
+                        "publishState": 0,
+                        "signupTime": {
+                            "timeType": 0,
+                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                        },
+                        "time": {
+                            "timeType": 0,
+                            "time": "2019-07-11 09:31 - 2019-07-11 09:31"
+                        },
+                        "signupState": 0, 
+                        "state": 0,
+                        "ifReview": true,
+                        "ifOnlyMem": true,
+                        "maxParticipants":30,
+                        "materialTemplateIds": [1,2,3],
+                        "participantIds": [1,2,3,...],
+                        "actualParticipantIds": [1,2,3,...], 
+                        "tags": ["tag1", "tag2", ...]
+                    }
+                ]
+            },
             "error": "",
             "message": ""
          }
@@ -384,7 +395,12 @@
    ```json
    <<< 200
       {
-          "data": {},
+          "data": {
+              "pagenum":2,
+              "pagesize":0,
+              "totalsize":78,
+              "content":[]
+          },
           "error": "",
           "massage": "",
       }
@@ -425,7 +441,12 @@
       ```json
       <<< 200
       {
-          "data": {},
+          "data": {
+              "pagenum":2,
+              "pagesize":0,
+              "totalsize":78,
+              "content":[]
+          },
           "error": "",
           "massage": "",
       }
@@ -466,7 +487,12 @@
       ```json
       <<< 200
       {
-          "data": {},
+          "data": {
+              "pagenum":2,
+              "pagesize":0,
+              "totalsize":78,
+              "content":[]
+          },
           "error": "",
           "massage": "",
       }
@@ -507,7 +533,12 @@
       ```json
       <<< 200         
       {
-          "data": {},
+          "data": {
+              "pagenum":2,
+              "pagesize":0,
+              "totalsize":78,
+              "content":[]
+          },
           "error": "",
           "massage": "",
       }
@@ -674,7 +705,12 @@
       ```json
       <<< 200
       {
-          "data": {},
+          "data": {
+              "pagenum":2,
+              "pagesize":0,
+              "totalsize":78,
+              "content":[]
+          },
           "error": "",
           "massage": "",
       }
@@ -687,3 +723,5 @@
           "message": "yyyy/mm/dd" + "操作者没有权限"
       }
       ```
+
+11. 查询单个活动
