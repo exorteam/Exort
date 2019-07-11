@@ -1,5 +1,6 @@
 package exort.associationmanager.serviceimpl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import exort.associationmanager.entity.Application;
@@ -110,18 +111,29 @@ public class AssociationServiceImpl implements AssociationService{
         responseBody.setMessage("");
         responseBody.setError("");
         return responseBody;
-    };
+    }
+
+    private ResponseBody  noAssoMessage (ResponseBody responseBody){
+        responseBody.setData(null);
+        responseBody.setError("notFound");
+        responseBody.setMessage("社团不存在");
+        return responseBody;
+    }
 
     public ResponseBody deleteAssociation(Integer assoId ){
         ResponseBody responseBody = new ResponseBody();
-        if(!assoRepository.existsById(assoId)) return false;
+        if(!assoRepository.existsById(assoId)){
+            return  noAssoMessage(responseBody);
+        }
         assoRepository.deleteById(assoId);
-        return true;
-    };
-
+        responseBody.setData(new HashMap());
+        return responseBody;
+    }
     public ResponseBody editAssociation(Integer assoId, String name, String description, List<String> tags, String logo){
         ResponseBody responseBody = new ResponseBody();
-        if(!assoRepository.existsById(assoId)) return null;
+        if(!assoRepository.existsById(assoId)){
+            return  noAssoMessage(responseBody);
+        }
 
         Association association = assoRepository.findById(assoId).get();
         association.setDescription(description);
@@ -129,35 +141,34 @@ public class AssociationServiceImpl implements AssociationService{
         association.setName(name);
         association.setLogo(logo);
         assoRepository.save(association);
-        return association;
+        responseBody.setData(association);
+
+        return responseBody;
     };
 
-    public  ResponseBody blockAssociation(Integer assoId,String reason){
+    public  ResponseBody patchAssociation(Integer assoId,String type,String reason){
         ResponseBody responseBody = new ResponseBody();
-        if(!assoRepository.existsById(assoId)) return false;
-
+        if(!assoRepository.existsById(assoId)){
+            return  noAssoMessage(responseBody);
+        }
         Association association = assoRepository.findById(assoId).get();
         association.setState(1);
         association.setReason(reason);
         assoRepository.save(association);
-        return true;
+
+        responseBody.setData(new HashMap());
+        return responseBody;
     };
 
 
     public ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app ){
-//        public static final int UNHANDLED = 0 ;
-//        public static final int ACCEPT = 1 ;
-//        public static final int REFUSED = 2 ;
-//        public static final int CANCELED = 3 ;
-//        public static final int CANCELED = 3 ;
-
+        ResponseBody responseBody = new ResponseBody();
         switch (type){
             case "accept": //create association
                 switch (app.getType()){
                     case "create":
                         if(true){    //有权限，待修改
                              assoRepository.save(app.getAssociation());
-
                              return true;
                         }
                         return false;
@@ -197,9 +208,9 @@ public class AssociationServiceImpl implements AssociationService{
                         return false;
                 };
         };
-        return false;
+        default:
+
+        return responseBody;
     };
-
-
 
 }
