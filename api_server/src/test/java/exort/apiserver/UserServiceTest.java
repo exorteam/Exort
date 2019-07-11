@@ -24,9 +24,11 @@ public class UserServiceTest {
 	@Autowired
 	private UserRepository repository;
 
+	private final int USER_TYPE_TEST = -10;
+
 	@After
 	public void cleanTestRepository(){
-		repository.deleteAll();
+		repository.deleteAll(repository.findByType(USER_TYPE_TEST));
 	}
 
 	@Test
@@ -35,7 +37,7 @@ public class UserServiceTest {
 		final String password = UUID.randomUUID().toString();
 
 		UserInfo info = new UserInfo();
-		info.setType(0);
+		info.setType(USER_TYPE_TEST);
 		info.setUsername(username);
 		info.setPassword(password);
 		
