@@ -16,7 +16,7 @@ steps:
     - api-server
 
 - name: build
-  image: thomasf/drone-mvn
+  image: maven
   volumes:
   - name: cache
     path: /root/.m2
