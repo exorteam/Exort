@@ -2,19 +2,6 @@ kind: pipeline
 name: exort-api-server
 
 steps:
-- name: build-settings
-  image: knives/drone-maven-setting
-  settings:
-    servers:
-    - id: docker-hub
-      username: 
-        from_secret: docker_usr
-      password: 
-        from_secret: docker_pwd
-  when:
-    branch:
-    - api-server
-
 - name: build
   image: thomasf/drone-mvn
   volumes:
@@ -40,6 +27,7 @@ steps:
     source:
         - api_server/target/apiserver-0.1.jar
         - api_server/apiserver.yaml
+        - api_server/Dockerfile
   when:
     branch:
     - api-server
