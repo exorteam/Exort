@@ -16,15 +16,15 @@
 
 - <a id='Association'></a> **Association**
 
-      |Field | Description |
-      |---|---|
-      |`id` _int_|社团ID|
-      |`name` _string_ | 社团名 |
-      |`description` _string_  | 社团描述 |
-      |`logo` _string_  | 社团图标 |
-      |`tags` _string_[] | 社团标签 |
-      |`blockState` int | 社团是否封禁 0表示已封紧 |
-      |`reason` _string_ | 封禁理由 | 
+    |Field | Description |
+    |---|---|
+    |`id` _int_|社团ID|
+    |`name` _string_ | 社团名 |
+    |`description` _string_  | 社团描述 |
+    |`logo` _string_  | 社团图标 |
+    |`tags` _string_[] | 社团标签 |
+    |`blockState` int | 社团是否封禁 0表示已封紧 |
+    |`reason` _string_ | 封禁理由 | 
 ## 申请
 
 - <a id='Application'></a>**Application**
@@ -52,16 +52,16 @@
 	
 - Path Parameters
 	
-	   |Parameter|Description|
-	   |--|--|
-	   |`associationId` _int_|社团id|
+	|Parameter|Description|
+	|--|--|
+	|`associationId` _int_|社团id|
 	
 - Response
 	
-	   |Code|Description|
-	   |--|--|
-	   |200 [_Association_](#Association)|查询成功|
-	   |404 "notFound"|不存在的申请|
+	|Code|Description|
+	|--|--|
+	|200 [_Association_](#Association)|查询成功|
+	|404 "notFound"|不存在的申请|
 	
 - Examples
 
