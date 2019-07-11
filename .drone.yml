@@ -2,6 +2,19 @@ kind: pipeline
 name: exort-api-server
 
 steps:
+- name: build-settings
+  image: knives/drone-maven-setting
+  settings:
+    servers:
+    - id: docker-hub
+      username: 
+        from_secret: docker_usr
+      password: 
+        from_secret: docker_pwd
+  when:
+    branch:
+    - api-server
+
 - name: build
   image: thomasf/drone-mvn
   volumes:
@@ -9,8 +22,7 @@ steps:
     path: /root/.m2
   commands:
   - cd ./api_server
-  - mvn clean package
-  - docker build -t exort/api-server .
+  - mvn clean package docker:removeImage -DimageName=exort/api-server docker:build -DpushImage -s ../settings.xml
   when:
     branch:
     - api-server
