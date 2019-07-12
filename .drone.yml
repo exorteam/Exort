@@ -14,13 +14,15 @@ steps:
   - mvn clean package 
   when:
     branch:
-    - api-server
+    - deploy_on
 
 - name: scp
   image: appleboy/drone-scp
   settings:
-    host: 202.120.40.8
-    port: 30720
+    host: 
+        from_secret: deploy_host
+    port: 
+        from_secret: deploy_port
     username: ubuntu
     key:
         from_secret: deploy_key
@@ -31,13 +33,15 @@ steps:
         - api_server/Dockerfile
   when:
     branch:
-    - api-server
+    - deploy_on
 
 - name: ssh
   image: appleboy/drone-ssh
   settings:
-    host: 202.120.40.8
-    port: 30720
+    host: 
+        from_secret: deploy_host
+    port: 
+        from_secret: deploy_port
     username: ubuntu
     key:
         from_secret: deploy_key
@@ -49,7 +53,7 @@ steps:
         - kubectl apply -f apiserver.yaml
   when:
     branch:
-    - api-server
+    - deploy_on
 
 volumes:
   - name: cache
