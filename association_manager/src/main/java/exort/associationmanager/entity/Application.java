@@ -2,6 +2,8 @@ package exort.associationmanager.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -11,16 +13,16 @@ public class Application<T> {
     Integer Id;
     Integer applicantId;
     String type;
-    T object;
+    MyObject object;
     String materials[];
-    Date createTime;
-    Date handleTime;
+    String createTime;
+    String handleTime;
     String state;//0 unhandled,1 accept,2 refused,3 canceled
 
-    public AssociationInfo getAssociationInfo(){
-        return (AssociationInfo) object;
-    }
-    public BlockInfo getBlockInfo(){
-        return  (BlockInfo) object;
-    }
+//    public AssociationInfo getAssociationInfo(){
+//        return (AssociationInfo) object;
+//    }
+//    public BlockInfo getBlockInfo(){
+//        return  (BlockInfo) object;
+//    }
 }

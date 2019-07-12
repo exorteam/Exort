@@ -1,9 +1,13 @@
 package exort.associationmanager.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import exort.associationmanager.entity.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,7 +86,7 @@ public class AssociationServiceImpl implements AssociationService{
         association.setDescription(description);
         association.setLogo(logo);
         association.setTags(tags);
-        association.setState(2);
+        association.setState(1);
         association.setReason(null);
 
         Integer associationId = 1;
@@ -123,13 +127,22 @@ public class AssociationServiceImpl implements AssociationService{
 
     public  ResponseBody patchAssociation(Integer assoId,String type,String reason){
         ResponseBody responseBody = new ResponseBody();
+        Association association = assoRepository.findById(assoId).get();
         if(!assoRepository.existsById(assoId)){
             return  noAssoMessage(responseBody);
         }
-        Association association = assoRepository.findById(assoId).get();
-        association.setState(1);
-        association.setReason(reason);
-        assoRepository.save(association);
+        switch (type){
+            case "unblock":
+                association.setState(1);
+                association.setReason(reason);
+                assoRepository.save(association);
+                break;
+            case "block":
+                association.setState(0);
+                association.setReason(reason);
+                assoRepository.save(association);
+        }
+
         return responseBody.setAndGetResponsebody(new HashMap(),"","");
     };
     public ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app ){
@@ -139,16 +152,18 @@ public class AssociationServiceImpl implements AssociationService{
                 switch (app.getType()) {
                     case "createAssociation":
                         if (true) {    //有权限，待修改
-                            AssociationInfo assoInfo = app.getAssociationInfo();
-                            createAssociation(assoInfo.getName(), assoInfo.getDescription(), assoInfo.getTags(), assoInfo.getLogo());
+                            List<String> tags =new ArrayList();
+                            MyObject assoInfo = app.getObject();
+                            createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
                             return responseBody.setAndGetResponsebody(new HashMap(), "", "");
                         }
                         return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                     case "unblockAssociation":
                         if (true) {
-                            BlockInfo blockInfo = app.getBlockInfo();
-                            Association asso = assoRepository.findById(blockInfo.getAssociationId()).get();
+                            MyObject blockInfo = app.getObject();
+                            Association asso = assoRepository.findById(blockInfo.getAssoId()).get();
                             asso.setState(1);
+
                             assoRepository.save(asso);
                             return responseBody.setAndGetResponsebody(new HashMap(), "", "");
                         }

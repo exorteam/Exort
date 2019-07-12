@@ -15,7 +15,7 @@ public class Association {
     private String description;
     private String logo;
 	private List<String> tags;
-	private Integer state; //0 blocked,1 active, 2 applying
+	private Integer state; //0 blocked,1 active
 	private String reason;
 	public boolean hasTags(List<String> ask_tags){
 		int len = ask_tags.size();

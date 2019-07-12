@@ -28,8 +28,8 @@ public class AssociationManagerController{
     @Data
     private static class ApplicationAssociationInfo {
         private Integer userId;
-        private String operation;
-        private Application app;
+        private String event;
+        private Application application;
     }
 
 
@@ -58,23 +58,14 @@ public class AssociationManagerController{
         return service.editAssociation(assoId, body.getName(),body.getDescription(),body.getTags(),body.getLogo());
     }
 
-    @PutMapping("/illegal_association/{assoId}")
+    @PatchMapping("/associations/{assoId}")
     public ResponseBody patchAssociation(@RequestBody PatchAssociationInfo body,@PathVariable(value="assoId") Integer assoId ){
         return service.patchAssociation(assoId,body.getType(),body.getDescription());
     }
 
     @PostMapping("/callback")
     public ResponseBody handleAssociationApplication(@RequestBody ApplicationAssociationInfo body){
-        return service.handleAsoociationApplication(body.getUserId(),body.getOperation(),body.getApp());
+        return service.handleAsoociationApplication(body.getUserId(),body.getEvent(),body.getApplication());
     }
 
-    @RequestMapping("/test")
-    public String handleAssociationApplication() {
-        return "Hello world!";
-    }
-
-    @GetMapping("/test1")
-    public String AssociationApplication() {
-        return "Hello world!";
-    }
 }
