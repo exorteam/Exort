@@ -18,6 +18,8 @@ kind: Deployment
 metadata:
   name: api-server
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: api-server
