@@ -541,7 +541,7 @@
    |`event` string| 事件, 可以是 create, accept, refuse, cancel|
    |`application`  [_Application_](#Application) | 申请对象 |
 
-#### 申请
+#### 社团创建申请
 
 - <a id='Application'></a>**Application**
 
@@ -550,11 +550,42 @@
    |`id` _int_|申请ID|
    |`applicantId` _int_|申请者ID|
    |`type` _string_|申请类型|
-   |`object` [_Association_](#Association)|Association 对象|
+   |`associationInfo` [_AssociationInfo_](#AssociationInfo)|AssociationInfo 对象|
    |`materialIds` _int[]_|申请材料ID列表|
    |`createdTime` _string_|申请时间|
    |`handledTime` _string_|处理时间|
    |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
+
+#### 社团解禁申请
+
+- <a id='Application'></a>**Application**
+
+   |Field|Description|
+   |--|--|
+   |`id` _int_|申请ID|
+   |`applicantId` _int_|申请者ID|
+   |`type` _string_|申请类型|
+   |`blockInfo` [_BlockInfo_](#BlockInfo)|BlockInfo 对象|
+   |`materialIds` _int[]_|申请材料ID列表|
+   |`createdTime` _string_|申请时间|
+   |`handledTime` _string_|处理时间|
+   |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
+
+#### 社团信息(AssociationInfo)
+
+   |Field|Description|
+   |--|--|
+   |`name` _string_|社团名称|
+   |`description` _string_|社团描述|
+   |`logo` _string_|社团logo|
+   |`tags` _string[]_|社团标签|
+
+#### 封禁信息(BlockInfo)
+
+   |Field|Description|
+   |--|--|
+   |`associationId` _string_|社团Id|
+   |`reason` _string_|解禁理由|
 
 - Response
 
@@ -573,13 +604,12 @@
 
    {
       "userId":123,
-      "operation":"_createAsso_",
+      "event":"refuse",
       "application":{
          "id":"123",
          "applicantId":"111",
-         "type":"refuse",
-         "association":{
-            "id":1,
+         "type":"createAssociation",
+         "AssociationInfo":{
             "name":"Association1",
             "description":"nothing to say",
             "logo":"image1(base64)",
@@ -587,8 +617,6 @@
                "T1",
                "T2",
             ],
-            "block_state":1,
-            "reason":"18+"
          },
          "materialIds":[
             123,
@@ -619,6 +647,41 @@
    ```json
    >>> POST /association_applications
    {
+      "userId":123,
+      "event":"accept",
+      "application":{
+         "id":"123",
+         "applicantId":"111",
+         "type":"unblockAssociation",
+         "AssociationInfo":{
+            "name":"Association1",
+            "description":"nothing to say",
+            "logo":"image1(base64)",
+            "tags":[
+               "T1",
+               "T2",
+            ],
+         },
+         "materialIds":[
+            123,
+            1233
+         ],
+         "createdTime":"1111-2-23",
+         "handledTime":"1223-3-22",
+         "state":"_pending_"
+      }
+   }
+   <<< 200
+   {
+     "data": {} ,
+     "error": "",
+     "message": ""
+   }
+   ```
+
+   ```json
+   >>> POST /association_applications
+   {
     "data":null,
      "error": "invalidFormat",
      "message": "无效的申请格式"
@@ -636,13 +699,12 @@
    >>> POST /association_applications
    {
       "userId":"12399999",
-      "operation":"_createAsso_",
+      "event":"accept",
       "application":{
          "id":"123",
          "applicantId":"111",
          "type":"refuse",
          "association":{
-            "id":1,
             "name":"Association1",
             "description":"nothing to say",
             "logo":"image1(base64)",
