@@ -62,7 +62,7 @@
         },
         methods: {
             getall(){
-                this.axios.get("http://localhost:8080/user/all").then((res)=>{
+                this.axios.get("https://202.120.40.8:30729/user/all").then((res)=>{
                     // console.log(res.data);
                     this.data6=res.data
                 })
@@ -84,7 +84,7 @@
 
                 this.axios({
                 method:'post',
-                url:'http://localhost:8080/user/update',
+                url:'https://202.120.40.8:30729/user/update',
                 data:info
                 }).then((res)=>{
                 // console.log(res);
@@ -105,7 +105,7 @@
 
                 this.axios({
                 method:'post',
-                url:'http://localhost:8080/user/delete',
+                url:'https://202.120.40.8:30729/user/delete',
                 data:info
                 }).then((res)=>{
                 // console.log(res);
