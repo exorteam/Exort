@@ -42,9 +42,10 @@ steps:
     key:
         from_secret: deploy_key
     script:
+        - export KUBECONFIG=$HOME/admin.conf
         - cd /home/ubuntu/deploy/${DRONE_REPO}/api_server
         - sudo docker build -t exort/api-server . 
-        - sudo kubectl apply -f apiserver.yaml
+        - kubectl apply -f apiserver.yaml
   when:
     branch:
     - api-server
