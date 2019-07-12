@@ -44,6 +44,7 @@ steps:
     script:
         - export KUBECONFIG=$HOME/admin.conf
         - cd /home/ubuntu/deploy/${DRONE_REPO}/api_server
+        - sudo docker image rm exort/api-server
         - sudo docker build -t exort/api-server . 
         - kubectl apply -f apiserver.yaml
   when:
