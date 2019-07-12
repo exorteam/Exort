@@ -101,6 +101,243 @@
    }
    ```
 
+### 验证密码
+
+- HTTP Request
+
+   **GET** `/accounts/{email}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`email` _string_|要验证密码的邮箱|
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`auth` _bool_|是否要验证密码, 默认为 _true_|
+   |`password` _string_|要验证的密码|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 [_Account_](#Account)|通过验证|
+   |401 "wrongPassword"|密码错误|
+   |404 "notFound"|账号不存在|
+
+- Examples
+
+   ```json
+   >>> GET /accounts/hello%40exort.com
+   {
+       "password": "password"
+   }
+
+   <<< 200
+   {
+       "data": {
+           "email": "hello@exort.com",
+           "verified": "false",
+           "userId": null,
+           "createdTime": "2019-07-12T01:24:59.353Z",
+           "verifiedTime": null,
+           "protected": true,
+       },
+       "error": "",
+       "message": ""
+   }
+   ```
+
+   ```json
+   >>> GET /accounts/hello%40exort.com
+   {
+       "auth": false
+   }
+
+   <<< 200
+   {
+       "data": {
+           "email": "hello@exort.com",
+           "verified": "false",
+           "userId": null,
+           "createdTime": "2019-07-12T01:24:59.353Z",
+           "verifiedTime": null,
+           "protected": true,
+       },
+       "error": "",
+       "message": ""
+   }
+   ```
+
+   ```json
+   >>> GET /accounts/hello%40exort.com
+   {
+       "password": "fasljflsadjfi"
+   }
+
+   <<< 401
+   {
+       "data": null,
+       "error": "wrongPassword",
+       "message": "密码错误"
+   }
+   ```
+
+   ```json
+   >>> GET /accounts/fsfasl%exort.com
+   {
+       "auth": false
+   }
+
+   <<< 404
+   {
+       "data": null,
+       "error": "notFound",
+       "message": "账号不存在"
+   }
+   ```
+
+### 关联用户
+
+- HTTP Request
+
+   **POST** `/accounts/{email}/user`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`email` _string_|要关联用户的账号邮箱|
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`userId` _int_|要关联的用户ID|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 [_Account_](#Account)|关联成功|
+   |400 "invalidUserId"|用户不存在, 或用户已被其他账号绑定|
+   |404 "notFound"|账号不存在|
+   |409 "conflict"|账号已绑定了用户|
+
+- Examples
+
+   ```json
+   >>> POST /accounts/hello%40exort.com/user
+   {
+       "userId": 1
+   }
+
+   <<< 200
+   {
+       "data": {
+           "email": "hello@exort.com",
+           "verified": "false",
+           "userId": 1,
+           "createdTime": "2019-07-12T01:24:59.353Z",
+           "verifiedTime": null,
+           "protected": true
+       },
+       "error": "",
+       "message": ""
+   }
+
+   >>> POST /accounts/hello%40exort.com/user
+   {
+       "userId": 2
+   }
+
+   <<< 409
+   {
+       "data": null,
+       "error": "conflict",
+       "message": "账号已绑定了用户"
+   }
+   ```
+
+   ```json
+   >>> POST /accounts/world%40exort.com/user
+   {
+       "userId": 1
+   }
+
+   <<< 400
+   {
+       "data": null,
+       "error": "invalidUserId",
+       "message": "用户不存在, 或用户已被其他账号绑定"
+   }
+   ```
+
+   ```json
+   >>> POST /accounts/ajlfjsjdl%40exort.com/user
+   {
+       "userId": 1000
+   }
+
+   <<< 400
+   {
+       "data": null,
+       "error": "notFound",
+       "message": "账号不存在"
+   }
+   ```
+
+### 切换保护状态
+
+- HTTP Request
+
+   **PUT** `/accounts/{email}/protection`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`email` _string_|要切换保护状态的账号邮箱|
+   
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`protection` _bool_|是否要启用保护|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 [_Account_](#Account)|修改成功|
+   |404 "notFound"|账号不存在|
+
+- Examples
+
+   ```json
+   >>> PUT /accounts/world%40exort.com/protection
+   {
+       "protection": false
+   }
+
+   <<< 200
+   {
+       "data": {
+           "email": "world@exort.com",
+           "verified": "false",
+           "userId": null,
+           "createdTime": "2019-07-12T01:24:59.353Z",
+           "verifiedTime": null,
+           "protected": false
+       },
+       "error": "",
+       "message": ""
+   }
+   ```
+
 ### 更换密码
 
 - HTTP Request
@@ -186,96 +423,6 @@
        },
        "error": "",
        "message": ""
-   }
-   ```
-
-### 关联用户
-
-- HTTP Request
-
-   **POST** `/accounts/{email}/user`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`email` _string_|要关联用户的账号邮箱|
-
-- Body Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`userId` _int_|要关联的用户ID|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 [_Account_](#Account)|关联成功|
-   |400 "invalidUserId"|用户不存在, 或用户已被其他账号绑定|
-   |404 "notFound"|账号不存在|
-   |409 "conflict"|账号已绑定了用户, 更换关联用户请使用 PUT 方法|
-
-- Examples
-
-   ```json
-   >>> POST /accounts/hello%40exort.com/user
-   {
-       "userId": 1
-   }
-
-   <<< 200
-   {
-       "data": {
-           "email": "hello@exort.com",
-           "verified": "false",
-           "userId": 1,
-           "createdTime": "2019-07-12T01:24:59.353Z",
-           "verifiedTime": null,
-           "protected": true
-       },
-       "error": "",
-       "message": ""
-   }
-
-   >>> POST /accounts/hello%40exort.com/user
-   {
-       "userId": 2
-   }
-
-   <<< 409
-   {
-       "data": null,
-       "error": "conflict",
-       "message": "账号已绑定了用户"
-   }
-   ```
-
-   ```json
-   >>> POST /accounts/world%40exort.com/user
-   {
-       "userId": 1
-   }
-
-   <<< 400
-   {
-       "data": null,
-       "error": "invalidUserId",
-       "message": "用户不存在, 或用户已被其他账号绑定"
-   }
-   ```
-
-   ```json
-   >>> POST /accounts/ajlfjsjdl%40exort.com/user
-   {
-       "userId": 1000
-   }
-
-   <<< 400
-   {
-       "data": null,
-       "error": "notFound",
-       "message": "账号不存在"
    }
    ```
 
