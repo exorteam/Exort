@@ -10,71 +10,86 @@ public class Activity {
     @GeneratedValue
     private Long id;
 
-    private List<Long> association_ids;
+    private List<Long> associationIds;
 
-    private String create_time;
+    private String createTime;
 
-    private String publish_time;
+    private String publishTime;
 
-    private String last_publish_time;
+    private String lastPublishTime;
 
-    private String last_modify_time;
-
-    private String signup_start_time;
-
-    private String signup_end_time;
-
-    private String start_time;
-
-    private String end_time;
+    private String lastModifyTime;
 
     private String title;
 
     private String content;
 
+    private ActivityTime signupTime;
+
+    private ActivityTime time;
+
+    private int publishState;
+
+    private int signupState;
+
     private int state;
 
-    private boolean review;
+    private boolean ifReview;
 
-    private boolean only_members;
+    private boolean ifOnlyMembers;
 
-    private int max_participants;
+    private int maxParticipants;
 
-    private List<Long> material_template_ids;
+    private List<Long> materialTemplateIds;
 
-    private List<Long> participants_ids;
+    private List<Long> participantIds;
+
+    private List<Long> realParticipantIds;
+
+    private List<String> tags;
 
     public Activity(
-            String create_time,
-            String publish_time,
-            String last_publish_time,
-            String last_modify_time,
-            String signup_start_time,
-            String signup_end_time,
-            String start_time,
-            String end_time,
+            List<Long> associationIds,
+            String createTime,
+            String publishTime,
+            String lastPublishTime,
+            String lastModifyTime,
+            ActivityTime signupTime,
+            ActivityTime time,
             String title,
             String content,
+            int publishState,
+            int signupState,
             int state,
-            boolean review,
-            boolean only_members,
-            int max_participants
-    ){
-        this.create_time = create_time;
-        this.publish_time = publish_time;
-        this.last_publish_time = last_publish_time;
-        this.last_modify_time = last_modify_time;
-        this.signup_start_time = signup_start_time;
-        this.signup_end_time = signup_end_time;
-        this.start_time = start_time;
-        this.end_time = end_time;
+            boolean ifReview,
+            boolean ifOnlyMembers,
+            int maxParticipants,
+            List<Long> materialTemplateIds,
+            List<Long> participantIds,
+            List<Long> realParticipantIds,
+            List<String> tags
+    ) {
+        this.associationIds = associationIds;
+        this.createTime = createTime;
+        this.publishTime = publishTime;
+        this.lastPublishTime = lastPublishTime;
+        this.lastModifyTime = lastModifyTime;
+        this.signupTime = signupTime;
+        this.time = time;
         this.title = title;
         this.content = content;
+        this.publishState = publishState;
+        this.signupState = signupState;
         this.state = state;
-        this.review = review;
-        this.only_members = only_members;
-        this.max_participants = max_participants;
+        this.ifReview = ifReview;
+        this.ifOnlyMembers = ifOnlyMembers;
+        this.maxParticipants = maxParticipants;
+        this.materialTemplateIds = materialTemplateIds;
+        this.participantIds = participantIds;
+        this.realParticipantIds = realParticipantIds;
+        this.tags = tags;
     }
+
 
     public Long getId() {
         return id;
@@ -84,76 +99,44 @@ public class Activity {
         this.id = id;
     }
 
-    public List<Long> getAssociation_ids() {
-        return association_ids;
+    public List<Long> getAssociationIds() {
+        return associationIds;
     }
 
-    public void setAssociation_ids(List<Long> association_ids) {
-        this.association_ids = association_ids;
+    public void setAssociationIds(List<Long> associationIds) {
+        this.associationIds = associationIds;
     }
 
-    public String getCreate_time() {
-        return create_time;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(String create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
-    public String getPublish_time() {
-        return publish_time;
+    public String getPublishTime() {
+        return publishTime;
     }
 
-    public void setPublish_time(String publish_time) {
-        this.publish_time = publish_time;
+    public void setPublishTime(String publishTime) {
+        this.publishTime = publishTime;
     }
 
-    public String getLast_publish_time() {
-        return last_publish_time;
+    public String getLastPublishTime() {
+        return lastPublishTime;
     }
 
-    public void setLast_publish_time(String last_publish_time) {
-        this.last_publish_time = last_publish_time;
+    public void setLastPublishTime(String lastPublishTime) {
+        this.lastPublishTime = lastPublishTime;
     }
 
-    public String getLast_modify_time() {
-        return last_modify_time;
+    public String getLastModifyTime() {
+        return lastModifyTime;
     }
 
-    public void setLast_modify_time(String last_modify_time) {
-        this.last_modify_time = last_modify_time;
-    }
-
-    public String getSignup_start_time() {
-        return signup_start_time;
-    }
-
-    public void setSignup_start_time(String signup_start_time) {
-        this.signup_start_time = signup_start_time;
-    }
-
-    public String getSignup_end_time() {
-        return signup_end_time;
-    }
-
-    public void setSignup_end_time(String signup_end_time) {
-        this.signup_end_time = signup_end_time;
-    }
-
-    public String getStart_time() {
-        return start_time;
-    }
-
-    public void setStart_time(String start_time) {
-        this.start_time = start_time;
-    }
-
-    public String getEnd_time() {
-        return end_time;
-    }
-
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
+    public void setLastModifyTime(String lastModifyTime) {
+        this.lastModifyTime = lastModifyTime;
     }
 
     public String getTitle() {
@@ -172,6 +155,38 @@ public class Activity {
         this.content = content;
     }
 
+    public ActivityTime getSignupTime() {
+        return signupTime;
+    }
+
+    public void setSignupTime(ActivityTime signupTime) {
+        this.signupTime = signupTime;
+    }
+
+    public ActivityTime getTime() {
+        return time;
+    }
+
+    public void setTime(ActivityTime time) {
+        this.time = time;
+    }
+
+    public int getPublishState() {
+        return publishState;
+    }
+
+    public void setPublishState(int publishState) {
+        this.publishState = publishState;
+    }
+
+    public int getSignupState() {
+        return signupState;
+    }
+
+    public void setSignupState(int signupState) {
+        this.signupState = signupState;
+    }
+
     public int getState() {
         return state;
     }
@@ -180,43 +195,59 @@ public class Activity {
         this.state = state;
     }
 
-    public boolean isReview() {
-        return review;
+    public boolean isIfReview() {
+        return ifReview;
     }
 
-    public void setReview(boolean review) {
-        this.review = review;
+    public void setIfReview(boolean ifReview) {
+        this.ifReview = ifReview;
     }
 
-    public boolean isOnly_members() {
-        return only_members;
+    public boolean isIfOnlyMembers() {
+        return ifOnlyMembers;
     }
 
-    public void setOnly_members(boolean only_members) {
-        this.only_members = only_members;
+    public void setIfOnlyMembers(boolean ifOnlyMembers) {
+        this.ifOnlyMembers = ifOnlyMembers;
     }
 
-    public int getMax_participants() {
-        return max_participants;
+    public int getMaxParticipants() {
+        return maxParticipants;
     }
 
-    public void setMax_participants(int max_participants) {
-        this.max_participants = max_participants;
+    public void setMaxParticipants(int maxParticipants) {
+        this.maxParticipants = maxParticipants;
     }
 
-    public List<Long> getMaterial_template_ids() {
-        return material_template_ids;
+    public List<Long> getMaterialTemplateIds() {
+        return materialTemplateIds;
     }
 
-    public void setMaterial_template_ids(List<Long> material_template_ids) {
-        this.material_template_ids = material_template_ids;
+    public void setMaterialTemplateIds(List<Long> materialTemplateIds) {
+        this.materialTemplateIds = materialTemplateIds;
     }
 
-    public List<Long> getParticipants_ids() {
-        return participants_ids;
+    public List<Long> getParticipantIds() {
+        return participantIds;
     }
 
-    public void setParticipants_ids(List<Long> participants_ids) {
-        this.participants_ids = participants_ids;
+    public void setParticipantIds(List<Long> participantIds) {
+        this.participantIds = participantIds;
+    }
+
+    public List<Long> getRealParticipantIds() {
+        return realParticipantIds;
+    }
+
+    public void setRealParticipantIds(List<Long> realParticipantIds) {
+        this.realParticipantIds = realParticipantIds;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

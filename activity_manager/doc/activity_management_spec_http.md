@@ -1,9 +1,13 @@
 ## 活动管理
 - **Activity**
 
+   - **TimeRange** 时间范围
+      - _string_ `start`
+      - _string_ `end`
+
    - **NewDateTime** 活动时间范围
       - 范围类型 _int_ `timeType`
-      - 时间范围 _String_ `time`, _String[]_ `time`...
+      - 时间范围 _String_ `TimeRange`, _String[]_ `TimeRange`...
 
    |属性|说明|
    |---|---|
@@ -262,9 +266,9 @@
       |`associationId`_int_| 社团ID |创建者|
       |`tags`_string[\]_|标签|[](空列表)|
       |`keyword`_string_|内容（简介）| null |
-      |`createTime`_string_|创建时间| null |
-      |`signupTime`_string_|报名时间| null |
-      |`startTime`_string_|开始时间| null |
+      |`createTime`_TimeRange_|创建时间| null |
+      |`signupTime`_TimeRange_|报名时间| null |
+      |`startTime`_TimeRange_|开始时间| null |
       |`publishState`_int_| 活动状态(0/unpublished, 1/published)| -1 |
       |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
       |`state`_int_| 活动状态(0未开始，1进行中，2已结束) | -1 |
@@ -410,12 +414,7 @@
    ```json
    <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -456,12 +455,7 @@
       ```json
       <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -502,12 +496,7 @@
       ```json
       <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -548,12 +537,7 @@
       ```json
       <<< 200         
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }

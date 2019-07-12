@@ -1,22 +1,24 @@
 package exort.activity.service;
 
 import exort.activity.entity.Activity;
+import exort.activity.entity.Response;
+import exort.activity.entity.Select;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ActivityService {
-    Activity createActivity(Map<String, String> maps);
 
-    boolean modifyActivity(Activity activity);
+    Response changeActivityState(Long activityid, String type);
 
-    Activity getActivity(Long activity_id);
+    Response addUserIds(Long activityid, List<Long> userIds, int type);
 
-    boolean publish(Long activity_id);
+    Response removeParticipants(Long activityid, List<Long> participantIds);
 
-    boolean withdraw(Long activity_id);
+    Response getActivity(Long acticityid);
 
-    boolean addParticipants(Long activity_id, List<Long> participant_ids);
+    Response getActivityUserIds(int pagesize, int pagenum, Long activityid, Long userId, int type);
 
-    boolean removeParticipants(Long activity_id, List<Long> participant_ids);
+    Response upsertActivity(Activity activity);
+
+    Response getActivities(Select select, int pagesize, int pagenum, int sortby);
 }
