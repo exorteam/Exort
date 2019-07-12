@@ -12,7 +12,7 @@ steps:
   commands:
   - cd ./api_server
   - mvn clean package 
-  when:
+  trigger:
     branch:
     - deploy_on
 
@@ -31,7 +31,7 @@ steps:
         - api_server/target/apiserver-0.1.jar
         - api_server/apiserver.yaml
         - api_server/Dockerfile
-  when:
+  trigger:
     branch:
     - deploy_on
 
@@ -51,7 +51,7 @@ steps:
         #- sudo docker image rm exort/api-server
         - sudo docker build -t exort/api-server . 
         - kubectl apply -f apiserver.yaml
-  when:
+  trigger:
     branch:
     - deploy_on
 
