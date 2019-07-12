@@ -3,13 +3,10 @@ package exort.associationmanager.serviceimpl;
 import java.util.HashMap;
 import java.util.List;
 
-import exort.associationmanager.entity.Application;
-import exort.associationmanager.entity.ResponseBody;
+import exort.associationmanager.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 
@@ -44,10 +41,8 @@ public class AssociationServiceImpl implements AssociationService{
         if(state != null){
             associations.removeIf(association -> !state.equals(association.getState()));
             if(associations.isEmpty()){
-                responseBody.setData(associations);
-                responseBody.setError("");
-                responseBody.setMessage("");
-                return responseBody;
+
+                return responseBody.setAndGetResponsebody(associations,"","");
             }
         }
 
@@ -55,10 +50,7 @@ public class AssociationServiceImpl implements AssociationService{
         if(keyword != null){
             associations.removeIf(association -> !association.getName().contains(keyword)||!association.getDescription().contains(keyword));
             if(associations.isEmpty()){
-                responseBody.setData(associations);
-                responseBody.setError("");
-                responseBody.setMessage("");
-                return responseBody;
+                return responseBody.setAndGetResponsebody(associations,"","");
             }
         }
 
@@ -70,16 +62,10 @@ public class AssociationServiceImpl implements AssociationService{
                 }
             }
             if(associations.isEmpty()){
-                responseBody.setData(associations);
-                responseBody.setError("");
-                responseBody.setMessage("");
-                return responseBody;
+                return responseBody.setAndGetResponsebody(associations,"","");
             }
         }
-        responseBody.setData(associations);
-        responseBody.setError("");
-        responseBody.setMessage("");
-        return responseBody;
+        return responseBody.setAndGetResponsebody(associations,"","");
     }
 
 
@@ -87,10 +73,7 @@ public class AssociationServiceImpl implements AssociationService{
         ResponseBody responseBody = new ResponseBody();
 
         if( name == null || description == null || tags == null || logo == null){
-            responseBody.setData(null);
-            responseBody.setError("invalidFormat");
-            responseBody.setMessage("无效的申请格式");
-            return null;
+            return responseBody.setAndGetResponsebody(null,"invalidFormat","无效的申请格式");
         }
 
         Association association= new Association();
@@ -108,16 +91,11 @@ public class AssociationServiceImpl implements AssociationService{
 
         assoRepository.save(association);
         responseBody.setData(association);
-        responseBody.setMessage("");
-        responseBody.setError("");
-        return responseBody;
+        return responseBody.setAndGetResponsebody(association,"","");
     }
 
     private ResponseBody  noAssoMessage (ResponseBody responseBody){
-        responseBody.setData(null);
-        responseBody.setError("notFound");
-        responseBody.setMessage("社团不存在");
-        return responseBody;
+        return responseBody.setAndGetResponsebody(null,"notFound","社团不存在");
     }
 
     public ResponseBody deleteAssociation(Integer assoId ){
@@ -127,23 +105,20 @@ public class AssociationServiceImpl implements AssociationService{
         }
         assoRepository.deleteById(assoId);
         responseBody.setData(new HashMap());
-        return responseBody;
+        return responseBody.setAndGetResponsebody(new HashMap(),"","");
     }
     public ResponseBody editAssociation(Integer assoId, String name, String description, List<String> tags, String logo){
         ResponseBody responseBody = new ResponseBody();
         if(!assoRepository.existsById(assoId)){
             return  noAssoMessage(responseBody);
         }
-
         Association association = assoRepository.findById(assoId).get();
         association.setDescription(description);
         association.setTags(tags);
         association.setName(name);
         association.setLogo(logo);
         assoRepository.save(association);
-        responseBody.setData(association);
-
-        return responseBody;
+        return responseBody.setAndGetResponsebody(association,"","");
     };
 
     public  ResponseBody patchAssociation(Integer assoId,String type,String reason){
@@ -155,62 +130,38 @@ public class AssociationServiceImpl implements AssociationService{
         association.setState(1);
         association.setReason(reason);
         assoRepository.save(association);
-
-        responseBody.setData(new HashMap());
-        return responseBody;
+        return responseBody.setAndGetResponsebody(new HashMap(),"","");
     };
-
-
     public ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app ){
         ResponseBody responseBody = new ResponseBody();
-        switch (type){
+        switch (type) {
             case "accept": //create association
-                switch (app.getType()){
-                    case "create":
-                        if(true){    //有权限，待修改
-                             assoRepository.save(app.getAssociation());
-                             return true;
+                switch (app.getType()) {
+                    case "createAssociation":
+                        if (true) {    //有权限，待修改
+                            AssociationInfo assoInfo = app.getAssociationInfo();
+                            createAssociation(assoInfo.getName(), assoInfo.getDescription(), assoInfo.getTags(), assoInfo.getLogo());
+                            return responseBody.setAndGetResponsebody(new HashMap(), "", "");
                         }
-                        return false;
-                    case "unblock":
-                        if(true){
-                            Association asso = app.getAssociation();
+                        return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                    case "unblockAssociation":
+                        if (true) {
+                            BlockInfo blockInfo = app.getBlockInfo();
+                            Association asso = assoRepository.findById(blockInfo.getAssociationId()).get();
                             asso.setState(1);
                             assoRepository.save(asso);
+                            return responseBody.setAndGetResponsebody(new HashMap(), "", "");
                         }
-                        return false;
+                        return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                 }
-
-            case  "refuse": //unblock association
-                switch (app.getType()){
-                    case "create":
-                        if(true){    //有权限，待修改
-                            return true;
-                        }
-                        return false;
-                    case "unblock":
-                        if(true){
-                            return true;
-                        }
-                        return false;
+            case "refuse":
+            case "cancel":
+                if (true) {
+                    return responseBody.setAndGetResponsebody(new HashMap(), "", "");
                 }
-            case  "cancel":
-                switch (app.getType()){
-                    case "create":
-                        if(true){    //有权限，待修改
-                            return true;
-                        }
-                        return false;
-                    case "unblock":
-                        if(true){
-                            return true;
-                        }
-                        return false;
-                };
-        };
-        default:
-
-        return responseBody;
-    };
-
+                return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+            default:
+                return responseBody.setAndGetResponsebody(null, "invalidType", "无效的申请类型");
+        }
+    }
 }

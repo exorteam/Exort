@@ -1,9 +1,7 @@
 package exort.associationmanager.controller;
 
 
-import exort.associationmanager.entity.Application;
-import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
+import exort.associationmanager.entity.*;
 import exort.associationmanager.entity.ResponseBody;
 import exort.associationmanager.service.AssociationService;
 import lombok.Data;
@@ -21,23 +19,14 @@ public class AssociationManagerController{
     private AssociationService service;
 
     @Data
-    private static class AssoRequestInfo {
-        private String name;
-        private String description;
-        private List<String> tags;
-        private  String logo;
-    }
 
-
-    @Data
-
-    private static class PatchAssoRequestInfo {
+    private static class PatchAssociationInfo {
         private String description;
         private String type;
     }
 
     @Data
-    private static class ApplicationAssoRequestInfo {
+    private static class ApplicationAssociationInfo {
         private Integer userId;
         private String operation;
         private Application app;
@@ -55,7 +44,7 @@ public class AssociationManagerController{
     }
 
     @PostMapping("/associations")
-    public ResponseBody createAssociation(@RequestBody AssoRequestInfo body){
+    public ResponseBody createAssociation(@RequestBody AssociationInfo body){
         return  service.createAssociation(body.getName(),body.getDescription(),body.getTags(),body.getLogo());
     }
 
@@ -65,17 +54,17 @@ public class AssociationManagerController{
     }
 
     @PutMapping("/associations/{assoId}")
-    public ResponseBody editAssociation(@RequestBody AssoRequestInfo body,@PathVariable(value="assoId") Integer assoId ){
+    public ResponseBody editAssociation(@RequestBody AssociationInfo body,@PathVariable(value="assoId") Integer assoId ){
         return service.editAssociation(assoId, body.getName(),body.getDescription(),body.getTags(),body.getLogo());
     }
 
     @PutMapping("/illegal_association/{assoId}")
-    public ResponseBody patchAssociation(@RequestBody PatchAssoRequestInfo body,@PathVariable(value="assoId") Integer assoId ){
+    public ResponseBody patchAssociation(@RequestBody PatchAssociationInfo body,@PathVariable(value="assoId") Integer assoId ){
         return service.patchAssociation(assoId,body.getType(),body.getDescription());
     }
 
-    @PostMapping("/association_application")
-    public ResponseBody handleAssociationApplication(@RequestBody ApplicationAssoRequestInfo body){
+    @PostMapping("/callback")
+    public ResponseBody handleAssociationApplication(@RequestBody ApplicationAssociationInfo body){
         return service.handleAsoociationApplication(body.getUserId(),body.getOperation(),body.getApp());
     }
 

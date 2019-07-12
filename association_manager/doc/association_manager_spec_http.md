@@ -600,8 +600,7 @@
 - example
 
    ``` json
-   >>> POST /association_applications
-
+   >>> POST /callback
    {
       "userId":123,
       "event":"refuse",
@@ -645,8 +644,7 @@
    ```
 
    ```json
-   >>> POST /association_applications
-   {
+   >>> POST /callback   {
       "userId":123,
       "event":"accept",
       "application":{
@@ -675,8 +673,7 @@
    ```
 
    ```json
-   >>> POST /association_applications
-   {
+   >>> POST /callback   {
     "data":null,
      "error": "invalidFormat",
      "message": "无效的申请格式"
@@ -691,8 +688,7 @@
    ```
 
    ```json
-   >>> POST /association_applications
-   {
+   >>> POST /callback   {
       "userId":"12399999",
       "event":"accept",
       "application":{
@@ -729,8 +725,7 @@
    ```
 
    ```json
-   >>> POST /association_applications
-   {
+   >>> POST /callback   {
       "userId":"12399999",
       "operation":"_createAsso_",
       "application":{
@@ -768,8 +763,7 @@
    ```
 
    ```json
-   >>> POST /association_applications
-   {
+   >>> POST /callback   {
       "userId":"122",
       "operation":"_createAsso_",
       "application":{

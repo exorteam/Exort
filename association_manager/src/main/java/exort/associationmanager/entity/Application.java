@@ -1,24 +1,26 @@
 package exort.associationmanager.entity;
 
-import java.time.format.DateTimeFormatter;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
-import java.util.List;
-
-import org.springframework.data.annotation.Id;
-
-import lombok.Data;
-
 @Data
-public class Application {
+public class Application<T> {
     @Id
     Integer Id;
     Integer applicantId;
     String type;
-    Association association;
+    T object;
     String materials[];
     Date createTime;
     Date handleTime;
     String state;//0 unhandled,1 accept,2 refused,3 canceled
+
+    public AssociationInfo getAssociationInfo(){
+        return (AssociationInfo) object;
+    }
+    public BlockInfo getBlockInfo(){
+        return  (BlockInfo) object;
+    }
 }
