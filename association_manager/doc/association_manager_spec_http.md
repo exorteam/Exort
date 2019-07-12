@@ -531,7 +531,7 @@
 
 - HTTP Request
 
-   **POST** `/association_applications`
+   **POST** `/callback`
 
 - Body Parameters
 
