@@ -1,5 +1,7 @@
 package exort.apiserver.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,11 @@ public class UserServiceController {
 	@GetMapping("/info")
 	public UserInfo getCurrentUser(){
 		return service.getCurrentUser();
+	}
+
+	@GetMapping("/all")
+	public List<UserInfo> getAllUsers(){
+		return service.getAllUsers();
 	}
 
 	@PostMapping("/update")
