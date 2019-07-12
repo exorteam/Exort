@@ -539,7 +539,7 @@
    |---|---|
    |`userId` string | 操作者id |
    |`event` string| 事件, 可以是 create, accept, refuse, cancel|
-   |`application`  [_Association_](#Association) | 申请对象 |
+   |`application`  [_Application_](#Application) | 申请对象 |
 
 #### 申请
 
@@ -550,7 +550,7 @@
    |`id` _int_|申请ID|
    |`applicantId` _int_|申请者ID|
    |`type` _string_|申请类型|
-   |`association` [_Association_](#Association)|Association 对象|
+   |`object` [_Association_](#Association)|Association 对象|
    |`materialIds` _int[]_|申请材料ID列表|
    |`createdTime` _string_|申请时间|
    |`handledTime` _string_|处理时间|
