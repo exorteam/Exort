@@ -541,7 +541,7 @@
    |`event` string| 事件, 可以是 create, accept, refuse, cancel|
    |`application`  [_Application_](#Application) | 申请对象 |
 
-#### 社团创建申请
+#### 申请
 
 - <a id='Application'></a>**Application**
 
@@ -550,28 +550,15 @@
    |`id` _int_|申请ID|
    |`applicantId` _int_|申请者ID|
    |`type` _string_|申请类型|
-   |`associationInfo` [_AssociationInfo_](#AssociationInfo)|AssociationInfo 对象|
-   |`materialIds` _int[]_|申请材料ID列表|
-   |`createdTime` _string_|申请时间|
-   |`handledTime` _string_|处理时间|
-   |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
-
-#### 社团解禁申请
-
-- <a id='Application'></a>**Application**
-
-   |Field|Description|
-   |--|--|
-   |`id` _int_|申请ID|
-   |`applicantId` _int_|申请者ID|
-   |`type` _string_|申请类型|
-   |`blockInfo` [_BlockInfo_](#BlockInfo)|BlockInfo 对象|
+   |`object` [_AssociationInfo_](#AssociationInfo)或[_BlockInfo_](#BlockInfo)|创建申请信息或解禁申请信息|
    |`materialIds` _int[]_|申请材料ID列表|
    |`createdTime` _string_|申请时间|
    |`handledTime` _string_|处理时间|
    |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
 
 #### 社团信息(AssociationInfo)
+
+- <a id='AssociationInfo'></a>**AssociationInfo**
 
    |Field|Description|
    |--|--|
@@ -581,6 +568,8 @@
    |`tags` _string[]_|社团标签|
 
 #### 封禁信息(BlockInfo)
+
+- <a id='BlockInfo'></a>**BlockInfo**
 
    |Field|Description|
    |--|--|
@@ -644,7 +633,8 @@
    ```
 
    ```json
-   >>> POST /callback   {
+   >>> POST /callback
+   {
       "userId":123,
       "event":"accept",
       "application":{
@@ -652,8 +642,13 @@
          "applicantId":"111",
          "type":"unblockAssociation",
          "AssociationInfo":{
-            "associationId":"211",
-            "reason":"14+",
+            "name":"Association1",
+            "description":"nothing to say",
+            "logo":"image1(base64)",
+            "tags":[
+               "T1",
+               "T2",
+            ],
          },
          "materialIds":[
             123,
@@ -673,7 +668,8 @@
    ```
 
    ```json
-   >>> POST /callback   {
+   >>> POST /callback
+   {
     "data":null,
      "error": "invalidFormat",
      "message": "无效的申请格式"
@@ -688,7 +684,8 @@
    ```
 
    ```json
-   >>> POST /callback   {
+   >>> POST /callback
+   {
       "userId":"12399999",
       "event":"accept",
       "application":{
@@ -725,7 +722,8 @@
    ```
 
    ```json
-   >>> POST /callback   {
+   >>> POST /callback
+   {
       "userId":"12399999",
       "operation":"_createAsso_",
       "application":{
@@ -763,7 +761,8 @@
    ```
 
    ```json
-   >>> POST /callback   {
+   >>> POST /callback
+   {
       "userId":"122",
       "operation":"_createAsso_",
       "application":{
