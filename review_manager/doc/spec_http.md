@@ -27,6 +27,15 @@
    |`handledTime` _string_|处理时间|
    |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
 
+- <a id='ApplicationList'></a>**ApplicationList**
+
+   |Field|Description|
+   |--|--|
+   |`pageNum` _int_|所返回的列表的实际的页码|
+   |`pageSize` _int_|所返回的列表的实际的申请数量|
+   |`totalSize` _int_|总的申请数量|
+   |`content` [_Application[]_](#Application)|申请列表|
+
 ### 创建申请
 
 - HTTP Request
@@ -266,7 +275,7 @@
    |Parameter|Description|
    |--|--|
    |`pageNum`|页码, 默认为0|
-   |`pageSize`|每页数量, 默认为20|
+   |`pageSize`|每页数量, 默认为20, 大于100|
    |`sortBy`|排序方式, 可以为 _createdTime_, _handledTime_, _object.userDefinedField_, 默认为 _createdTime_|
 
 - Body Parameters
@@ -284,7 +293,7 @@
 
    |Code|Description|
    |--|--|
-   |200 [_Application[]_](#Application)|查询成功, 返回列表可能为空|
+   |200 [_ApplicationList_](#ApplicationList)|查询成功, 返回列表可能为空|
 
 - Examples
 
@@ -296,32 +305,37 @@
 
    <<< 200
    {
-     "data": [
-       {
-         "applicantId": 111,
-         "type": "createAssociation",
-         "object": {
-           "name": "hahahha",
-           "description": "hello world",
-           ...
+     "data": {
+       "pageNum": 0,
+       "pageSize": 2,
+       "totalSize": 191,
+       "content": [
+         {
+           "applicantId": 111,
+           "type": "createAssociation",
+           "object": {
+             "name": "hahahha",
+             "description": "hello world",
+             ...
+           },
+           "materialIds": [],
+           "createdTime": "2019-07-09T03:19:06.618Z",
+           "handledTime": "2019-07-09T03:24:49.797Z",
+           "state": "refused"
          },
-         "materialIds": [],
-         "createdTime": "2019-07-09T03:19:06.618Z",
-         "handledTime": "2019-07-09T03:24:49.797Z",
-         "state": "refused"
-       },
-       {
-         "applicantId": 111,
-         "type": "signupActivity",
-         "object": {
-           "activityId": 55
-         },
-         "materialIds": [],
-         "createdTime": "2019-07-10T03:19:06.618Z",
-         "handledTime": "2019-07-10T03:24:49.797Z",
-         "state": "accepted"
-       }
-     ],
+         {
+           "applicantId": 111,
+           "type": "signupActivity",
+           "object": {
+             "activityId": 55
+           },
+           "materialIds": [],
+           "createdTime": "2019-07-10T03:19:06.618Z",
+           "handledTime": "2019-07-10T03:24:49.797Z",
+           "state": "accepted"
+         }
+       ]
+     },
      "error": "",
      "message": ""
    }
@@ -338,20 +352,25 @@
 
    <<< 200
    {
-     "data": [
-       {
-         "applicantId": 111,
-         "type": "signupActivity",
-         "object": {
-           "activityId": 55
+     "data": {
+       "pageNum": 0,
+       "pageSize": 20,
+       "totalSize": 191,
+       "content": [
+         {
+           "applicantId": 111,
+           "type": "signupActivity",
+           "object": {
+             "activityId": 55
+           },
+           "materialIds": [],
+           "createdTime": "2019-07-10T03:19:06.618Z",
+           "handledTime": "2019-07-10T03:24:49.797Z",
+           "state": "accepted"
          },
-         "materialIds": [],
-         "createdTime": "2019-07-10T03:19:06.618Z",
-         "handledTime": "2019-07-10T03:24:49.797Z",
-         "state": "accepted"
-       },
-       ...
-     ],
+         ...
+       ],
+     },
      "error": "",
      "message": ""
    }
@@ -365,7 +384,12 @@
 
    <<< 200
    {
-     "data": [],
+     "data": {
+       "pageNum": 0,
+       "pageSize": 20,
+       "totalSize": 191,
+       "content": []
+     },
      "error": "",
      "message": ""
    }
