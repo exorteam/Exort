@@ -25,4 +25,7 @@ public interface AssociationService{
 
     public  ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app );
 
+
+//    public  boolean createTestData();
+
 }

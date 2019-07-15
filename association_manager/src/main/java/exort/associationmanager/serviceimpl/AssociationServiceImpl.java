@@ -2,6 +2,7 @@ package exort.associationmanager.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import exort.associationmanager.entity.*;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
+
+import static com.google.common.primitives.Ints.min;
 
 @Service
 public class AssociationServiceImpl implements AssociationService{
@@ -69,7 +72,26 @@ public class AssociationServiceImpl implements AssociationService{
                 return responseBody.setAndGetResponsebody(associations,"","");
             }
         }
-        return responseBody.setAndGetResponsebody(associations,"","");
+
+        int totalSize = associations.size();
+
+        int max =20;
+        int realPageSize,realPageNum;
+
+        realPageSize = min(pageSize,max);
+        realPageNum = pageNum * pageSize / realPageSize;
+        AssociationList assoList = new AssociationList();
+
+
+        assoList.setContent(associations.subList(realPageNum * realPageSize ,( realPageNum + 1 ) * realPageSize));
+        assoList.setTotalSize(totalSize);
+        assoList.setPageSize(realPageSize);
+        assoList.setPageNumber(realPageNum);
+
+
+
+
+        return responseBody.setAndGetResponsebody(assoList,"","");
     }
 
 
@@ -134,7 +156,7 @@ public class AssociationServiceImpl implements AssociationService{
         switch (type){
             case "unblock":
                 association.setState(1);
-                association.setReason(reason);
+                association.setReason("");
                 assoRepository.save(association);
                 break;
             case "block":
@@ -178,5 +200,27 @@ public class AssociationServiceImpl implements AssociationService{
             default:
                 return responseBody.setAndGetResponsebody(null, "invalidType", "无效的申请类型");
         }
-    }
+    };
+//    public  boolean createTestData(){
+//        Association association = new Association();
+//        List<String> tags = new LinkedList<String>();
+//        tags.add("T1");
+//        tags.add("T2");
+//        association.setName("test");
+//        association.setDescription("test");
+//        association.setLogo("logo");
+//        association.setTags(tags);
+//        association.setState(1);
+//        association.setReason(null);
+//        Integer associationId = 1;
+//        while(assoRepository.existsById(associationId)){++associationId;}
+//        association.setId(associationId);
+//        for (int i = 0; i <1000 ; i++) {
+//            assoRepository.save(association);
+//            associationId++;
+//            association.setId(associationId);
+//        }
+//        return  true;
+//
+//    }
 }

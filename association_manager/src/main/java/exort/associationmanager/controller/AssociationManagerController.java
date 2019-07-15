@@ -43,6 +43,7 @@ public class AssociationManagerController{
         return service.getAssociation(assoId);
     }
 
+
     @PostMapping("/associations")
     public ResponseBody createAssociation(@RequestBody AssociationInfo body){
         return  service.createAssociation(body.getName(),body.getDescription(),body.getTags(),body.getLogo());
