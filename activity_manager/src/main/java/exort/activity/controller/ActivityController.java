@@ -11,13 +11,18 @@ import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ActivityController {
 
     @Autowired
     private ActivityService as;
+
+    @ResponseBody
+    @GetMapping(value = "/")
+    public String hello(){
+        return "Hello, world!";
+    }
 //1
     @ResponseBody
     @PostMapping(value = "/activities")
@@ -27,7 +32,8 @@ public class ActivityController {
 //2
     @ResponseBody
     @PutMapping(value = "/activities/{activityid}")
-    public Response updateActivity(@RequestBody Activity activity){
+    public Response updateActivity(@RequestBody Activity activity, @PathVariable(value = "activityid") String activityid){
+        activity.setId(activityid);
         return as.upsertActivity(activity);
     }
 //3
@@ -39,44 +45,44 @@ public class ActivityController {
 //4
     @ResponseBody
     @PatchMapping(value = "/activities/{activityid}")
-    public Response publishActivity(@PathVariable(value = "activityid") Long activityid, @RequestBody String type){
+    public Response publishActivity(@PathVariable(value = "activityid")String activityid, @RequestBody String type){
         return as.changeActivityState(activityid, type);
     }
 //5
     @ResponseBody
     @PostMapping(value = "/activities/{activityid}/participants")
-    public Response addParticipants(@PathVariable(value = "activityid") Long activityid, @RequestBody List<Long> participantIds){
+    public Response addParticipants(@PathVariable(value = "activityid") String activityid, @RequestBody List<Long> participantIds){
         return as.addUserIds(activityid, participantIds, 1);
     }
 //6
     @ResponseBody
     @PostMapping(value = "/activities/{activityid}/realparticipants")
-    public Response addRealParticipants(@PathVariable(value = "activityid") Long activityid, @RequestBody List<Long> realParticipantIds){
+    public Response addRealParticipants(@PathVariable(value = "activityid") String activityid, @RequestBody List<Long> realParticipantIds){
         return as.addUserIds(activityid, realParticipantIds, 2);
     }
 //7
     @ResponseBody
     @DeleteMapping(value = "/activities/{activityid}/participants")
-    public Response deleteParticipants(@PathVariable(value = "activityid") Long activityid, @RequestBody List<Long> participantIds){
+    public Response deleteParticipants(@PathVariable(value = "activityid")String activityid, @RequestBody List<Long> participantIds){
         return as.removeParticipants(activityid, participantIds);
     }
 //8
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}/participants")
-    public Response getActivityParticipants(@PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum") int pagenum, @PathVariable(value = "activityid") Long activityid, @RequestBody Long userId){
+    public Response getActivityParticipants(@PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum") int pagenum, @PathVariable(value = "activityid") String activityid, @RequestBody Long userId){
         return as.getActivityUserIds(pagesize, pagenum, activityid, userId, 1);
     }
 //9
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}/realparticipants")
-    public Response getActivityRealParticipants(@PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum") int pagenum, @PathVariable(value = "activityid") Long activityid, @RequestBody Long userId){
+    public Response getActivityRealParticipants(@PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum") int pagenum, @PathVariable(value = "activityid") String activityid, @RequestBody Long userId){
         return as.getActivityUserIds(pagesize, pagenum, activityid, userId, 2);
     }
 //10
     @ResponseBody
     @PostMapping(value = "/callback/acceptsignup")
     public Response acceptSignup(@RequestBody Operation operation){
-        Long activityid = operation.getApplication().getSignup().getActivityId();
+        String activityid = operation.getApplication().getSignup().getActivityId();
         Long userId = operation.getApplication().getApplicantId();
         List<Long> user = new ArrayList<>();
         user.add(userId);
@@ -85,7 +91,7 @@ public class ActivityController {
 // 11
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}")
-    public Response getActivity(@PathVariable(value = "activityid") Long acticityid){
+    public Response getActivity(@PathVariable(value = "activityid") String acticityid){
         return as.getActivity(acticityid);
     }
 }

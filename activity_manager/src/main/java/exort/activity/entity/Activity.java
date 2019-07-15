@@ -1,14 +1,16 @@
 package exort.activity.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.GeneratedValue;
 import java.util.List;
 
+@Document(collection = "activity")
 public class Activity {
+
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     private List<Long> associationIds;
 
@@ -36,7 +38,7 @@ public class Activity {
 
     private boolean ifReview;
 
-    private boolean ifOnlyMembers;
+    private boolean ifOnlyMem;
 
     private int maxParticipants;
 
@@ -48,32 +50,16 @@ public class Activity {
 
     private List<String> tags;
 
-    public Activity(
-            List<Long> associationIds,
-            String createTime,
-            String publishTime,
-            String lastPublishTime,
-            String lastModifyTime,
-            ActivityTime signupTime,
-            ActivityTime time,
-            String title,
-            String content,
-            int publishState,
-            int signupState,
-            int state,
-            boolean ifReview,
-            boolean ifOnlyMembers,
-            int maxParticipants,
-            List<Long> materialTemplateIds,
-            List<Long> participantIds,
-            List<Long> realParticipantIds,
-            List<String> tags
-    ) {
+    public Activity(List<Long> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
+            int publishState, int signupState, int state, boolean ifReview, boolean ifOnlyMem, int maxParticipants,
+            List<Long> materialTemplateIds, List<Long> participantIds, List<Long> realParticipantIds,
+            List<String> tags) {
+        this.id = (new ObjectId()).toString();
         this.associationIds = associationIds;
-        this.createTime = createTime;
-        this.publishTime = publishTime;
-        this.lastPublishTime = lastPublishTime;
-        this.lastModifyTime = lastModifyTime;
+        this.createTime = "2019-07-01";
+        this.publishTime = "2019-07-01";
+        this.lastPublishTime = "2019-07-01";
+        this.lastModifyTime = "2019-07-01";
         this.signupTime = signupTime;
         this.time = time;
         this.title = title;
@@ -82,21 +68,12 @@ public class Activity {
         this.signupState = signupState;
         this.state = state;
         this.ifReview = ifReview;
-        this.ifOnlyMembers = ifOnlyMembers;
+        this.ifOnlyMem = ifOnlyMem;
         this.maxParticipants = maxParticipants;
         this.materialTemplateIds = materialTemplateIds;
         this.participantIds = participantIds;
         this.realParticipantIds = realParticipantIds;
         this.tags = tags;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public List<Long> getAssociationIds() {
@@ -203,12 +180,12 @@ public class Activity {
         this.ifReview = ifReview;
     }
 
-    public boolean isIfOnlyMembers() {
-        return ifOnlyMembers;
+    public boolean isIfOnlyMem() {
+        return ifOnlyMem;
     }
 
-    public void setIfOnlyMembers(boolean ifOnlyMembers) {
-        this.ifOnlyMembers = ifOnlyMembers;
+    public void setIfOnlyMem(boolean ifOnlyMem) {
+        this.ifOnlyMem = ifOnlyMem;
     }
 
     public int getMaxParticipants() {
@@ -249,5 +226,13 @@ public class Activity {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

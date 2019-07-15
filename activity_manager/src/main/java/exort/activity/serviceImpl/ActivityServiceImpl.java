@@ -29,7 +29,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response changeActivityState(Long activityid, String type){
+    public Response changeActivityState(String activityid, String type){
         try{
             Activity activity = ad.getActivity(activityid);
             if(activity != null){
@@ -49,7 +49,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response addUserIds(Long activityid, List<Long> userIds, int type){
+    public Response addUserIds(String activityid, List<Long> userIds, int type){
         try{
             Activity activity = ad.getActivity(activityid);
             if(activity!=null){
@@ -72,7 +72,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response removeParticipants(Long activityid, List<Long> participantIds){
+    public Response removeParticipants(String activityid, List<Long> participantIds){
         try{
             Activity activity = ad.getActivity(activityid);
             if(activity!=null){
@@ -89,7 +89,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response getActivityUserIds(int pagesize, int pagenum, Long activityid, Long userId, int type){
+    public Response getActivityUserIds(int pagesize, int pagenum, String activityid, Long userId, int type){
         try{
             if(userId==0){
                 return ad.getActivityUserIds( pagesize, pagenum, activityid, userId, type);
@@ -103,7 +103,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response getActivity(Long acticityid){
+    public Response getActivity(String acticityid){
         try{
             Activity activity = ad.getActivity(acticityid);
             if(acticityid!=null){

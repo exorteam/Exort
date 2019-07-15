@@ -109,17 +109,17 @@ public class Operation {
 
 
         public class Signup{
-            private Long activityId;
+            private String activityId;
 
-            public Signup(Long activityid){
+            public Signup(String activityid){
                 this.activityId = activityid;
             }
 
-            public Long getActivityId() {
+            public String getActivityId() {
                 return activityId;
             }
 
-            public void setActivityId(Long activityId) {
+            public void setActivityId(String activityId) {
                 this.activityId = activityId;
             }
         }

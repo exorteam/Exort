@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface ActivityService {
 
-    Response changeActivityState(Long activityid, String type);
+    Response changeActivityState(String activityid, String type);
 
-    Response addUserIds(Long activityid, List<Long> userIds, int type);
+    Response addUserIds(String activityid, List<Long> userIds, int type);
 
-    Response removeParticipants(Long activityid, List<Long> participantIds);
+    Response removeParticipants(String activityid, List<Long> participantIds);
 
-    Response getActivity(Long acticityid);
+    Response getActivity(String acticityid);
 
-    Response getActivityUserIds(int pagesize, int pagenum, Long activityid, Long userId, int type);
+    Response getActivityUserIds(int pagesize, int pagenum, String activityid, Long userId, int type);
 
     Response upsertActivity(Activity activity);
 

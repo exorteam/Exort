@@ -8,11 +8,11 @@ public interface ActivityDao {
 
     Response update(Activity activity);
 
-    Activity getActivity(Long id);
+    Activity getActivity(String id);
 
-    Response getActivityUserIds(int pagesize, int pagenum, Long activityid, Long userId, int type);
+    Response getActivityUserIds(int pagesize, int pagenum, String activityid, Long userId, int type);
 
-    Response checkUserId(Long activityid, Long userId, int type);
+    Response checkUserId(String activityid, Long userId, int type);
 
     Response selectActivities(Select select, int pagesize, int pagenum, int sortby);
 }
