@@ -412,6 +412,35 @@ _用户在这些域中有至少一个角色_
 
 - Examples
 
+### 批量添加、移除角色权限
+
+- HTTP Request
+
+   **PUT** `/roles/{name}/permissions`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`name` _string_|角色名|
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`method` _string_|批量更新方法, 可以是 _POST_, _DELETE_|
+   |`permissionNames` _string[]_|权限名列表|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 [_Permission[]_](#Permission)|变更后的角色权限列表|
+   |404 "roleNotFound"|角色不存在|
+
+- Examples
+
+
 ### 查询角色权限列表
 
 - HTTP Request
