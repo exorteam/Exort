@@ -964,4 +964,63 @@
   }
   ```
 
+
+### 初始化部门
+
+- HTTP Request
+
+  **POST** `/associations/{associationId}/department`
+
+- Path Parameters
+
+  | Parameter           | Description |
+  | ------------------- | ----------- |
+  | `associationId` int | 社团ID      |
+
+- Body Parameters
+
+  | Parameter    | Description |
+  | ------------ | ----------- |
+  | `userId` int | 用户ID      |
+
+- Response
+
+  | Code               | Description |
+  | ------------------ | ----------- |
+  | 200 true           | 请求成功    |
+  | 400 “UserNotFound” | 用户不存在  |
+
+- Example
+
+  ```json
+  >>> POST /associations/2/department
+  {
+      "userId":2
+  }
   
+  
+  <<< 200
+  {
+      "data":true,
+      "error":"",
+      "message":"",
+  }
+  ```
+
+  ```json
+  >>> POST /associations/2/department
+  {
+      "userId":5
+  }
+  
+  
+  <<< 400
+  {
+      "data":null,
+      "error":"UserNotFound",
+      "message":"用户不存在",
+  }
+  ```
+
+  
+
