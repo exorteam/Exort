@@ -590,7 +590,6 @@
 
    ``` json
    >>> POST /callback
-
    {
       "userId":123,
       "event":"refuse",

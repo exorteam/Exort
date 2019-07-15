@@ -53,4 +53,3 @@ public class ArticleController {
 		return service.withdrawArticle(articleId);
 	}
 }
-
