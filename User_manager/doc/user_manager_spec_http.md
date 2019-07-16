@@ -38,7 +38,7 @@
        ```json
        >>> POST /users
        {
-           nickname:"chenjingyu"
+           "nickname":"chenjingyu"
        }
        ```
        ```json
@@ -148,49 +148,7 @@
        }
        ```
 
-3. 激活用户
-   - Http Request
-   **PATCH** `/users/activate`
-
-   - Body Parameters
-   
-      |Parameter|Description|
-      |---|---|
-      |`id`_int_| 用户ID |
-
-   - Response
- 
-      |code|description|
-      |---|---|
-      |200-（无）|激活成功|
-      |400-(错误信息)|激活失败|
-    
-   - example
-
-       ```json
-       >>> PATCH /users
-       {
-           "id":123
-       }
-       ```
-       ```json
-       <<< 200
-       {
-           "data": {},
-           "error":"",
-           "message":""
-       }
-       ```
-       ```json
-       <<< 400
-       {
-           "data": null,
-           "error": "invalid " + 实际错误信息,
-           "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-       }
-       ```
-
-4. 禁用用户
+3. 禁用用户
    - Http Request
    **PATCH** `/users/block`
 
@@ -232,7 +190,7 @@
        }
        ```
 
-5. 恢复用户
+4. 恢复用户
    - Http Request
    **PATCH** `/users/recover`
 
