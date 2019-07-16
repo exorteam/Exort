@@ -4,6 +4,7 @@
    |属性|说明|
    |---|---|
    |int id | |
+   |string account| 账户邮箱 |
    |string nickname | 昵称 |
    |string description | 个人描述 |
    |int gender | (可选)个人信息-性别 |
@@ -18,12 +19,13 @@
 
 1. 创建用户
     - 输入
-        - 昵称
+        - 账户邮箱
     - 输出
         - 用户
 
 2. 更改信息
     - 输入
+        - 用户ID
         - 昵称
         - 个人描述
         - 性别

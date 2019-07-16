@@ -24,7 +24,7 @@
    
       |Parameter|Description|
       |---|---|
-      |`nickname`_string_| 昵称 |
+      |`account`_string_| 账户邮箱 |
 
    - Response
  
@@ -38,7 +38,7 @@
        ```json
        >>> POST /users
        {
-           "nickname":"chenjingyu"
+           "account":"17423845@sjtu.edu.cn"
        }
        ```
        ```json
@@ -46,6 +46,7 @@
        {
            "data": {
                "id": 421,
+               "account":"17423845@sjtu.edu.cn",
                "nickname":"chenjingyu",
                "description":"", 
                "gender":"", 
@@ -104,49 +105,50 @@
     
    - example
 
-       ```json
-       >>> POST /users
-       {
-           "nickname":"cjy",
-           "description":"a little boy",
-           "gender":1,
-           "birthday":"1999-03-27",
-           "name":"chenjingyu",
-           "studentNumber":"517030910206",
-           "phone":"127346483929",
-           "email":"634247843@qq.com",
-           "qq":"634247843",
-           "wechat":"cjy634247843"
-       }
-       ```
-       ```json
-       <<< 200
-       {
-           "data": {
-               "id": 421,
-               "nickname":"cjy",
-               "description":"a little boy",
-               "gender":1,
-               "birthday":"1999-03-27",
-               "name":"chenjingyu",
-               "studentNumber":"517030910206",
-               "phone":"127346483929",
-               "email":"634247843@qq.com",
-               "qq":"634247843",
-               "wechat":"cjy634247843"
-           },
-           "error":"",
-           "message":""
-       }
-       ```
-       ```json
-       <<< 400
-       {
-           "data": null,
-           "error": "invalid " + 实际错误信息,
-           "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-       }
-       ```
+      ```json
+      >>> POST /users
+      {
+          "nickname":"cjy",
+          "description":"a little boy",
+          "gender":1,
+          "birthday":"1999-03-27",
+          "name":"chenjingyu",
+          "studentNumber":"517030910206",
+          "phone":"127346483929",
+          "email":"634247843@qq.com",
+          "qq":"634247843",
+          "wechat":"cjy634247843"
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {
+              "id": 421,
+              "account":"17423845@sjtu.edu.cn",
+              "nickname":"cjy",
+              "description":"a little boy",
+              "gender":1,
+              "birthday":"1999-03-27",
+              "name":"chenjingyu",
+              "studentNumber":"517030910206",
+              "phone":"127346483929",
+              "email":"634247843@qq.com",
+              "qq":"634247843",
+              "wechat":"cjy634247843"
+          },
+          "error":"",
+          "message":""
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 3. 禁用用户
    - Http Request
@@ -167,28 +169,28 @@
     
    - example
 
-       ```json
-       >>> PATCH /users
-       {
-           "id":321
-       }
-       ```
-       ```json
-       <<< 200
-       {
-           "data": {},
-           "error":"",
-           "message":""
-       }
-       ```
-       ```json
-       <<< 400
-       {
-           "data": null,
-           "error": "invalid " + 实际错误信息,
-           "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-       }
-       ```
+      ```json
+      >>> PATCH /users
+      {
+          "id":321
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {},
+          "error":"",
+          "message":""
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 4. 恢复用户
    - Http Request
@@ -209,28 +211,28 @@
     
    - example
 
-       ```json
-       >>> PATCH /users
-       {
-           "id":312
-       }
-       ```
-       ```json
-       <<< 200
-       {
-           "data": {},
-           "error":"",
-           "message":""
-       }
-       ```
-       ```json
-       <<< 400
-       {
-           "data": null,
-           "error": "invalid " + 实际错误信息,
-           "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
-       }
-       ```
+      ```json
+      >>> PATCH /users
+      {
+          "id":312
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {},
+          "error":"",
+          "message":""
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
+      }
+      ```
 
 5. 用户解禁申请回调
    - **Application**
@@ -351,4 +353,4 @@
           "error": "invalid " + 实际错误信息,
           "message": "yyyy/mm/dd" + "操作者没有权限"
       }
-      ```   
+      ```
