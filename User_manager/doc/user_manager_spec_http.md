@@ -231,3 +231,71 @@
            "message": "yyyy/mm/dd" + "修改失败，请再次尝试。"
        }
        ```
+
+5. 用户解禁申请回调
+   - **Application**
+      |Field|Description|
+      |--|--|
+      |`id`_int_|申请ID|
+      |`applicantId`_int_|申请者ID|
+      |`type`_string_|申请类型|
+      |`object`_Signup_| 加入活动申请信息|
+      |`materialIds`_int[]_|申请材料ID列表|
+      |`createdTime`_string_|申请时间|
+      |`handledTime`_string_|处理时间|
+      |`state`_string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
+
+   - **Signup**
+      - 空
+
+   - Http Request
+   **POST** `/callback/revoveruser`
+
+   - Body Parameters
+      
+      |Parameter|Description|
+      |---|---|
+      |`operatorId`_int_| 操作者ID |
+      |`action`_string_| 操作 |
+      |`application`_Application_|申请|
+
+   - Response 
+      |code|description|
+      |---|---|
+      |200-(无实际返回值)|回调成功|
+      |400-(错误信息)|回调失败|
+
+      ```json
+      >>> POST /callback/acceptsignup
+      {
+          "operatorId": 32,
+          "action": "recover",
+          "signup": {
+              "id": 271,
+              "applicantId": 111,
+              "type": "recoveruser",
+              "object": {},
+              "materialIds": [],
+              "createdTime": "2019-07-10T03:19:06.618Z",
+              "handledTime": "2019-07-10T03:24:49.797Z",
+              "state": "accepted"
+           }
+         }
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {},
+          "error": "",
+          "massage": "",
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "操作者没有权限"
+      }
+      ```
