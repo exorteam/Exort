@@ -398,7 +398,7 @@
 
 - HTTP Request
 
-  **DELETE** `/associations/{assoicationId}/departments/{departmentId}/members/{userId}`
+  **DELETE** `/associations/{associationId}/departments/{departmentId}/members/{userId}`
 
 - Path Parameters
 

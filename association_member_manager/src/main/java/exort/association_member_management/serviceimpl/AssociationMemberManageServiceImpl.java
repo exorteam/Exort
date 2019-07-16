@@ -182,7 +182,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
-    public ResponseCode getSpecMemberList(int associationId, int departmentId, int page,int size) {
+    public ResponseCode getSpecMemberList(int associationId, int departmentId) {
         ResponseCode responseCode=new ResponseCode();
         return responseCode;
     }
@@ -207,7 +207,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
-    public ResponseCode checkUserPermissionInAssociation(int associationId, int userId, int permission) {
+    public ResponseCode checkUserPermissionInAssociation(int associationId, int userId, String permission) {
         ResponseCode responseCode=new ResponseCode();
         return responseCode;
     }
@@ -234,5 +234,15 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     public ResponseCode addOneToAssociation(int associationId, int userId) {
         ResponseCode responseCode=new ResponseCode();
         return responseCode;
+    }
+
+    @Override
+    public ResponseCode getAssoUserList(int associationId) {
+        return null;
+    }
+
+    @Override
+    public ResponseCode initDepartment(int associationId, int userId) {
+        return null;
     }
 }

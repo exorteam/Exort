@@ -16,14 +16,15 @@ public interface AssociationMemberManageService {
     public ResponseCode createDepartment(int associationId,String departmentName,String departmentDesc,int parentId);
     public ResponseCode deleteDepartment(int associationId,int departmentId);
     public ResponseCode editDepartment(int associationId,int departmentId,String departmentName,String departmentDesc,int parentId);
-    public ResponseCode getSpecMemberList(int associationId,int departmentId,int page,int size);
+    public ResponseCode getSpecMemberList(int associationId,int departmentId);
     public ResponseCode removeOneFromDepartment(int associationId,int departmentId,int userId);
     public ResponseCode addOneToDepartment(int associationId,int departmentId,int userId);
     public ResponseCode changeOneToDepartment(int associationId,int directionDepartmentId,int userId);
-    public ResponseCode checkUserPermissionInAssociation(int associationId,int userId,int permission);
+    public ResponseCode checkUserPermissionInAssociation(int associationId,int userId,String permission);
     public ResponseCode getUserAssociation(int userId);
     public ResponseCode getUserDepartment(int associationId,int userId);
     public ResponseCode deleteOneInAssociation(int associationId,int userId);
     public ResponseCode addOneToAssociation(int associationId,int userId);
-
+    public ResponseCode getAssoUserList(int associationId);
+    public ResponseCode initDepartment(int associationId,int userId);
 }

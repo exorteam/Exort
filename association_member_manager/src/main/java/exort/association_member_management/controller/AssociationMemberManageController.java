@@ -11,20 +11,19 @@ import java.util.Date;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = {"/association-member-management"})
 @Api(value = "AssociationMemberManageController", tags = {"社团成员管理接口"})
 public class AssociationMemberManageController {
     @Autowired
     private AssociationMemberManageService associationMemberManageService;
 
-    @GetMapping(value = "/get-spec-appli", produces = "application/json")
+    @GetMapping(value = "/get-spec-appli")
     @ApiOperation(value = "得到某个具体的申请信息")
     @ApiImplicitParam(name = "applyId", value = "申请信息ID", required = true, dataType = "int")
     public ResponseCode getSpecApplication(@RequestParam(value = "applyId") int applyId) {
         return associationMemberManageService.getSpecApplication(applyId);
     }
 
-    @GetMapping(value = "get-some-applis", produces = "application/json")
+    @GetMapping(value = "get-some-applis")
     @ApiOperation(value = "查找某些申请")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "申请人ID", dataType = "int"),
@@ -39,177 +38,119 @@ public class AssociationMemberManageController {
         return associationMemberManageService.getSomeApplications(userId, associationId, departmentId, startTime, endTime, page, size);
     }
 
-    @PutMapping(value = "adopt-appli", produces = "application/json")
+    @PutMapping(value = "adopt-appli")
     @ApiOperation(value = "通过某个申请")
-    @ApiImplicitParam(name = "applyId", value = "申请信息ID", required = true, dataType = "int")
     public ResponseCode adoptApplication(int applyId) {
 
         return associationMemberManageService.adoptApplication(applyId);
     }
 
-    @PutMapping(value = "refuse-appli", produces = "application/json")
+    @PutMapping(value = "refuse-appli")
     @ApiOperation(value = "拒绝某个申请")
-    @ApiImplicitParam(name = "applyId", value = "申请信息ID", required = true, dataType = "int")
     public ResponseCode refuseApplication(int applyId) {
         return associationMemberManageService.refuseApplication(applyId);
     }
 
-    @GetMapping(value = "get-department-tree", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
-    @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int")
-    public ResponseCode getDepartmentTree(@RequestParam(value = "associationId") int associationId) {
+    public ResponseCode getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
         return associationMemberManageService.getDepartmentTree(associationId);
     }
 
 
-    @GetMapping(value = "get-spec-department-info", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "得到某个部门的信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int")
-    })
-    public ResponseCode getSpecDepartmentInfo(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "departmentId") int departmentId) {
+    public ResponseCode getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
         return associationMemberManageService.getSpecDepartmentInfo(associationId, departmentId);
     }
 
 
-    @PostMapping(value = "create-department", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "创建部门")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentName", value = "部门名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "departmentDesc", value = "部门描述", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "parentId", value = "部门父节点", required = true, dataType = "int")
-    })
-    public ResponseCode createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
-        return associationMemberManageService.createDepartment(associationId, departmentName, departmentDesc, parentId);
+    public ResponseCode createDepartment(@PathVariable int associationId, @RequestParam(value = "name") String name, @RequestParam(value = "description") String description, @RequestParam(value = "parentId") int parentId) {
+        return associationMemberManageService.createDepartment(associationId, name, description, parentId);
     }
 
 
-    @DeleteMapping(value = "delete-department", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "删除部门")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int")
-    })
-    public ResponseCode deleteDepartment(int associationId, int departmentId) {
+    public ResponseCode deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
         return associationMemberManageService.deleteDepartment(associationId, departmentId);
     }
 
 
-    @PutMapping(value = "edit-department", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "编辑部门")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentName", value = "部门名称", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "departmentDesc", value = "部门描述", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "parentId", value = "部门父节点", required = true, dataType = "int")
-    })
-    public ResponseCode editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId) {
-        return associationMemberManageService.editDepartment(associationId, departmentId, departmentName, departmentDesc, parentId);
+    public ResponseCode editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestParam(value = "name") String name, @RequestParam(value = "description") String description, @RequestParam(value = "parentId") int parentId) {
+        return associationMemberManageService.editDepartment(associationId, departmentId, name, description, parentId);
     }
 
 
-    @GetMapping(value = "get-spec-memberlist", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/asssociations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "得到某个部门的成员列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "size", value = "单页几条", required = true, dataType = "int"),
-    })
-    public ResponseCode getSpecMemberList(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "departmentId") int departmentId, @RequestParam(value = "page") int page, @RequestParam(value = "size") int size) {
-        return associationMemberManageService.getSpecMemberList(associationId, departmentId, page, size);
+    public ResponseCode getSpecMemberList(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+        return associationMemberManageService.getSpecMemberList(associationId, departmentId);
     }
 
 
-    @DeleteMapping(value = "remove-one-from-department", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}/members/{userId}")
     @ApiOperation(value = "将成员从某个部门中移除")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int"),
-    })
-    public ResponseCode removeOneFromDepartment(int associationId, int departmentId, int userId) {
+    public ResponseCode removeOneFromDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @PathVariable(value = "userId") int userId) {
         return associationMemberManageService.removeOneFromDepartment(associationId, departmentId, userId);
     }
 
 
-    @PostMapping(value = "add-one-to-department", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "为某个部门添加成员")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int"),
-    })
-    public ResponseCode addOneToDepartment(int associationId, int departmentId, int userId) {
+    public ResponseCode addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestParam(value = "userId") int userId) {
         return associationMemberManageService.addOneToDepartment(associationId, departmentId, userId);
     }
 
 
-    @PutMapping(value = "change-one-to-department", produces = "application/json")
-    @ApiOperation(value = "更改某个成员所属部门")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "directionDepartmentId", value = "目标部门ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int"),
-    })
-    public ResponseCode changeOneToDepartment(int associationId, int directionDepartmentId, int userId) {
-        return associationMemberManageService.changeOneToDepartment(associationId, directionDepartmentId, userId);
-    }
-
-
-    @GetMapping(value = "check-user-permission-in-association", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members/{userId}/permissions/{permission}")
     @ApiOperation(value = "判断该用户在某个社团是否有某个权限")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "permission", value = "用户权限", required = true, dataType = "int"),
-    })
-    public ResponseCode checkUserPermissionInAssociation(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "userId") int userId, @RequestParam(value = "permission") int permission) {
+    public ResponseCode checkUserPermissionInAssociation(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId, @PathVariable(value = "permission") String permission) {
         return associationMemberManageService.checkUserPermissionInAssociation(associationId, userId, permission);
     }
 
 
-    @GetMapping(value = "get-user-association", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations")
     @ApiOperation(value = "查询用户所属社团")
-    @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int")
-    public ResponseCode getUserAssociation(@RequestParam(value = "userId") int userId) {
+    public ResponseCode getUserAssociation(@PathVariable(value = "userId") int userId) {
         return associationMemberManageService.getUserAssociation(userId);
     }
 
 
-    @GetMapping(value = "get-user-department", produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations/{associationId}/departments")
     @ApiOperation(value = "查询用户在指定社团中所属部门")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int")
-    })
-    public ResponseCode getUserDepartment(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "userId") int userId) {
+    public ResponseCode getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
         return associationMemberManageService.getUserDepartment(associationId, userId);
     }
 
 
-    @DeleteMapping(value = "delete-one-in-association", produces = "application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/members/{userId}")
     @ApiOperation(value = "在社团中删除某个成员")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int")
-    })
-    public ResponseCode deleteOneInAssociation(int associationId, int userId) {
+    public ResponseCode deleteOneInAssociation(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
         return associationMemberManageService.deleteOneInAssociation(associationId, userId);
     }
 
 
-    @PostMapping(value = "add-one-to-association", produces = "application/json")
+    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/members")
     @ApiOperation(value = "为社团添加一个成员")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "associationId", value = "社团ID", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int")
-    })
-    public ResponseCode addOneToAssociation(int associationId, int userId) {
+    public ResponseCode addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestParam(value = "userId") int userId) {
         return associationMemberManageService.addOneToAssociation(associationId, userId);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members")
+    @ApiOperation(value = "得到社团成员列表")
+    public ResponseCode getAssUserList(@PathVariable(value = "associationId") int associationId) {
+        return associationMemberManageService.getAssoUserList(associationId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/department")
+    @ApiOperation(value = "初始化部门")
+    public ResponseCode initDepartment(@PathVariable(value = "associationId")int associationId, @RequestParam(value = "userId") int userId) {
+        return associationMemberManageService.initDepartment(associationId,userId);
+    }
 
 }
