@@ -9,18 +9,17 @@ steps:
     path: /root/.m2
   commands:
   - cd ./auth
-  - mvn clean package 
+  - mvn clean package docker:build
 
-- name: ssh
-  image: appleboy/drone-ssh
-  settings:
-    host: 212.64.27.71
-    username: ubuntu
-    password:
-        from_secret: server_pwd
-    script:
-        - cd /drone/src/auth
-        - sudo docker build -t exort/auth .
+#- name: ssh
+#  image: appleboy/drone-ssh
+#  settings:
+#    host: 212.64.27.71
+#    username: ubuntu
+#    password:
+#        from_secret: server_pwd
+#    script:
+#        - sudo docker build -t exort/auth .
 
 trigger:
   branch:
