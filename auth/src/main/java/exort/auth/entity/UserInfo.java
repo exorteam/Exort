@@ -12,6 +12,6 @@ public class UserInfo {
 
 	private String username;
 	private String password;
-	private String type;
+	private int type;
 
 }
