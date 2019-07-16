@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import exort.associationmanager.entity.*;
+import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,9 +24,9 @@ public class AssociationServiceImpl implements AssociationService{
     private AssociationRepository assoRepository;
 //    private AssociationApplicationRepository assoAppRepository;
 
-    public ResponseBody getAssociation(Integer assoId){
+    public ResponseBody getAssociation(String assoId){
         ResponseBody responseBody = new ResponseBody();
-        Association association = assoRepository.findById(assoId).get();
+        Association association = assoRepository.findById(assoId);
         if(association==null){
             responseBody.setData(null);
             responseBody.setError("notFound");
@@ -111,8 +112,7 @@ public class AssociationServiceImpl implements AssociationService{
         association.setState(1);
         association.setReason(null);
 
-        Integer associationId = 1;
-        while(assoRepository.existsById(associationId)){++associationId;}
+        String associationId = new ObjectId().toString();
         association.setId(associationId);
 
         assoRepository.save(association);
@@ -124,21 +124,21 @@ public class AssociationServiceImpl implements AssociationService{
         return responseBody.setAndGetResponsebody(null,"notFound","社团不存在");
     }
 
-    public ResponseBody deleteAssociation(Integer assoId ){
+    public ResponseBody deleteAssociation(String assoId ){
         ResponseBody responseBody = new ResponseBody();
-        if(!assoRepository.existsById(assoId)){
+        if(assoRepository.findById(assoId)==null){
             return  noAssoMessage(responseBody);
         }
         assoRepository.deleteById(assoId);
         responseBody.setData(new HashMap());
         return responseBody.setAndGetResponsebody(new HashMap(),"","");
     }
-    public ResponseBody editAssociation(Integer assoId, String name, String description, List<String> tags, String logo){
+    public ResponseBody editAssociation(String assoId, String name, String description, List<String> tags, String logo){
         ResponseBody responseBody = new ResponseBody();
-        if(!assoRepository.existsById(assoId)){
+        if(assoRepository.findById(assoId)==null){
             return  noAssoMessage(responseBody);
         }
-        Association association = assoRepository.findById(assoId).get();
+        Association association = assoRepository.findById(assoId);
         association.setDescription(description);
         association.setTags(tags);
         association.setName(name);
@@ -147,10 +147,10 @@ public class AssociationServiceImpl implements AssociationService{
         return responseBody.setAndGetResponsebody(association,"","");
     };
 
-    public  ResponseBody patchAssociation(Integer assoId,String type,String reason){
+    public  ResponseBody patchAssociation(String assoId,String type,String reason){
         ResponseBody responseBody = new ResponseBody();
-        Association association = assoRepository.findById(assoId).get();
-        if(!assoRepository.existsById(assoId)){
+        Association association = assoRepository.findById(assoId);
+        if(assoRepository.findById(assoId)==null){
             return  noAssoMessage(responseBody);
         }
         switch (type){
@@ -167,7 +167,7 @@ public class AssociationServiceImpl implements AssociationService{
 
         return responseBody.setAndGetResponsebody(new HashMap(),"","");
     };
-    public ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app ){
+    public ResponseBody handleAsoociationApplication(String user_id, String type, Application app ){
         ResponseBody responseBody = new ResponseBody();
         switch (type) {
             case "accept": //create association
@@ -176,14 +176,15 @@ public class AssociationServiceImpl implements AssociationService{
                         if (true) {    //有权限，待修改
                             List<String> tags =new ArrayList();
                             MyObject assoInfo = app.getObject();
-                            createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
-                            return responseBody.setAndGetResponsebody(new HashMap(), "", "");
+                            responseBody=createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
+
+                            return responseBody;
                         }
                         return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                     case "unblockAssociation":
                         if (true) {
                             MyObject blockInfo = app.getObject();
-                            Association asso = assoRepository.findById(blockInfo.getAssoId()).get();
+                            Association asso = assoRepository.findById(blockInfo.getAssociationId().toString());
                             asso.setState(1);
 
                             assoRepository.save(asso);

@@ -34,7 +34,7 @@ public class AssociationServiceTest {
         responseBody.setMessage("");
         responseBody.setError("");
         responseBody.setData("");
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
 
     /**
@@ -44,7 +44,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testListAssociations() throws Exception {
-//        assertEquals(responseBody,service.listAssociations(111);
+//        assertEquals(responseBody,service.listAssociations("111";
 
     }
 
@@ -55,7 +55,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testCreateAssociation() throws Exception {
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
 
     /**
@@ -65,7 +65,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testDeleteAssociation() throws Exception {
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
 
     /**
@@ -75,7 +75,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testEditAssociation() throws Exception {
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
 
     /**
@@ -85,7 +85,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testPatchAssociation() throws Exception {
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
 
     /**
@@ -95,10 +95,10 @@ public class AssociationServiceTest {
      */
     @Test
     public void testHandleAsoociationApplication() throws Exception {
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
     public void testCreateTestData() throws Exception{
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
     }
 
 
@@ -109,7 +109,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testNoAssoMessage() throws Exception {
-        assertEquals(responseBody,service.getAssociation(111));
+        assertEquals(responseBody,service.getAssociation("111"));
 /*
 try {
    Method method = AssociationServiceImpl.getClass().getMethod("noAssoMessage", ResponseBody.class);

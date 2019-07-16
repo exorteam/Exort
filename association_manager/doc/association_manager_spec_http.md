@@ -590,31 +590,30 @@
 
    ``` json
    >>> POST /callback
-   {
-      "userId":123,
-      "event":"refuse",
-      "application":{
-         "id":"123",
-         "applicantId":"111",
-         "type":"createAssociation",
-         "AssociationInfo":{
-            "name":"Association1",
-            "description":"nothing to say",
-            "logo":"image1(base64)",
-            "tags":[
-               "T1",
-               "T2",
-            ],
-         },
-         "materialIds":[
-            123,
-            1233
-         ],
-         "createdTime":"1111-2-23",
-         "handledTime":"1223-3-22",
-         "state":"_pending_"
-      }
-   }
+  {
+	   "userId":"129",
+     "event":"accept",
+     "application":{
+     "Id":"12dasdsd3",
+     "applicantId":"111",
+     "type":"createAssociation",
+     "object":{
+          "name":"Association1",
+          "description":"nothing to say",
+          "logo":"image1(base64)",
+          "tags":[
+              "T1",
+              "T2"
+            ]
+      },
+      "materialIds":[
+           "123",
+           "1233"
+      ],
+      "createdTime":"1111-2-23",
+      "handledTime":"1223-3-22",
+      "state":"_pending_"}
+  }
    <<< 200
    {
       "association":{
@@ -634,31 +633,30 @@
 
    ```json
    >>> POST /callback
-   {
-      "userId":123,
-      "event":"accept",
-      "application":{
-         "id":"123",
-         "applicantId":"111",
-         "type":"unblockAssociation",
-         "AssociationInfo":{
-            "name":"Association1",
-            "description":"nothing to say",
-            "logo":"image1(base64)",
-            "tags":[
-               "T1",
-               "T2",
-            ],
-         },
-         "materialIds":[
-            123,
-            1233
-         ],
-         "createdTime":"1111-2-23",
-         "handledTime":"1223-3-22",
-         "state":"_pending_"
-      }
-   }
+  {
+	   "userId":"129",
+     "event":"accept",
+     "application":{
+     "Id":"12dasdsd3",
+     "applicantId":"111",
+     "type":"createAssociation",
+     "object":{
+          "name":"Association1",
+          "description":"nothing to say",
+          "logo":"image1(base64)",
+          "tags":[
+              "T1",
+              "T2"
+            ]
+      },
+      "materialIds":[
+           "123",
+           "1233"
+      ],
+      "createdTime":"1111-2-23",
+      "handledTime":"1223-3-22",
+      "state":"_pending_"}
+  }
    <<< 200
    {
      "data": {} ,
@@ -723,35 +721,30 @@
 
    ```json
    >>> POST /callback
-   {
-      "userId":"12399999",
-      "operation":"_createAsso_",
-      "application":{
-         "id":"123",
-         "applicantId":"111",
-         "type":"refuse",
-         "association":{
-            "id":1,
-            "name":"Association1",
-            "description":"nothing to say",
-            "logo":"image1(base64)",
-            "tags":[
-               "T1",
-               "T2",
-            ],
-            "block_state":1,
-            "reason":"18+"
-         },
-         "materialIds":[
-            123,
-            1233
-         ],
-         "createdTime":"1111-2-23",
-         "handledTime":"1223-3-22",
-         "state":"_pending_"
-      }
-   }
-
+  {
+	   "userId":"129",
+     "event":"accept",
+     "application":{
+     "Id":"12dasdsd3",
+     "applicantId":"111",
+     "type":"createAssociation",
+     "object":{
+          "name":"Association1",
+          "description":"nothing to say",
+          "logo":"image1(base64)",
+          "tags":[
+              "T1",
+              "T2"
+            ]
+      },
+      "materialIds":[
+           "123",
+           "1233"
+      ],
+      "createdTime":"1111-2-23",
+      "handledTime":"1223-3-22",
+      "state":"_pending_"}
+  }
    <<< 403
    {
       "data":null,
@@ -762,35 +755,30 @@
 
    ```json
    >>> POST /callback
-   {
-      "userId":"122",
-      "operation":"_createAsso_",
-      "application":{
-         "id":"123",
-         "applicantId":"111",
-         "type":"refuse",
-         "association":{
-            "id":1,
-            "name":"Association1",
-            "description":"nothing to say",
-            "logo":"image1(base64)",
-            "tags":[
-               "T1",
-               "T2",
-            ],
-            "block_state":1,
-            "reason":"18+"
-         },
-         "materialIds":[
-            123,
-            1233
-         ],
-         "createdTime":"1111-2-23",
-         "handledTime":"1223-3-22",
-         "state":"_pending_"
-      }
-   }
-
+  {
+	   "userId":"129",
+     "event":"accept",
+     "application":{
+     "Id":"12dasdsd3",
+     "applicantId":"111",
+     "type":"createAssociation",
+     "object":{
+          "name":"Association1",
+          "description":"nothing to say",
+          "logo":"image1(base64)",
+          "tags":[
+              "T1",
+              "T2"
+            ]
+      },
+      "materialIds":[
+           "123",
+           "1233"
+      ],
+      "createdTime":"1111-2-23",
+      "handledTime":"1223-3-22",
+      "state":"_pending_"}
+  }
    <<< 404
    {
       "data":null,

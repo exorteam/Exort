@@ -27,7 +27,7 @@ public class AssociationManagerController{
 
     @Data
     private static class ApplicationAssociationInfo {
-        private Integer userId;
+        private String userId;
         private String event;
         private Application application;
     }
@@ -39,7 +39,7 @@ public class AssociationManagerController{
     }
 
     @GetMapping("/associations/{assoId}")
-    public ResponseBody getAssociation(@PathVariable(value="assoId") Integer assoId){
+    public ResponseBody getAssociation(@PathVariable(value="assoId") String assoId){
         return service.getAssociation(assoId);
     }
 
@@ -50,17 +50,17 @@ public class AssociationManagerController{
     }
 
     @DeleteMapping("/associations/{assoId}")
-    public ResponseBody deleteAssociation(@PathVariable(value="assoId") Integer assoId ){
+    public ResponseBody deleteAssociation(@PathVariable(value="assoId") String assoId ){
         return  service.deleteAssociation(assoId);
     }
 
     @PutMapping("/associations/{assoId}")
-    public ResponseBody editAssociation(@RequestBody AssociationInfo body,@PathVariable(value="assoId") Integer assoId ){
+    public ResponseBody editAssociation(@RequestBody AssociationInfo body,@PathVariable(value="assoId") String assoId ){
         return service.editAssociation(assoId, body.getName(),body.getDescription(),body.getTags(),body.getLogo());
     }
 
     @PatchMapping("/associations/{assoId}")
-    public ResponseBody patchAssociation(@RequestBody PatchAssociationInfo body,@PathVariable(value="assoId") Integer assoId ){
+    public ResponseBody patchAssociation(@RequestBody PatchAssociationInfo body,@PathVariable(value="assoId") String assoId ){
         return service.patchAssociation(assoId,body.getType(),body.getDescription());
     }
 

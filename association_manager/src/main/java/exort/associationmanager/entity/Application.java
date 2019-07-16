@@ -10,19 +10,12 @@ import java.util.Date;
 @Data
 public class Application<T> {
     @Id
-    Integer Id;
-    Integer applicantId;
+    String Id;
+    String applicantId;
     String type;
     MyObject object;
-    String materials[];
-    String createTime;
-    String handleTime;
+    String materialIds[];
+    String createdTime;
+    String handledTime;
     String state;//0 unhandled,1 accept,2 refused,3 canceled
-
-//    public AssociationInfo getAssociationInfo(){
-//        return (AssociationInfo) object;
-//    }
-//    public BlockInfo getBlockInfo(){
-//        return  (BlockInfo) object;
-//    }
 }

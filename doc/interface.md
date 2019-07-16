@@ -403,7 +403,7 @@
 - 列出角色权限
 
    Permission[] ListRolePermissions(int role_id)
-  
+
 - 判断用户在指定域是否有指定权限
 
    bool HasPermission(int user_id, int scope_id, int permission_id)
