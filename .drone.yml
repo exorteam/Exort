@@ -7,13 +7,17 @@ steps:
   volumes:
   - name: cache
     path: /root/.m2
+  - name: targetfile
+    path: /drone/src/auth/target
   commands:
   - cd ./auth
   - mvn clean package 
-  - pwd
 
 - name: docker
   image: plugins/docker
+  volumes:
+  - name: targetfile
+    path: ./auth/target
   settings: 
     username:
         from_secret: aliyun-docker-usr
@@ -24,8 +28,6 @@ steps:
     dockerfile: ./auth/Dockerfile
     tags:
         - latest
-    commands:
-    - ls ./auth
 
 trigger:
   branch:
@@ -35,4 +37,6 @@ volumes:
   - name: cache
     host:
       path: /home/ubuntu/repo
-
+  - name: targetfile
+    host:
+      path: /home/ubuntu/targetfile
