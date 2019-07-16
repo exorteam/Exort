@@ -6,6 +6,7 @@ import exort.auth.entity.UserInfo;
 
 public interface UserRepository extends MongoRepository<UserInfo,Integer> {
 
-	public boolean existsByUsername(String usr);
+	public boolean  existsByUsername(String usr);
 	public UserInfo findByUsername(String usr);
+	public void     deleteByType(int type);
 }

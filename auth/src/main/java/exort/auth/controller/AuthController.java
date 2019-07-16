@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.auth.entity.AuthResponse;
 import exort.auth.entity.UserInfo;
 import exort.auth.service.AuthService;
 
@@ -20,7 +21,21 @@ public class AuthController {
 
 	@PostMapping("/register")
 	public String register(@RequestBody UserInfo info){
-		return service.register(info.getUsername(),info.getPassword());
+		int res = service.register(info.getUsername(),info.getPassword());
+		switch(res){
+			case 0 :
+				return "Zero register error";
+			case -1:
+				return "Username and password should not be empty";
+			case -2:
+				return "Username exists";
+			default:
+				return "Register success";
+		}
+	}
 
+	@PostMapping("/auth")
+	public AuthResponse auth(@RequestBody String token){
+		return service.auth(token);
 	}
 }

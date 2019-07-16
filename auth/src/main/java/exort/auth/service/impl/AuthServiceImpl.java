@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import exort.auth.component.JwtKeyUtil;
+import exort.auth.entity.AuthResponse;
 import exort.auth.entity.UserInfo;
 import exort.auth.entity.UserType;
 import exort.auth.repository.UserRepository;
@@ -43,15 +44,19 @@ public class AuthServiceImpl implements AuthService {
 		return jwtToken;
 	}
 
-	public String register(String usr,String pwd){
+	public int register(String usr,String pwd){
+		return register(usr,pwd,UserType.USER);
+	}
+
+	public int register(String usr,String pwd,int type){
 		if(usr == null || pwd == null){
-			return "Username and password should not be empty";
+			return -1; // Username and password should not be empty
 		}
 		if(repository.existsByUsername(usr)){
-			return "Username exists";
+			return -2; // Username exists
 		}
 
-		int id = 0;
+		int id = 2;
 		while(repository.existsById(id)){
 			++id;
 		}
@@ -59,9 +64,18 @@ public class AuthServiceImpl implements AuthService {
 		info.setUsername(usr);
 		info.setPassword(pwd);
 		info.setId(id);
-		info.setType(UserType.USER); // Normal user for default
+		info.setType(type);
 		repository.save(info);
 
-		return "success";
+		return id;
+	}
+
+	public AuthResponse auth(String token){
+		final Claims claims = Jwts.parser().setSigningKey(jwtKeyUtil.getKey()).parseClaimsJws(token).getBody();
+		AuthResponse response = new AuthResponse();
+		response.setUsername(claims.getSubject());
+		response.setId(claims.get("id",Integer.class));
+		response.setType(claims.get("type",Integer.class));
+		return response;
 	}
 }

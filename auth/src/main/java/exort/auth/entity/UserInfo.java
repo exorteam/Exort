@@ -8,10 +8,10 @@ import lombok.Data;
 public class UserInfo {
 
 	@Id
-	private int id;
+	private int    id;
 
 	private String username;
 	private String password;
-	private int type;
+	private int    type;
 
 }
