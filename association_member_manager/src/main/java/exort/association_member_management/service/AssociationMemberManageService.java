@@ -2,29 +2,51 @@ package exort.association_member_management.service;
 
 
 import exort.association_member_management.dto.ResponseCode;
+import exort.association_member_management.entity.Department;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface AssociationMemberManageService {
     public ResponseCode getSpecApplication(int applyId);
-    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime,int page,int size);
+
+    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime, int page, int size);
+
     public ResponseCode adoptApplication(int applyId);
+
     public ResponseCode refuseApplication(int applyId);
-    public ResponseCode getDepartmentTree(int associationId);
-    public ResponseCode getSpecDepartmentInfo(int associationId,int departmentId);
-    public ResponseCode createDepartment(int associationId,String departmentName,String departmentDesc,int parentId);
-    public ResponseCode deleteDepartment(int associationId,int departmentId);
-    public ResponseCode editDepartment(int associationId,int departmentId,String departmentName,String departmentDesc,int parentId);
-    public ResponseCode getSpecMemberList(int associationId,int departmentId);
-    public ResponseCode removeOneFromDepartment(int associationId,int departmentId,int userId);
-    public ResponseCode addOneToDepartment(int associationId,int departmentId,int userId);
-    public ResponseCode changeOneToDepartment(int associationId,int directionDepartmentId,int userId);
-    public ResponseCode checkUserPermissionInAssociation(int associationId,int userId,String permission);
-    public ResponseCode getUserAssociation(int userId);
-    public ResponseCode getUserDepartment(int associationId,int userId);
-    public ResponseCode deleteOneInAssociation(int associationId,int userId);
-    public ResponseCode addOneToAssociation(int associationId,int userId);
-    public ResponseCode getAssoUserList(int associationId);
-    public ResponseCode initDepartment(int associationId,int userId);
+
+    public ResponseCode<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response);
+
+    public ResponseCode<Department> getSpecDepartmentInfo(int associationId, int departmentId, HttpServletResponse response);
+
+    public ResponseCode<Department> createDepartment(int associationId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response);
+
+    public ResponseCode<Department> deleteDepartment(int associationId, int departmentId, HttpServletResponse response);
+
+    public ResponseCode<Department> editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response);
+
+    public ResponseCode<List<Integer>> getSpecMemberList(int associationId, int departmentId, HttpServletResponse response);
+
+    public ResponseCode<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response);
+
+    public ResponseCode<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response);
+
+//    public ResponseCode changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response);
+
+    public ResponseCode<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response);
+
+    public ResponseCode<List<Integer>> getUserAssociation(int userId, HttpServletResponse response);
+
+    public ResponseCode<List<Department>> getUserDepartment(int associationId, int userId, HttpServletResponse response);
+
+    public ResponseCode<Boolean> deleteOneInAssociation(int associationId, int userId, HttpServletResponse response);
+
+    public ResponseCode<Boolean> addOneToAssociation(int associationId, int userId, HttpServletResponse response);
+
+    public ResponseCode<List<Integer>> getAssoUserList(int associationId, HttpServletResponse response);
+
+    public ResponseCode<Boolean> initDepartment(int associationId, int userId, HttpServletResponse response);
 }

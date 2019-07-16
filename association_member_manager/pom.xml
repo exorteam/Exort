@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.Exort</groupId>
+    <groupId>Exort</groupId>
     <artifactId>association_member_management</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>association_member_management</name>

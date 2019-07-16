@@ -41,6 +41,7 @@
   | Code                              | Description                                        |
   | --------------------------------- | -------------------------------------------------- |
   | 200 [*Department[]*](#Department) | 查询成功, 返回列表(至少有两个，有管理层和普通成员) |
+  | 404 “AssociationNotFound”         | 该社团不存在                                       |
 
 - Examples
 
@@ -69,6 +70,19 @@
     "message":"",
   }
   ```
+  
+  ```json
+  >>> GET /associations/3516/departments
+  
+  <<< 404
+  {
+    "data":null,
+    "error":"AssociationNotFound",
+    "message":"该社团不存在",
+  }
+  ```
+  
+  
 
 
 ### 得到某个部门的信息
@@ -89,7 +103,7 @@
   | Code                            | Description  |
   | ------------------------------- | ------------ |
   | 200 [_Department_](#Department) | 查询成功     |
-  | 404 "departmentNotFound"        | 不存在该部门 |
+  | 404 "DepartmentNotFound"        | 不存在该部门 |
 
 - Examples
 
@@ -116,8 +130,8 @@
   <<< 404
   {
       "data":null,
-      "error":"departmentNotFound",
-    	"message":"不存在该申请"
+      "error":"DepartmentNotFound",
+    	"message":"不存在该社团"
   }
   ```
 
@@ -146,7 +160,8 @@
   | Code                            | Description        |
   | ------------------------------- | ------------------ |
   | 201 [_Department_](#Department) | 成功               |
-  | 400 "InvalidDepatment"          | 部门创建信息不合法 |
+  | 400 "InvalidDepartment"         | 部门创建信息不合法 |
+  | 404 “AssociationNotFound”       | 该社团不存在       |
 
 - Examples
 
@@ -184,7 +199,7 @@
   <<< 400
   {
     "data": null,
-    "error": "BadRequest",
+    "error": "InvalidDepartment",
     "message": "部门创建信息不合法"
   }
 ```
@@ -410,14 +425,13 @@
 
 - Response
 
-  | Code                      | Description                |
-  | ------------------------- | -------------------------- |
-  | 200 true                  | 请求成功，并且成功删除用户 |
-  | 400 “InvalidUserId”       | 不存在该用户               |
-  | 404 "DepartmentNotFound"  | 不存在该部门               |
-  | 404 "AssociationNotFound" | 不存在该社团               |
-  | 404 "UserNotFound"        | 社团中不存在该用户         |
-
+  | Code                     | Description                |
+  | ------------------------ | -------------------------- |
+  | 200 true                 | 请求成功，并且成功删除用户 |
+  | 400 “InvalidUserId”      | 不存在该用户               |
+  | 404 "DepartmentNotFound" | 不存在该部门               |
+  | 404 "UserNotFound"       | 社团中不存在该用户         |
+  
 - Example
 
   ```json
@@ -435,36 +449,24 @@
   ```json
   >>> DELETE /associations/1/departments/2/members/205186
   
+  
+  <<< 400
+    {
+        "data":null,
+        "error":"InvalidUserId",
+        "message":"不存在该用户"
+    }
   ```
 
-<<< 400
-  {
-      "data":null,
-      "error":"InvalidUserId",
-      "message":"部门中不存在该用户"
-  }
-  ```
-  
   ```json
-  >>> DELETE /associations/1/departments/2516651/members/20
+ >>> DELETE /associations/1/departments/2516651/members/20
   
-  <<< 404
-  {
+ <<< 404
+ {
       "data":null,
       "error":"DepartmentNotFound",
       "message":"不存在该部门"
-}
-  ```
-
-  ```json
-  >>> DELETE /associations/1123123/departments/2/members/20
-  
-  <<< 404
-  {
-      "data":null,
-      "error":"AssociationNotFound",
-      "message":"不存在该社团"
-  }
+ }
   ```
 
   ```json
@@ -501,13 +503,12 @@
   
 - Response
 
-  | Code                      | Description                        |
-  | ------------------------- | ---------------------------------- |
-  | 200 true                  | 请求成功，并且成功在部门中添加用户 |
-  | 400 “InvalidUserId”       | 不存在该用户                       |
-  | 404 "AssociationNotFound" | 不存在该社团                       |
-  | 404 "DepartmentNotFound"  | 不存在该部门                       |
-
+  | Code                     | Description                        |
+  | ------------------------ | ---------------------------------- |
+  | 200 true                 | 请求成功，并且成功在部门中添加用户 |
+  | 400 “InvalidUserId”      | 不存在该用户                       |
+  | 404 "DepartmentNotFound" | 不存在该部门                       |
+  
 - Example
 
   ```json
@@ -525,20 +526,6 @@
   ```
   
   ```json
-  >>> POST /associations/123/departments/2/members
-  {
-         "userId":20
-  }
-  
-  <<< 404
-  {
-        "data":null,
-        "error":"AssociationNotFound",
-        "message":"不存在该社团"
-  }
-  ```
-  
-  ```json
   >>> POST /associations/1/departments/21412/members
   {
       "userId":20
@@ -552,9 +539,9 @@
        "message":"不存在该部门"
   } 	
   ```
-
   
-
+  
+  
   ```json
   >>> POST /associations/1/departments/21412/members
   {
@@ -566,7 +553,7 @@
       "data":null,
       "error":"InvalidUserId",
       "message":"不存在该用户"
-  }
+}
   ```
 
 ### 判断该用户在某个社团是否有某个权限
@@ -585,13 +572,13 @@
 
 - Response
 
-  | Code                      | Description      |
-  | ------------------------- | ---------------- |
-  | 200 true                  | 请求成功         |
-  | 400 “InvalidUserId”       | 不存在该用户     |
-  | 404 "AssociationNotFound" | 不存在该社团     |
-  | 404 "UserNotFound"        | 用户不在该社团中 |
-  | 404 "PermissionNotFound"  | 没有该权限       |
+  | Code                      | Description           |
+  | ------------------------- | --------------------- |
+  | 200 true                  | 请求成功,且拥有该权限 |
+  | 400 “InvalidUserId”       | 不存在该用户          |
+  | 404 "AssociationNotFound" | 不存在该社团          |
+  | 404 "UserNotFound"        | 用户不在该社团中      |
+  | 404 "PermissionNotFound"  | 没有该权限            |
 
 - Example
 
@@ -714,7 +701,7 @@
   | --------------------------------- | ------------------ |
   | 200 [*Department[]*](#Department) | 请求成功           |
   | 400 “InvalidUserId”               | 不存在该用户       |
-  | 400 "InvalidAssociationId"        | 不存在该社团       |
+  | 404 "AssociationNotFound"         | 不存在该社团       |
   | 404 "UserNotFound"                | 用户没有参与该社团 |
 
 - Example
@@ -797,7 +784,7 @@
 
   | Code                      | Description                |
   | ------------------------- | -------------------------- |
-  | 200 {}                    | 请求成功，并且成功删除用户 |
+  | 200 true                    | 请求成功，并且成功删除用户 |
   | 400 “InvalidUserId”       | 不存在该用户               |
   | 404 "UserNotFound"        | 社团中不存在该用户         |
   | 404 "AssociationNotFound" | 不存在该社团               |
@@ -810,7 +797,7 @@
   
   <<< 200
   {
-      "data":{},
+      "data":true,
       "error":"",
       "message":""
   }

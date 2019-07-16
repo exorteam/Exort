@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Service
@@ -29,11 +30,11 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
     @Override
     public ResponseCode getSpecApplication(int applyId) {
-        ResponseCode responseCode=new ResponseCode();
+        ResponseCode responseCode = new ResponseCode();
 
-        responseCode.setMsg("Success.");
-        HashMap<String,Application> data=new HashMap<>();
-        data.put("application",applicationRepository.findById(applyId).get());
+        responseCode.setMessage("Success.");
+        HashMap<String, Application> data = new HashMap<>();
+        data.put("application", applicationRepository.findById(applyId).get());
         responseCode.setData(data);
 
         return responseCode;
@@ -41,28 +42,28 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
     //条件拼接
     @Override
-    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime,int page,int size) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime, int page, int size) {
+        ResponseCode responseCode = new ResponseCode();
 
-        Specification<Application> specification=new Specification<Application>() {
+        Specification<Application> specification = new Specification<Application>() {
             @Override
             public Predicate toPredicate(Root<Application> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<>();
 
-                if(userId.isPresent()){
-                    list.add(criteriaBuilder.equal(root.get("userId").as(Integer.class),userId.get()));
+                if (userId.isPresent()) {
+                    list.add(criteriaBuilder.equal(root.get("userId").as(Integer.class), userId.get()));
                 }
-                if(associationId.isPresent() && departmentId.isPresent()){
-                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class),associationId.get()));
-                    list.add(criteriaBuilder.equal(root.get("departmentId").as(Integer.class),departmentId.get()));
-                }
-
-                if(associationId.isPresent()){
-                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class),associationId.get()));
+                if (associationId.isPresent() && departmentId.isPresent()) {
+                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class), associationId.get()));
+                    list.add(criteriaBuilder.equal(root.get("departmentId").as(Integer.class), departmentId.get()));
                 }
 
-                if(startTime.isPresent() && endTime.isPresent()){
-                    list.add(criteriaBuilder.between(root.get("applyTime").as(Date.class),startTime.get(),endTime.get()));
+                if (associationId.isPresent()) {
+                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class), associationId.get()));
+                }
+
+                if (startTime.isPresent() && endTime.isPresent()) {
+                    list.add(criteriaBuilder.between(root.get("applyTime").as(Date.class), startTime.get(), endTime.get()));
                 }
 
                 criteriaQuery.where(criteriaBuilder.and(list.toArray(new Predicate[list.size()])));
@@ -71,13 +72,13 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             }
         };
 
-      Pageable pageable=PageRequest.of(page,size);
+        Pageable pageable = PageRequest.of(page, size);
 
-        Page<Application> applications=applicationRepository.findAll(specification,pageable);
+        Page<Application> applications = applicationRepository.findAll(specification, pageable);
 
 
-        HashMap<String,Page<Application>> data=new HashMap<>();
-        data.put("application",applications);
+        HashMap<String, Page<Application>> data = new HashMap<>();
+        data.put("application", applications);
         responseCode.setData(data);
 
         return responseCode;
@@ -85,164 +86,497 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
     @Override
     public ResponseCode adoptApplication(int applyId) {
-        ResponseCode responseCode=new ResponseCode();
+        ResponseCode responseCode = new ResponseCode();
 
-        Application application= applicationRepository.findById(applyId).get();
+        Application application = applicationRepository.findById(applyId).get();
         application.setState(Application.ACCEPTED);
         applicationRepository.save(application);
 
-        responseCode.setMsg("Success Adopt");
+        responseCode.setMessage("Success Adopt");
 
         return responseCode;
     }
 
     @Override
     public ResponseCode refuseApplication(int applyId) {
-        ResponseCode responseCode=new ResponseCode();
+        ResponseCode responseCode = new ResponseCode();
 
-        Application application= applicationRepository.findById(applyId).get();
+        Application application = applicationRepository.findById(applyId).get();
         application.setState(Application.REFUSED);
         applicationRepository.save(application);
 
-        responseCode.setMsg("Success Refuse");
+        responseCode.setMessage("Success Refuse");
         return responseCode;
     }
 
     @Override
-    public ResponseCode getDepartmentTree(int associationId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response) {
+        ResponseCode<List<Department>> responseCode = new ResponseCode<>();
 
-        List<Department>departments=departmentRepository.findAllByAssociationId(associationId);
+        List<Department> departments = departmentRepository.findAllByAssociationId(associationId);
 
-        responseCode.setMsg("ok");
-        HashMap<String,List<Department>> departmentTree=new HashMap<>();
-        departmentTree.put("departmentTree",departments);
-        responseCode.setData(departmentTree);
+        if (departments.size() == 0) {
+            response.setStatus(404);
 
-        return responseCode;
-    }
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("该社团不存在");
 
-    @Override
-    public ResponseCode getSpecDepartmentInfo(int associationId, int departmentId) {
-        ResponseCode responseCode=new ResponseCode();
+        } else {
+            response.setStatus(200);
 
-        List<Department>departments=departmentRepository.findAllByAssociationIdAndDepartmentId(associationId,departmentId);
-
-        responseCode.setMsg("ok");
-        HashMap<String,List<Department>> ret=new HashMap<>();
-        ret.put("SpecDepartmentInfo",departments);
-        responseCode.setData(ret);
+            responseCode.setData(departments);
+        }
 
         return responseCode;
     }
 
     @Override
-    public ResponseCode createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Department> getSpecDepartmentInfo(int associationId, int departmentId, HttpServletResponse response) {
+        ResponseCode<Department> responseCode = new ResponseCode<>();
 
-        Department department=new Department(associationId,departmentName,departmentDesc,parentId);
-        departmentRepository.save(department);
+        Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
 
-        responseCode.setMsg("Success Create Department");
-        HashMap<String,Integer> ret=new HashMap<>();
-        ret.put("associationId",associationId);
-        ret.put("departmentId",department.getDepartmentId());
+        if (department == null) {
+            response.setStatus(404);
 
-        responseCode.setData(ret);
+            responseCode.setError("DepartmentNotFound");
+            responseCode.setMessage("该部门不存在");
+        } else {
+            response.setStatus(200);
 
-        return responseCode;
-    }
-
-    @Override
-    public ResponseCode deleteDepartment(int associationId, int departmentId) {
-        ResponseCode responseCode=new ResponseCode();
-
-        Department department=departmentRepository.findByAssociationIdAndDepartmentId(associationId,departmentId);
-        departmentRepository.delete(department);
-
-        responseCode.setMsg("Success Delete Department");
+            responseCode.setData(department);
+        }
 
         return responseCode;
     }
 
     @Override
-    public ResponseCode editDepartment(int associationId,int departmentId, String departmentName, String departmentDesc, int parentId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Department> createDepartment(int associationId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
+        ResponseCode<Department> responseCode = new ResponseCode<>();
 
-        Department department=departmentRepository.findByAssociationIdAndDepartmentId(associationId,departmentId);
-        department.setName(departmentName);
-        department.setDescription(departmentDesc);
-        department.setParentId(parentId);
+        if (departmentRepository.existsByAssociationId(associationId)) {
 
-        departmentRepository.save(department);
+            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId)) {
 
-        responseCode.setMsg("Success Edit Department");
+                Department department = new Department(associationId, departmentName, departmentDesc, parentId);
+                departmentRepository.save(department);
+
+                responseCode.setData(department);
+
+            } else {
+                response.setStatus(400);
+
+                responseCode.setError("InvalidDepartment");
+                responseCode.setMessage("部门创建信息不合法");
+            }
+
+        } else {
+            response.setStatus(404);
+
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("该社团不存在");
+        }
 
         return responseCode;
     }
 
     @Override
-    public ResponseCode getSpecMemberList(int associationId, int departmentId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Department> deleteDepartment(int associationId, int departmentId, HttpServletResponse response) {
+        ResponseCode<Department> responseCode = new ResponseCode<>();
+
+        Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
+
+        if (department == null) {
+            response.setStatus(404);
+
+            responseCode.setError("DepartmentNotFound");
+            responseCode.setMessage("不存在该部门");
+        } else {
+            responseCode.setData(department);
+
+            departmentRepository.delete(department);
+        }
+
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode removeOneFromDepartment(int associationId, int departmentId, int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Department> editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
+        ResponseCode<Department> responseCode = new ResponseCode<>();
+
+        Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
+
+        if (department == null) {
+            response.setStatus(404);
+
+            responseCode.setError("DepartmentNotFound");
+            responseCode.setMessage("不存在该部门");
+        } else {
+
+            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId)) {
+
+                response.setStatus(200);
+
+                department.setName(departmentName);
+                department.setDescription(departmentDesc);
+                department.setParentId(parentId);
+
+                departmentRepository.save(department);
+
+            } else {
+                response.setStatus(400);
+
+                responseCode.setError("InvalidParentId");
+                responseCode.setMessage("无效父节点");
+            }
+
+        }
 
         return responseCode;
     }
 
     @Override
-    public ResponseCode addOneToDepartment(int associationId, int departmentId, int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<List<Integer>> getSpecMemberList(int associationId, int departmentId, HttpServletResponse response) {
+        ResponseCode<List<Integer>> responseCode = new ResponseCode<>();
+
+        if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
+
+            response.setStatus(200);
+
+            // outside
+            List<Integer> userList = new ArrayList<>();
+            responseCode.setData(userList);
+
+        } else {
+            response.setStatus(404);
+
+            responseCode.setError("DepartmentNotFound");
+            responseCode.setMessage("不存在该部门");
+        }
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode changeOneToDepartment(int associationId, int directionDepartmentId, int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existUser = true;
+
+        if (existUser) {
+
+            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
+                // outside
+                boolean existUserInAsso = true;
+
+                if (existUserInAsso) {
+                    response.setStatus(200);
+
+                    responseCode.setData(true);
+
+                } else {
+                    response.setStatus(404);
+
+                    responseCode.setError("UserNotFound");
+                    responseCode.setMessage("社团中不存在该用户");
+                }
+
+            } else {
+                response.setStatus(404);
+
+                responseCode.setError("DepartmentNotFound");
+                responseCode.setMessage("不存在该部门");
+            }
+
+        } else {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+        }
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode checkUserPermissionInAssociation(int associationId, int userId, String permission) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existUser = true;
+
+        if (existUser) {
+
+            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
+
+                response.setStatus(200);
+
+                // outside
+                // add_user_to_department
+
+                responseCode.setData(true);
+            } else {
+                response.setStatus(404);
+
+                responseCode.setError("DepartmentNotFound");
+                responseCode.setMessage("不存在该部门");
+            }
+
+        } else {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+        }
+
+        return responseCode;
+    }
+
+//    @Override
+//    public ResponseCode changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response) {
+//        ResponseCode responseCode = new ResponseCode();
+//        return responseCode;
+//    }
+
+    @Override
+    public ResponseCode<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response) {
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existUser = true;
+
+        if (!existUser) {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+
+            return responseCode;
+        }
+
+        if (departmentRepository.existsByAssociationId(associationId)) {
+
+            // outside
+            boolean existUserInAsso = true;
+
+            if (!existUserInAsso) {
+                response.setStatus(404);
+
+                responseCode.setError("UserNotFound");
+                responseCode.setMessage("用户不在该社团中");
+                return responseCode;
+
+            }
+
+            // outside
+            boolean hasPermission = true;
+            if (hasPermission) {
+                response.setStatus(200);
+
+                responseCode.setData(true);
+            } else {
+                response.setStatus(404);
+
+                responseCode.setError("PermissionNotFound");
+                responseCode.setMessage("没有该权限");
+            }
+
+        } else {
+            response.setStatus(404);
+
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("不存在该社团");
+        }
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode getUserAssociation(int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<List<Integer>> getUserAssociation(int userId, HttpServletResponse response) {
+        ResponseCode<List<Integer>> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existuser = true;
+        if (!existuser) {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+            return responseCode;
+        }
+
+        //outside
+        List<Integer> associationId = new ArrayList<>();
+
+        response.setStatus(200);
+
+        responseCode.setData(associationId);
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode getUserDepartment(int associationId, int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<List<Department>> getUserDepartment(int associationId, int userId, HttpServletResponse response) {
+        ResponseCode<List<Department>> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existuser = true;
+        if (!existuser) {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+            return responseCode;
+        }
+
+        if (departmentRepository.existsByAssociationId(associationId)) {
+
+            // outside
+            boolean userInAsso = true;
+            if (userInAsso) {
+                response.setStatus(200);
+
+                List<Department> departments = new ArrayList<>();
+                responseCode.setData(departments);
+
+            } else {
+                response.setStatus(404);
+
+                responseCode.setError("UserNotFound");
+                responseCode.setMessage("用户没有参与该社团");
+            }
+
+        } else {
+            response.setStatus(404);
+
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("不存在该社团");
+        }
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode deleteOneInAssociation(int associationId, int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Boolean> deleteOneInAssociation(int associationId, int userId, HttpServletResponse response) {
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existuser = true;
+        if (!existuser) {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+            return responseCode;
+        }
+
+        if (!departmentRepository.existsByAssociationId(associationId)) {
+            response.setStatus(404);
+
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("不存在该社团");
+            return responseCode;
+        }
+
+        // outside
+        boolean userInAsso = true;
+        if (userInAsso) {
+            response.setStatus(200);
+
+            // outside
+            // delete user in asso
+
+            responseCode.setData(true);
+
+        } else {
+            response.setStatus(404);
+
+            responseCode.setError("UserNotFound");
+            responseCode.setMessage("用户没有参与该社团");
+        }
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode addOneToAssociation(int associationId, int userId) {
-        ResponseCode responseCode=new ResponseCode();
+    public ResponseCode<Boolean> addOneToAssociation(int associationId, int userId, HttpServletResponse response) {
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existuser = true;
+        if (!existuser) {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+            return responseCode;
+        }
+
+        if (!departmentRepository.existsByAssociationId(associationId)) {
+            response.setStatus(404);
+
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("不存在该社团");
+            return responseCode;
+        }
+
+        response.setStatus(200);
+
+        // outside
+        // add user to asso
+
+        responseCode.setData(true);
+
         return responseCode;
     }
 
     @Override
-    public ResponseCode getAssoUserList(int associationId) {
-        return null;
+    public ResponseCode<List<Integer>> getAssoUserList(int associationId, HttpServletResponse response) {
+        ResponseCode<List<Integer>> responseCode = new ResponseCode<>();
+
+        if (!departmentRepository.existsByAssociationId(associationId)) {
+            response.setStatus(404);
+
+            responseCode.setError("AssociationNotFound");
+            responseCode.setMessage("不存在该社团");
+            return responseCode;
+        }
+
+        // outside
+        // get users in asso
+        List<Integer> users = new ArrayList<>();
+        response.setStatus(200);
+        responseCode.setData(users);
+
+        return responseCode;
     }
 
     @Override
-    public ResponseCode initDepartment(int associationId, int userId) {
-        return null;
+    public ResponseCode<Boolean> initDepartment(int associationId, int userId, HttpServletResponse response) {
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+
+        // outside
+        boolean existuser = true;
+        if (!existuser) {
+            response.setStatus(400);
+
+            responseCode.setError("InvalidUserId");
+            responseCode.setMessage("不存在该用户");
+            return responseCode;
+        }
+
+        response.setStatus(200);
+        Department manageDepartment = new Department(associationId, "管理层", "管理部门的最基础部门", 0);
+
+        Department allUsers = new Department(associationId, "所有成员", "社团中所有成员", 0);
+
+        departmentRepository.save(manageDepartment);
+        departmentRepository.save(allUsers);
+
+        responseCode.setData(true);
+
+        return responseCode;
     }
 }

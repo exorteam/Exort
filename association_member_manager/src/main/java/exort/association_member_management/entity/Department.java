@@ -33,6 +33,10 @@ public class Department {
         this.parentId = parentId;
     }
 
+    public Department(int associationId) {
+        this.associationId = associationId;
+    }
+
     public Department() {
     }
 }

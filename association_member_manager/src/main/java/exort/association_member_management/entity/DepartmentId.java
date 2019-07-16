@@ -11,5 +11,5 @@ public class DepartmentId implements Serializable {
     @NotNull
     int associationId;
     @NotNull
-    long departmentId;
+    int departmentId;
 }
