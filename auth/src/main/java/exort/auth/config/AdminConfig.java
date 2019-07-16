@@ -1,7 +1,5 @@
 package exort.auth.config;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +17,13 @@ public class AdminConfig {
 
 	private final int    ADMIN_ID       = 1;
 	private final String ADMIN_USERNAME = "admin";
-	private final String ADMIN_PASSWORD = UUID.randomUUID().toString().substring(0,4);
+	private final String ADMIN_PASSWORD = "123";
 
 	@Bean
 	public void createDefaultAdmin(){
-		if(repository.existsByUsername(ADMIN_USERNAME))return;
+		if(repository.existsByUsername(ADMIN_USERNAME)){
+			repository.delete(repository.findByUsername(ADMIN_USERNAME));
+		}
 
 		UserInfo admin = new UserInfo();
 		admin.setId(ADMIN_ID);
@@ -32,6 +32,6 @@ public class AdminConfig {
 		admin.setType(UserType.ADMIN);
 		repository.save(admin);
 
-		log.info("init admin with ["+ADMIN_ID+"|"+ADMIN_USERNAME+"|"+ADMIN_PASSWORD+"]");
+		log.info("Init admin with ["+ADMIN_ID+"|"+ADMIN_USERNAME+"|"+ADMIN_PASSWORD+"]");
 	}
 }
