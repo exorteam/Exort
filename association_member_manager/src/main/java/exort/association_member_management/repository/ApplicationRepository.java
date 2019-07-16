@@ -1,6 +1,6 @@
-package com.exort.association_member_management.repository;
+package exort.association_member_management.repository;
 
-import com.exort.association_member_management.entity.Application;
+import exort.association_member_management.entity.Application;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

@@ -1,4 +1,4 @@
-package com.exort.association_member_management.config;
+package exort.association_member_management.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

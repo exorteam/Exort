@@ -1,17 +1,13 @@
-package com.exort.association_member_management.controller;
+package exort.association_member_management.controller;
 
-import com.exort.association_member_management.dto.ResponseCode;
-import com.exort.association_member_management.entity.Application;
-import com.exort.association_member_management.entity.Department;
-import com.exort.association_member_management.service.AssociationMemberManageService;
+import exort.association_member_management.dto.ResponseCode;
+import exort.association_member_management.service.AssociationMemberManageService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @RestController

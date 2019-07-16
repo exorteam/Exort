@@ -1,11 +1,11 @@
-package com.exort.association_member_management.serviceimpl;
+package exort.association_member_management.serviceimpl;
 
-import com.exort.association_member_management.dto.ResponseCode;
-import com.exort.association_member_management.entity.Application;
-import com.exort.association_member_management.entity.Department;
-import com.exort.association_member_management.repository.ApplicationRepository;
-import com.exort.association_member_management.repository.DepartmentRepository;
-import com.exort.association_member_management.service.AssociationMemberManageService;
+import exort.association_member_management.dto.ResponseCode;
+import exort.association_member_management.entity.Application;
+import exort.association_member_management.entity.Department;
+import exort.association_member_management.repository.ApplicationRepository;
+import exort.association_member_management.repository.DepartmentRepository;
+import exort.association_member_management.service.AssociationMemberManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

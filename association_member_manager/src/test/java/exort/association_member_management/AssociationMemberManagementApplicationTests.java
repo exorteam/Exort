@@ -1,4 +1,4 @@
-package com.exort.association_member_management;
+package exort.association_member_management;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

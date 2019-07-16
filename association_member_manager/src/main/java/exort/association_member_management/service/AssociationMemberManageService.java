@@ -1,7 +1,7 @@
-package com.exort.association_member_management.service;
+package exort.association_member_management.service;
 
 
-import com.exort.association_member_management.dto.ResponseCode;
+import exort.association_member_management.dto.ResponseCode;
 
 import java.util.Date;
 import java.util.Optional;
