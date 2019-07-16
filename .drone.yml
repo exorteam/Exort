@@ -11,7 +11,7 @@ steps:
     path: /drone/src/auth/target
   commands:
   - cd ./auth
-  - mvn clean package 
+  - mvn package 
 
 - name: docker
   image: plugins/docker
