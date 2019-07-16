@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import exort.auth.entity.UserInfo;
-import exort.auth.entity.UserType;
 import exort.auth.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 
@@ -29,7 +28,6 @@ public class AdminConfig {
 		admin.setId(ADMIN_ID);
 		admin.setUsername(ADMIN_USERNAME);
 		admin.setPassword(ADMIN_PASSWORD);
-		admin.setType(UserType.ADMIN);
 		repository.save(admin);
 
 		log.info("Init admin with ["+ADMIN_ID+"|"+ADMIN_USERNAME+"|"+ADMIN_PASSWORD+"]");

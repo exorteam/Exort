@@ -13,43 +13,21 @@ steps:
   - cd ./api_server
   - mvn clean package 
 
-- name: scp
-  image: appleboy/drone-scp
-  settings:
-    host: 
-        from_secret: deploy_host
-    port: 
-        from_secret: deploy_port
-    username: ubuntu
-    key:
-        from_secret: deploy_key
-    target: /home/ubuntu/deploy/${DRONE_REPO}/
-    source:
-        - api_server/target/apiserver-0.1.jar
-        - api_server/apiserver.yaml
-        - api_server/Dockerfile
+- name: docker
+  image: plugins/docker
+  settings: 
+    username:
+        from_secret: aliyun-docker-usr
+    password:
+        from_secret: aliyun-docker-pwd
+    repo: registry.cn-shanghai.aliyuncs.com/exort/auth
+    registry: registry.cn-shanghai.aliyuncs.com
+    tags:
+        - 0.0.1
 
-
-- name: ssh
-  image: appleboy/drone-ssh
-  settings:
-    host: 
-        from_secret: deploy_host
-    port: 
-        from_secret: deploy_port
-    username: ubuntu
-    key:
-        from_secret: deploy_key
-    script:
-        - export KUBECONFIG=$HOME/admin.conf
-        - cd /home/ubuntu/deploy/${DRONE_REPO}/api_server
-        #- sudo docker image rm exort/api-server
-        - sudo docker build -t exort/api-server . 
-        - kubectl apply -f apiserver.yaml
- 
 trigger:
   branch:
-  - deploy_on
+  - auth
   
 volumes:
   - name: cache

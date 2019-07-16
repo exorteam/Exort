@@ -1,4 +1,4 @@
-# 登录模块 HTTP RESTful 接口设计
+# 登陆注册验证模块 HTTP RESTful 接口设计
 
 ## 统一返回结果格式
 
