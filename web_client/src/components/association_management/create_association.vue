@@ -1,3 +1,5 @@
+
+
 <template>
 <div>
        <i-form :model="formItem" :label-width="80" >
@@ -11,7 +13,7 @@
             <i-input :value.sync="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
         </Form-item>
         <Form-item label="社团标签">
-            <Tag v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue">{{ item  }}</Tag>
+            <Tag v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue" @click="Alert">{{ item  }}</Tag>
             <i-input v-model="newtag" placeholder="请输入"></i-input>
             <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
         </Form-item>
@@ -61,6 +63,9 @@
             }
         },
         methods: {
+            Alert(){
+              console.log("I'm working")
+            },
           ReturnList(){
             this.$router.push({
               path: '/asso_list',
@@ -84,4 +89,37 @@
           },
         },
     }
+</script>
+<template>
+<Modal v-model="form.create_show" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
+    <Form v-model="form" :label-width="112">
+        <FormItem label="社团名称">
+            <i-input :value.sync="formItem.name" placeholder="请输入"></i-input>
+        </FormItem>
+        <FormItem label="社团简介">
+            <i-input :value.sync="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+        </FormItem>
+        <FormItem label="社团标签">
+            <Tag :value.sync="formItem.tags" v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue" @click="Alert">{{ item  }}</Tag>
+            <i-input v-model="newtag" placeholder="请输入"></i-input>
+            <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
+        </FormItem>
+        <FormItem label="社团Logo">
+            <Upload :value.sync="formItem.logo" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
+                <div style="padding: 20px 0">
+                    <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                    <p>点击或将社团Logo拖拽到这里上传</p>
+                </div>
+            </Upload>
+        </FormItem>
+    </Form>
+</Modal>
+</template>
+
+<script>
+export default {
+    props: {
+        formItem: Object
+    }
+}
 </script>

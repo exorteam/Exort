@@ -4,10 +4,12 @@
             <div id="AssoList">
                 <div id=SearchAsso>
                 <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
-                <Button type="info">搜索+{{test_info}}</Button>
+                <Button type="info">搜索</Button>
                 <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
-      <!-- <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button> -->
                 </div>
+                <!-- <div>
+                    {{AssoList}}
+                </div> -->
                 <div>
                     <div id="Divide">
                         <Divider />
@@ -21,6 +23,7 @@
                 <div id="Divide">
                    <Divider />
                 </div>
+
                 <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
                     <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:300px" >
                         <p slot="title">
@@ -41,6 +44,12 @@
                             </li>
                         </ul>
                     </Card>
+                </div>
+                <div id="Divide">
+                <Divider />
+                </div>
+                <div style="test-align: center;">
+                    <Page :total="test_info" show-sizer show-total show-elevator></Page>
                 </div>
             </div>
         </Tab-pane>
@@ -337,6 +346,8 @@ import axios from 'axios'
                     }
                 ],
                 test_info:null,
+                searchdata:{keyword:"q",tags:[],state:1},
+
             }
         },
 
@@ -397,11 +408,42 @@ import axios from 'axios'
         },
 
         mounted () {
-            axios
-            .get('https://localhost:8080/associations/0/5')
-            .then(response => (this.test_info = response))
+            // axios
+            // .get('http://localhost:8080/associations',{
+            //     params: {
+            //         pageNum:0,
+            //         pageSize:6,
+            //         _body: btoa(JSON.stringify({
+            //             keyword:"qw",
+            //             tags:"",
+            //             state:1
+            //         }))
+            //     }})
+            // .then(response =>{this.AssoList = response.data.data.content})
+            // .catch(e => {console.log(e)})
+
+            axios({
+                method:'get',
+                url:'http://localhost:8080/associations',
+                responseType:'json',
+                data:{
+                    keyword:"q",
+                    tags:[],
+                    state:1
+                },
+                params: {
+                    pageNum:0,
+                    pageSize:5,
+                    keyword:"qw",
+                    tags:"",
+                    state:1
+                }
+            })
+            .then(function(response) {response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))})
+            .catch(e => {console.log(e)});
         }
-    }
+
+}
 </script>
 <style>
 
