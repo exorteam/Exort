@@ -4,6 +4,7 @@
    |属性|说明|
    |---|---|
    |`id`_int_| |
+   |`account` _string_|账户|
    |`nickname`_string_| 昵称 |
    |`description`_string_| 个人描述 |
    |`gender`_int_| (可选)个人信息-性别 |
@@ -152,6 +153,7 @@
 
 3. 禁用用户
    - Http Request
+
    **PATCH** `/users/block`
 
    - Body Parameters
@@ -194,6 +196,7 @@
 
 4. 恢复用户
    - Http Request
+
    **PATCH** `/users/recover`
 
    - Body Parameters
@@ -236,6 +239,7 @@
 
 5. 用户解禁申请回调
    - **Application**
+
       |Field|Description|
       |--|--|
       |`id`_int_|申请ID|
@@ -247,10 +251,8 @@
       |`handledTime`_string_|处理时间|
       |`state`_string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
 
-   - **NULL**
-      - 空
-
    - Http Request
+
    **POST** `/callback/revoveruser`
 
    - Body Parameters
@@ -262,6 +264,7 @@
       |`application`_Application_|申请|
 
    - Response 
+
       |code|description|
       |---|---|
       |200-(无实际返回值)|回调成功|
