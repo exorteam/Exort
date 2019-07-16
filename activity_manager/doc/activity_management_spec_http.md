@@ -265,7 +265,7 @@
       |`createTime`_string_|创建时间| null |
       |`signupTime`_string_|报名时间| null |
       |`startTime`_string_|开始时间| null |
-      |`publishState`_int_| 活动状态(0/unpublished, 1/published)| -1 |
+      |`publishState`_int_| 发布状态(0/unpublished, 1/published)| -1 |
       |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
       |`state`_int_| 活动状态(0未开始，1进行中，2已结束) | -1 |
       |`ifReview`_bool_|报名是否需要审核| -1 |
@@ -640,7 +640,7 @@
       |200-（实际参加者ID列表）|查询成功|
       |400-（空列表）|查询失败|
 
-      ```json
+      ```jsonabout
       >>> GET /activities/32/realparticipants?pagenum=32&pagesize=12
       {
          "userId": 21
