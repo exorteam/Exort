@@ -1,106 +1,98 @@
 <template>
-    <Tabs active-key="key1">
-        <Tab-pane label="社团管理" key="key1">
-<div id="AssoList">
-    <div id=SearchAsso>
-      <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
-      <Button type="info">搜索</Button>
-      <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
+    <Tabs active-key="tab_key">
+        <Tab-pane label="社团管理" key="tab_pane_key1">
+            <div id="AssoList">
+                <div id=SearchAsso>
+                <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
+                <Button type="info">搜索+{{test_info}}</Button>
+                <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
       <!-- <Button type="info" style="  position:relative ;right:-400px;">创建社团</Button> -->
-    </div>
-
-    <div>
-  <div id="Divide">
-       <Divider />
-    </div>
-      <b-form-checkbox-group
-        v-model="selected1"
-        :options="options1"
-        switches
-      ></b-form-checkbox-group>
-    </div>
-    <div id="Divide">
-       <Divider />
-    </div>
-
-    <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
-      <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:300px" >
-        <p slot="title">
-            <Icon type="ios-film-outline"></Icon>
-            {{item.name}}（{{StateList(item.state)}}）
-        </p>
-
-        <a href="#" slot="extra" @click.prevent="EditAsso">
-            <Icon type="ios-loop-strong"></Icon>
-            Edit
-        </a>
-        <div style="text-align: center;height:100px">
-            <img :src="item.logo" style="width:80px;height:80px;"/>
-        </div>
-                <p>{{ item.description }}</p>
-        <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
-            <li>
-                <p>{{ tag }}</p>
-            </li>
-        </ul>
-
-      </Card>
-    </div>
-  </div>
-    </Tab-pane>
-    <Tab-pane label="社团申请管理" key="key1">
-        <b-tabs content-class="mt-3">
-    <b-tab title="已提交" active>
-    <div id="AssoAppList">
-          <div id=SearchAsso>
-            <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
-            <Button type="info">搜索</Button>
-             <Button type="info" @click="StartApp" style="  position:relative ;right:-400px;">创建申请</Button>
-          </div>
-          <div>
-            <div id="Divide">
-              <Divider />
+                </div>
+                <div>
+                    <div id="Divide">
+                        <Divider />
+                    </div>
+                    <b-form-checkbox-group
+                        v-model="selected1"
+                        :options="options1"
+                        switches
+                    ></b-form-checkbox-group>
+                </div>
+                <div id="Divide">
+                   <Divider />
+                </div>
+                <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
+                    <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:300px" >
+                        <p slot="title">
+                            <Icon type="ios-film-outline"></Icon>
+                            {{item.name}}（{{StateList(item.state)}}）
+                        </p>
+                        <a href="#" slot="extra" @click.prevent="EditAsso">
+                            <Icon type="ios-loop-strong"></Icon>
+                            Edit
+                        </a>
+                        <div style="text-align: center;height:100px">
+                            <img :src="item.logo" style="width:80px;height:80px;"/>
+                        </div>
+                        <p>{{ item.description }}</p>
+                        <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
+                            <li>
+                                <p>{{ tag }}</p>
+                            </li>
+                        </ul>
+                    </Card>
+                </div>
             </div>
-            <b-form-checkbox-group v-model="selected2" :options="options2" switches>
-            </b-form-checkbox-group>
-          </div>
-          <div id="Divide">
-            <Divider />
-          </div>
-          <div>
-            <i-table :columns="columns1" :data="data1"></i-table>
-            </div>
-        </div>
-    </b-tab>
-    <b-tab title="已处理">
+        </Tab-pane>
+        <Tab-pane label="社团申请管理" key="tab_pane_key2">
+            <b-tabs content-class="mt-3">
+                <b-tab title="已提交" active>
+                <div id="AssoAppList">
+                    <div id=SearchAsso>
+                        <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
+                        <Button type="info">搜索</Button>
+                        <Button type="info" @click="StartApp" style="  position:relative ;right:-400px;">创建申请</Button>
+                    </div>
+                    <div>
+                        <div id="Divide">
+                            <Divider />
+                        </div>
+                        <b-form-checkbox-group v-model="selected2" :options="options2" switches>
+                        </b-form-checkbox-group>
+                    </div>
+                    <div id="Divide">
+                        <Divider />
+                    </div>
+                    <div>
+                        <i-table :columns="columns1" :data="data1"></i-table>
+                    </div>
+                    </div>
+                    </b-tab>
+                <b-tab title="已处理">
+                    <div id="AssoAppList">
+                        <div id=SearchAsso>
+                            <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
+                            <Button type="info">搜索</Button>
+                            <Button type="info" @click="StartApp" style="  position:relative ;right:-400px;">创建申请</Button>
+                        </div>
+                        <div>
+                            <div id="Divide">
+                                <Divider />
+                            </div>
+                            <b-form-checkbox-group v-model="selected3" :options="options3" switches>
+                            </b-form-checkbox-group>
+                        </div>
+                        <div id="Divide">
+                            <Divider />
+                        </div>
+                        <div>
+                            <i-table :columns="columns2" :data="data2"></i-table>
+                        </div>
+                    </div>
+                </b-tab>
 
-        <div id="AssoAppList">
-          <div id=SearchAsso>
-            <Input v-model="default_value" placeholder="请输入社团名称" style="width: 300px" />
-            <Button type="info">搜索</Button>
-            <Button type="info" @click="StartApp" style="  position:relative ;right:-400px;">创建申请</Button>
-          </div>
-          <div>
-            <div id="Divide">
-              <Divider />
-            </div>
-            <b-form-checkbox-group v-model="selected3" :options="options3" switches>
-            </b-form-checkbox-group>
-          </div>
-          <div id="Divide">
-            <Divider />
-          </div>
-          <div>
-            <i-table :columns="columns2" :data="data2"></i-table>
-            </div>
-        </div>
-
-    </b-tab>
-
-      </b-tabs>
-      </Tab-pane>
-
-
+            </b-tabs>
+        </Tab-pane>
     </Tabs>
 </template>
 
@@ -110,11 +102,12 @@ import Liquid from '../../assets/AssociationLogo/solid.jpg'
 import Solid from '../../assets/AssociationLogo/solid.jpg'
 import Gas from '../../assets/AssociationLogo/solid.jpg'
 import Exort from '../../assets/AssociationLogo/solid.jpg'
+import axios from 'axios'
 
     export default {
         data () {
             return {
-              columns1: [
+                columns1: [
                     {
                         title: '申请人Id',
                         key: 'applicant_Id'
@@ -140,8 +133,7 @@ import Exort from '../../assets/AssociationLogo/solid.jpg'
                         key: 'operate',
                     }
                 ],
-
-            data1: [
+                data1: [
                     {
                         applicant_Id: 'wangxiaoming',
                         applicant_name: '王小明',
@@ -183,10 +175,7 @@ import Exort from '../../assets/AssociationLogo/solid.jpg'
                         operate:'取消'
                     },
                 ],
-
-
-
-               columns2: [
+                columns2: [
                     {
                         title: '申请人Id',
                         key: 'applicant_Id'
@@ -216,8 +205,7 @@ import Exort from '../../assets/AssociationLogo/solid.jpg'
                         key: 'operate_result',
                     }
                 ],
-
-            data2: [
+                data2: [
                     {
                         applicant_Id: 'wangxiaoming',
                         applicant_name: '王小明',
@@ -264,30 +252,26 @@ import Exort from '../../assets/AssociationLogo/solid.jpg'
                         operate_result:'未通过'
                     },
                 ],
-
-            selected1: ['active','blocked'], // Must be an array reference!
-            options1: [
-            { text: '已激活', value: 'active' },
-            { text: '已锁定', value: 'blocked' },
-            { text: '已封禁', value: 'deleted' },
-            { text: '申请中', value: 'created' },
-            ],
-            selected2:['applying','applying_unblocked'],
-            options2: [
-            { text: '申请创建社团', value: 'applying' },
-            { text: '申请取消锁定', value: 'applying_unblocked' }
-            ],
-
-            selected3:['pass','canceled','refused'],
-            options3: [
-              { text: '已通过申请', value: 'pass' },
-            { text: '已取消申请', value: 'canceled' },
-            { text: '已拒绝申请', value: 'refused' },
-            ],
-            default_value : "",
-
-
-            AssoList: [
+                selected1: ['active','blocked'], // Must be an array reference!
+                options1: [
+                    { text: '已激活', value: 'active' },
+                    { text: '已锁定', value: 'blocked' },
+                    { text: '已封禁', value: 'deleted' },
+                    { text: '申请中', value: 'created' },
+                ],
+                selected2:['applying','applying_unblocked'],
+                options2: [
+                    { text: '申请创建社团', value: 'applying' },
+                    { text: '申请取消锁定', value: 'applying_unblocked' }
+                ],
+                selected3:['pass','canceled','refused'],
+                options3: [
+                    { text: '已通过申请', value: 'pass' },
+                    { text: '已取消申请', value: 'canceled' },
+                    { text: '已拒绝申请', value: 'refused' },
+                ],
+                default_value : "",
+                AssoList: [
                     {
                         name: 'Team Liquid',
                         description: "欧洲老牌战队，成立于2012年12月。在2016年在2016 Shanghai Major和2016ESL ONE这两项赛事中都取得了亚军。紧接着队伍人员进行调整，引进了Miracle-等数名天梯9000高分选手。在 2017 年成為 TI 冠軍。",
@@ -352,8 +336,10 @@ import Exort from '../../assets/AssociationLogo/solid.jpg'
                       ]
                     }
                 ],
+                test_info:null,
             }
         },
+
         methods: {
           StartCreate(){
             this.$router.push({
@@ -410,9 +396,11 @@ import Exort from '../../assets/AssociationLogo/solid.jpg'
           }
         },
 
-        // mounted () {
-        //     this.changeLimit();
-        // }
+        mounted () {
+            axios
+            .get('https://localhost:8080/associations/0/5')
+            .then(response => (this.test_info = response))
+        }
     }
 </script>
 <style>
