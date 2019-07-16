@@ -1,5 +1,5 @@
 kind: pipeline
-name: exort-api-server
+name: exort
 
 steps:
 - name: build
@@ -10,6 +10,7 @@ steps:
   commands:
   - cd ./auth
   - mvn clean package 
+  - pwd
 
 - name: docker
   image: plugins/docker
@@ -23,6 +24,8 @@ steps:
     dockerfile: ./auth/Dockerfile
     tags:
         - latest
+    commands:
+    - ls ./auth
 
 trigger:
   branch:
