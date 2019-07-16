@@ -239,13 +239,13 @@
       |`id`_int_|申请ID|
       |`applicantId`_int_|申请者ID|
       |`type`_string_|申请类型|
-      |`object`_Signup_| 加入活动申请信息|
+      |`object`_NULL_| 无|
       |`materialIds`_int[]_|申请材料ID列表|
       |`createdTime`_string_|申请时间|
       |`handledTime`_string_|处理时间|
       |`state`_string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
 
-   - **Signup**
+   - **NULL**
       - 空
 
    - Http Request
@@ -274,7 +274,7 @@
               "id": 271,
               "applicantId": 111,
               "type": "recoveruser",
-              "object": {},
+              "object": null,
               "materialIds": [],
               "createdTime": "2019-07-10T03:19:06.618Z",
               "handledTime": "2019-07-10T03:24:49.797Z",
@@ -299,3 +299,56 @@
           "message": "yyyy/mm/dd" + "操作者没有权限"
       }
       ```
+
+6. 查询用户信息
+   - Http Request
+   **GET** `/users`
+
+   - Body Parameters
+
+      |Parameter|Description|
+      |---|---|
+      |`id`_int_|用户ID|
+   
+   - Response
+
+      |code|description|
+      |---|---|
+      |200-(用户)|查找成功|
+      |400-(错误信息)|查找失败|
+
+   - example
+      ```json
+      >>> GET /users
+      {
+          "id": 4234
+      }
+      ```
+      ```json
+      <<< 200
+      {
+          "data": {
+              "id": 4234,
+              "nickname":"cjy",
+              "description":"a little boy",
+              "gender":1,
+              "birthday":"1999-03-27",
+              "name":"chenjingyu",
+              "studentNumber":"517030910206",
+              "phone":"127346483929",
+              "email":"634247843@qq.com",
+              "qq":"634247843",
+              "wechat":"cjy634247843"
+          },
+          "error": "",
+          "message": ""
+      }
+      ```
+      ```json
+      <<< 400
+      {
+          "data": null,
+          "error": "invalid " + 实际错误信息,
+          "message": "yyyy/mm/dd" + "操作者没有权限"
+      }
+      ```   

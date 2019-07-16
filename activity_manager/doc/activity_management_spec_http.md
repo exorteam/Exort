@@ -680,6 +680,8 @@
        |---|---|
        |200-(无实际返回值)|回调成功|
        |400-(错误信息)|回调失败|
+   
+   - example 
 
       ```json
       >>> POST /callback/acceptsignup
@@ -704,12 +706,7 @@
       ```json
       <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
