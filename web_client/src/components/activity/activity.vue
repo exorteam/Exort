@@ -14,12 +14,38 @@
             <b-form-select v-model="select.signupSelected" :options="signupSelectList" style="width: 120px; height: 32px; margin-left: 30px"></b-form-select>
             活动状态<!-- 根据活动状态搜索 -->
             <b-form-select v-model="select.startSelected" :options="startSelectList" style="width: 120px; height: 32px; margin-left: 30px"></b-form-select>
+            发起社团<!-- 直接输入社团名称 -->
+            <Input v-model="select.value" placeholder="请输入社团名称" style="width: 300px"/>
+            关键词<!-- keyword -->
+            <Input v-model="select.value" placeholder="请输入社团名称" style="width: 300px"/>            
             是否需要审核
             <Checkbox v-model="select.ifReview"/>
             是否允许非本组织成员参加
             <Checkbox v-model="select.ifOnlyMem"/>
-            发起社团<!-- 直接输入社团名称 -->
-            <Input v-model="select.value" placeholder="请输入社团名称" style="width: 300px"/>
+
+            <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
+            <div v-if="tag.tagList.length">
+                <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
+            </div>
+
+            <TagChoose :tag="tag"/>
+            <!-- <div>
+                <Modal v-model="tag_show" @on-ok="tag_show=false" @on-cancel="handleCancel" loading :closable="false">
+                    <Form v-model="form" :label-width="80">
+                        <FormItem label="选择标签">
+                            <Button @click="cancelSelect" v-for="tag in select.tagList" :key="tag.id" :row="tag">{{ tag }}</Button>
+                        </FormItem>
+                        <FormItem label="选择标签">
+                            <Input v-model="tag_select"/>
+                        </FormItem>
+                        <FormItem label="标签库">
+                            <Button @click="confirmSelect" v-for="item in tagRepository" :key="item.id" :row="item">{{ item }}</Button>
+                        </FormItem>
+                    </Form>
+                </Modal>
+            </div> -->
+
+            <!-- 按照条件进行搜索 -->
             <Button type="info" @click="handleSelect">搜索</Button>
             <!-- 新建活动 -->
             <Button type="info" @click="form.onshow=true" style="position:relative; float: right;">新建</Button>
@@ -136,11 +162,15 @@ let cardLists=[
     }
 ]
 
-import ActivityCreate from '../activity/activity_create.vue'
+let tagrepo = ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座"]
+
+import ActivityCreate from './activity_create.vue'
+import TagChoose from './tag_choose'
+import http from '../../http-common'
 
 export default {
     name: 'activity',
-    components: { ActivityCreate },
+    components: { ActivityCreate, TagChoose },
     data () {
         return{
             publishSelected: null,
@@ -162,6 +192,10 @@ export default {
                 numberOfPeople: 30,
                 materials: ""
             },
+            tag:{
+                tag_show: false,
+                tagList:[],
+            },
             select:{
                 createTime:"",
                 signupTime:"",
@@ -177,7 +211,21 @@ export default {
     },
     methods: {
         handleSelect(){
-
+            let data = this.select
+            http.
+                get('/activities', {
+                    params:{
+                        pagenum:0,
+                        pagesize:1,
+                        _body: btoa(JSON.stringify({data}))
+                    }
+                })
+                .then(response => {
+                    this.cardList = response.data
+                })
+                .catch(e => {
+                    console.log(e)
+                })
         }
     },
     mounted() {

@@ -82,8 +82,15 @@
     // components: {assoside, sysside},
     data() {
       return {
+        admin: 0,
         isCollapsed: false
       };
+    },
+    methods: {
+      quit(){
+
+      },
+
     },
     computed: {
       menuitemClasses: function () {

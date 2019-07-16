@@ -47,19 +47,19 @@
 <script>
 let timeTypeLists=[
     {
-        value: '未发布',
+        value: 0,
         text: '开展一次，时间连续'
     },
     {
-        value: '已发布',
+        value: 1,
         text: '多次开展，日期不连续'
     },
     {
-        value: '已发布',
+        value: 2,
         text: '连续多天开展，每天时间固定相同'
     },
     {
-        value: '已发布',
+        value: 3,
         text: '多天开展，每天时间不相同'
     }
 ]
