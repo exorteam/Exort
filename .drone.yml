@@ -22,6 +22,7 @@ steps:
         from_secret: aliyun-docker-pwd
     repo: registry.cn-shanghai.aliyuncs.com/exort/auth
     registry: registry.cn-shanghai.aliyuncs.com
+    dockerfile: ./auth/Dockerfile
     tags:
         - 0.0.1
 
