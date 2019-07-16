@@ -969,32 +969,28 @@
 
 - HTTP Request
 
-  **POST** `/associations/{associationId}/department`
-
-- Path Parameters
-
-  | Parameter           | Description |
-  | ------------------- | ----------- |
-  | `associationId` int | 社团ID      |
+  **POST** `/associations`
 
 - Body Parameters
 
   | Parameter    | Description |
-  | ------------ | ----------- |
-  | `userId` int | 用户ID      |
+  | ------------------- | ----------- |
+  | `userId` int        | 用户ID      |
+  | `associationId` int | 社团ID      |
 
 - Response
 
   | Code               | Description |
   | ------------------ | ----------- |
   | 200 true           | 请求成功    |
-  | 400 “UserNotFound” | 用户不存在  |
+  | 400 “InvalidUser”  | 用户不存在  |
 
 - Example
 
   ```json
   >>> POST /associations/2/department
   {
+      "associationId":2,
       "userId":2
   }
   
@@ -1010,6 +1006,7 @@
   ```json
   >>> POST /associations/2/department
   {
+      "associationId":2,
       "userId":5
   }
   
@@ -1017,7 +1014,7 @@
   <<< 400
   {
       "data":null,
-      "error":"UserNotFound",
+      "error":"InvalidUser",
       "message":"用户不存在",
   }
   ```
