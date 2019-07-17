@@ -624,7 +624,7 @@
       |200-（实际参加者ID列表）|查询成功|
       |400-（空列表）|查询失败|
 
-      ```json
+      ```jsonabout
       >>> GET /activities/32/realparticipants?pagenum=32&pagesize=12
       {
          "userId": 21

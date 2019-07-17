@@ -2,7 +2,6 @@ package exort.activity.controller;
 
 import exort.activity.entity.*;
 import exort.activity.service.ActivityService;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
