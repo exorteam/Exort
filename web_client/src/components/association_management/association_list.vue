@@ -1,5 +1,28 @@
 <template>
     <Tabs active-key="tab_key">
+        <Modal v-model="form.create_show" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
+            <Form v-model="form" :label-width="112">
+                <FormItem label="社团名称">
+                    <Input v-model="form.name"/>
+                </FormItem>
+                <FormItem label="社团描述">
+                    <Input v-model="form.description"/>
+                </FormItem>
+                <FormItem label="社团标签">
+                    <Tag v-for="item in form.tags" :key="item.key" type="border" closable color="blue">{{ item  }}</Tag>
+                    <i-input v-model="newtag" placeholder="请输入"></i-input>
+                    <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
+                </FormItem>
+                <FormItem label="社团Logo">
+                    <Upload v-model= "form.logo" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
+                        <div style="padding: 20px 0">
+                            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                            <p>点击或将社团logo拖拽到这里上传</p>
+                        </div>
+                    </Upload>
+                </FormItem>
+            </Form>
+        </Modal>
         <Tab-pane label="社团管理" key="tab_pane_key1">
             <div id="AssoList">
                 <div id=SearchAsso>
@@ -7,9 +30,6 @@
                 <Button type="info">搜索</Button>
                 <Button type="info" @click="StartCreate" style="  position:relative ;right:-400px;">创建社团</Button>
                 </div>
-                <!-- <div>
-                    {{AssoList}}
-                </div> -->
                 <div>
                     <div id="Divide">
                         <Divider />
@@ -107,15 +127,25 @@
 
 <script>
 
-import Liquid from '../../assets/AssociationLogo/solid.jpg'
+// import Liquid from '../../assets/AssociationLogo/solid.jpg'
 import Solid from '../../assets/AssociationLogo/solid.jpg'
-import Gas from '../../assets/AssociationLogo/solid.jpg'
-import Exort from '../../assets/AssociationLogo/solid.jpg'
-import axios from 'axios'
+// import Gas from '../../assets/AssociationLogo/solid.jpg'
+// import Exort from '../../assets/AssociationLogo/solid.jpg'
+// import axios from 'axios'
+import axios from '../../http-common'
+import associationCreate from './create_association'
 
     export default {
+        components: {  associationCreate },
         data () {
             return {
+                form:{
+                    create_show:false,
+                    name:"",
+                    description:"",
+                    tags:[],
+                    logo:""
+                },
                 columns1: [
                     {
                         title: '申请人Id',
@@ -284,7 +314,7 @@ import axios from 'axios'
                     {
                         name: 'Team Liquid',
                         description: "欧洲老牌战队，成立于2012年12月。在2016年在2016 Shanghai Major和2016ESL ONE这两项赛事中都取得了亚军。紧接着队伍人员进行调整，引进了Miracle-等数名天梯9000高分选手。在 2017 年成為 TI 冠軍。",
-                        logo: Liquid,
+                        logo: Solid,
                         state:0,
                         tags:[
                           "Dota2",
@@ -328,7 +358,7 @@ import axios from 'axios'
                     {
                       name: 'Team Gas',
                       description: "气体战队成员为：一号位：ZSMJ 二号位：水瓶座（之前担任固体战队的工具人中单） 三号位：Axx 四号位：Ch 五号位：狗哥SanSheng",
-                      logo: Gas,
+                      logo: Solid,
                       state:4,
                       tags:[
                         "Dota2"
@@ -337,7 +367,7 @@ import axios from 'axios'
                     {
                       name: 'Exort',
                       description: "使用微服务架构独立开发的在线社团管理与社交工具",
-                      logo: Exort,
+                      logo: Solid,
                       state:4,
                       tags:[
                         "社团管理",
@@ -353,18 +383,7 @@ import axios from 'axios'
 
         methods: {
           StartCreate(){
-            this.$router.push({
-              path: '/create_asso',
-              name: 'CreateAsso',
-              // params: {
-              //     key: 'key',
-              //     msgKey: this.msg
-              // }
-              /*query: {
-                  key: 'key',
-                  msgKey: this.msg
-              }*/
-            })
+            // chosenForm.create_show = true
           },
           StartApp(){
             this.$router.push({
@@ -379,6 +398,12 @@ import axios from 'axios'
                   msgKey: this.msg
               }*/
             })
+          },
+          info_ok(){
+              form.create_show=false
+          },
+          info_cancel(){
+              form.create_show=false
           },
           StateList(state){
               switch(state)
@@ -422,25 +447,20 @@ import axios from 'axios'
             // .then(response =>{this.AssoList = response.data.data.content})
             // .catch(e => {console.log(e)})
 
-            axios({
-                method:'get',
-                url:'http://localhost:8080/associations',
-                responseType:'json',
-                data:{
-                    keyword:"q",
-                    tags:[],
-                    state:1
-                },
-                params: {
-                    pageNum:0,
-                    pageSize:5,
-                    keyword:"qw",
-                    tags:"",
-                    state:1
-                }
-            })
-            .then(function(response) {response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))})
-            .catch(e => {console.log(e)});
+            // axios
+            // .get('associations',{
+            //     params: {
+            //         pageNum:0,
+            //         pageSize:5,
+            //         keyword:"qw",
+            //         tags:"",
+            //         state:1
+            //     }
+            // })
+
+            // .then(function(response) {this.AssoList = response.data.data.content})
+            // .catch(e => {console.log(e)});
+            // console.log(this.AssoList);
         }
 
 }

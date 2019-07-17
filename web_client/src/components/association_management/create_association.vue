@@ -1,114 +1,22 @@
-
-
-<template>
-<div>
-       <i-form :model="formItem" :label-width="80" >
-        <Form-item label="社团名称">
-            <i-input :value.sync="formItem.name" placeholder="请输入"></i-input>
-        </Form-item>
-        <!-- <Form-item label="社团图片">
-            <i-input :value.sync="formItem.input" placeholder="请输入"></i-input>
-        </Form-item> -->
-        <Form-item label="社团描述" :autosize="{minRows: 2,maxRows: 5}">
-            <i-input :value.sync="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
-        </Form-item>
-        <Form-item label="社团标签">
-            <Tag v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue" @click="Alert">{{ item  }}</Tag>
-            <i-input v-model="newtag" placeholder="请输入"></i-input>
-            <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
-        </Form-item>
-
-        <Upload
-            multiple
-            type="drag"
-            action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
-            <div style="padding: 20px 0">
-                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                <p>点击或将社团logo及申请材料拖拽到这里上传</p>
-            </div>
-        </Upload>
-        <Form-item>
-            <b-button v-b-modal.modal-1 variant="success" >提交</b-button>
-            <b-modal id="modal-1" title="提交信息" hide-footer>
-              <p class="my-4">提交成功</p>
-              <b-button class="mt-3" variant="outline-primary" block @click="ReturnList">返回列表</b-button>
-            </b-modal>
-
-            <b-button v-b-modal.modal-2 variant="outline-primary"  style="margin-left: 800px">取消</b-button>
-            <b-modal id="modal-2"  title="确认返回" hide-footer>
-              <p class="my-4">您确定返回社团列表界面吗？（创建信息将不保存）</p>
-              <b-button class="mt-3" variant="outline-primary" block @click="ReturnList">确定</b-button>
-              <b-button class="mt-3" variant="outline-primary" block @click="$bvModal.hide('modal-2')">取消</b-button>
-            </b-modal>
-        </Form-item>
-    </i-form>
-
-</div>
-</template>
-<script>
-    export default {
-        data () {
-            return {
-                modal2: false,
-                modal1: false,
-                modal_loading: false,
-              newtag:'',
-              formItem: {
-                  name:this.$route.params.name,
-                  description:'',
-                  state:'',
-                  tags:[],
-
-              },
-            }
-        },
-        methods: {
-            Alert(){
-              console.log("I'm working")
-            },
-          ReturnList(){
-            this.$router.push({
-              path: '/asso_list',
-              name: 'AssoList',
-            })
-          },
-          ReturnThis(){
-            this.$router.push({
-              path: '/create_asso',
-              name: 'CreateAsso',
-            })
-          },
-          AddNewTag(){
-            this.formItem.tags.push(this.newtag);
-          },
-          del(){
-            this.modal_loading = true;
-          },
-          Confirm(){
-            this.modal1=true;
-          },
-        },
-    }
-</script>
 <template>
 <Modal v-model="form.create_show" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
     <Form v-model="form" :label-width="112">
         <FormItem label="社团名称">
-            <i-input :value.sync="formItem.name" placeholder="请输入"></i-input>
+            <Input v-model="form.name"/>
         </FormItem>
-        <FormItem label="社团简介">
-            <i-input :value.sync="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+        <FormItem label="社团描述">
+            <Input v-model="form.description"/>
         </FormItem>
         <FormItem label="社团标签">
-            <Tag :value.sync="formItem.tags" v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue" @click="Alert">{{ item  }}</Tag>
+            <Tag v-for="item in form.tags" :key="item.key" type="border" closable color="blue">{{ item  }}</Tag>
             <i-input v-model="newtag" placeholder="请输入"></i-input>
             <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
         </FormItem>
         <FormItem label="社团Logo">
-            <Upload :value.sync="formItem.logo" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
+            <Upload v-model= "form.logo" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
                 <div style="padding: 20px 0">
                     <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                    <p>点击或将社团Logo拖拽到这里上传</p>
+                    <p>点击或将社团logo拖拽到这里上传</p>
                 </div>
             </Upload>
         </FormItem>
@@ -119,7 +27,17 @@
 <script>
 export default {
     props: {
-        formItem: Object
-    }
+        form: Object
+    },
+    data () {
+    return {
+        newtag:''
+        }
+    },
+    methods: {
+        AddNewTag(){
+            this.formItem.tags.push(this.newtag);
+        },
+    },
 }
 </script>

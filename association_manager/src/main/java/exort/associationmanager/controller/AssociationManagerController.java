@@ -35,20 +35,20 @@ public class AssociationManagerController{
         private Application application;
     }
 
-    @GetMapping("/associations")
-    public ResponseBody listAssociations(@RequestBody AssociationFilterParams body,@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize ){
-        return service.listAssociations(body,pageNum,pageSize);
-    }
-
 //    @GetMapping("/associations")
-//    public ResponseBody listAssociations(@RequestParam("keyword") String keyword,@RequestParam("tags") String tags,@RequestParam("state") Integer state,@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize ){
-//        AssociationFilterParams body=new AssociationFilterParams();
-//        body.setKeyword(keyword);
-//        List<String> laozizhenshicaole = new ArrayList<String>(Arrays.asList(tags.split(",")));
-//        body.setTags(laozizhenshicaole);
-//        body.setState(state);
+//    public ResponseBody listAssociations(@RequestBody AssociationFilterParams body,@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize ){
 //        return service.listAssociations(body,pageNum,pageSize);
 //    }
+
+    @GetMapping("/associations")
+    public ResponseBody listAssociations(@RequestParam("keyword") String keyword,@RequestParam("tags") String tags,@RequestParam("state") Integer state,@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize ){
+        AssociationFilterParams body=new AssociationFilterParams();
+        body.setKeyword(keyword);
+        List<String> laozizhenshicaole = new ArrayList<String>(Arrays.asList(tags.split(",")));
+        body.setTags(laozizhenshicaole);
+        body.setState(state);
+        return service.listAssociations(body,pageNum,pageSize);
+    }
 
     @GetMapping("/associations/{assoId}")
     public ResponseBody getAssociation(@PathVariable(value="assoId") String assoId){
