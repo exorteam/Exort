@@ -1,5 +1,5 @@
 kind: pipeline
-name: exort
+name: exort-auth
 
 steps:
 - name: build
@@ -21,6 +21,45 @@ trigger:
   branch:
   - auth
   
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+
+---
+
+kind: pipeline
+name: exort-common
+
+steps:
+- name: mvndeploy
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  commands:
+  - cd ./common
+  - mvn clean deploy
+
+trigger:
+  branch:
+  - common
+
 volumes:
   - name: cache
     host:
