@@ -1,5 +1,5 @@
 <template>
-<Modal v-model="tag.tag_show" @on-ok="tag_show=false" @on-cancel="handleCancel" loading :closable="false">
+<Modal v-model="tag.tag_show" @on-ok="tag.tag_show=false" @on-cancel="handleCancel" loading :closable="false">
     <Form :label-width="80">
         <FormItem label="选择标签">
             <Button @click="cancelSelect" v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Button>
