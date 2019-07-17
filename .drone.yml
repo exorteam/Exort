@@ -19,7 +19,7 @@ steps:
   settings:
     host: 212.64.27.71
     username: ubuntu
-    passowrd:
+    password:
         from_secret: server_pwd
     script:
         - sudo docker push exort/auth
