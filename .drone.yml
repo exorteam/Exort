@@ -11,8 +11,8 @@ steps:
     path: /var/run/docker.sock
   commands:
   - cd ./auth
-  - export DOCKER_HOST=tcp://docker:2375
   - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
+  - sudo docker push exort/auth
 
 #- name: push-image
 #  image: appleboy/drone-ssh
