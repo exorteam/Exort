@@ -7,9 +7,11 @@ steps:
   volumes:
   - name: cache
     path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
   commands:
   - cd ./auth
-  - export DOCKER_HOST=tcp://docker:2375
+  #- export DOCKER_HOST=tcp://docker:2375
   - mvn clean package docker:build
 
 - name: push-image
@@ -31,3 +33,6 @@ volumes:
   - name: cache
     host:
       path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
