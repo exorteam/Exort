@@ -9,10 +9,12 @@ steps:
     path: /root/.m2
   - name: docker-sock
     path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
   commands:
   - cd ./auth
   - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
-  - sudo docker push exort/auth
+  #- sudo docker push exort/auth
 
 #- name: push-image
 #  image: appleboy/drone-ssh
@@ -35,3 +37,6 @@ volumes:
   - name: docker-sock
     host:
       path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
