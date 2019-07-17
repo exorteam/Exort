@@ -29,10 +29,20 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	public int register(AuthRequest req){
-		return 0;
+		HttpHeaders headers = new HttpHeaders();
+        HttpMethod method = HttpMethod.POST;
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<AuthRequest> requestEntity = new HttpEntity<>(req,headers);
+		ResponseEntity<Integer> response = rt.exchange("http://202.120.40.8:30728/register",method,requestEntity,Integer.class);
+		return response.getBody();
 	}
 
 	public AuthResponse auth(String token){
-		return null;
+		HttpHeaders headers = new HttpHeaders();
+        HttpMethod method = HttpMethod.POST;
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> requestEntity = new HttpEntity<>(token,headers);
+		ResponseEntity<AuthResponse> response = rt.exchange("http://202.120.40.8:30728/auth",method,requestEntity,AuthResponse.class);
+		return response.getBody();
 	}
 }

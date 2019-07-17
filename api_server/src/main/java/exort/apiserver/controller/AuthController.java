@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.apiserver.entity.AuthRequest;
+import exort.apiserver.entity.AuthResponse;
 import exort.apiserver.service.AuthService;
 
 @RestController
@@ -17,6 +18,16 @@ public class AuthController {
 	@PostMapping("/login")
 	public String login(@RequestBody AuthRequest req){
 		return authService.login(req);
+	}
+
+	@PostMapping("/register")
+	public int register(@RequestBody AuthRequest req){
+		return authService.register(req);
+	}
+
+	@PostMapping("/auth")
+	public AuthResponse auth(@RequestBody String token){
+		return authService.auth(token);
 	}
 
 }
