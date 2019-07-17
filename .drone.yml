@@ -1,5 +1,5 @@
 kind: pipeline
-name: exort-api-server
+name: exort
 
 steps:
 - name: build
@@ -7,55 +7,30 @@ steps:
   volumes:
   - name: cache
     path: /root/.m2
-  - name: cache2
-    path: /tmp/maven
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
   commands:
-  - cd ./api_server
-  - mvn clean package 
+  - cd ./auth
+  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
 
-- name: scp
-  image: appleboy/drone-scp
-  settings:
-    host: 
-        from_secret: deploy_host
-    port: 
-        from_secret: deploy_port
-    username: ubuntu
-    key:
-        from_secret: deploy_key
-    target: /home/ubuntu/deploy/${DRONE_REPO}/
-    source:
-        - api_server/target/apiserver-0.1.jar
-        - api_server/apiserver.yaml
-        - api_server/Dockerfile
-
-
-- name: ssh
-  image: appleboy/drone-ssh
-  settings:
-    host: 
-        from_secret: deploy_host
-    port: 
-        from_secret: deploy_port
-    username: ubuntu
-    key:
-        from_secret: deploy_key
-    script:
-        - export KUBECONFIG=$HOME/admin.conf
-        - cd /home/ubuntu/deploy/${DRONE_REPO}/api_server
-        #- sudo docker image rm exort/api-server
-        - sudo docker build -t exort/api-server . 
-        - kubectl apply -f apiserver.yaml
- 
 trigger:
   branch:
-  - deploy_on
+  - auth
   
 volumes:
   - name: cache
     host:
       path: /home/ubuntu/repo
-  - name: cache2
+  - name: docker-sock
     host:
-      path: /home/ubuntu/mvn_tmp
-
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
