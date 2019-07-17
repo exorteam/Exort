@@ -33,5 +33,4 @@ build/
 ### VS Code ###
 .vscode/
 
-.DS_Store
-*.swp
+**/application.properties
