@@ -1,11 +1,11 @@
-package exort.association_member_management.serviceimpl;
+package exort.association_member_manager.serviceimpl;
 
-import exort.association_member_management.dto.ResponseCode;
-import exort.association_member_management.entity.Application;
-import exort.association_member_management.entity.Department;
-import exort.association_member_management.repository.ApplicationRepository;
-import exort.association_member_management.repository.DepartmentRepository;
-import exort.association_member_management.service.AssociationMemberManageService;
+import exort.association_member_manager.dto.ResponseCode;
+import exort.association_member_manager.entity.Application;
+import exort.association_member_manager.entity.Department;
+import exort.association_member_manager.repository.ApplicationRepository;
+import exort.association_member_manager.repository.DepartmentRepository;
+import exort.association_member_manager.service.AssociationMemberManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +31,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Override
     public ResponseCode getSpecApplication(int applyId) {
         ResponseCode responseCode = new ResponseCode();
-
         responseCode.setMessage("Success.");
         HashMap<String, Application> data = new HashMap<>();
         data.put("application", applicationRepository.findById(applyId).get());

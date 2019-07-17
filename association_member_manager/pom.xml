@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>Exort</groupId>
-    <artifactId>association_member_management</artifactId>
+    <artifactId>association_member_manager</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>association_member_management</name>
+    <name>association_member_manager</name>
     <description>Demo for association_member_management</description>
 
     <properties>
@@ -101,6 +101,11 @@
             <artifactId>swagger-models</artifactId>
             <version>1.5.21</version>
         </dependency>
+        <dependency>
+            <groupId>exort</groupId>  <!-- 我们的组号 -->
+            <artifactId>common</artifactId>  <!-- 添加的其他模块的项目名 -->
+            <version>1.0-SNAPSHOT</version>  <!-- 我们就用snapshot -->
+        </dependency>
     </dependencies>
 
     <build>
@@ -111,5 +116,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>exort</id>
+            <name>Exort</name>
+            <url>http://cirno.wang/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

@@ -1,8 +1,7 @@
-package exort.association_member_management.entity;
+package exort.association_member_manager.entity;
 
 import lombok.Data;
 
-import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 

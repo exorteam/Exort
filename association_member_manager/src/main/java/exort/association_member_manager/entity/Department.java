@@ -1,4 +1,4 @@
-package exort.association_member_management.entity;
+package exort.association_member_manager.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

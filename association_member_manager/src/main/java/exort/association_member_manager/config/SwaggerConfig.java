@@ -1,4 +1,4 @@
-package exort.association_member_management.config;
+package exort.association_member_manager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.exort.association_member_management.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.exort.association_member_manager.controller"))
                 .paths(PathSelectors.regex("/.*"))
                 .build();
     }

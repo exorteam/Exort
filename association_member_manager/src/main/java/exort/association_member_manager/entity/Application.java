@@ -1,4 +1,4 @@
-package exort.association_member_management.entity;
+package exort.association_member_manager.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity

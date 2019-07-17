@@ -1,8 +1,8 @@
-package exort.association_member_management.service;
+package exort.association_member_manager.service;
 
 
-import exort.association_member_management.dto.ResponseCode;
-import exort.association_member_management.entity.Department;
+import exort.association_member_manager.dto.ResponseCode;
+import exort.association_member_manager.entity.Department;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;

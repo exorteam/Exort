@@ -1,4 +1,4 @@
-package exort.association_member_management.dto;
+package exort.association_member_manager.dto;
 
 import lombok.Data;
 

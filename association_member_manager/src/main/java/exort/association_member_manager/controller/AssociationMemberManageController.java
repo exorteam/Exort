@@ -1,8 +1,8 @@
-package exort.association_member_management.controller;
+package exort.association_member_manager.controller;
 
-import exort.association_member_management.dto.ResponseCode;
-import exort.association_member_management.entity.Department;
-import exort.association_member_management.service.AssociationMemberManageService;
+import exort.association_member_manager.dto.ResponseCode;
+import exort.association_member_manager.entity.Department;
+import exort.association_member_manager.service.AssociationMemberManageService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,22 +21,12 @@ public class AssociationMemberManageController {
 
     @GetMapping(value = "/get-spec-appli")
     @ApiOperation(value = "得到某个具体的申请信息")
-    @ApiImplicitParam(name = "applyId", value = "申请信息ID", required = true, dataType = "int")
     public ResponseCode getSpecApplication(@RequestParam(value = "applyId") int applyId) {
         return associationMemberManageService.getSpecApplication(applyId);
     }
 
     @GetMapping(value = "get-some-applis")
     @ApiOperation(value = "查找某些申请")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "申请人ID", dataType = "int"),
-            @ApiImplicitParam(name = "associationId", value = "社团ID", dataType = "int"),
-            @ApiImplicitParam(name = "departmentId", value = "部门ID", dataType = "int"),
-            @ApiImplicitParam(name = "startTime", value = "起始时间", dataType = "Date"),
-            @ApiImplicitParam(name = "endTime", value = "终止时间", dataType = "Date"),
-            @ApiImplicitParam(name = "page", value = "第几页", dataType = "int"),
-            @ApiImplicitParam(name = "size", value = "单页条数", dataType = "int")
-    })
     public ResponseCode getSomeApplications(@RequestParam(value = "userId") Optional<Integer> userId, @RequestParam(value = "associationId") Optional<Integer> associationId, @RequestParam(value = "departmentId") Optional<Integer> departmentId, @RequestParam(value = "startTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Optional<Date> startTime, @RequestParam(value = "endTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Optional<Date> endTime, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "20") int size) {
         return associationMemberManageService.getSomeApplications(userId, associationId, departmentId, startTime, endTime, page, size);
     }
@@ -48,11 +38,6 @@ public class AssociationMemberManageController {
         return associationMemberManageService.adoptApplication(applyId);
     }
 
-    @PutMapping(value = "refuse-appli")
-    @ApiOperation(value = "拒绝某个申请")
-    public ResponseCode refuseApplication(int applyId) {
-        return associationMemberManageService.refuseApplication(applyId);
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
