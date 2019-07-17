@@ -12,13 +12,12 @@ steps:
   commands:
   - cd ./auth
   #- export DOCKER_HOST=tcp://docker:2375
-  - mvn clean package docker:build
+  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build
 
 - name: push-image
   image: appleboy/drone-ssh
   settings:
-    host: 
-        from_secret: 212.64.27.71
+    host: 212.64.27.71
     username: ubuntu
     passowrd:
         from_secret: server_pwd
