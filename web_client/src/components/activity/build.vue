@@ -15,7 +15,7 @@
                     placeholder="输入名称"
                 ></b-form-input>
             </b-form-group>
-            
+
             <b-form-group
                 id="input-group-1"
                 label="活动简介:"
