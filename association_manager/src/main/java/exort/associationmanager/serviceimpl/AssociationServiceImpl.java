@@ -26,6 +26,7 @@ public class AssociationServiceImpl implements AssociationService{
 
     public ResponseBody getAssociation(String assoId){
         ResponseBody responseBody = new ResponseBody();
+
         Association association = assoRepository.findById(assoId);
         if(association==null){
             responseBody.setData(null);
@@ -46,7 +47,7 @@ public class AssociationServiceImpl implements AssociationService{
 
         Integer state = params.getState();
 
-        if(state != null){
+        if(state != null && state != 2){
             associations.removeIf(association -> !state.equals(association.getState()));
             if(associations.isEmpty()){
 
@@ -56,7 +57,7 @@ public class AssociationServiceImpl implements AssociationService{
 
         String keyword = params.getKeyword();
         if(keyword != null){
-            associations.removeIf(association -> !association.getName().contains(keyword)||!association.getDescription().contains(keyword));
+            associations.removeIf(association -> !association.getName().contains(keyword)&&!association.getDescription().contains(keyword));
             if(associations.isEmpty()){
                 return responseBody.setAndGetResponsebody(associations,"","");
             }
@@ -83,8 +84,15 @@ public class AssociationServiceImpl implements AssociationService{
         realPageNum = pageNum * pageSize / realPageSize;
         AssociationList assoList = new AssociationList();
 
+        int subFirst = realPageNum * realPageSize;
+        int subLast = min((realPageNum + 1) * realPageSize,totalSize);
 
-        assoList.setContent(associations.subList(realPageNum * realPageSize ,( realPageNum + 1 ) * realPageSize));
+        if(subFirst >= totalSize){
+            subFirst = 0;
+            subLast = 0;
+        }
+
+        assoList.setContent(associations.subList(subFirst,subLast));
         assoList.setTotalSize(totalSize);
         assoList.setPageSize(realPageSize);
         assoList.setPageNumber(realPageNum);
