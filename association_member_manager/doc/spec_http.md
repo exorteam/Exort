@@ -12,6 +12,32 @@
   | `error` string   | 状态/错误码                                               |
   | `message` string | 人类友好的状态/错误信息                                   |
 
+## 申请信息
+
+- <a id='Application'></a> Application
+
+  | Field                                                 | Description                                              |
+  | ----------------------------------------------------- | -------------------------------------------------------- |
+  | `id` *int*                                            | 申请ID                                                   |
+  | `applicantId` *int*                                   | 申请者ID                                                 |
+  | `type` *string*                                       | 申请类型                                                 |
+  | `associationInfo` [AssociationInfo](#AssociationInfo) | 自定义json对象                                           |
+  | `materialIds` *int[]*                                 | 申请材料ID列表                                           |
+  | `createdTime` *string*                                | 申请时间                                                 |
+  | `handledTime` *string*                                | 处理时间                                                 |
+  | `state` *string*                                      | 状态,可以是 *pending*, *accepted*, *refused*, *canceled* |
+
+  
+
+## 申请社团信息
+
+- <a id='AssociationInfo'></a> AssociationInfo
+
+  | 属性                | 说明       |
+  | ------------------- | ---------- |
+  | `associationId` int | 申请社团ID |
+  | `departmentId` int  | 申请部门ID |
+
 ## 部门
 
 - <a id='Department'></a> Department
@@ -23,6 +49,95 @@
   | String name        | 部门名称     |
   | String description | 部门描述     |
   | int parentId       | 父部门节点ID |
+
+### 通过申请
+
+> 回调注册
+
+- HTTP Request
+
+  **POST** `/application/accept`
+
+- Body Parameters
+
+  | Parameter                                   | Description                                          |
+  | ------------------------------------------- | ---------------------------------------------------- |
+  | `userId` int                                | 用户ID                                               |
+  | `event` string                              | 事件，可以是 *create*, *accepte*, *refuse*, *cancel* |
+  | `application` [_Application_](#Application) | 申请                                                 |
+
+- Response
+
+  | Code              | Description |
+  | ----------------- | ----------- |
+  | 200 true          | 请求成功    |
+  | 400 "InvalidUser" | 用户已存在  |
+
+- Example
+
+  ```json
+  >>> POST /association/application
+  {
+      "userId":2,
+      "event":"create",
+      "application":{
+          "id":123,
+          "applicant":2,
+          "type":"acceptApplication",
+          "AssociationInfo":{
+              "associationId":2,
+              "departmentId":3
+          },
+        "materialIds":[
+              12,
+              31
+          ],
+          "createdTime":"2019-7-17",
+          "handledTime":"2019-5-15",
+          "state":"pending"
+      }
+  }
+  
+  <<< 200
+  {
+      "data":true,
+      "error":"",
+    "message":""
+  }
+  ```
+  
+  ```json
+  >>> POST /association/application
+  {
+      "userId":2,
+      "event":"create",
+      "application":{
+          "id":123,
+          "applicant":2,
+          "type":"acceptApplication",
+          "AssociationInfo":{
+              "associationId":2,
+              "departmentId":3
+          },
+          "materialIds":[
+              12,
+              31
+          ],
+          "createdTime":"2019-7-17",
+          "handledTime":"2019-5-15",
+          "state":"pending"
+      }
+  }
+  
+  <<< 400
+  {
+      "data":null,
+      "error":"InvalidUser",
+      "message":"用户已存在"
+  }
+  ```
+  
+  
 
 ### 得到部门树
 
@@ -459,8 +574,10 @@
   ```
 
   ```json
- >>> DELETE /associations/1/departments/2516651/members/20
   
+  ```
+ >>> DELETE /associations/1/departments/2516651/members/20
+
  <<< 404
  {
       "data":null,
