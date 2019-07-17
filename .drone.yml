@@ -9,7 +9,7 @@ steps:
     path: /root/.m2
   commands:
   - cd ./auth
-  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build
+  - mvn clean package docker:build
 
 - name: push-image
   image: appleboy/drone-ssh

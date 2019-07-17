@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>exort</groupId>
 	<artifactId>auth</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>auth</name>
 	<description>Demo project for Spring Boot</description>
 
@@ -67,6 +67,10 @@
 					<exposes>                      
 						<expose>8080</expose>      
 					</exposes>                     
+					<imageTags>
+						<imageTag>${project.version}</imageTag>
+						<!--<imageTag>latest</imageTag>-->
+					</imageTags>
 					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
 					<rm>true</rm>
 					<resources>
