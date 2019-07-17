@@ -121,7 +121,12 @@ public class ActivityDaoImpl implements ActivityDao {
                 int totalsize = userids.size();
                 int pageSize = min(100, pagesize);
                 int pageNum = pagenum * pagesize / pageSize;
-                List<Integer> result = userids.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalsize));
+                List<Integer> result;
+                if(userids.size() < pageNum * pageSize){
+                    result = new ArrayList<>();
+                }else{
+                    result = userids.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalsize));
+                }
                 return new PageList<Integer>(pageSize, pageNum, totalsize, result);
             }
             return null;
