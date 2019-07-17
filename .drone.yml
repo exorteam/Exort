@@ -9,17 +9,18 @@ steps:
     path: /root/.m2
   commands:
   - cd ./auth
-  - mvn clean package docker:build
+  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build
 
-#- name: ssh
-#  image: appleboy/drone-ssh
-#  settings:
-#    host: 212.64.27.71
-#    username: ubuntu
-#    password:
-#        from_secret: server_pwd
-#    script:
-#        - sudo docker build -t exort/auth .
+- name: push-image
+  image: appleboy/drone-ssh
+  settings:
+    host: 
+        from_secret: 212.64.27.71
+    username: ubuntu
+    passowrd:
+        from_secret: server_pwd
+    script:
+        - sudo docker push exort/auth
 
 trigger:
   branch:

@@ -63,6 +63,10 @@
 			  	<configuration>
 					<imageName>exort/auth</imageName>
 					<baseImage>java</baseImage>
+					<maintainer>MrHate</maintainer>
+					<exposes>                      
+						<expose>8080</expose>      
+					</exposes>                     
 					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
 					<rm>true</rm>
 					<resources>
