@@ -11,6 +11,8 @@ steps:
     path: /var/run/docker.sock
   - name: docker-cred
     path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
   commands:
   - cd ./auth
   - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
@@ -29,3 +31,6 @@ volumes:
   - name: docker-cred
     host:
       path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
