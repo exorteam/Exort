@@ -7,7 +7,7 @@
 
    |属性|说明|
    |---|---|
-   |int id | |
+   |string id | |
    |int[] association_ids | 组织者|
    |Datetime create_time | 创建时间 |
    |Datetime publish_time | 第一次发布时间 |
