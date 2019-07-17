@@ -12,7 +12,7 @@ public class Activity {
     @Id
     private String id;
 
-    private List<Long> associationIds;
+    private List<Integer> associationIds;
 
     private String createTime;
 
@@ -42,17 +42,17 @@ public class Activity {
 
     private int maxParticipants;
 
-    private List<Long> materialTemplateIds;
+    private List<Integer> materialTemplateIds;
 
-    private List<Long> participantIds;
+    private List<Integer> participantIds;
 
-    private List<Long> realParticipantIds;
+    private List<Integer> realParticipantIds;
 
     private List<String> tags;
 
-    public Activity(List<Long> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
+    public Activity(List<Integer> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
             int publishState, int signupState, int state, boolean ifReview, boolean ifOnlyMem, int maxParticipants,
-            List<Long> materialTemplateIds, List<Long> participantIds, List<Long> realParticipantIds,
+            List<Integer> materialTemplateIds, List<Integer> participantIds, List<Integer> realParticipantIds,
             List<String> tags) {
         this.id = (new ObjectId()).toString();
         this.associationIds = associationIds;
@@ -76,11 +76,11 @@ public class Activity {
         this.tags = tags;
     }
 
-    public List<Long> getAssociationIds() {
+    public List<Integer> getAssociationIds() {
         return associationIds;
     }
 
-    public void setAssociationIds(List<Long> associationIds) {
+    public void setAssociationIds(List<Integer> associationIds) {
         this.associationIds = associationIds;
     }
 
@@ -196,27 +196,27 @@ public class Activity {
         this.maxParticipants = maxParticipants;
     }
 
-    public List<Long> getMaterialTemplateIds() {
+    public List<Integer> getMaterialTemplateIds() {
         return materialTemplateIds;
     }
 
-    public void setMaterialTemplateIds(List<Long> materialTemplateIds) {
+    public void setMaterialTemplateIds(List<Integer> materialTemplateIds) {
         this.materialTemplateIds = materialTemplateIds;
     }
 
-    public List<Long> getParticipantIds() {
+    public List<Integer> getParticipantIds() {
         return participantIds;
     }
 
-    public void setParticipantIds(List<Long> participantIds) {
+    public void setParticipantIds(List<Integer> participantIds) {
         this.participantIds = participantIds;
     }
 
-    public List<Long> getRealParticipantIds() {
+    public List<Integer> getRealParticipantIds() {
         return realParticipantIds;
     }
 
-    public void setRealParticipantIds(List<Long> realParticipantIds) {
+    public void setRealParticipantIds(List<Integer> realParticipantIds) {
         this.realParticipantIds = realParticipantIds;
     }
 

@@ -283,7 +283,7 @@
       |400-(错误信息)|创建失败|
    
       ```json
-      >>> GET /activitiespagesize=10&pagenum=2&osrtby=1
+      >>> GET /activities?pagesize=10&pagenum=2&osrtby=1
       {
           "associationId":[2,3],
           "tags":["运动"],
