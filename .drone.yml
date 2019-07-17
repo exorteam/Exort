@@ -1,5 +1,5 @@
 kind: pipeline
-name: exort
+name: exort-auth
 
 steps:
 - name: build
@@ -38,7 +38,7 @@ volumes:
 ---
 
 kind: pipeline
-name: exort
+name: exort-common
 
 steps:
 - name: mvndeploy
