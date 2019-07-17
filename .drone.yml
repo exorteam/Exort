@@ -20,7 +20,7 @@ steps:
 trigger:
   branch:
   - auth
-  
+
 volumes:
   - name: cache
     host:
@@ -73,3 +73,28 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+
+---
+
+kind: pipeline
+name: exort-association-manager
+
+steps:
+- name: mvndeploy
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  commands:
+  - cd ./association-manager
+  - mvn clean deploy
+
+trigger:
+  branch:
+  - association_dev
