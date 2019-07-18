@@ -1068,4 +1068,60 @@
   }
   ```
 
+
+### 初始化部门
+
+- HTTP Request
+
+  **POST** `/associations`
+
+- Body Parameters
+
+  | Parameter    | Description |
+  | ------------------- | ----------- |
+  | `userId` int        | 用户ID      |
+  | `associationId` int | 社团ID      |
+
+- Response
+
+  | Code               | Description |
+  | ------------------ | ----------- |
+  | 200 true           | 请求成功    |
+  | 400 “InvalidUser”  | 用户不存在  |
+
+- Example
+
+  ```json
+  >>> POST /associations/2/department
+  {
+      "associationId":2,
+      "userId":2
+  }
   
+  
+  <<< 200
+  {
+      "data":true,
+      "error":"",
+      "message":"",
+  }
+  ```
+
+  ```json
+  >>> POST /associations/2/department
+  {
+      "associationId":2,
+      "userId":5
+  }
+  
+  
+  <<< 400
+  {
+      "data":null,
+      "error":"InvalidUser",
+      "message":"用户不存在",
+  }
+  ```
+
+  
+

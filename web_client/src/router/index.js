@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // import Index from '@/components/index'
-// import Activity from '../components/activity/Activity.vue'
+import Activity from '../components/activity/activity.vue'
 import About from '../components/activity/about.vue'
 import Build from '../components/activity/build.vue'
 
@@ -36,9 +36,19 @@ export default new Router({
       component: AdminIndex,
       children: [
         {
+          path: 'activity',
+          name: 'activity',
+          component: Activity
+        },
+        {
           path: 'activity/build',
           name: 'build',
           component: Build
+        },
+        {
+          path: 'activity/about',
+          name: 'about',
+          component: About
         },
         {
           path: 'asso_list',
@@ -69,11 +79,6 @@ export default new Router({
           path: 'sys_create_asso',
           name: 'SysCreateAsso',
           component: SysCreateAsso
-        },
-        {
-          path: 'activity/about',
-          name: 'about',
-          component: About
         },
         {
           path: 'application_management',

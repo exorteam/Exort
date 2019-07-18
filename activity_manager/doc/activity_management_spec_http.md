@@ -1,13 +1,17 @@
 ## 活动管理
 - **Activity**
 
+   - **TimeRange** 时间范围
+      - _string_ `start`
+      - _string_ `end`
+
    - **NewDateTime** 活动时间范围
-      - 范围类型 _int_ `timeType`
-      - 时间范围 _String_ `time`, _String[]_ `time`...
+      - 范围类型 _int_ `type`
+      - 时间范围 _String_ `TimeRange`, _String[]_ `TimeRange`...
 
    |属性|说明|
    |---|---|
-   |`id`_int_| |
+   |`id`_string_| |
    |`associationIds`_int[]_| 组织者|
    |`createTime`_Datetime_| 创建时间 |
    |`publishTime`_Datetime_| 第一次发布时间 |
@@ -68,14 +72,14 @@
          "title": "abv",
          "content": "qwujyshdg",
          "signupTime": {
-             "timeType": 0,
+             "type": 0,
              "time":{
                  "start": "2019-07-11 09:31",
                  "end": "2019-07-11 09:31"
              }
          },
          "time": {
-             "timeType": 0,
+             "type": 0,
              "time":{
                  "start": "2019-07-11 09:31",
                  "end": "2019-07-11 09:31"
@@ -102,14 +106,14 @@
                  "content": "qewretrytretyjdhgeewfwqdw",
                  "publishState": 0,
                  "signupTime": {
-                      "timeType": 0/1/2,
+                      "type": 0/1/2,
                       "time":{
                           "start": "2019-07-11 09:31",
                           "end": "2019-07-11 09:31"
                       }
                  },
                  "time": {
-                      "timeType": 0/1/2,
+                      "type": 0/1/2,
                       "time": {
                           "start": "2019-07-11 09:31",
                           "end": "2019-07-11 09:31"
@@ -171,14 +175,14 @@
          "title": "abv",
          "content": "qwujyshdg",
          "signupTime": {
-             "timeType": 0,
+             "type": 0,
              "time":{
                  "start": "2019-07-11 09:31",
                  "end": "2019-07-11 09:31"
              }
          },
          "time": {
-             "timeType": 0,
+             "type": 0,
              "time":{
                  "start": "2019-07-11 09:31",
                  "end": "2019-07-11 09:31"
@@ -205,14 +209,14 @@
                  "content": "qewretrytretyjdhgeewfwqdw",
                  "publishState": 0,
                  "signupTime": {
-                     "timeType": 0,
+                     "type": 0,
                      "time": {
                          "start": "2019-07-11 09:31",
                          "end":"2019-07-11 09:31"
                      },
                  },
                  "time": {
-                     "timeType": 0,
+                     "type": 0,
                      "time": {
                          "start": "2019-07-11 09:31",
                          "end":"2019-07-11 09:31"
@@ -262,9 +266,9 @@
       |`associationId`_int_| 社团ID |创建者|
       |`tags`_string[\]_|标签|[](空列表)|
       |`keyword`_string_|内容（简介）| null |
-      |`createTime`_string_|创建时间| null |
-      |`signupTime`_string_|报名时间| null |
-      |`startTime`_string_|开始时间| null |
+      |`createTime`_TimeRange_|创建时间| null |
+      |`signupTime`_TimeRange_|报名时间| null |
+      |`startTime`_TimeRange_|开始时间| null |
       |`publishState`_int_| 活动状态(0/unpublished, 1/published)| -1 |
       |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
       |`state`_int_| 活动状态(0未开始，1进行中，2已结束) | -1 |
@@ -279,7 +283,7 @@
       |400-(错误信息)|创建失败|
    
       ```json
-      >>> GET /activitiespagesize=10&pagenum=2&osrtby=1
+      >>> GET /activities?pagesize=10&pagenum=2&osrtby=1
       {
           "associationId":[2,3],
           "tags":["运动"],
@@ -314,14 +318,14 @@
                         "content": "qewretrytretyjdhgeewfwqdw",
                         "publishState": 0,
                         "signupTime": {
-                            "timeType": 0,
+                            "type": 0,
                             "time": {
                                 "start": "2019-07-11 09:31",
                                 "end":"2019-07-11 09:31"
                             },
                         },
                         "time": {
-                            "timeType": 0,
+                            "type": 0,
                             "time": {
                                 "start": "2019-07-11 09:31",
                                 "end":"2019-07-11 09:31"
@@ -348,11 +352,11 @@
                         "content": "qewretrytretyjdhgeewfwqdw",
                         "publishState": 0,
                         "signupTime": {
-                            "timeType": 0,
+                            "type": 0,
                             "time": "2019-07-11 09:31 - 2019-07-11 09:31"
                         },
                         "time": {
-                            "timeType": 0,
+                            "type": 0,
                             "time": {
                                 "start": "2019-07-11 09:31",
                                 "end":"2019-07-11 09:31"
@@ -410,12 +414,7 @@
    ```json
    <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -456,12 +455,7 @@
       ```json
       <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -502,12 +496,7 @@
       ```json
       <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -548,12 +537,7 @@
       ```json
       <<< 200         
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -696,6 +680,8 @@
        |---|---|
        |200-(无实际返回值)|回调成功|
        |400-(错误信息)|回调失败|
+   
+   - example 
 
       ```json
       >>> POST /callback/acceptsignup
@@ -720,12 +706,7 @@
       ```json
       <<< 200
       {
-          "data": {
-              "pagenum":2,
-              "pagesize":0,
-              "totalsize":78,
-              "content":[]
-          },
+          "data": {},
           "error": "",
           "massage": "",
       }
@@ -768,14 +749,14 @@
               "content": "qewretrytretyjdhgeewfwqdw",
               "publishState": 0,
               "signupTime": {
-                  "timeType": 0,
+                  "type": 0,
                   "time": {
                       "start": "2019-07-11 09:31",
                       "end":"2019-07-11 09:31"
                   },
               },
               "time": {
-                  "timeType": 0,
+                  "type": 0,
                   "time": {
                       "start": "2019-07-11 09:31",
                       "end":"2019-07-11 09:31"
