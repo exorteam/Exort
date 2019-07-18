@@ -1,10 +1,7 @@
 package exort.activity.serviceImpl;
 
 import exort.activity.dao.ActivityDao;
-import exort.activity.entity.Activity;
-import exort.activity.entity.ActivityTime;
-import exort.activity.entity.Response;
-import exort.activity.entity.Select;
+import exort.activity.entity.*;
 import exort.activity.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +22,13 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Response getActivities(Select select, int pagesize, int pagenum, int sortby){
-        return ad.selectActivities(select, pagesize, pagenum, sortby);
+        PageList<Activity> result =  ad.selectActivities(select, pagesize, pagenum, sortby);
+        if(result==null){
+            return new Response<>(null, "invalid error", "invalid message");
+
+        }else{
+            return new Response<>(result, "","");
+        }
     }
 
     @Override
@@ -35,33 +38,39 @@ public class ActivityServiceImpl implements ActivityService {
             if(activity != null){
                 if(type.equals("publish")){
                     activity.setPublishState(1);
+                    System.out.println(activity.getPublishState());
                 }else{
                     activity.setPublishState(0);
+                    System.out.println(activity.getAssociationIds());
                 }
                 ad.update(activity);
                 return new Response<>(new HashMap(), "", "");
             }
-            return new Response<>(null, "invalid error","invallid message");
+            return new Response<>(null, "invalid error1","invalid message");
         }catch(Exception e){
             e.printStackTrace();
-            return new Response<>(null, "invalid error","invallid message");
+            return new Response<>(null, "invalid error2","invalid message");
         }
     }
 
     @Override
-    public Response addUserIds(String activityid, List<Long> userIds, int type){
+    public Response addUserIds(String activityid, List<Integer> userIds, int type){
         try{
             Activity activity = ad.getActivity(activityid);
             if(activity!=null){
                 if(type==1){
-                    List<Long> oldp = activity.getParticipantIds();
+                    List<Integer> oldp = activity.getParticipantIds();
+                    List<Integer> temp = new ArrayList<>(oldp);
+                    temp.retainAll(userIds);
+                    oldp.removeAll(temp);
                     oldp.addAll(userIds);
                     activity.setParticipantIds(oldp);
                 } else{
-                    List<Long> oldp = activity.getRealParticipantIds();
+                    List<Integer> oldp = activity.getRealParticipantIds();
                     oldp.addAll(userIds);
                     activity.setRealParticipantIds(oldp);
                 }
+                ad.update(activity);
                 return new Response<>(new HashMap(), "","");
             }
             return new Response<>(null,"invalid error","invalid message");
@@ -72,13 +81,14 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response removeParticipants(String activityid, List<Long> participantIds){
+    public Response removeParticipants(String activityid, List<Integer> participantIds){
         try{
             Activity activity = ad.getActivity(activityid);
-            if(activity!=null){
-                List<Long> oldp = activity.getParticipantIds();
+            if(activity != null){
+                List<Integer> oldp = activity.getParticipantIds();
                 oldp.removeAll(participantIds);
                 activity.setParticipantIds(oldp);
+                ad.update(activity);
                 return new Response<>(new HashMap(), "","");
             }
             return new Response<>(null,"invalid error","invalid message");
@@ -89,12 +99,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public Response getActivityUserIds(int pagesize, int pagenum, String activityid, Long userId, int type){
+    public Response getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type){
         try{
             if(userId==0){
-                return ad.getActivityUserIds( pagesize, pagenum, activityid, userId, type);
+                PageList<Integer> result =  ad.getActivityUserIds( pagesize, pagenum, activityid, type);
+                if(result == null){
+                    return new Response<>(null, "invalid error", "invalid message");
+                }else{
+                    return new Response<>(result, "", "");
+                }
             }{
-                return ad.checkUserId(activityid, userId, type);
+                List<Integer> result =  ad.checkUserId(activityid, userId, type);
+                if(result==null){
+                    return new Response<>(null,"invalid error", "invalid message");
+                }else{
+                    if(result.size()==0){
+                        return new Response<>(new HashMap(), "","");
+                    }else{
+                        return new Response<>(result,"","");
+                    }
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
