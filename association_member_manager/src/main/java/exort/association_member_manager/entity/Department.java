@@ -15,7 +15,6 @@ public class Department extends exort.api.http.entity.Department {
     @Id
     int associationId;
     @Id
-    @GeneratedValue
     int departmentId;
     @ApiModelProperty(value = "部门名称", name = "name")
     String name;

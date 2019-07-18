@@ -75,10 +75,10 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
     @Override
     public ResponseCode<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode= new ResponseCode<>();
+        ResponseCode<Boolean> responseCode = new ResponseCode<>();
 
         // outside
-        boolean userInAsso = true;
+        boolean userInAsso = false;
 
         if (!userInAsso) {
             response.setStatus(200);
@@ -156,7 +156,12 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId)) {
 
                 Department department = new Department(associationId, departmentName, departmentDesc, parentId);
+                Department maxDepartment = departmentRepository.findFirstByAssociationIdOrderByDepartmentIdDesc(associationId);
+
+                department.setDepartmentId((maxDepartment != null ? maxDepartment.getDepartmentId() + 1 : 0));
                 departmentRepository.save(department);
+
+                response.setStatus(200);
 
                 responseCode.setData(department);
 
@@ -189,6 +194,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             responseCode.setError("DepartmentNotFound");
             responseCode.setMessage("不存在该部门");
         } else {
+            response.setStatus(200);
+
             responseCode.setData(department);
 
             departmentRepository.delete(department);
@@ -220,6 +227,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
                 department.setParentId(parentId);
 
                 departmentRepository.save(department);
+
+                responseCode.setData(department);
 
             } else {
                 response.setStatus(400);

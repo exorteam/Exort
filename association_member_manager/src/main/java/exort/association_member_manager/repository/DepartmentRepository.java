@@ -9,7 +9,7 @@ import java.util.List;
 public interface DepartmentRepository extends JpaRepository<Department, Integer>, PagingAndSortingRepository<Department, Integer> {
     List<Department> findAllByAssociationId(int associationId);
 
-    List<Department> findAllByAssociationIdAndDepartmentId(int associationId, int departmentId);
+    Department findFirstByAssociationIdOrderByDepartmentIdDesc(int associationId);
 
     Boolean existsByAssociationIdAndDepartmentId(int associationId, int departmentId);
 
