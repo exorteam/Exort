@@ -15,10 +15,14 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 
+//引入qs
+import qs from 'qs'
+
 Vue.use(iView);
 Vue.use(BootstrapVue);
 Vue.use(router);
 Vue.use(Vuex);
+Vue.prototype.$qs = qs;
 
 // The routing configuration
 const RouterConfig = {
@@ -26,7 +30,7 @@ const RouterConfig = {
 };
 Vue.config.productionTip = false;
 
-store.dispatch('setStatus')
+store.dispatch('setStatus');
 
 new Vue({
   el: '#app',
