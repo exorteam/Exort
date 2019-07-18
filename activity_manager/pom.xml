@@ -81,6 +81,32 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+			<plugin>
+			 	<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+			  	<version>1.2.0</version>
+			  	<configuration>
+					<imageName>exort/activity-manager</imageName>
+					<baseImage>java</baseImage>
+					<maintainer>RSP</maintainer>
+					<exposes>                      
+						<expose>8080</expose>      
+					</exposes>                     
+					<imageTags>
+						<imageTag>${project.version}</imageTag>
+						<!--<imageTag>latest</imageTag>-->
+					</imageTags>
+					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+					<rm>true</rm>
+					<resources>
+				   		<resource>
+					 		<targetPath>/</targetPath>
+					 		<directory>${project.build.directory}</directory>
+					 		<include>${project.build.finalName}.jar</include>
+				   		</resource>
+					</resources>
+			  	</configuration>
+			</plugin>
         </plugins>
     </build>
 
