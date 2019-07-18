@@ -6,13 +6,12 @@ import java.util.List;
 public class ActivityTime {
 
     private int type;
+
     private List<TimeRange> time;
 
-    public ActivityTime(int type, TimeRange timeRange){
+    public ActivityTime(int type, List<TimeRange> time){
         this.type = type;
-        List<TimeRange> tr = new ArrayList<>();
-        tr.add(timeRange);
-        this.time = tr;
+        this.time = time;
     }
 
     public int getType() {
@@ -27,10 +26,8 @@ public class ActivityTime {
         return time;
     }
 
-    public void setTime(TimeRange time) {
-        List<TimeRange> tr = new ArrayList<>();
-        tr.add(time);
-        this.time = tr;
+    public void setTime(List<TimeRange> time) {
+        this.time = time;
     }
 
 }

@@ -2,60 +2,50 @@
     <div>
         <!-- 搜索方式 -->
         <div>
-            创建时间<!-- 活动创建时间搜索 -->
-            <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-left: 30px"></DatePicker>
-            报名时间<!-- 活动报名时间搜索 -->            
-            <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-left: 30px"></DatePicker>
-            开始时间<!-- 活动开始时间搜索 -->            
-            <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-left: 30px"></DatePicker>
-            发布状态<!-- 根据活动发布状态搜索 -->
-            <b-form-select v-model="select.publishSelected" :options="publishSelectList" style="width: 120px; height: 32px; margin-left: 30px"></b-form-select>
-            报名状态<!-- 根据活动报名状态搜索 -->
-            <b-form-select v-model="select.signupSelected" :options="signupSelectList" style="width: 120px; height: 32px; margin-left: 30px"></b-form-select>
-            活动状态<!-- 根据活动状态搜索 -->
-            <b-form-select v-model="select.startSelected" :options="startSelectList" style="width: 120px; height: 32px; margin-left: 30px"></b-form-select>
-            发起社团<!-- 直接输入社团名称 -->
-            <Input v-model="select.value" placeholder="请输入社团名称" style="width: 300px"/>
-            关键词<!-- keyword -->
-            <Input v-model="select.value" placeholder="请输入社团名称" style="width: 300px"/>            
-            是否需要审核
-            <Checkbox v-model="select.ifReview"/>
-            是否允许非本组织成员参加
-            <Checkbox v-model="select.ifOnlyMem"/>
-
-            <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
-            <div v-if="tag.tagList.length">
-                <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
+            <div style="margin-top: 15px; margin-left: 20px">
+                创建时间<!-- 活动创建时间搜索 -->
+                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 50px"></DatePicker>                
+                报名时间<!-- 活动报名时间搜索 -->            
+                <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 50px"></DatePicker>
+                开始时间<!-- 活动开始时间搜索 -->            
+                <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 50px"></DatePicker>
+                发布状态<!-- 根据活动发布状态搜索 -->
+                <b-form-select v-model="select.publishSelected" :options="publishSelectList" style="width: 120px; height: 32px; margin-right: 50px"></b-form-select>
+                报名状态<!-- 根据活动报名状态搜索 -->
+                <b-form-select v-model="select.signupSelected" :options="signupSelectList" style="width: 120px; height: 32px; margin-right: 50px"></b-form-select>
+                活动状态<!-- 根据活动状态搜索 -->
+                <b-form-select v-model="select.startSelected" :options="startSelectList" style="width: 120px; height: 32px; margin-right: 50px"></b-form-select>
             </div>
+            <div style="margin-top:15px; margin-left: 20px">
+                发起社团<!-- 直接输入社团名称 -->
+                <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                关键词<!-- keyword -->
+                <Input v-model="select.keyword" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                是否需要审核
+                <Checkbox v-model="select.ifReview" style="margin-right: 40px"/>
+                是否允许非本组织成员参加
+                <Checkbox v-model="select.ifOnlyMem" style="margin-right: 40px"/>
 
-            <TagChoose :tag="tag"/>
-            <!-- <div>
-                <Modal v-model="tag_show" @on-ok="tag_show=false" @on-cancel="handleCancel" loading :closable="false">
-                    <Form v-model="form" :label-width="80">
-                        <FormItem label="选择标签">
-                            <Button @click="cancelSelect" v-for="tag in select.tagList" :key="tag.id" :row="tag">{{ tag }}</Button>
-                        </FormItem>
-                        <FormItem label="选择标签">
-                            <Input v-model="tag_select"/>
-                        </FormItem>
-                        <FormItem label="标签库">
-                            <Button @click="confirmSelect" v-for="item in tagRepository" :key="item.id" :row="item">{{ item }}</Button>
-                        </FormItem>
-                    </Form>
-                </Modal>
-            </div> -->
+                <div style="display:inline">
+                    <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
+                    <TagChoose :tag="tag"/>
+                </div>
+                <div v-if="tag.tagList.length" style="display:inline">
+                    <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
+                </div>
 
-            <!-- 按照条件进行搜索 -->
-            <Button type="info" @click="handleSelect">搜索</Button>
-            <!-- 新建活动 -->
-            <Button type="info" @click="form.onshow=true" style="position:relative; float: right;">新建</Button>
+            </div>
+            <div style="margin-top:15px; margin-left: 20px">
+                <!-- 按照条件进行搜索 -->
+                <Button type="info" @click="handleSelect">搜索</Button>
+                <!-- 新建活动 -->
+                <Button type="info" @click="form.onshow=true">新建</Button>
+            </div>
 
             <ActivityCreate :form ="form"/>
         </div>
 
-        <div id="Divide" style="width: 100%;">
-            <Divider />
-        </div>
+        <Divider style="width: 100%;"/>
 
         <!-- 活动排列 -->
         <div>
@@ -66,9 +56,10 @@
                         <Badge style="float: right" :text="card.text" :status="card.state"/>
                     </div>
                     <Divider />
-                    <router-link :to="{path: '/admin/activity/about'}">
-                        <img src="../../assets/activity/cover1.jpeg" style="height: 280px; width: 100%;"/>
-                    </router-link>
+                    <Button @click="to_detail(card.id)" type="text" style="height: 280px; width: 100%;">
+                        <img :src="card.image" style="height: 280px; width: 100%;"/>
+                    </Button>
+                    <Divider />
                     <p>Time:{{card.time}}</p>
                     <p>Brief Description:{{card.bd}}</p>
                 </Card>
@@ -133,46 +124,54 @@ let startSelectLists=[
 
 let cardLists=[
     {
+        id:1,
         name:"五一长跑节",
         text:"已结束",
+        image: image,
         state:"processing",
         time: "2019-05-01",
         bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
     },
     {
+        id:2,
         name:"MVIG大型数据集标注",
         text:"未开始",
+        image: image,
         state: "success",
         time:"2019-07-18 22:17 - 2019-07-31 23:59",
         bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
     },
     {
+        id:3,
         name:"联名文化衫Line Up",
         text:"进行中",
+        image: image,
         state: "warning",
         time:"2019-07-23 08:00 - 2019-07-31 08:00",
         bd:"明天，你就要去很远的地方，带上我们的故事。"
     },
     {
+        id:4,
         name:"校园带队志愿者招募",
         text:"未发布",
+        image: image,
         state:"default",
         time:"2019-07-11 15:00 - 2019-07-11 18:30",
         bd:"招募校园带队讲解志愿者",
     }
 ]
 
-let tagrepo = ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座"]
-
 import ActivityCreate from './activity_create.vue'
 import TagChoose from './tag_choose'
-import http from '../../http-common'
+import axios from 'axios'
+import image from '../../assets/activity/cover1.jpeg'
 
 export default {
     name: 'activity',
     components: { ActivityCreate, TagChoose },
     data () {
         return{
+            currentAvtivityId: 0,
             publishSelected: null,
             publishSelectList: publishSelectLists,
             signupSelected: null,
@@ -197,26 +196,36 @@ export default {
                 tagList:[],
             },
             select:{
-                createTime:"",
-                signupTime:"",
-                startTime:"",
+                association: "",
+                keyword: "",
+                createTime: "",
+                signupTime: "",
+                startTime: "",
                 publishSelected: null,
                 signupSelected: null,
                 startSelected: null,
                 ifReview: false,
                 ifOnlyMem: false,
-                value: '',
             }
         }
     },
     methods: {
+        to_detail(value){
+            // console.log(value)
+            sessionStorage.setItem('activityid', value)
+            this.$store.dispatch('setStatus')
+            console.log(this.$store.getters.get_activityid)
+
+            this.$router.replace({path: "/admin/activity/about"})
+        },
         handleSelect(){
             let data = this.select
-            http.
-                get('/activities', {
+            data.tags = this.tag.tagList
+            axios.
+                get('http://localhost:8000/activities', {
                     params:{
                         pagenum:0,
-                        pagesize:1,
+                        pagesize:10,
                         _body: btoa(JSON.stringify({data}))
                     }
                 })
@@ -229,7 +238,33 @@ export default {
         }
     },
     mounted() {
-        
+        let data = {
+            tagList:[],
+            association: [],
+            keyword: "",
+            createTime: "",
+            signupTime: "",
+            startTime: "",
+            publishSelected: null,
+            signupSelected: null,
+            startSelected: null,
+            ifReview: -1,
+            ifOnlyMem: -1,
+        }
+        axios
+            .get('http://localhost:8000/activities', {
+                params:{
+                    pagenum:0,
+                    pagesize:9,
+                    _body: btoa(JSON.stringify({data}))
+                }
+            })
+            .then(response => {
+                this.cardList = response.data
+            })
+            .catch(e => {
+                console.log(e)
+            })
     },
 }
 </script>
