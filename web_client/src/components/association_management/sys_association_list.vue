@@ -42,7 +42,7 @@
             <div style="text-align: center;height:100px">
                 <img :src="item.logo" style="width:80px;height:80px;"/>
             </div>
-                    <p>{{ item.description }}</p>
+            <p>{{ item.description }}</p>
             <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
                 <li>
                     <p>{{ tag }}</p>
@@ -51,7 +51,10 @@
             </Card>
         </div>
         <div style="margin-top:15px;text-align: center">
-        <Page show-sizer show-elevator show-total :page-size="pageProp.pageSize" :current="pageProp.pageNum" :total="pageProp.totalSize"></Page>
+        <Page id = "page" show-sizer show-elevator show-total
+        :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+        :current.sync = "pageProp.pageNum" ></Page>
+        <Button @click="showSize">showSize</Button>
         </div>
         </div>
         </Tab-pane>
@@ -137,10 +140,10 @@ export default {
                 type:""
             },
             pageProp:{
+                pageSizeOpt:[6,9,12],
                 totalSize : 50,
                 pageSize : 6,
-                pageNum : 1,
-
+                pageNum : 4
             },
             tag:{
                 tag_show: false,
@@ -380,12 +383,15 @@ export default {
         }
     },
     methods: {
+        showSize(){
+            console.log(this.pageProp.pageSize)
+        },
         showCreateForm(){
             this.type = "create"
             this.form.onshow=true
         },
         showEditForm(item){
-            console.log(item)
+            // console.log(item)
             this.form.assoId=item.id
             this.form.name=item.name
             this.form.description=item.description
@@ -411,12 +417,39 @@ export default {
             }
         },
 
+        getState(){
+            // console.log("I'm here")
+            if(this.assoStateSelected.length==2) {
+                this.assoSearch.state = 2
+                console.log(this.assoSearch.state)
+                console.log(this.assoStateSelected)
+
+            }
+            else if (this.assoStateSelected[0] == "active"){
+                this.assoSearch.state = 1
+                console.log(this.assoSearch.state)
+                console.log(this.assoStateSelected)
+            }
+            else if (this.assoStateSelected[0]=="blocked"){
+                this.assoSearch.state = 0
+                console.log(this.assoSearch.state)
+                 console.log(this.assoStateSelected)
+
+            }
+            else{
+                this.assoSearch.state = -1
+                console.log(this.assoSearch.state)
+                 console.log(this.assoStateSelected)
+            }
+        },
+
         getAssociationList() {
-            console.log(this.assoSearch);
-            this.assoSearch.pageNum = this.pageProp.pageNum -1
-            this.assoSearch.pageSize = this.pageProp.pageSize
-            this.assoSearch.tags =
-            this.assoSearch.state =
+            // console.log(this.assoSearch);
+            this.assoSearch.pageNum = this.pageProp.pageNum - 1;
+            this.assoSearch.pageSize = this.pageProp.pageSize;
+            this.assoSearch.tags = this.tag.tagList.join();
+            this.getState();
+            // console.log(this.assoSearch)
 
             axios
             .get('associations',{
@@ -429,8 +462,9 @@ export default {
                 }
             })
             .then(response => {
-                console.log(response.data)
-                 this.AssoList = response.data.data.content
+                // console.log(this.tags)
+                this.AssoList = response.data.data.content
+                this.pageProp.totalSize = response.data.data.content.length
             })
             .catch(e => {
                 console.log(e)
@@ -449,8 +483,7 @@ export default {
                 }
             })
             .then(response => {
-                console.log(response.data)
-                 this.AssoList = response.data.data.content
+                this.AssoList = response.data.data.content
             })
             .catch(e => {
                 console.log(e)

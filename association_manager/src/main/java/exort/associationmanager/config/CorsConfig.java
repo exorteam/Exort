@@ -16,7 +16,8 @@ public class CorsConfig {
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         // addAllowedOrigin 不能设置为* 因为与 allowCredential 冲突
-        corsConfiguration.addAllowedOrigin("http://localhost:7000");
+//        corsConfiguration.addAllowedOrigin("http://localhost:7000");
+        corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         // allowCredential 需设置为true

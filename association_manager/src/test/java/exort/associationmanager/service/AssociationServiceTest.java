@@ -1,6 +1,7 @@
 package exort.associationmanager.service;
 
 import exort.associationmanager.entity.Application;
+import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.ResponseBody;
 import org.junit.Test;
@@ -22,6 +23,7 @@ public class AssociationServiceTest {
 
     ResponseBody responseBody = new ResponseBody();
     AssociationService service;
+    Association association = new Association();
 
     /**
      *
@@ -30,7 +32,7 @@ public class AssociationServiceTest {
      */
     @Test
     public void testGetAssociation() throws Exception {
-
+        association.setId("");
         responseBody.setMessage("");
         responseBody.setError("");
         responseBody.setData("");
