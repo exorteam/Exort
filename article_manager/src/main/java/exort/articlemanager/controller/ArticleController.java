@@ -1,5 +1,6 @@
 package exort.articlemanager.controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +51,13 @@ public class ArticleController {
 	}
 
 	@PatchMapping(rootPath+"/{articleId}")
-	public boolean patchArticle(@PathVariable("articleId") int articleId, @RequestBody String opt){
-		if(opt.toLowerCase().equals("publish")){
+	public boolean patchArticle(@PathVariable("articleId") int articleId, @RequestBody HashMap<String,Boolean> body){
+		if(body.get("publish")){
 			return service.publishArticle(articleId);
 		}
-		if(opt.toLowerCase().equals("withdraw")){
+		else{
 			return service.withdrawArticle(articleId);
 		}
-		return false;
 	}
 
 }

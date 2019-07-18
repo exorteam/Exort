@@ -50,90 +50,105 @@
 
    |Code|Description|
    |--|--|
-   |200 <br>_articleId_|文章ID|
+   |200 <br>articleId|文章ID|
 
 - Examples
 
-## 解引用标签
+## 查看文章
 
 - HTTP Request
 
-   **DELETE** `/categories/{category}/tags/{name}/refs/{referrer}`
+   **GET** `/articles/{articleId}`
 
 - Path Parameters
 
    |Parameter|Description|
    |--|--|
-   |`category` _string_|标签分类|
-   |`name` _string_|标签名|
-   |`referrer` _string_|解引用者|
+   |`articleId` _int_|文章ID|
 
 - Response
 
    |Code|Description|
    |--|--|
-   |200 [_Tag_](#Tag)|精简标签|
+   |200 <br>[Article](#Article)|文章信息|
 
 - Examples
 
-## 查询标签
+## 更新文章
 
 - HTTP Request
 
-   **GET** `/categories/{category}/tags/{name}`
+   **PUT** `/articles/{articleId}`
 
 - Path Parameters
 
    |Parameter|Description|
    |--|--|
-   |`category` _string_|标签分类|
-   |`name` _string_|标签名|
+   |`articleId` _int_|文章ID|
 
 - Body Parameters
 
    |Parameter|Description|
    |--|--|
-   |`simple` _bool_|若为 _true_, 则返回精简标签. 默认为 _false_|
+   |`title` _String_|文章标题|
+   |`content` _String_|文章内容|
 
 - Response
 
    |Code|Description|
    |--|--|
-   |200 [_Tag_](#Tag)|根据 `simple` 返回精简或完整的标签|
+   |200 <br>[Article](#Article)|文章信息|
 
 - Examples
 
-## 搜索标签
+## 删除文章
 
 - HTTP Request
 
-   **GET** `/categories/{category}/tags`
+   **DELETE** `/articles/{articleId}`
 
 - Path Parameters
 
    |Parameter|Description|
    |--|--|
-   |`category` _string_|标签分类|
-
-- Query Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`pageNum` _int_|页码, 默认为0|
-   |`pageSize` _int_|每页数量, 默认为10|
-   |`sortBy` _string_|默认为 _default_, 不作排序. 也可以是 _totalRefs_ 按总引用数降序|
+   |`articleId` _int_|文章ID|
 
 - Body Parameters
 
    |Parameter|Description|
    |--|--|
-   |`keyword` _string_|关键词|
-   |`simple` _bool_|指定返回的是否精简标签, 默认为 _true_|
 
 - Response
 
    |Code|Description|
    |--|--|
-   |200 [_TagList_](#TagList)|查询成功|
+   |200 <br>Empty Object|删除成功返回空对象|
 
 - Examples
+
+## 发布或撤回文章
+
+- HTTP Request
+
+   **PATCH** `/articles/{articleId}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`articleId` _int_|文章ID|
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`publish` _boolean_|是则发布，否则撤回|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 <br>[Article](#Article)|文章信息|
+
+- Examples
+
