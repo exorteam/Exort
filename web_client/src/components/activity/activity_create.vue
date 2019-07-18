@@ -14,8 +14,10 @@
                 </Select>
             </FormItem>
             <FormItem label="活动时间">
-                <DatePicker v-model="form.time" type="daterange" placeholder="yyyy-mm-dd"></DatePicker>
-                <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
+                <div>
+                    <DatePicker v-model="form.time" type="daterange" placeholder="yyyy-mm-dd"></DatePicker>
+                    <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
+                </div>
             </FormItem>
             <FormItem label="报名是否需要审核:">
                 <Checkbox v-model="form.checked1"/>

@@ -4,15 +4,15 @@ import java.util.List;
 
 public class Operation {
 
-    private Long operatorId;
+    private int operatorId;
     private String action;
     private Application application;
 
-    public Long getOperatorId() {
+    public int getOperatorId() {
         return operatorId;
     }
 
-    public void setOperatorId(Long operatorId) {
+    public void setOperatorId(int operatorId) {
         this.operatorId = operatorId;
     }
 
@@ -34,28 +34,28 @@ public class Operation {
 
 
     public class Application{
-        private Long id;
-        private Long applicantId;
+        private int id;
+        private int applicantId;
         private String type;
         private Signup signup;
-        private List<Long> materialIds;
+        private List<Integer> materialIds;
         private String createTime;
         private String handledTime;
         private String state;
 
-        public Long getId() {
+        public int getId() {
             return id;
         }
 
-        public void setId(Long id) {
+        public void setId(int id) {
             this.id = id;
         }
 
-        public Long getApplicantId() {
+        public int getApplicantId() {
             return applicantId;
         }
 
-        public void setApplicantId(Long applicantId) {
+        public void setApplicantId(int applicantId) {
             this.applicantId = applicantId;
         }
 
@@ -75,11 +75,11 @@ public class Operation {
             this.signup = signup;
         }
 
-        public List<Long> getMaterialIds() {
+        public List<Integer> getMaterialIds() {
             return materialIds;
         }
 
-        public void setMaterialIds(List<Long> materialIds) {
+        public void setMaterialIds(List<Integer> materialIds) {
             this.materialIds = materialIds;
         }
 
@@ -111,9 +111,9 @@ public class Operation {
         public class Signup{
             private String activityId;
 
-            public Signup(String activityid){
-                this.activityId = activityid;
-            }
+//            public Signup(String activityid){
+//                this.activityId = activityid;
+//            }
 
             public String getActivityId() {
                 return activityId;

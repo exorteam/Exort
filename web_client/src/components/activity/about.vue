@@ -23,7 +23,7 @@
                 <Table :columns="columns10" :data="data9"></Table>
             </p>
         </div>
-        <div style="margin-top: 100px">
+        <div style="margin-top: 50px">
             <p>
             申请者
                 <Table :columns="columns10" :data="data9"></Table>
@@ -97,6 +97,7 @@ export default {
     data() {
         return{
             form: {
+                create_show: false,
                 create_time:'2019-01-01',
                 publish_time: '2019-01-02',
                 last_publish_time: '2019-01-04',

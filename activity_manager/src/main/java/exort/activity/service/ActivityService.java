@@ -10,13 +10,13 @@ public interface ActivityService {
 
     Response changeActivityState(String activityid, String type);
 
-    Response addUserIds(String activityid, List<Long> userIds, int type);
+    Response addUserIds(String activityid, List<Integer> userIds, int type);
 
-    Response removeParticipants(String activityid, List<Long> participantIds);
+    Response removeParticipants(String activityid, List<Integer> participantIds);
 
     Response getActivity(String acticityid);
 
-    Response getActivityUserIds(int pagesize, int pagenum, String activityid, Long userId, int type);
+    Response getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type);
 
     Response upsertActivity(Activity activity);
 

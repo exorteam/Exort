@@ -1,4 +1,4 @@
-package exort.api.http.types;
+package exort.api.http.entity;
 import lombok.Data;
 
 import java.util.Date;

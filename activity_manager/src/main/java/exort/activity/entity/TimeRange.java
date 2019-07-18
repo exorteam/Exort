@@ -3,6 +3,7 @@ package exort.activity.entity;
 public class TimeRange{
 
     private String start;
+
     private String end;
 
     public TimeRange(String start, String end){
