@@ -3,10 +3,13 @@ package exort.articlemanager.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.articlemanager.entity.Article;
@@ -15,41 +18,46 @@ import exort.articlemanager.service.ArticleService;
 
 @RestController
 public class ArticleController {
+
+	private static final String rootPath = "/articles";
+
 	@Autowired
 	private ArticleService service;
 
-	@PostMapping("/create")
+	@PostMapping(rootPath)
 	public Article createArticle(@RequestBody Article article){
 		return service.createArticle(article);
 	}
 
-	@GetMapping("/delete")
-	public boolean deleteArticle(@RequestParam int articleId){
+	@DeleteMapping(rootPath+"/{articleId}")
+	public boolean deleteArticle(@PathVariable("articleId") int articleId){
 		return service.deleteArticle(articleId);
 	}
 
-	@PostMapping("/update")
-	public boolean updateArticle(@RequestParam int articleId, @RequestParam String title, @RequestBody String content){
-		return service.updateArticle(articleId,title,content);
+	@PutMapping(rootPath+"/{articleId}")
+	public boolean updateArticle(@PathVariable("articleId") int articleId, @RequestBody Article article){
+		return service.updateArticle(articleId,article.getTitle(),article.getContent());
 	}
 
-	@GetMapping("/get")
-	public Article getArticle(@RequestParam int articleId){
+	@GetMapping(rootPath+"/{articleId}")
+	public Article getArticle(@PathVariable("articleId") int articleId){
 		return service.getArticle(articleId);
 	}
 
-	@PostMapping("/list")
+	@GetMapping(rootPath)
 	public List<Article> listArticle(@RequestBody ArticleFilterParams params){
 		return service.listArticle(params);
 	}
 
-	@GetMapping("/publish")
-	public boolean publishArticle(@RequestParam int articleId){
-		return service.publishArticle(articleId);
+	@PatchMapping(rootPath+"/{articleId}")
+	public boolean patchArticle(@PathVariable("articleId") int articleId, @RequestBody String opt){
+		if(opt.toLowerCase().equals("publish")){
+			return service.publishArticle(articleId);
+		}
+		if(opt.toLowerCase().equals("withdraw")){
+			return service.withdrawArticle(articleId);
+		}
+		return false;
 	}
 
-	@GetMapping("/withdraw")
-	public boolean withdrawArticle(@RequestParam int articleId){
-		return service.withdrawArticle(articleId);
-	}
 }

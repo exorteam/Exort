@@ -11,19 +11,19 @@ import lombok.Data;
 public class Article {
 
 	@Id
-	private int id;
+	private int 			id;
 
-	private String title;
-	private String content;
-	private List<Integer> authors;
+	private String 			title;
+	private String 			content;
+	private List<Integer> 	authors;
 
-	private Date createTime;
-	private Date publishTime;
-	private Date lastPublishTime;
-	private Date lastModifyTime;
+	private Date 			createTime;
+	private Date 			publishTime;
+	private Date 			lastPublishTime;
+	private Date 			lastModifyTime;
 
 	// 0: unpublished, 1: published, 2: error
-	private int state;
+	private int 			state;
 
-	private int createMethod;
+	private int 			createMethod;
 }
