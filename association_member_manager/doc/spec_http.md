@@ -16,22 +16,22 @@
 
 - <a id='Application'></a> Application
 
-  | Field                                                 | Description                                              |
-  | ----------------------------------------------------- | -------------------------------------------------------- |
-  | `id` *int*                                            | 申请ID                                                   |
-  | `applicantId` *int*                                   | 申请者ID                                                 |
-  | `type` *string*                                       | 申请类型                                                 |
-  | `associationInfo` [AssociationInfo](#AssociationInfo) | 自定义json对象                                           |
-  | `materialIds` *int[]*                                 | 申请材料ID列表                                           |
-  | `createdTime` *string*                                | 申请时间                                                 |
-  | `handledTime` *string*                                | 处理时间                                                 |
-  | `state` *string*                                      | 状态,可以是 *pending*, *accepted*, *refused*, *canceled* |
+  | Field                                              | Description                                              |
+  | -------------------------------------------------- | -------------------------------------------------------- |
+  | `id` *int*                                         | 申请ID                                                   |
+  | `applicantId` *int*                                | 申请者ID                                                 |
+  | `type` *string*                                    | 申请类型                                                 |
+  | `departmentInfo` [DepartmentInfo](#DepartmentInfo) | 自定义json对象                                           |
+  | `materialIds` *int[]*                              | 申请材料ID列表                                           |
+  | `createdTime` *string*                             | 申请时间                                                 |
+  | `handledTime` *string*                             | 处理时间                                                 |
+  | `state` *string*                                   | 状态,可以是 *pending*, *accepted*, *refused*, *canceled* |
 
   
 
 ## 申请社团信息
 
-- <a id='AssociationInfo'></a> AssociationInfo
+- <a id='DepartmentInfo'></a> DepartmentInfo
 
   | 属性                | 说明       |
   | ------------------- | ---------- |

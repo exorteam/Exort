@@ -1,7 +1,9 @@
 package exort.association_member_manager.service;
 
 
-import exort.association_member_manager.dto.ResponseCode;
+import exort.api.http.entity.Application;
+import exort.api.http.entity.ApplicationDepartmentInfo;
+import exort.api.http.entity.ResponseCode;
 import exort.association_member_manager.entity.Department;
 
 import javax.servlet.http.HttpServletResponse;
@@ -10,13 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AssociationMemberManageService {
-    public ResponseCode getSpecApplication(int applyId);
+//    public ResponseCode getSpecApplication(int applyId);
+//
+//    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime, int page, int size);
 
-    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime, int page, int size);
+    public ResponseCode<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application,HttpServletResponse response);
 
-    public ResponseCode adoptApplication(int applyId);
-
-    public ResponseCode refuseApplication(int applyId);
+//    public ResponseCode refuseApplication(int applyId);
 
     public ResponseCode<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response);
 

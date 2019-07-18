@@ -1,17 +1,16 @@
 package exort.association_member_manager.controller;
 
-import exort.association_member_manager.dto.ResponseCode;
+import exort.api.http.entity.Application;
+import exort.api.http.entity.ApplicationDepartmentInfo;
+import exort.api.http.entity.ResponseCode;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Api(value = "AssociationMemberManageController", tags = {"社团成员管理接口"})
@@ -19,23 +18,11 @@ public class AssociationMemberManageController {
     @Autowired
     private AssociationMemberManageService associationMemberManageService;
 
-    @GetMapping(value = "/get-spec-appli")
-    @ApiOperation(value = "得到某个具体的申请信息")
-    public ResponseCode getSpecApplication(@RequestParam(value = "applyId") int applyId) {
-        return associationMemberManageService.getSpecApplication(applyId);
-    }
-
-    @GetMapping(value = "get-some-applis")
-    @ApiOperation(value = "查找某些申请")
-    public ResponseCode getSomeApplications(@RequestParam(value = "userId") Optional<Integer> userId, @RequestParam(value = "associationId") Optional<Integer> associationId, @RequestParam(value = "departmentId") Optional<Integer> departmentId, @RequestParam(value = "startTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Optional<Date> startTime, @RequestParam(value = "endTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Optional<Date> endTime, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "20") int size) {
-        return associationMemberManageService.getSomeApplications(userId, associationId, departmentId, startTime, endTime, page, size);
-    }
-
-    @PutMapping(value = "adopt-appli")
+    @RequestMapping(method = RequestMethod.POST,value = "/application/accept")
     @ApiOperation(value = "通过某个申请")
-    public ResponseCode adoptApplication(int applyId) {
+    public ResponseCode<Boolean> adoptApplication(@RequestParam(value = "userId") int userId, @RequestParam(value = "event") String event, @RequestParam(value = "application")Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
 
-        return associationMemberManageService.adoptApplication(applyId);
+        return associationMemberManageService.adoptApplication(userId,event,application,response);
     }
 
 
