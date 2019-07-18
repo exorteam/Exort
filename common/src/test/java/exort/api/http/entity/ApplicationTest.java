@@ -1,4 +1,4 @@
-package exort.api.http.types;
+package exort.api.http.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
