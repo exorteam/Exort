@@ -10,5 +10,6 @@ public class  AssociationInfo{
     private String description;
     private List<String> tags;
     private  String logo;
+    private AssociationInfo data;
 }
 

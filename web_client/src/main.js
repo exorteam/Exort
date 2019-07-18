@@ -13,6 +13,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 
+//axios
+// import axios from 'axios'
+// import VueAxios from 'vue-axios'
+// Vue.prototype.$axios = axios
+// 使用$axios来调用axios，例如：$axios.get()
+
+
 Vue.use(iView);
 Vue.use(BootstrapVue);
 Vue.use(router);
