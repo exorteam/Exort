@@ -1,5 +1,5 @@
 kind: pipeline
-name: exort-auth
+name: exort-association_member_manager
 
 steps:
 - name: build
@@ -15,11 +15,11 @@ steps:
     path: /etc/hosts
   commands:
   - cd ./auth
-  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
+  - mvn clean package docker:removeImage -DimageName=exort/association_member_manager docker:build -DpushImage
 
 trigger:
   branch:
-  - auth
+  - asso_mem_manage
   
 volumes:
   - name: cache

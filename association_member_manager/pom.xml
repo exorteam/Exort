@@ -11,7 +11,7 @@
 
     <groupId>Exort</groupId>
     <artifactId>association_member_manager</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.9.0</version>
     <name>association_member_manager</name>
     <description>Demo for association_member_management</description>
 
@@ -113,6 +113,33 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!--docker maven plugin-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <imageName>exort/association_member_manager</imageName>
+                    <baseImage>java</baseImage>
+                    <maintainer>Bert-Z</maintainer>
+                    <exposes>
+                        <expose>8900</expose>
+                    </exposes>
+                    <imageTags>
+                        <imageTag>0.9.0</imageTag>
+                        <!--<imageTag>latest</imageTag>-->
+                    </imageTags>
+                    <entryPoint>["java", "-jar", "/association_member_manager-0.9.0.jar"]</entryPoint>
+                    <rm>true</rm>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>target</directory>
+                            <include>association_member_manager-0.9.0.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
             </plugin>
         </plugins>
     </build>
