@@ -30,7 +30,8 @@
    |`materialTemplateIds`_int[]_| 报名材料模板 |
    |`participantIds`_int[]_| 参与者ID列表 |
    |`actualParticipantIds`_int[]_| 实际参加者ID列表 |
-   |`tags`__String[]__| 标签列表 |
+   |`tags`_String[]_| 标签列表 |
+   |`image`_String_| 活动图片 |
 
    - **AvtivityList** 活动列表
       - `pagenum` _int_  实际的页码
@@ -56,6 +57,7 @@
       |`numberOfParticipants`_int_|最大参加人数|
       |`materialTemplateIds`_int[]_|材料模板|
       |`tags`_string[]_|标签|
+      |`image`_String_| 活动图片 |
 
    - Response  
    
@@ -89,7 +91,8 @@
          "ifOnlyMem": false,
          "numberOfParticipants": 30,
          "materialTemplateIds": [3,4,5,6],
-         "tags": ["运动"]
+         "tags": ["运动"],
+         "image": "",
       }
       ```
       ```json   
@@ -127,7 +130,8 @@
                  "materialTemplateIds": [1,2,3],
                  "participantIds": [1,2,3,...],
                  "actualParticipantIds": [1,2,3,...], 
-                 "tags": ["tag1", "tag2", ...]
+                 "tags": ["tag1", "tag2", ...],
+                 "image":"",
              },
              "error":"",
              "message":""
@@ -160,6 +164,7 @@
       |`numberOfParticipants`_int_|最大参加人数|
       |`materialTemplateIds`_int[]_|材料模板|
       |`tags`_string[]_|标签|
+      |`image`_String_| 活动图片 |
 
    - Response
 
@@ -192,7 +197,8 @@
          "ifOnlyMem": false,
          "numberOfParticipants": 30,
          "materialTemplateIds": [3,4,5,6],
-         "tags": ["运动"]
+         "tags": ["运动"],
+         "image":""
       }
       ```
       ```json
@@ -230,7 +236,8 @@
                  "materialTemplateIds": [1,2,3],
                  "participantIds": [1,2,3,...],
                  "actualParticipantIds": [1,2,3,...], 
-                 "tags": ["tag1", "tag2", ...]
+                 "tags": ["tag1", "tag2", ...],
+                 "image":""
              },
              "error": "",
              "message": ""
@@ -339,7 +346,8 @@
                         "materialTemplateIds": [1,2,3],
                         "participantIds": [1,2,3,...],
                         "actualParticipantIds": [1,2,3,...], 
-                        "tags": ["tag1", "tag2", ...]
+                        "tags": ["tag1", "tag2", ...],
+                        "image":""
                     },
                     {
                         "id": 21,
@@ -370,7 +378,8 @@
                         "materialTemplateIds": [1,2,3],
                         "participantIds": [1,2,3,...],
                         "actualParticipantIds": [1,2,3,...], 
-                        "tags": ["tag1", "tag2", ...]
+                        "tags": ["tag1", "tag2", ...],
+                        "image":""
                     }
                 ]
             },
@@ -770,7 +779,8 @@
               "materialTemplateIds": [1,2,3],
               "participantIds": [1,2,3,...],
               "actualParticipantIds": [1,2,3,...], 
-              "tags": ["tag1", "tag2", ...]
+              "tags": ["tag1", "tag2", ...],
+              "image":""
           },
           "error": "",
           "massage": "",
