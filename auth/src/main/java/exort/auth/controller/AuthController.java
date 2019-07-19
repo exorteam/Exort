@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.auth.entity.AuthResponse;
-import exort.auth.entity.UserInfo;
+import exort.auth.entity.UserAccount;
 import exort.auth.service.AuthService;
 
 @RestController
@@ -15,13 +15,13 @@ public class AuthController {
 	private AuthService service;
 
 	@PostMapping("/login")
-	public String login(@RequestBody UserInfo info){
-		return service.login(info.getUsername(),info.getPassword());
+	public String login(@RequestBody UserAccount account){
+		return service.login(account.getUsername(),account.getPassword());
 	}
 
 	@PostMapping("/register")
-	public String register(@RequestBody UserInfo info){
-		int res = service.register(info.getUsername(),info.getPassword());
+	public String register(@RequestBody UserAccount account){
+		int res = service.register(account.getUsername(),account.getPassword());
 		switch(res){
 			case 0 :
 				return "Zero register error";

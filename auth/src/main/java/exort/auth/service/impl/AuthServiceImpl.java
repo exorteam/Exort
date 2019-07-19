@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import exort.auth.component.JwtKeyUtil;
 import exort.auth.entity.AuthResponse;
-import exort.auth.entity.UserInfo;
-import exort.auth.repository.UserRepository;
+import exort.auth.entity.UserAccount;
+import exort.auth.repository.AccountRepository;
 import exort.auth.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +17,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class AuthServiceImpl implements AuthService {
 	@Autowired
-	private UserRepository repository;
+	private AccountRepository accountRepository;
 	@Autowired
 	private JwtKeyUtil jwtKeyUtil;
 
@@ -25,15 +25,15 @@ public class AuthServiceImpl implements AuthService {
 		if(usr == null || pwd == null){
 			return "Username and password should not be empty";
 		}
-		if(!repository.existsByUsername(usr)){
+		if(!accountRepository.existsByUsername(usr)){
 			return "No such username";
 		}
-		if(!repository.findByUsername(usr).getPassword().equals(pwd)){
+		if(!accountRepository.findByUsername(usr).getPassword().equals(pwd)){
 			return "Wrong password";
 		}
 
 		// generate jwt
-		final UserInfo user = repository.findByUsername(usr);
+		final UserAccount user = accountRepository.findByUsername(usr);
 		String jwtToken = Jwts.builder()
 			.setSubject(user.getUsername())
 			.claim("id", user.getId())
@@ -48,19 +48,19 @@ public class AuthServiceImpl implements AuthService {
 		if(usr == null || pwd == null){
 			return -1; // Username and password should not be empty
 		}
-		if(repository.existsByUsername(usr)){
+		if(accountRepository.existsByUsername(usr)){
 			return -2; // Username exists
 		}
 
 		int id = 2;
-		while(repository.existsById(id)){
+		while(accountRepository.existsById(id)){
 			++id;
 		}
-		UserInfo info = new UserInfo();
-		info.setUsername(usr);
-		info.setPassword(pwd);
-		info.setId(id);
-		repository.save(info);
+		UserAccount account = new UserAccount();
+		account.setUsername(usr);
+		account.setPassword(pwd);
+		account.setId(id);
+		accountRepository.save(account);
 
 		return id;
 	}
