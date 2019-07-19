@@ -11,6 +11,8 @@ public interface AssociationRepository extends MongoRepository<Association,Integ
     Association findById(String AssoId);
 
     void deleteById(String AssoId);
+    boolean  existsByName(String name);
+    public boolean  existsById(String id);
 
 
 }

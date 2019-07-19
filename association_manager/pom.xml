@@ -24,6 +24,18 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+			<version>1.4.194</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -70,6 +82,10 @@
 			<groupId>com.vaadin.external.google</groupId>
 			<artifactId>android-json</artifactId>
 			<version>0.0.20131108.vaadin1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -121,15 +137,15 @@
 				   </resources>
 				 </configuration>
 		    </plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<jvmArguments>
-						 -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8088
-					</jvmArguments>
-				</configuration>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>org.springframework.boot</groupId>-->
+				<!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<jvmArguments>-->
+						 <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8088-->
+					<!--</jvmArguments>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 			<plugin>
 				<!--热部署配置-->
 				<groupId>org.springframework.boot</groupId>
