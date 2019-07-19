@@ -93,7 +93,7 @@ steps:
     path: /etc/hosts
   commands:
   - cd ./association-manager
-  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
+  - mvn clean package docker:removeImage -DimageName=exort/association-manager docker:build -DpushImage
 
 trigger:
   branch:

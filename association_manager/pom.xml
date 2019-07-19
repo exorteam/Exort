@@ -102,7 +102,7 @@
 				 <configuration>
 				   <imageName>exort/association-manager</imageName>
 				   <baseImage>java</baseImage>
-				   <maintainer>MrHate</maintainer>
+				   <maintainer>CJY</maintainer>
 				   <exposes>
 					   <expose>8080</expose>
 				   </exposes>
