@@ -5,10 +5,10 @@
                 <Input v-model="form.title"/>
             </FormItem>
             <FormItem label="报名时间">
-                <DatePicker type="daterange" v-model="form.signupTime" placeholder="yyyy-mm-dd"></DatePicker>            
-                <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
+                <DatePicker type="daterange" v-model="signupDate" placeholder="yyyy-mm-dd"></DatePicker>            
+                <TimePicker format="HH:mm" v-model="signupTime" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
             </FormItem>
-            <FormItem label="选择活动时间类型:">
+            <!-- <FormItem label="选择活动时间类型:">
                 <Select v-model="form.timeType" style="width:200px">
                     <Option v-for="item in timeTypeList" :value="item.value" :key="item.value">{{ item.text }}</Option>
                 </Select>
@@ -18,15 +18,15 @@
                     <DatePicker v-model="form.time" type="daterange" placeholder="yyyy-mm-dd"></DatePicker>
                     <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
                 </div>
-            </FormItem>
+            </FormItem> -->
             <FormItem label="报名是否需要审核:">
-                <Checkbox v-model="form.checked1"/>
+                <Checkbox v-model="form.ifReview"/>
             </FormItem>
             <FormItem label="是否仅社团或组织成员可以参加:">
-                <Checkbox v-model="form.checked2"/>
+                <Checkbox v-model="form.ifOnlyMem"/>
             </FormItem>
             <FormItem label="最大人数">
-                <Input v-model="form.numberOfPeople"/>
+                <Input v-model="form.maxParticipants"/>
             </FormItem>
             <FormItem label="上传活动宣传图">
                 <Upload multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
@@ -37,16 +37,17 @@
                 </Upload>
             </FormItem>
             <FormItem label="活动简介">
-                <Input v-model="form.description"/>
+                <Input v-model="form.content"/>
             </FormItem>
-            <FormItem label="报名材料">
+            <!-- <FormItem label="报名材料">
                 <Input v-model="form.materials"/>
-            </FormItem>
+            </FormItem> -->
         </Form>
     </Modal>
 </template>
 
 <script>
+import Axios from 'axios';
 let timeTypeLists=[
     {
         value: 0,
@@ -68,19 +69,61 @@ let timeTypeLists=[
 
 export default {
     props: {
-        form: Object
+            form: Object
     },
     data(){
-        return {
-            timeTypeList: timeTypeLists
-        }
+            return {
+                    signupTime:'',
+                    signupDate:'',
+                    timeTypeList: timeTypeLists
+            }
     },
     methods: {
         info_ok(){
-            this.form.onshow = false
+                this.form.onshow = false
+                if(this.signupTime[0]!=""){
+                    let a = this.signupTime[0].split(':')
+                    let b = this.signupTime[1].split(':')
+                    console.log(a,b)
+                    this.signupDate[0].setHours(parseInt(a[0]), parseInt(a[1]), 0, 0)
+                    this.signupDate[1].setHours(parseInt(b[0]), parseInt(b[1]), 0, 0)
+                    console.log(this.signupDate)
+                }
+                let data={
+                    title: this.form.title,
+                    content: this.form.content,
+                    signupTime: {
+                        type: 0,
+                        time:[{
+                            start: this.signupDate[0],
+                            end: this.signupDate[1],
+                        }]
+                    },
+                    time: {
+                        type: 0, 
+                        time:[{
+                            start: "",
+                            end: "",
+                        }]
+                    },
+                    ifReview: this.form.ifReview,
+                    ifOnlyMem: this.form.ifOnlyMem,
+                    maxParticipants: this.form.maxParticipants,
+                    materials: this.form.materials,
+                    tags: this.form.tags
+                }
+                Axios
+                    .post('http://localhost:8080/activities', data)
+                    .then(response => {
+                        console.log(response.data.data)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                console.log(data)
         },
         info_cancel(){
-            this.form.onshow = false
+                this.form.onshow = false
         }
     },
 }
