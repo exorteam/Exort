@@ -22,6 +22,8 @@ public class ActivityServiceImplTest {
     @Autowired
     private ActivityService as;
 
+    String globalid;
+
     @Test
     public void upsertActivity() {
         List<Integer> associationIds = new ArrayList<>();
@@ -49,9 +51,24 @@ public class ActivityServiceImplTest {
         Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully", 1, 2, 0,
                 true, false, 10, materialTemplateIds, participantIds, realParticipantIds, tags, "");
 
+        globalid = activity.getId();
+
         Response response = as.upsertActivity(activity);
         System.out.println(response.getData());
         assertEquals(Activity.class, response.getData().getClass());
+
+    }
+
+    @Test
+    public void changeActivityState() {
+        upsertActivity();
+
+        String type1 = "publish";
+        String type2 = "withdraw";
+        Response response = as.changeActivityState(globalid, type2);
+        assertEquals(response.getError(), "");
+        Response response1 = as.changeActivityState(globalid, type1);
+        assertEquals(response1.getError(), "");
     }
 
     @Test
@@ -73,50 +90,44 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void changeActivityState() {
-        String id = "5d312f49a5fabe2b278b82be";
-        String type1 = "publish";
-        String type2 = "withdraw";
-        Response response = as.changeActivityState(id, type2);
-        assertEquals(response.getError(), "");
-        Response response1 = as.changeActivityState(id, type1);
-        assertEquals(response1.getError(), "");
-    }
-
-    @Test
     public void addUserIds() {
-        String activityid = "5d312f49a5fabe2b278b82be";
+        upsertActivity();
+
         List<Integer> userIds = new ArrayList<>();
         userIds.add(35);
         userIds.add(42);
-        Response response1 = as.addUserIds(activityid, userIds, 1);
-        Response response2 = as.addUserIds(activityid, userIds, 2);
+        Response response1 = as.addUserIds(globalid, userIds, 1);
+        Response response2 = as.addUserIds(globalid, userIds, 2);
         assertEquals("", response1.getError());
         assertEquals("", response2.getError());
     }
 
     @Test
     public void removeParticipants() {
-        String activityid = "5d312f49a5fabe2b278b82be";
+        upsertActivity();
+
         List<Integer> userIds = new ArrayList<>();
         userIds.add(35);
-        Response response = as.removeParticipants(activityid, userIds);
+        Response response = as.removeParticipants(globalid, userIds);
         assertEquals("", response.getError());
     }
 
     @Test
     public void getActivityUserIds() {
-        String activityid = "5d312f49a5fabe2b278b82be";
-        Response response1 = as.getActivityUserIds(9, 0, activityid, 0, 1);
-        Response response2 = as.getActivityUserIds(0, 0, activityid, 32, 1);
+        upsertActivity();
+
+        Response response1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
+        Response response2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
         assertEquals("", response1.getError());
         assertEquals(new HashMap(), response2.getData());
     }
 
     @Test
     public void getActivity() {
-        String id = "5d312f49a5fabe2b278b82be";
-        Response response = as.getActivity(id);
+        upsertActivity();
+
+        Response response = as.getActivity(globalid);
         assertEquals("", response.getError());
     }
+
 }
