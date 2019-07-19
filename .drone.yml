@@ -97,7 +97,7 @@ steps:
 
 trigger:
   branch:
-  - acivity_dev
+  - activity_dev
 
 volumes:
   - name: cache
