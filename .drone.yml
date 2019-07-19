@@ -80,7 +80,7 @@ kind: pipeline
 name: exort-association-manager
 
 steps:
-- name: mvndeploy
+- name: build
   image: thomasf/drone-mvn
   volumes:
   - name: cache
