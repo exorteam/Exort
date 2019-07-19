@@ -28,7 +28,7 @@
         </div>
 
         <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
-            <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:300px" >
+            <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px" >
             <p slot="title">
                 <Icon type="ios-film-outline"></Icon>
                 {{item.name}}（{{StateList(item.state)}}）
@@ -42,19 +42,25 @@
             <div style="text-align: center;height:100px">
                 <img :src="item.logo" style="width:80px;height:80px;"/>
             </div>
-            <p>{{ item.description }}</p>
-            <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
-                <li>
-                    <p>{{ tag }}</p>
-                </li>
-            </ul>
+            <div style= "min-height: 100%;">
+                <p>{{ item.description }}</p>
+                <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
+                    <li>
+                        <p>{{ tag }}</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div style="position:absolute;bottom:10px;">
+                <Button type="info" v-on:click="showEditForm(item)">编辑</Button>
+                <Button style= " position:relative ;left:200px;" type="warning" v-on:click="deleteAssociation(item)">删除</Button>
+            </div>
             </Card>
         </div>
         <div style="margin-top:15px;text-align: center">
-        <Page id = "page" show-sizer show-elevator show-total
+        <Page id = "page" show-elevator show-total
         :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
         :current.sync = "pageProp.pageNum" ></Page>
-        <Button @click="showSize">showSize</Button>
         </div>
         </div>
         </Tab-pane>
@@ -120,11 +126,12 @@ import TagChoose from '../activity/tag_choose.vue'
 export default {
 
     name:'associationList',
-
     components:{CreateAssociation,TagChoose},
     data () {
         return {
             tagrepo : ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座","zxc","asd"],
+
+
             form:{
                 assoId:"",
                 onshow: false,
@@ -136,14 +143,17 @@ export default {
                 },
                 logo:"",
                 needMaterial:false,
+                assoState:null,
+                showState:false,
                 materials: "",
                 type:""
             },
+
+
             pageProp:{
-                pageSizeOpt:[6,9,12],
                 totalSize : 50,
                 pageSize : 6,
-                pageNum : 4
+                pageNum : 1
             },
             tag:{
                 tag_show: false,
@@ -311,67 +321,7 @@ export default {
                 { text: '已拒绝申请', value: 'refused' },
             ],
             inputDefaultValue : "",
-            AssoList: [
-                {
-                    name: 'Team Liquid',
-                    description: "欧洲老牌战队，成立于2012年12月。在2016年在2016 Shanghai Major和2016ESL ONE这两项赛事中都取得了亚军。紧接着队伍人员进行调整，引进了Miracle-等数名天梯9000高分选手。在 2017 年成為 TI 冠軍。",
-                    logo: Solid,
-                    state:0,
-                    tags:[
-                      "Dota2",
-                      "Ti冠军"
-                    ]
-                },
-                {
-                  name: "Team Solid",
-                  description: "B神、龙神、跳刀、二冰他们和yyf一起组建的Ti9海选战队。",
-                  logo: Solid,
-                  state:1,
-                  tags:[
-                    "Dota2",
-                    "2届Ti冠军("
-                  ]
-                },
-                              {
-                  name: "Team Solid",
-                  description: "B神、龙神、跳刀、二冰他们和yyf一起组建的Ti9海选战队。",
-                  logo: Solid,
-                  state:2,
-                  tags:[
-                    "Dota2",
-                    "2届Ti冠军("
-                  ]
-                },
-                              {
-                  name: "Team Solid",
-                  description: "B神、龙神、跳刀、二冰他们和yyf一起组建的Ti9海选战队。",
-                  logo: Solid,
-                  state:3,
-                  tags:[
-                    "Dota2",
-                    "2届Ti冠军("
-                  ]
-                },
-                {
-                  name: 'Team Gas',
-                  description: "气体战队成员为：一号位：ZSMJ 二号位：水瓶座（之前担任固体战队的工具人中单） 三号位：Axx 四号位：Ch 五号位：狗哥SanSheng",
-                  logo: Solid,
-                  state:4,
-                  tags:[
-                    "Dota2"
-                  ]
-                },
-                {
-                  name: 'Exort',
-                  description: "使用微服务架构独立开发的在线社团管理与社交工具",
-                  logo: Solid,
-                  state:4,
-                  tags:[
-                    "社团管理",
-                    "实用"
-                  ]
-                }
-            ],
+            AssoList: [],
             assoSearch:{
                 keyword:"",
                 tags:"asd",
@@ -383,22 +333,45 @@ export default {
         }
     },
     methods: {
-        showSize(){
-            console.log(this.pageProp.pageSize)
-        },
+        // showSize(){
+        //     console.log(this.pageProp.pageSize)
+        // },
         showCreateForm(){
-            this.type = "create"
+            this.form.type = "create"
             this.form.onshow=true
         },
         showEditForm(item){
             // console.log(item)
+            this.form.assoState = item.state
+            this.form.showState = true
             this.form.assoId=item.id
             this.form.name=item.name
             this.form.description=item.description
             this.form.tag.tagList=item.tags
-            this.type = "edit"
+            this.form.type = "edit"
             this.form.onshow=true
         },
+        deleteAssociation(item){
+            // console.log(item)
+            // this.form.assoId=item.id
+
+            axios
+            .delete('associations/'+item.id
+            )
+            .then(response => {
+                console.log(this.tags)
+                // this.AssoList = response.data.data.content
+                // this.pageProp.totalSize = response.data.data.totalSize
+                this.$Message.info('删除成功');
+
+                this.getAssociationList();
+                // this.$router.go(0)
+            })
+            .catch(e => {
+                console.log(e)
+            });
+        },
+
         ok () {
             this.$Message.info('点击了确定');
         },
@@ -421,25 +394,15 @@ export default {
             // console.log("I'm here")
             if(this.assoStateSelected.length==2) {
                 this.assoSearch.state = 2
-                console.log(this.assoSearch.state)
-                console.log(this.assoStateSelected)
-
             }
             else if (this.assoStateSelected[0] == "active"){
                 this.assoSearch.state = 1
-                console.log(this.assoSearch.state)
-                console.log(this.assoStateSelected)
             }
             else if (this.assoStateSelected[0]=="blocked"){
                 this.assoSearch.state = 0
-                console.log(this.assoSearch.state)
-                 console.log(this.assoStateSelected)
-
             }
             else{
                 this.assoSearch.state = -1
-                console.log(this.assoSearch.state)
-                 console.log(this.assoStateSelected)
             }
         },
 
@@ -457,14 +420,14 @@ export default {
                     pageNum:this.assoSearch.pageNum,
                     pageSize:this.assoSearch.pageSize,
                     keyword:this.assoSearch.keyword,
-                    tags:this.assoSearch.tags,
+                    tags:this.tag.tagList.join(),
                     state:this.assoSearch.state
                 }
             })
             .then(response => {
                 // console.log(this.tags)
                 this.AssoList = response.data.data.content
-                this.pageProp.totalSize = response.data.data.content.length
+                this.pageProp.totalSize = response.data.data.totalSize
             })
             .catch(e => {
                 console.log(e)
@@ -477,13 +440,14 @@ export default {
                 params: {
                     pageNum:0,
                     pageSize:6,
-                    keyword:"qw",
+                    keyword:"",
                     tags:"",
                     state:2
                 }
             })
             .then(response => {
                 this.AssoList = response.data.data.content
+                this.pageProp.totalSize = response.data.data.totalSize
             })
             .catch(e => {
                 console.log(e)

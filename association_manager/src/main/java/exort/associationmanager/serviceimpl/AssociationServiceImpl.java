@@ -62,14 +62,17 @@ public class AssociationServiceImpl implements AssociationService{
         }
 
         List<String> tags = params.getTags();
-        if(tags != null){
-            for (Integer i = 0; i < associations.size(); i++) {
-                if(!associations.get(i).hasTags(tags)){
-                    associations.remove(i);
+        if(!((tags.size()==0) || (tags.size()==1&&tags.get(0)==""))) {
+            int size = associations.size();
+            if (tags != null) {
+                for (int i = size - 1; i >= 0; i--) {
+                    if (!associations.get(i).hasTags(tags)) {
+                        associations.remove(i);
+                    }
                 }
-            }
-            if(associations.isEmpty()){
-                return responseBody.setAndGetResponsebody(associations,"","");
+                if (associations.isEmpty()) {
+                    return responseBody.setAndGetResponsebody(associations, "", "");
+                }
             }
         }
 

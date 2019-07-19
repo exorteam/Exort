@@ -19,15 +19,17 @@
                 </div>
             </FormItem>
             <FormItem label="社团Logo">
-                <Upload multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
-                    <div style="padding: 20px 0">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>点击或将社团Logo拖拽到这里上传</p>
-                    </div>
-                </Upload>
+                <b-form-file v-model="file" ref="file-input" class="mb-2"></b-form-file>
+
+                <b-button @click="clearFiles" class="mr-2">Reset via method</b-button>
+
+                <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
             </FormItem>
             <FormItem label="报名材料" v-if="form.needMaterial">
-                <Input v-model="form.materials"/>
+                <Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
+            </FormItem>
+            <FormItem label="社团状态" v-if="form.showState">
+                <Input placeholder="请输入新的状态" v-model="form.assoState"/>
             </FormItem>
         </Form>
     </Modal>
@@ -43,49 +45,88 @@ export default {
     },
     data(){
         return {
+            file: null
         }
     },
-    methods: {
-        info_ok(){
-            this.form.onshow = false
-            if(this.form.type="create"){
+    computed: {
 
-                axios
-                .post('associations',{
-                    data:{
-                        name:this.form.name,
-                        description:this.form.description,
-                        tags:this.form.tag.tagList,
-                        logo:this.form.logo
-                    }
-                })
-                .then(response => {
-                    console.log(response.data)
-                    // this.AssoList = response.data.data.content
-                })
-                .catch(e => {
-                    console.log(e)
-                })
-                this.$Message.info('创建成功');
+    },
+    methods: {
+        clearFiles() {
+            this.$refs['file-input'].reset();
+        },
+    //    const _self = this;
+    //    var files = e.target.files[0];
+    //    if (!e || !window.FileReader) return; // 看支持不支持FileReader
+    //    let reader = new FileReader();
+    //    reader.readAsDataURL(files); // 这里是最关键的一步，转换就在这里
+    //    reader.onloadend = function() {
+    //       //  这个时候_self.avatar中存的就是编码过后的图片了
+    //      _self.avatar = this.result;
+    //    };
+        info_ok(){
+            // this.form.onshow = false
+            const _self = this;
+            console.log(_self.form.type);
+
+            if(_self.form.type=="create"){
+                var imgFile;
+                let reader = new FileReader();
+                reader.readAsDataURL(this.file);
+
+                reader.onload=function(e) {        //读取完毕后调用接口
+                    console.log(_self.form.name);
+                    imgFile = e.target.result;
+                    console.log(imgFile);
+                    axios
+                    .post('associations',{
+                        data:{
+                            name:_self.form.name,
+                            description:_self.form.description,
+                            tags:_self.form.tag.tagList,
+                            logo:imgFile
+                        }
+                    })
+                    .then(response => {
+                        console.log(response.data)
+                        // this.AssoList = response.data.data.content
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                };
+
+                _self.form.onshow = false
+                _self.$Message.info('创建成功');
+                _self.$router.go(0);
+
             }
             else{
-                axios
-                .put('associations/${this.form.assoId}',{
-                    data: {
-                        name:this.form.name,
-                        description:this.form.description,
-                        tags:this.form.tag.tagList,
-                        logo:this.form.logo
-                    }
-                })
-                .then(response => {
-                    console.log(response.data)
-                    // this.AssoList = response.data.data.content
-                })
-                .catch(e => {
-                    console.log(e)
-                })
-                this.$Message.info('修改成功');
+                var imgFile;
+                let reader = new FileReader();
+                reader.readAsDataURL(this.file);
+                reader.onload=function(e) {
+                    imgFile = e.target.result;
+                    axios
+                    .put('associations/'+_self.form.assoId,{
+                        data: {
+                            name:_self.form.name,
+                            description:_self.form.description,
+                            tags:_self.form.tag.tagList,
+                            logo:imgFile
+                        }
+                    })
+                    .then(response => {
+                        console.log(response.data)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+
+                }
+                _self.form.onshow = false
+                _self.$Message.info('修改成功');
+                this.$parent.getAssociationList();
             }
         },
         info_cancel(){
