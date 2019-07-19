@@ -98,3 +98,17 @@ steps:
 trigger:
   branch:
   - association_dev
+
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts

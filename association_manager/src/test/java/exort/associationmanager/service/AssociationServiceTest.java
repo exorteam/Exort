@@ -5,10 +5,6 @@ import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.ResponseBody;
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
