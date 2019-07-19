@@ -92,7 +92,7 @@ steps:
   - name: server-hosts
     path: /etc/hosts
   commands:
-  - cd ./association-manager
+  - cd ./association_manager
   - mvn clean package docker:removeImage -DimageName=exort/association-manager docker:build -DpushImage
 
 trigger:
