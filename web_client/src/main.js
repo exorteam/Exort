@@ -15,17 +15,19 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 
-//axios
-// import axios from 'axios'
-// import VueAxios from 'vue-axios'
-// Vue.prototype.$axios = axios
-// 使用$axios来调用axios，例如：$axios.get()
+//引入qs
+import qs from 'qs'
 
+// 引入axios
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 Vue.use(iView);
 Vue.use(BootstrapVue);
 Vue.use(router);
 Vue.use(Vuex);
+Vue.use(VueAxios, axios)
+Vue.prototype.$qs = qs;
 
 // The routing configuration
 const RouterConfig = {
@@ -33,7 +35,7 @@ const RouterConfig = {
 };
 Vue.config.productionTip = false;
 
-store.dispatch('setStatus')
+store.dispatch('setStatus');
 
 new Vue({
   el: '#app',
