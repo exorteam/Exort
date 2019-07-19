@@ -1,15 +1,9 @@
 package exort.associationmanager;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
-import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
-import exort.associationmanager.entity.AssociationList;
-import exort.associationmanager.entity.ResponseBody;
+import exort.associationmanager.entity.*;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 import org.junit.Assert;
@@ -31,6 +25,7 @@ public class AssociationManagerApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
+
 	@Test
 	public void testCreateAssociation(){
 		Association association = new Association();
@@ -46,15 +41,6 @@ public class AssociationManagerApplicationTests {
 
 	@Test
 	public void testGetAssociation(){
-		Association association = new Association();
-		ResponseBody responseBody = service.getAssociation("5d3133846372d60e482d12c2");
-		association = (Association) responseBody.getData();
-		Assert.assertEquals(association.getName(),"qqwrv");
-
-	}
-
-	@Test
-	public void testListAssociation(){
 		AssociationList associations =new AssociationList();
 		AssociationFilterParams params = new AssociationFilterParams();
 		params.setState(1);
@@ -62,22 +48,101 @@ public class AssociationManagerApplicationTests {
 		params.setKeyword("qqwrv");
 		ResponseBody responseBody = service.listAssociations(params,0,6);
 		associations = (AssociationList) responseBody.getData();
-		Assert.assertEquals(associations.getContent().size(),5);
-		Assert.assertEquals(associations.getTotalSize(),(Integer) 5);
+		String assoId=associations.getContent().get(0).getId();
+		Association association = new Association();
+		responseBody = service.getAssociation(assoId);
+		association = (Association) responseBody.getData();
+		Assert.assertEquals(association.getName(),"qqwrv");
+
+	}
+
+	@Test
+	public void testListAssociation(){
+		Association new_association = new Association();
+		new_association.setName("qqwrv"+"444");
+		new_association.setDescription(UUID.randomUUID().toString());
+		new_association.setLogo(UUID.randomUUID().toString());
+		new_association.setTags( Arrays.asList("a","f"));
+		for (int i = 0; i <10 ; i++) {
+			service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
+		}
+
+
+
+		AssociationList associations =new AssociationList();
+		AssociationFilterParams params = new AssociationFilterParams();
+		params.setState(1);
+		params.setTags(Arrays.asList("a","g"));
+		params.setKeyword("qqwrv"+"444");
+		ResponseBody responseBody = service.listAssociations(params,0,6);
+		associations = (AssociationList) responseBody.getData();
+		Assert.assertEquals(associations.getContent().size(),6);
+		Assert.assertEquals(associations.getTotalSize(),(Integer) 10);
 		Assert.assertEquals(associations.getPageNumber(),(Integer) 0);
 		Assert.assertEquals(associations.getPageSize(),(Integer) 6);
-
-
 	}
+
 	@Test
 	public void testDeleteAssociation(){
-		ResponseBody responseBody = service.deleteAssociation("5d3133846372d60e482d12c2");
-		Assert.assertEquals(responseBody.getError(),"");
-		Assert.assertEquals(responseBody.getMessage(),"");
+		AssociationList associations =new AssociationList();
+		AssociationFilterParams params = new AssociationFilterParams();
+		params.setState(1);
+		params.setTags(Arrays.asList("a","g"));
+		params.setKeyword("qqwrv"+"444");
+		ResponseBody responseBody = service.listAssociations(params,0,10);
+		associations = (AssociationList) responseBody.getData();
 
-//		Assert.assertEquals(repository.findById("5d3133846372d60e482d12c2"),null);
+		for (int i = 0; i <10 ; i++) {
+			String assoId=associations.getContent().get(i).getId();
+			responseBody = service.deleteAssociation(assoId);
 
+			Assert.assertEquals(responseBody.getError(),"");
+			Assert.assertEquals(responseBody.getMessage(),"");
+			Assert.assertEquals(repository.findById(assoId),null);
+		}
 
 	}
+
+	@Test
+	public void testEditAssociation(){
+		ResponseBody responseBody = service.editAssociation("5d3134216372d61d78c1030f","eewrd","混沌陨石",Arrays.asList("e","w"),"None");
+		Association association = (Association) responseBody.getData();
+		Assert.assertEquals(responseBody.getError(),"");
+		Assert.assertEquals(responseBody.getMessage(),"");
+		Assert.assertEquals(association.getName(),"eewrd");
+		Assert.assertEquals(association.getDescription(),"混沌陨石");
+	}
+
+	@Test
+	public void testPatchAssociation(){
+		ResponseBody responseBody = service.patchAssociation("5d3134216372d61d78c1030f","block","!*+");
+		Assert.assertEquals(responseBody.getError(),"");
+		Assert.assertEquals(responseBody.getMessage(),"");
+		Association association = (Association) service.getAssociation("5d3134216372d61d78c1030f").getData();
+		Assert.assertEquals(association.getState(),(Integer)0);
+	}
+
+	@Test
+	public void testHandleAssociation(){
+		MyObject myObject = new MyObject();
+		myObject.setDescription(UUID.randomUUID().toString());
+		myObject.setLogo(UUID.randomUUID().toString());
+		myObject.setName("qqwrv");
+		myObject.setTags(Arrays.asList("a","f"));
+
+		Application application= new Application();
+		application.setApplicantId("111");
+		application.setCreatedTime("111");
+		application.setHandledTime("1wq");
+		application.setId("qwewq");
+		application.setMaterialIds(Arrays.asList("aqwe","qwef"));
+		application.setState("pending");
+		application.setObject(myObject);
+		application.setType("createAssociation");
+
+		ResponseBody responseBody = service.handleAsoociationApplication("5d3134216372d61d78c1030f","accept",application);
+
+	}
+
 
 }

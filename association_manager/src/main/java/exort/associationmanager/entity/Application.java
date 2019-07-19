@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Application<T> {
@@ -14,7 +15,7 @@ public class Application<T> {
     String applicantId;
     String type;
     MyObject object;
-    String materialIds[];
+    List<String> materialIds;
     String createdTime;
     String handledTime;
     String state;//0 unhandled,1 accept,2 refused,3 canceled
