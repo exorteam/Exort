@@ -77,7 +77,7 @@ volumes:
 ---
 
 kind: pipeline
-name: exort-acivity-manager
+name: exort-activity-manager
 
 steps:
 - name: build
@@ -92,8 +92,8 @@ steps:
   - name: server-hosts
     path: /etc/hosts
   commands:
-  - cd ./acivity_manager
-  - mvn clean package docker:removeImage -DimageName=exort/acivity_manager docker:build -DpushImage
+  - cd ./activity_manager
+  - mvn clean package docker:removeImage -DimageName=exort/activity_manager docker:build -DpushImage
 
 trigger:
   branch:
