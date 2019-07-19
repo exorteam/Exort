@@ -96,11 +96,23 @@ public class AssociationManagerApplicationTests {
 
 	@Test
 	public void testDeleteAssociation(){
+
+        Association new_association = new Association();
+        new_association.setName("qqwrv"+"delete");
+        new_association.setDescription(UUID.randomUUID().toString());
+        new_association.setLogo(UUID.randomUUID().toString());
+        new_association.setTags( Arrays.asList("a","f"));
+        for (int i = 0; i <10 ; i++) {
+            service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
+        }
+
+
+
 		AssociationList associations =new AssociationList();
 		AssociationFilterParams params = new AssociationFilterParams();
 		params.setState(1);
 		params.setTags(Arrays.asList("a","g"));
-		params.setKeyword("qqwrv"+"444");
+		params.setKeyword("qqwrv"+"delete");
 		ResponseBody responseBody = service.listAssociations(params,0,9);
 		associations = (AssociationList) responseBody.getData();
 
