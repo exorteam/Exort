@@ -29,7 +29,7 @@ public class AssociationManagerApplicationTests {
 	@Test
 	public void testCreateAssociation(){
 		Association association = new Association();
-		association.setName("qqwrv");
+		association.setName("qqwrv"+"create");
 		association.setDescription(UUID.randomUUID().toString());
 		association.setLogo(UUID.randomUUID().toString());
 		association.setTags( Arrays.asList("a","f"));
@@ -41,15 +41,23 @@ public class AssociationManagerApplicationTests {
 
 	@Test
 	public void testGetAssociation(){
+		Association association = new Association();
+		association.setName("qqwrv"+"get");
+		association.setDescription(UUID.randomUUID().toString());
+		association.setLogo(UUID.randomUUID().toString());
+		association.setTags( Arrays.asList("a","f"));
+		ResponseBody responseBody = new ResponseBody();
+		service.createAssociation(association.getName(),association.getDescription(),association.getTags(),association.getLogo());
+
 		AssociationList associations =new AssociationList();
 		AssociationFilterParams params = new AssociationFilterParams();
 		params.setState(1);
 		params.setTags(Arrays.asList("a","g"));
-		params.setKeyword("qqwrv");
-		ResponseBody responseBody = service.listAssociations(params,0,6);
+		params.setKeyword("qqwrv"+"get");
+		responseBody = service.listAssociations(params,0,6);
 		associations = (AssociationList) responseBody.getData();
 		String assoId=associations.getContent().get(0).getId();
-		Association association = new Association();
+//		association = new Association();
 		responseBody = service.getAssociation(assoId);
 		association = (Association) responseBody.getData();
 		Assert.assertEquals(association.getName(),"qqwrv");
@@ -89,10 +97,10 @@ public class AssociationManagerApplicationTests {
 		params.setState(1);
 		params.setTags(Arrays.asList("a","g"));
 		params.setKeyword("qqwrv"+"444");
-		ResponseBody responseBody = service.listAssociations(params,0,10);
+		ResponseBody responseBody = service.listAssociations(params,0,9);
 		associations = (AssociationList) responseBody.getData();
 
-		for (int i = 0; i <10 ; i++) {
+		for (int i = 0; i <9 ; i++) {
 			String assoId=associations.getContent().get(i).getId();
 			responseBody = service.deleteAssociation(assoId);
 
@@ -105,7 +113,16 @@ public class AssociationManagerApplicationTests {
 
 	@Test
 	public void testEditAssociation(){
-		ResponseBody responseBody = service.editAssociation("5d3134216372d61d78c1030f","eewrd","混沌陨石",Arrays.asList("e","w"),"None");
+		AssociationList associations =new AssociationList();
+		AssociationFilterParams params = new AssociationFilterParams();
+		params.setState(1);
+		params.setTags(Arrays.asList("a","g"));
+		params.setKeyword("qqwrv");
+		ResponseBody responseBody = service.listAssociations(params,0,6);
+		associations = (AssociationList) responseBody.getData();
+		String assoId=associations.getContent().get(0).getId();
+
+		responseBody = service.editAssociation(assoId,"eewrd","混沌陨石",Arrays.asList("e","w"),"None");
 		Association association = (Association) responseBody.getData();
 		Assert.assertEquals(responseBody.getError(),"");
 		Assert.assertEquals(responseBody.getMessage(),"");
@@ -115,10 +132,19 @@ public class AssociationManagerApplicationTests {
 
 	@Test
 	public void testPatchAssociation(){
-		ResponseBody responseBody = service.patchAssociation("5d3134216372d61d78c1030f","block","!*+");
+		AssociationList associations =new AssociationList();
+		AssociationFilterParams params = new AssociationFilterParams();
+		params.setState(1);
+		params.setTags(Arrays.asList("a","g"));
+		params.setKeyword("qqwrv");
+		ResponseBody responseBody = service.listAssociations(params,0,6);
+		associations = (AssociationList) responseBody.getData();
+		String assoId=associations.getContent().get(0).getId();
+
+		responseBody = service.patchAssociation(assoId,"block","!*+");
 		Assert.assertEquals(responseBody.getError(),"");
 		Assert.assertEquals(responseBody.getMessage(),"");
-		Association association = (Association) service.getAssociation("5d3134216372d61d78c1030f").getData();
+		Association association = (Association) service.getAssociation(assoId).getData();
 		Assert.assertEquals(association.getState(),(Integer)0);
 	}
 
