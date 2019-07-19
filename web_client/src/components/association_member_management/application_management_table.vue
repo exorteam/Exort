@@ -86,6 +86,29 @@
       }
     },
     methods: {
+      getApplicationInfos(){
+        this.axios.get().then((res)=>{
+            this.rows=res.data;
+        })
+      },
+      deleteAppli(index){
+
+        this.rows[index].id;
+        let deletedata={};
+
+        this.axios({
+          method:'post',
+          url:'',
+          data:deletedata,
+        }).then((res)=>{
+
+        }).catch((error)=>{
+
+        });
+
+
+      },
+
       handleSelectAll (status) {
         this.$refs.selection.selectAll(status);
       },
@@ -93,10 +116,23 @@
         this.$Modal.info({
           title: 'User Info',
           content: `Name：${this.rows[index].name}<br>Age：${this.rows[index].age}<br>Address：${this.rows[index].address}`
-        })
+        });
+        this.$Modal.confirm({
+          title: 'Title',
+          content: `Name：${this.rows[index].name}<br>Age：${this.rows[index].age}<br>Address：${this.rows[index].address}`,
+          okText: 'Accept',
+          cancelText: 'Cancel',
+          onOk: () => {
+            this.$Message.info('Accept');
+          },
+          onCancel: () => {
+            this.$Message.info('Clicked cancel');
+          }
+        });
       },
       remove (index) {
         this.rows.splice(index, 1);
+        // this.deleteAppli(index);
       }
     },
     computed: {

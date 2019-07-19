@@ -7,12 +7,18 @@
       </router-link>
     </MenuItem>
     <MenuItem name="1-2">
+      <router-link :to="{name:'AppliManagement'}">
+        <Icon type="ios-navigate"></Icon>
+        <span>成员申请管理</span>
+      </router-link>
+    </MenuItem>
+    <MenuItem name="1-3">
       <router-link :to="{name:'activity'}">
         <Icon type="ios-navigate"></Icon>
         <span>活动管理</span>
       </router-link>
     </MenuItem>
-    <MenuItem name="1-3">
+    <MenuItem name="1-4">
       <!--<router-link :to="{name:''}">-->
         <Icon type="ios-navigate"></Icon>
         <span>文章管理</span>
