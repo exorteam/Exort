@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ActivityDao {
 
-    Response update(Activity activity);
+    Activity update(Activity activity);
 
     Activity getActivity(String id);
 

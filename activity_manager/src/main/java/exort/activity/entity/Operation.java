@@ -111,10 +111,6 @@ public class Operation {
         public class Signup{
             private String activityId;
 
-//            public Signup(String activityid){
-//                this.activityId = activityid;
-//            }
-
             public String getActivityId() {
                 return activityId;
             }

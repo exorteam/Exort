@@ -17,7 +17,12 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Response upsertActivity(Activity activity){
-        return ad.update(activity);
+        Activity newActivity=  ad.update(activity);
+        if(newActivity==null){
+            return new Response<>(null, "invalid error", "invalid message");
+        }else{
+            return new Response<>(newActivity, "", "");
+        }
     }
 
     @Override
@@ -46,10 +51,10 @@ public class ActivityServiceImpl implements ActivityService {
                 ad.update(activity);
                 return new Response<>(new HashMap(), "", "");
             }
-            return new Response<>(null, "invalid error1","invalid message");
+            return new Response<>(null, "invalid error","invalid message");
         }catch(Exception e){
             e.printStackTrace();
-            return new Response<>(null, "invalid error2","invalid message");
+            return new Response<>(null, "invalid error","invalid message");
         }
     }
 
@@ -60,14 +65,22 @@ public class ActivityServiceImpl implements ActivityService {
             if(activity!=null){
                 if(type==1){
                     List<Integer> oldp = activity.getParticipantIds();
-                    List<Integer> temp = new ArrayList<>(oldp);
-                    temp.retainAll(userIds);
-                    oldp.removeAll(temp);
-                    oldp.addAll(userIds);
+                    if(oldp!=null){
+                        List<Integer> temp = new ArrayList<>(oldp);
+                        temp.retainAll(userIds);
+                        oldp.removeAll(temp);
+                        oldp.addAll(userIds);
+                    }else{
+                        oldp = userIds;
+                    }
                     activity.setParticipantIds(oldp);
                 } else{
                     List<Integer> oldp = activity.getRealParticipantIds();
-                    oldp.addAll(userIds);
+                    if(oldp!=null){
+                        oldp.addAll(userIds);
+                    }else{
+                        oldp = userIds;
+                    }
                     activity.setRealParticipantIds(oldp);
                 }
                 ad.update(activity);
@@ -86,10 +99,14 @@ public class ActivityServiceImpl implements ActivityService {
             Activity activity = ad.getActivity(activityid);
             if(activity != null){
                 List<Integer> oldp = activity.getParticipantIds();
-                oldp.removeAll(participantIds);
-                activity.setParticipantIds(oldp);
-                ad.update(activity);
-                return new Response<>(new HashMap(), "","");
+                if(oldp!=null){
+                    oldp.removeAll(participantIds);
+                    activity.setParticipantIds(oldp);
+                    ad.update(activity);
+                    return new Response<>(new HashMap(), "","");
+                }else{
+                    return new Response<>(null,"invalid error","invalid message");
+                }
             }
             return new Response<>(null,"invalid error","invalid message");
         }catch (Exception e){
@@ -129,15 +146,16 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Response getActivity(String acticityid){
         try{
+            System.out.println(ad);
             Activity activity = ad.getActivity(acticityid);
-            if(acticityid!=null){
+            if(activity!=null){
                 return new Response<>(activity, "","");
             }else{
-                return new Response<>(null, "invalid error","invalid message");
+                return new Response<>(null, "invalid error1","invalid message");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new Response<>(null, "invalid error","invalid message");
+            return new Response<>(null, "invalid error2","invalid message");
         }
     }
 }
