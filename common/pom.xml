@@ -56,12 +56,12 @@
         <repository>
             <id>exort-releases</id>
             <name>Releases</name>
-            <url>http://cirno.wang/repository/maven-releases</url>
+            <url>http://cirno.wang:18080/repository/maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>exort-snapshots</id>
             <name>Snapshot</name>
-            <url>http://cirno.wang/repository/maven-snapshots</url>
+            <url>http://cirno.wang:18080/repository/maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -69,7 +69,7 @@
         <repository>
             <id>exort</id>
             <name>Exort</name>
-            <url>http://cirno.wang/repository/maven-public/</url>
+            <url>http://cirno.wang:18080/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
