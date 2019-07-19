@@ -126,7 +126,7 @@ export default {
                 }
                 _self.form.onshow = false
                 _self.$Message.info('修改成功');
-                this.$parent.getAssociationList();
+                this.$emit('showCityName',data);
             }
         },
         info_cancel(){
