@@ -50,10 +50,12 @@ public class Activity {
 
     private List<String> tags;
 
+    private String image;
+
     public Activity(List<Integer> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
             int publishState, int signupState, int state, boolean ifReview, boolean ifOnlyMem, int maxParticipants,
             List<Integer> materialTemplateIds, List<Integer> participantIds, List<Integer> realParticipantIds,
-            List<String> tags) {
+            List<String> tags, String image) {
         this.id = (new ObjectId()).toString();
         this.associationIds = associationIds;
         this.createTime = "2019-07-01";
@@ -74,6 +76,7 @@ public class Activity {
         this.participantIds = participantIds;
         this.realParticipantIds = realParticipantIds;
         this.tags = tags;
+        this.image = image;
     }
 
     public List<Integer> getAssociationIds() {
@@ -234,5 +237,13 @@ public class Activity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

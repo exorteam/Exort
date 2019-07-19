@@ -73,3 +73,42 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+
+---
+
+kind: pipeline
+name: exort-acivity-manager
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  commands:
+  - cd ./acivity_manager
+  - mvn clean package docker:removeImage -DimageName=exort/acivity_manager docker:build -DpushImage
+
+trigger:
+  branch:
+  - acivity_dev
+
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
