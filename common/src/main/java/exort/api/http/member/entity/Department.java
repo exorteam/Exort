@@ -1,4 +1,4 @@
-package exort.api.http.entity;
+package exort.api.http.member.entity;
 
 import lombok.Data;
 
