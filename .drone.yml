@@ -54,7 +54,7 @@ steps:
     path: /etc/hosts
   commands:
   - cd ./common
-  - mvn clean deploy
+  - mvn clean deploy source:jar
 
 trigger:
   branch:
