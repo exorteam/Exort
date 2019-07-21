@@ -182,8 +182,11 @@
         })
       },
       getDepartmentUsers(){
-        this.axios.get().then((res)=>{
+        this.axios.get("http://localhost:8900/associations/2/departments").then((res)=>{
           console.log(res);
+          console.log(res.status);
+        }).catch((error)=>{
+          console.log(error.response.status);
         })
       },
       renderContent(h, {root, node, data}) {
@@ -291,6 +294,9 @@
       remove(index) {
         this.rows.splice(index, 1);
       }
+    },
+    mounted(){
+      // this.getDepartmentUsers();
     }
   }
 </script>
