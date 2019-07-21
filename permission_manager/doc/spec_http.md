@@ -63,7 +63,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 _string[]_|用户的域列表|
-   |404 "userNotFound"|用户不存在|
 
 - Examples
 
@@ -85,7 +84,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 [_Role[]_](#Role)|用户在指定域的角色列表, 可以为空|
-   |404 "userNotFound"|用户不存在|
 
 - Examples
 
@@ -107,8 +105,7 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 [_Role_](#Role)|用户在该域有指定角色|
-   |404 "userNotFound"|用户不存在|
+   |200 _{}_|用户在该域有指定角色|
    |404 "roleNotFound"|用户在该域没有指定角色|
 
 - Examples
@@ -131,60 +128,8 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 [_Permission_](#Permission)|用户在该域有指定权限|
-   |404 "userNotFound"|用户不存在|
+   |200 _{}_|用户在该域有指定权限|
    |404 "permissionNotFound"|用户在该域没有指定权限|
-
-- Examples
-
-### 在指定域给用户添加角色
-
-- HTTP Request
-
-   **POST** `/users/{userId}/scopes/{scope}/roles`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`userId` _int_|用户ID|
-   |`scope` _string_|域|
-
-- Body Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`roleName` _string_|要添加的角色名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 [_Role[]_](#Role)|添加角色后, 用户在指定域的角色列表|
-   |404 "userNotFound"|用户不存在|
-
-- Examples
-
-### 在指定域移除用户的角色
-
-- HTTP Request
-
-   **DELETE** `/users/{userId}/scopes/{scope}/roles/{roleName}`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`userId` _int_|用户ID|
-   |`scope` _string_|域|
-   |`roleName` _string_|要移除的角色名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 [_Role[]_](#Role)|移除角色后, 用户在指定域的角色列表|
-   |404 "userNotFound"|用户不存在|
 
 - Examples
 
@@ -205,8 +150,8 @@ _用户在这些域中有至少一个角色_
 
    |Parameter|Description|
    |--|--|
-   |`method` _string_|批量更新方法, 可以是 _POST_, _DELETE_|
-   |`roleNames` _string[]_|角色名列表|
+   |`operation` _string_|添加或移除, 可以是 _add_, _remove_, 默认为 _add_|
+   |`args` _string[]_|角色名列表|
 
 - Response
 
@@ -262,7 +207,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 [_PagedData\<int\>_](#PagedData)|用户ID列表|
-   |404 "roleNotFound"|角色不存在|
 
 - Examples
 
@@ -309,7 +253,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 _{}_|删除成功|
-   |404 "roleNotFound"|角色不存在|
 
 - Examples
 
@@ -361,58 +304,7 @@ _用户在这些域中有至少一个角色_
 
 - Examples
 
-### 赋予角色权限
-
-- HTTP Request
-
-   **POST** `/roles/{name}/permissions`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`name` _string_|角色名|
-
-- Body Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`permissionName` _string_|权限名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 _string[]_|角色的权限列表|
-   |400 "invalidPermission"|不存在该权限|
-   |404 "roleNotFound"|角色不存在|
-
-- Examples
-
-### 移除角色权限
-
-- HTTP Request
-
-   **DELETE** `/roles/{name}/permissions/{permissionName}`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`name` _string_|角色名|
-   |`permissionName` _string_|要移除的权限名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 _string[]_|角色的权限列表|
-   |404 "roleNotFound"|角色不存在|
-   |404 "permissionNotFound"|角色没有该权限|
-
-- Examples
-
-### 批量添加、移除角色权限
+### 添加、移除角色权限
 
 - HTTP Request
 
@@ -428,15 +320,15 @@ _用户在这些域中有至少一个角色_
 
    |Parameter|Description|
    |--|--|
-   |`method` _string_|批量更新方法, 可以是 _POST_, _DELETE_|
-   |`permissionNames` _string[]_|权限名列表|
+   |`operation` _string_|添加或者移除, 可以是 _add_, _remove_, 默认为 _add_|
+   |`args` _string[]_|权限名列表|
 
 - Response
 
    |Code|Description|
    |--|--|
    |200 [_Permission[]_](#Permission)|变更后的角色权限列表|
-   |404 "roleNotFound"|角色不存在|
+   |400 "invalidOperation"|无效的操作, 只能是 _add_, _remove_ 之一|
 
 - Examples
 
@@ -457,8 +349,7 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 _string[]_|角色的权限列表|
-   |404 "roleNotFound"|角色不存在|
+   |200 [_Permission[]_](#Permission)|角色的权限列表|
 
 - Examples
 
@@ -505,7 +396,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 _{}_|删除成功|
-   |404 "permissionNotFound"|权限不存在|
 
 - Examples
 
