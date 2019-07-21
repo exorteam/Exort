@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,14 +20,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<Long> list(String scope, Integer pageNum, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
-        return usrr.findUserIdsByScope(scope, pageable);
+        return usrr.findUserIdsByScope(scope, PageRequest.of(pageNum, pageSize));
     }
 
     @Override
     public Page<Long> list(String scope, String roleId, Integer pageNum, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
-        return usrr.findUserIdsByScopeAndRoleId(scope, roleId, pageable);
+        return usrr.findUserIdsByScopeAndRoleId(scope, roleId, PageRequest.of(pageNum, pageSize));
     }
 
     @Override
@@ -45,10 +44,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<String> listScopes(Integer pageNum, Integer pageSize) {
+        return usrr.findScopes(PageRequest.of(pageNum, pageSize));
+    }
+
+    @Override
     public List<ExortRole> listRoles(Long userId, String scope) {
         return usrr.findRolesByUserIdAndScope(userId, scope);
     }
 
+    @Transactional
     @Override
     public List<ExortRole> grantRoles(Long userId, String scope, List<String> roleIds) {
         for (String roleId: roleIds) {
@@ -57,6 +62,7 @@ public class UserServiceImpl implements UserService {
         return listRoles(userId, scope);
     }
 
+    @Transactional
     @Override
     public List<ExortRole> revokeRoles(Long userId, String scope, List<String> roleIds) {
         for (String roleId: roleIds) {

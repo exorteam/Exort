@@ -73,6 +73,9 @@ public class RoleController {
         if (ops.getOperation() == null) {
             ops.setOperation("add");
         }
+        if (ops.getArgs() == null) {
+            ops.setArgs(new ArrayList<>());
+        }
         List<ExortPerm> perms;
         if (ops.getOperation().toLowerCase().equals("add")) {
             perms = rs.grantPerms(name, ops.getArgs());

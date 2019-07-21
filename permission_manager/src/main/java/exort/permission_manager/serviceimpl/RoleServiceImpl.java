@@ -75,6 +75,7 @@ public class RoleServiceImpl implements RoleService {
         return listPerms(name);
     }
 
+    @Transactional
     @Override
     public List<ExortPerm> revokePerms(String name, List<String> permIds) {
         for (String permId: permIds) {

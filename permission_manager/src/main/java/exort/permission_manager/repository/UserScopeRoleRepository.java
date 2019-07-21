@@ -22,6 +22,9 @@ public interface UserScopeRoleRepository extends JpaRepository<UserScopeRole, Lo
     @Query("SELECT DISTINCT usr.scope FROM UserScopeRole usr WHERE usr.userId = ?1")
     List<String> findScopesByUserId(Long userId);
 
+    @Query("SELECT DISTINCT usr.scope FROM UserScopeRole usr")
+    Page<String> findScopes(Pageable pageable);
+
     /* Find roles */
     @Query("SELECT usr.role FROM UserScopeRole usr WHERE usr.userId = ?1 AND usr.scope = ?2")
     List<ExortRole> findRolesByUserIdAndScope(Long userId, String scope);

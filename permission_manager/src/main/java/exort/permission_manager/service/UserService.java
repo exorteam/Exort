@@ -11,6 +11,7 @@ public interface UserService {
     boolean hasRole(Long userId, String scope, String roleId);
     boolean hasPerm(Long userId, String scope, String permId);
     List<String> listScopes(Long userId);
+    Page<String> listScopes(Integer pageNum, Integer pageSize);
     List<ExortRole> listRoles(Long userId, String scope);
     List<ExortRole> grantRoles(Long userId, String scope, List<String> roleIds);
     List<ExortRole> revokeRoles(Long userId, String scope, List<String> roleIds);

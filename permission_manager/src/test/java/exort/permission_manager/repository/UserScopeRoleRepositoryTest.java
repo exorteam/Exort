@@ -106,6 +106,24 @@ class UserScopeRoleRepositoryTest {
     }
 
     @Test
+    void findScopes() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<String> p = usrr.findScopes(pageable);
+        assertEquals(2, p.getTotalElements());
+        assertEquals(2, p.getNumberOfElements());
+        assertArrayEquals(new String[]{"scope1", "scope2"}, p.getContent().toArray());
+        pageable = PageRequest.of(1, 1);
+        p = usrr.findScopes(pageable);
+        assertEquals(2, p.getTotalElements());
+        assertEquals(1, p.getNumberOfElements());
+        assertArrayEquals(new String[]{"scope2"}, p.getContent().toArray());
+        pageable = PageRequest.of(2, 2);
+        p = usrr.findScopes(pageable);
+        assertEquals(2, p.getTotalElements());
+        assertEquals(0, p.getNumberOfElements());
+    }
+
+    @Test
     void findRolesByUserIdAndScope() {
         assertEquals(2, usrr.findRolesByUserIdAndScope(1L, "scope1").size());
         assertEquals(1, usrr.findRolesByUserIdAndScope(1L, "scope2").size());

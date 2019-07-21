@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +86,19 @@ class UserServiceImplTest {
         assertArrayEquals(new String[]{"scope1", "scope2"}, us.listScopes(1L).toArray());
         assertArrayEquals(new String[]{"scope1", "scope2"}, us.listScopes(2L).toArray());
         assertArrayEquals(new String[]{"scope2"}, us.listScopes(3L).toArray());
+
+        Page<String> p = us.listScopes(0, 10);
+        assertArrayEquals(new String[]{"scope1", "scope2"}, p.getContent().toArray());
+        assertEquals(2, p.getTotalElements());
+        assertEquals(2, p.getNumberOfElements());
+        p = us.listScopes(1, 1);
+        assertArrayEquals(new String[]{"scope2"}, p.getContent().toArray());
+        assertEquals(2, p.getTotalElements());
+        assertEquals(1, p.getNumberOfElements());
+        p = us.listScopes(2, 2);
+        assertArrayEquals(new String[]{}, p.getContent().toArray());
+        assertEquals(2, p.getTotalElements());
+        assertEquals(0, p.getNumberOfElements());
     }
 
     @Test

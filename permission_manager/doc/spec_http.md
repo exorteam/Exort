@@ -62,6 +62,28 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
+   |200 [_PagedData\<string\>_](#PagedData)|用户的域列表|
+
+- Examples
+
+### 获取所有域
+
+
+- HTTP Request
+
+   **GET** `/users/{userId}/scopes`
+
+- Query Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`pageNum` _int_|页码, 默认为0|
+   |`pageSize` _int_|每页数量, 默认为50, 不能超过200, 否则按200查询|
+
+- Response
+
+   |Code|Description|
+   |--|--|
    |200 _string[]_|用户的域列表|
 
 - Examples

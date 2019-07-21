@@ -27,6 +27,14 @@ public class UserController {
         return new ApiResponse<>(us.listScopes(userId));
     }
 
+    @GetMapping("/scopes")
+    public ApiResponse<PagedData<String>> getScopes(
+            PageQuery page) {
+        page = PageQuery.relocate(page, 50, 200);
+        Page<String> scopes = us.listScopes(page.getPageNum(), page.getPageSize());
+        return new ApiResponse<>(new PagedData<>(page.getPageNum(), page.getPageSize(), scopes.getTotalElements(), scopes.getContent()));
+    }
+
     @GetMapping("/users/{userId}/scopes/{scope}/roles")
     public ApiResponse<List<Role>> getRoles(
             @PathVariable("userId") Long userId,
@@ -71,6 +79,9 @@ public class UserController {
         if (ops.getOperation() == null) {
             ops.setOperation("add");
         }
+        if (ops.getArgs() == null) {
+            ops.setArgs(new ArrayList<>());
+        }
         List<ExortRole> roles;
         if (ops.getOperation().toLowerCase().equals("add")) {
             roles = us.grantRoles(userId, scope, ops.getArgs());
@@ -90,7 +101,7 @@ public class UserController {
     public ApiResponse<PagedData<Long>> getUsers(
             @PathVariable("scope") String scope,
             @PathVariable("roleName") String roleName,
-            @RequestBody PageQuery page) {
+            PageQuery page) {
         page = PageQuery.relocate(page, 50, 200);
         Page<Long> userIds = us.list(scope, roleName, page.getPageNum(), page.getPageSize());
         return new ApiResponse<>(new PagedData<>(
@@ -104,7 +115,7 @@ public class UserController {
     @GetMapping("/scopes/{scope}/users")
     public ApiResponse<PagedData<Long>> getUsers(
             @PathVariable("scope") String scope,
-            @RequestBody PageQuery page) {
+            PageQuery page) {
         page = PageQuery.relocate(page, 50, 200);
         Page<Long> userIds = us.list(scope, page.getPageNum(), page.getPageSize());
         return new ApiResponse<>(new PagedData<>(
