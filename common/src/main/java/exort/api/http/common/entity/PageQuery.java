@@ -16,4 +16,15 @@ public class PageQuery {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
     }
+
+    public static PageQuery relocate(PageQuery pq, Integer defaultSize, Integer maxSize) {
+        int num = pq.getPageNum() == null ? 0 : pq.getPageNum();
+        int size = pq.getPageSize() == null ? defaultSize : pq.getPageSize();
+        long start = num * (long)size;
+        if (size > maxSize) {
+            size = maxSize;
+            num = start / size > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)(start / size);
+        }
+        return new PageQuery(num, size, pq.getSortBy());
+    }
 }
