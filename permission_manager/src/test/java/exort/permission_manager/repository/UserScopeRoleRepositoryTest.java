@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,18 +62,40 @@ class UserScopeRoleRepositoryTest {
 
     @Test
     void findUserIdsByScope() {
-        assertEquals(2, usrr.findUserIdsByScope("scope1").size());
-        assertEquals(3, usrr.findUserIdsByScope("scope2").size());
+        // normal use
+        Pageable pageable = PageRequest.of(0, 10);
+        assertEquals(2, usrr.findUserIdsByScope("scope1", pageable).getNumberOfElements());
+        assertEquals(3, usrr.findUserIdsByScope("scope2", pageable).getNumberOfElements());
+        // test pagination
+        pageable = PageRequest.of(0, 2);
+        assertEquals(2, usrr.findUserIdsByScope("scope2", pageable).getNumberOfElements());
+        pageable = PageRequest.of(1, 2);
+        assertEquals(1, usrr.findUserIdsByScope("scope2", pageable).getNumberOfElements());
+        pageable = PageRequest.of(2, 4);
+        Page<Long> p = usrr.findUserIdsByScope("scope2", pageable);
+        assertEquals(0, p.getNumberOfElements());
+        assertEquals(3, p.getTotalElements());
     }
 
     @Test
     void findUserIdsByScopeAndRoleId() {
-        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope1", "role1").size());
-        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope1", "role2").size());
-        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope1", "role3").size());
-        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope2", "role1").size());
-        assertEquals(0, usrr.findUserIdsByScopeAndRoleId("scope2", "role2").size());
-        assertEquals(2, usrr.findUserIdsByScopeAndRoleId("scope2", "role3").size());
+        // normal test
+        Pageable pageable = PageRequest.of(0, 10);
+        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope1", "role1", pageable).getNumberOfElements());
+        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope1", "role2", pageable).getNumberOfElements());
+        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope1", "role3", pageable).getNumberOfElements());
+        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope2", "role1", pageable).getNumberOfElements());
+        assertEquals(0, usrr.findUserIdsByScopeAndRoleId("scope2", "role2", pageable).getNumberOfElements());
+        assertEquals(2, usrr.findUserIdsByScopeAndRoleId("scope2", "role3", pageable).getNumberOfElements());
+        // test pagination
+        pageable = PageRequest.of(0, 1);
+        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope2", "role3", pageable).getNumberOfElements());
+        pageable = PageRequest.of(1, 1);
+        assertEquals(1, usrr.findUserIdsByScopeAndRoleId("scope2", "role3", pageable).getNumberOfElements());
+        pageable = PageRequest.of(2, 2);
+        Page<Long> p = usrr.findUserIdsByScopeAndRoleId("scope2", "role3", pageable);
+        assertEquals(0, p.getNumberOfElements());
+        assertEquals(2, p.getTotalElements());
     }
 
     @Test

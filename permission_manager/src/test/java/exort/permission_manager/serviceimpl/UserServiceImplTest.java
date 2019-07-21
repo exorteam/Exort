@@ -67,10 +67,17 @@ class UserServiceImplTest {
 
     @Test
     void list() {
-        assertArrayEquals(new Long[]{1L, 2L}, us.list("scope1").toArray());
-        assertArrayEquals(new Long[]{1L, 2L, 3L}, us.list("scope2").toArray());
-        assertArrayEquals(new Long[]{1L}, us.list("scope1", "role1").toArray());
-        assertArrayEquals(new Long[]{1L, 3L}, us.list("scope2", "role3").toArray());
+        // test normal
+        assertArrayEquals(new Long[]{1L, 2L}, us.list("scope1", 0, 10).getContent().toArray());
+        assertArrayEquals(new Long[]{1L, 2L, 3L}, us.list("scope2", 0, 10).getContent().toArray());
+        assertArrayEquals(new Long[]{1L}, us.list("scope1", "role1", 0, 10).getContent().toArray());
+        assertArrayEquals(new Long[]{1L, 3L}, us.list("scope2", "role3", 0, 10).getContent().toArray());
+        // test pagination
+        assertArrayEquals(new Long[]{2L}, us.list("scope2", 1, 1).getContent().toArray());
+        assertArrayEquals(new Long[]{}, us.list("scope2", 2, 2).getContent().toArray());
+        assertEquals(3L, us.list("scope2", 3, 3).getTotalElements());
+        assertArrayEquals(new Long[]{3L}, us.list("scope2", "role3", 1, 1).getContent().toArray());
+        assertEquals(2L, us.list("scope2", "role3", 1, 1).getTotalElements());
     }
 
     @Test

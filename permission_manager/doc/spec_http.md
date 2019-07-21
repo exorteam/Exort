@@ -179,7 +179,7 @@ _用户在这些域中有至少一个角色_
    |Parameter|Description|
    |--|--|
    |`pageNum` _int_|页码, 默认为0|
-   |`pageSize` _int_|每页数量, 默认为20, 不能超过100, 否则按100查询|
+   |`pageSize` _int_|每页数量, 默认为50, 不能超过200, 否则按200查询|
 
 - Response
 
@@ -201,6 +201,13 @@ _用户在这些域中有至少一个角色_
    |--|--|
    |`scope` _string_|域|
    |`roleName` _string_|角色名|
+
+- Query Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`pageNum` _int_|页码, 默认为0|
+   |`pageSize` _int_|每页数量, 默认为50, 不能超过200, 否则按200查询|
 
 - Response
 

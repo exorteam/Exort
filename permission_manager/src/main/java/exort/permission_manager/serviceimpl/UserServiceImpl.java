@@ -4,6 +4,9 @@ import exort.permission_manager.entity.ExortRole;
 import exort.permission_manager.repository.UserScopeRoleRepository;
 import exort.permission_manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,13 +18,15 @@ public class UserServiceImpl implements UserService {
     private UserScopeRoleRepository usrr;
 
     @Override
-    public List<Long> list(String scope) {
-        return usrr.findUserIdsByScope(scope);
+    public Page<Long> list(String scope, Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        return usrr.findUserIdsByScope(scope, pageable);
     }
 
     @Override
-    public List<Long> list(String scope, String roleId) {
-        return usrr.findUserIdsByScopeAndRoleId(scope, roleId);
+    public Page<Long> list(String scope, String roleId, Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+        return usrr.findUserIdsByScopeAndRoleId(scope, roleId, pageable);
     }
 
     @Override

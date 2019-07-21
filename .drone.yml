@@ -130,7 +130,7 @@ steps:
   - cd ./permission_manager
   - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
   - mv -f perm src/main/resources
-  - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage
+  - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage -Dspring.profiles.active=prod
 
 trigger:
   branch:

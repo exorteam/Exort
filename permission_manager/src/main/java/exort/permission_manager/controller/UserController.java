@@ -2,13 +2,14 @@ package exort.permission_manager.controller;
 
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.OperationBatch;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
-import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.entity.Role;
-import exort.permission_manager.entity.ExortPerm;
 import exort.permission_manager.entity.ExortRole;
 import exort.permission_manager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -83,6 +84,34 @@ public class UserController {
             res.add(new Role(role.getId(), role.getDescription()));
         }
         return new ApiResponse<>(res);
+    }
+
+    @GetMapping("/scopes/{scope}/roles/{roleName}/users")
+    public ApiResponse<PagedData<Long>> getUsers(
+            @PathVariable("scope") String scope,
+            @PathVariable("roleName") String roleName,
+            @RequestBody PageQuery page) {
+        page = PageQuery.relocate(page, 50, 200);
+        Page<Long> userIds = us.list(scope, roleName, page.getPageNum(), page.getPageSize());
+        return new ApiResponse<>(new PagedData<>(
+                page.getPageNum(),
+                page.getPageSize(),
+                userIds.getTotalElements(),
+                userIds.getContent()));
+    }
+
+
+    @GetMapping("/scopes/{scope}/users")
+    public ApiResponse<PagedData<Long>> getUsers(
+            @PathVariable("scope") String scope,
+            @RequestBody PageQuery page) {
+        page = PageQuery.relocate(page, 50, 200);
+        Page<Long> userIds = us.list(scope, page.getPageNum(), page.getPageSize());
+        return new ApiResponse<>(new PagedData<>(
+                page.getPageNum(),
+                page.getPageSize(),
+                userIds.getTotalElements(),
+                userIds.getContent()));
     }
 
 }

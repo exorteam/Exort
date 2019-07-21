@@ -2,6 +2,8 @@ package exort.permission_manager.repository;
 
 import exort.permission_manager.entity.ExortRole;
 import exort.permission_manager.entity.UserScopeRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,10 +13,10 @@ import java.util.List;
 public interface UserScopeRoleRepository extends JpaRepository<UserScopeRole, Long> {
     /* Find users */
     @Query("SELECT DISTINCT usr.userId FROM UserScopeRole usr WHERE usr.scope = ?1")
-    List<Long> findUserIdsByScope(String scope);
+    Page<Long> findUserIdsByScope(String scope, Pageable pageable);
 
     @Query("SELECT DISTINCT usr.userId FROM UserScopeRole usr WHERE usr.scope = ?1 AND usr.roleId = ?2")
-    List<Long> findUserIdsByScopeAndRoleId(String scope, String roleId);
+    Page<Long> findUserIdsByScopeAndRoleId(String scope, String roleId, Pageable pageable);
 
     /* Find scopes */
     @Query("SELECT DISTINCT usr.scope FROM UserScopeRole usr WHERE usr.userId = ?1")
