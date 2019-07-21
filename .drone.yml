@@ -20,7 +20,7 @@ steps:
 trigger:
   branch:
   - auth
-  
+
 volumes:
   - name: cache
     host:
@@ -59,6 +59,82 @@ steps:
 trigger:
   branch:
   - common
+
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+
+---
+
+kind: pipeline
+name: exort-perm
+
+steps:
+steps:
+- name: test
+  when:
+    event:
+    - pull_request
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  environment:
+    FTP_USER:
+      from_secret: conf_user
+    FTP_PASS:
+      from_secret: conf_pass
+  commands:
+  - cd ./permission_manager
+  - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
+  - mv perm/* src/main/resources/
+  - mvn clean test
+
+steps:
+- name: build
+  when:
+    event:
+    - push
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  environment:
+    FTP_USER:
+      from_secret: conf_user
+    FTP_PASS:
+      from_secret: conf_pass
+  commands:
+  - cd ./permission_manager
+  - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
+  - mv perm/* src/main/resources/
+  - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage
+
+trigger:
+  branch:
+  - perm-mgr
 
 volumes:
   - name: cache
