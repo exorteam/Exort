@@ -5,6 +5,7 @@ import exort.api.http.common.entity.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -20,6 +21,11 @@ public class ApiErrorHandler {
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<ApiResponse> handleJsonError(HttpMessageNotReadableException e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse("bad_json", e.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
+    public ResponseEntity<ApiResponse> handleJsonError(HttpRequestMethodNotSupportedException e, WebRequest request) {
+        return new ResponseEntity<>(new ApiResponse("bad_method", e.getMessage()), HttpStatus.valueOf(405));
     }
 
     @ExceptionHandler({Exception.class})
