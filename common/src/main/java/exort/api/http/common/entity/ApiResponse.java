@@ -3,6 +3,8 @@ package exort.api.http.common.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+
 @Data
 @NoArgsConstructor
 public class ApiResponse<T> {
@@ -17,5 +19,9 @@ public class ApiResponse<T> {
     public ApiResponse(String error, String message) {
         this.error = error;
         this.message = message;
+    }
+
+    public static ApiResponse emptyResponse() {
+        return new ApiResponse<>(new HashMap());
     }
 }
