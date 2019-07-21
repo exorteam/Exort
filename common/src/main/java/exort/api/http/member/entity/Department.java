@@ -9,5 +9,4 @@ public class Department {
     String name;
     String description;
     int parentId;
-
 }

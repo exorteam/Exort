@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OperationBatch<ArgType> {
+public class Operation<ArgType> {
     private String operation;
-    private List<ArgType> args;
+    private ArgType arg;
 }

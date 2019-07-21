@@ -1,13 +1,17 @@
 package exort.api.http.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PagedData<DataType> {
-    private int pageNum;
-    private int pageSize;
-    private int totalSize;
+    private Integer pageNum;
+    private Integer pageSize;
+    private Integer totalSize;
     private List<DataType> content;
 }
