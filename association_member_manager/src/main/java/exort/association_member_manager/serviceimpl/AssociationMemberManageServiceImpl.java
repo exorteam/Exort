@@ -7,7 +7,12 @@ import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -17,6 +22,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
 //    @Override
 //    public ResponseCode getSpecApplication(int applyId) {
@@ -79,6 +87,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean userInAsso = false;
+//        String url="http://localhost:8900/users/"+userId+"/scopes";
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            userInAsso=true;
+//        }catch (HttpClientErrorException e){
+//            userInAsso=false;
+//        }
+
 
         if (!userInAsso) {
             response.setStatus(200);
@@ -251,7 +267,20 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             response.setStatus(200);
 
             // outside
+            String url = "http://localhost:8900/scopes/" + associationId + "/roles/" + departmentId + "/users";
             List<Integer> userList = new ArrayList<>();
+//            try{
+//                ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//                userList=(List<Integer>)responseEntity.getBody().getData();
+//            }catch (HttpClientErrorException e){
+//                response.setStatus(404);
+//
+//                responseCode.setError("roleNotFound");
+//                responseCode.setMessage("角色不存在");
+//
+//                return responseCode;
+//            }
+
             responseCode.setData(userList);
 
         } else {
@@ -270,12 +299,27 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existUser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
 
         if (existUser) {
 
             if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
                 // outside
                 boolean existUserInAsso = true;
+//                String url = "http://localhost:8900/scopes/" + associationId + "/roles/" + departmentId + "/users";
+//                try {
+//                    ResponseEntity<ResponseCode> responseEntity = this.restTemplate.getForEntity(url, ResponseCode.class);
+//                    existUserInAsso = true;
+//                } catch (HttpClientErrorException e) {
+//                    existUserInAsso = false;
+//                }
+
 
                 if (existUserInAsso) {
                     response.setStatus(200);
@@ -312,6 +356,13 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existUser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
 
         if (existUser) {
 
@@ -321,6 +372,16 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
                 // outside
                 // add_user_to_department
+//                HttpHeaders headers = new HttpHeaders();
+//                String data = new String();
+//                HttpEntity<String> formEntity = new HttpEntity<String>(data, headers);
+//                String url = "http://localhost:8900/users/?id=" + userId;
+//                try {
+//                    ResponseEntity<ResponseCode> responseEntity = this.restTemplate.postForEntity(url, ResponseCode.class);
+//
+//                } catch (HttpClientErrorException e) {
+//                    existUser = false;
+//                }
 
                 responseCode.setData(true);
             } else {
@@ -352,6 +413,13 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existUser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
 
         if (!existUser) {
             response.setStatus(400);
@@ -366,6 +434,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
             // outside
             boolean existUserInAsso = true;
+
 
             if (!existUserInAsso) {
                 response.setStatus(404);
@@ -405,6 +474,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
+
         if (!existuser) {
             response.setStatus(400);
 
@@ -429,6 +506,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
+
         if (!existuser) {
             response.setStatus(400);
 
@@ -441,6 +526,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
             // outside
             boolean userInAsso = true;
+//        String url="http://localhost:8900/users/"+userId+"/scopes";
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            userInAsso=true;
+//        }catch (HttpClientErrorException e){
+//            userInAsso=false;
+//        }
+
             if (userInAsso) {
                 response.setStatus(200);
 
@@ -470,6 +563,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
+
         if (!existuser) {
             response.setStatus(400);
 
@@ -488,6 +589,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean userInAsso = true;
+        //        String url="http://localhost:8900/users/"+userId+"/scopes";
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            userInAsso=true;
+//        }catch (HttpClientErrorException e){
+//            userInAsso=false;
+//        }
+
         if (userInAsso) {
             response.setStatus(200);
 
@@ -512,6 +621,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
+
         if (!existuser) {
             response.setStatus(400);
 
@@ -553,6 +670,18 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         // outside
         // get users in asso
         List<Integer> users = new ArrayList<>();
+//            try{
+//                ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//                userList=(List<Integer>)responseEntity.getBody().getData();
+//            }catch (HttpClientErrorException e){
+//                response.setStatus(404);
+//
+//                responseCode.setError("roleNotFound");
+//                responseCode.setMessage("角色不存在");
+//
+//                return responseCode;
+//            }
+
         response.setStatus(200);
         responseCode.setData(users);
 
@@ -565,6 +694,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
+//        String url="http://localhost:8900/users/?id="+userId;
+//        try{
+//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            existUser=true;
+//        }catch (HttpClientErrorException e){
+//            existUser=false;
+//        }
+
         if (!existuser) {
             response.setStatus(400);
 
