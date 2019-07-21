@@ -12,6 +12,6 @@ import java.util.List;
 public class PagedData<DataType> {
     private Integer pageNum;
     private Integer pageSize;
-    private Integer totalSize;
+    private Long totalSize;
     private List<DataType> content;
 }
