@@ -1,8 +1,7 @@
-package exort.api.http.entity;
+package exort.api.http.review.entity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exort.api.http.review.entity.Application;
 import lombok.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
