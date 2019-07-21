@@ -41,7 +41,28 @@ kind: pipeline
 name: exort-common
 
 steps:
+- name: prtest
+  when:
+    event:
+    - pull_request
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  commands:
+  - cd ./common
+  - mvn test
+
 - name: mvndeploy
+  when:
+    event:
+    - push
   image: thomasf/drone-mvn
   volumes:
   - name: cache
