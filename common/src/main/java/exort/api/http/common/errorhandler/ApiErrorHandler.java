@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.validation.BindException;
 
 @RestControllerAdvice
 public class ApiErrorHandler {
@@ -27,6 +28,11 @@ public class ApiErrorHandler {
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ApiResponse> handleJsonError(MethodArgumentTypeMismatchException e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse("bad_path_parameter", e.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler({BindException.class})
+    public ResponseEntity<ApiResponse> handleJsonError(BindException e, WebRequest request) {
+        return new ResponseEntity<>(new ApiResponse("bad_query_parameter", e.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
