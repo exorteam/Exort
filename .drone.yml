@@ -103,7 +103,7 @@ steps:
   commands:
   - cd ./permission_manager
   - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
-  - mv -rf perm/* src/main/resources/
+  - mv -f perm/* src/main/resources/
   - mvn clean test
 
 steps:
@@ -129,7 +129,7 @@ steps:
   commands:
   - cd ./permission_manager
   - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
-  - mv -rf perm/* src/main/resources/
+  - mv -f perm/* src/main/resources/
   - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage
 
 trigger:
