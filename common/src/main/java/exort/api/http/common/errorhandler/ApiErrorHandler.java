@@ -9,6 +9,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ApiErrorHandler {
@@ -20,7 +21,12 @@ public class ApiErrorHandler {
 
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<ApiResponse> handleJsonError(HttpMessageNotReadableException e, WebRequest request) {
-        return new ResponseEntity<>(new ApiResponse("bad_json", e.getMessage()), HttpStatus.valueOf(400));
+        return new ResponseEntity<>(new ApiResponse("bad_body_parameter", e.getMessage()), HttpStatus.valueOf(400));
+    }
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ApiResponse> handleJsonError(MethodArgumentTypeMismatchException e, WebRequest request) {
+        return new ResponseEntity<>(new ApiResponse("bad_path_parameter", e.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
