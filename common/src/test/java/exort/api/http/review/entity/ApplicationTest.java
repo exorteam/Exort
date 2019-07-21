@@ -28,8 +28,8 @@ class ApplicationTest {
 
     @Test
     void TestJSONToObject() {
-        assertEquals(application.getId(), 1);
-        assertEquals(application.getApplicantId(), 2);
+        assertEquals(application.getId().longValue(), 1L);
+        assertEquals(application.getApplicantId().longValue(), 2L);
         assertEquals(application.getType(), "signup");
         assertEquals(application.getMaterialIds().size(), 0);
         assertNull(application.getCreatedTime());
