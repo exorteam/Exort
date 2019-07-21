@@ -1,4 +1,4 @@
-package exort.api.http.entity;
+package exort.api.http.common.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
