@@ -26,11 +26,7 @@ public class PermServiceImpl implements PermService {
     @Setter
     private String endpoint;
 
-    private RestTemplate rest;
-
-    public PermServiceImpl() {
-        this.rest = new RestTemplate();
-    }
+    private RestTemplate rest = new RestTemplate();;
 
     private String url(String path) {
         return "http://" + endpoint + path;
@@ -47,6 +43,7 @@ public class PermServiceImpl implements PermService {
         return builder.build().toString();
     }
 
+    @Override
     public ApiResponse<List<String>> getScopes(@NotNull Long userId) {
         return rest.exchange(
                 url("/users/{userId}/scopes"),
@@ -56,14 +53,17 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<PagedData<String>> getScopes() {
         return getScopes(null, null);
     }
 
+    @Override
     public ApiResponse<PagedData<String>> getScopes(Integer pageSize) {
         return getScopes(null, pageSize);
     }
 
+    @Override
     public ApiResponse<PagedData<String>> getScopes(Integer pageNum, Integer pageSize) {
         return rest.exchange(
                 pageUrl("/scopes", pageNum, pageSize),
@@ -72,6 +72,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Role>> getRoles(@NotNull Long userId, @NotNull String scope) {
         return rest.exchange(
                 url("/users/{userId}/scopes/{scope}/roles"),
@@ -81,6 +82,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Role>> grantRoles(@NotNull Long userId, @NotNull String scope, List<String> roleNames) {
         return rest.exchange(
                 url("/users/{userId}/scopes/{scope}/roles"),
@@ -90,6 +92,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Role>> revokeRoles(@NotNull Long userId, @NotNull String scope, List<String> roleNames) {
         return rest.exchange(
                 url("/users/{userId}/scopes/{scope}/roles"),
@@ -99,6 +102,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse hasRole(@NotNull Long userId, @NotNull String scope, @NotNull String roleName) {
         return rest.exchange(
                 url("/users/{userId}/scopes/{scope}/roles/{roleName}"),
@@ -108,6 +112,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse hasPermission(@NotNull Long userId, @NotNull String scope, @NotNull String permissionName) {
         return rest.exchange(
                 url("/users/{userId}/scopes/{scope}/permissions/{permissionName}"),
@@ -118,14 +123,17 @@ public class PermServiceImpl implements PermService {
     }
 
 
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(@NotNull String scope) {
         return getUsers(scope, (Integer) null, null);
     }
 
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(@NotNull String scope, Integer pageSize) {
         return getUsers(scope, (Integer) null, pageSize);
     }
 
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(@NotNull String scope, Integer pageNum, Integer pageSize) {
         return rest.exchange(
                 pageUrl("/scopes/{scope}/users", pageNum, pageSize),
@@ -135,14 +143,17 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(@NotNull String scope, @NotNull String roleName) {
         return getUsers(scope, roleName, null, null);
     }
 
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(@NotNull String scope, @NotNull String roleName, Integer pageSize) {
         return getUsers(scope, roleName, null, pageSize);
     }
 
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(@NotNull String scope, @NotNull String roleName, Integer pageNum, Integer pageSize) {
         return rest.exchange(
                 pageUrl("/scopes/{scope}/roles/{roleName}/users", pageNum, pageSize),
@@ -152,6 +163,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<Role> createRole(@NotNull Role roleArg) {
         roleArg.setName(null);
         return rest.exchange(
@@ -161,6 +173,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse deleteRole(@NotNull String name) {
         return rest.exchange(
                 url("/roles/{name}"),
@@ -170,6 +183,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<Role> updateRole(@NotNull Role roleArg) {
         String name = roleArg.getName();
         roleArg.setName(null);
@@ -181,6 +195,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<Role> getRole(@NotNull String name) {
         return rest.exchange(
                 url("/roles/{name}"),
@@ -190,6 +205,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Permission>> getPermissions(@NotNull String roleName) {
         return rest.exchange(
                 url("/roles/{name}/permissions"),
@@ -199,6 +215,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Permission>> grantPermissions(@NotNull String roleName, List<String> permissionNames) {
         return rest.exchange(
                 url("/roles/{roleName}/permissions"),
@@ -208,6 +225,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Permission>> revokePermissions(@NotNull String roleName, List<String> permissionNames) {
         return rest.exchange(
                 url("/roles/{roleName}/permissions"),
@@ -217,6 +235,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<Permission> createPermission(@NotNull Permission permArg) {
         permArg.setName(null);
         return rest.exchange(
@@ -226,6 +245,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse deletePermission(@NotNull String name) {
         return rest.exchange(
                 url("/permissions/{name}"),
@@ -235,6 +255,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<Permission> updatePermission(@NotNull Permission permArg) {
         String name = permArg.getName();
         permArg.setName(null);
@@ -246,6 +267,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<Permission> getPermission(@NotNull String name) {
         return rest.exchange(
                 url("/permissions/{name}"),
@@ -255,6 +277,7 @@ public class PermServiceImpl implements PermService {
         ).getBody();
     }
 
+    @Override
     public ApiResponse<List<Permission>> getPermissions() {
         return rest.exchange(
                 url("/permissions"),
