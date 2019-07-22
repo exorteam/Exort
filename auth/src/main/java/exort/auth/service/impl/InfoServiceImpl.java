@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import exort.auth.entity.UserInfo;
 import exort.auth.repository.InfoRepository;
 import exort.auth.service.InfoService;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class InfoServiceImpl implements InfoService {
 
 	@Autowired
@@ -22,6 +24,7 @@ public class InfoServiceImpl implements InfoService {
 	}
 
 	public boolean updateUserInfo(UserInfo info){
+		log.info(info.getNickname());
 		infoRepository.save(info);
 		return true;
 	}

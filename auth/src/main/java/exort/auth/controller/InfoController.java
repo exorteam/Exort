@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import exort.auth.entity.RestResponse;
 import exort.auth.entity.UserInfo;
 import exort.auth.service.InfoService;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping(path="/users")
+@Log4j2
 public class InfoController {
 
 	@Autowired
@@ -31,7 +34,8 @@ public class InfoController {
 	}
 
 	@PostMapping("/info/{id}")
-	public RestResponse updateUserInfo(@PathVariable("id") int id,UserInfo info){
+	public RestResponse updateUserInfo(@PathVariable("id") int id,@RequestBody UserInfo info){
+		log.info(info.getNickname());
 		if(id == info.getId() && service.updateUserInfo(info)){
 			return new RestResponse<UserInfo>(service.getUserInfo(info.getId()),"","");
 		}else{
