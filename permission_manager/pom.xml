@@ -10,7 +10,7 @@
     </parent>
     <groupId>exort</groupId>
     <artifactId>permission_manager</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0.RELEASE</version>
     <name>permission_manager</name>
     <description>Permission manager for Exort</description>
 
@@ -92,7 +92,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 			  	<version>1.2.0</version>
 			  	<configuration>
-					<imageName>exort/permission_manager</imageName>
+					<imageName>exort/permission-manager</imageName>
 					<baseImage>java</baseImage>
 					<maintainer>icecola2018</maintainer>
 					<exposes>
