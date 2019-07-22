@@ -23,11 +23,11 @@ public class AssociationServiceImplTest {
    private AssociationService service;
 
    @Test
-   public void testCreateAssociation(){
-       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
-       Assert.assertEquals(responseBody.getError(),"");
-       Assert.assertEquals(responseBody.getMessage(),"");
-   }
+//   public void testCreateAssociation(){
+//       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
+//       Assert.assertEquals(responseBody.getError(),"");
+//       Assert.assertEquals(responseBody.getMessage(),"");
+//   }
 
 //    @Test
 //    public void testGetAssociation(){
@@ -113,7 +113,7 @@ public class AssociationServiceImplTest {
 //
    @Test
    public void testEditAssociation(){
-       AssociationList associations =new AssociationList();
+       AssociationList associations = new AssociationList();
        AssociationFilterParams params = new AssociationFilterParams();
        params.setState(1);
        params.setTags(Arrays.asList("a","g"));
