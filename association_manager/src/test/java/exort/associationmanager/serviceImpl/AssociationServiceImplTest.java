@@ -1,6 +1,7 @@
 package exort.associationmanager.serviceImpl;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import exort.associationmanager.entity.*;
@@ -23,7 +24,7 @@ public class AssociationServiceImplTest {
 
    @Test
    public void testCreateAssociation(){
-       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(),UUID.randomUUID().toString(), Arrays.asList("a","f"));
+       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString(),);
        Assert.assertEquals(responseBody.getError(),"");
        Assert.assertEquals(responseBody.getMessage(),"");
    }
