@@ -14,7 +14,7 @@ steps:
   - name: server-hosts
     path: /etc/hosts
   commands:
-  - cd ./auth
+  - cd ./association_member_management
   - mvn clean package docker:removeImage -DimageName=exort/association_member_manager docker:build -DpushImage
 
 trigger:

@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://202.120.40.8:30721/BertZ?serverTimezone=UTC
+    url: jdbc:mysql://exort-mysql:30721/BertZ
     username: BertZ
     password: 1qaz2wsx
   jpa:
