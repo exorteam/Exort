@@ -174,7 +174,7 @@ public class AssociationMemberManageServiceImplTest {
         departmentRepository.save(new Department(1,"hello","das",0));
 
         ApiResponse = associationMemberManageService.removeOneFromDepartment(1, 8, 1, response);
-        Assert.assertEquals(404, response.getStatus());
+        Assert.assertEquals(401, response.getStatus());
         Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
         associationMemberManageService.removeOneFromDepartment(1, 0, 1, response);
@@ -205,7 +205,7 @@ public class AssociationMemberManageServiceImplTest {
         departmentRepository.save(new Department(1,"hello","das",0));
 
         ApiResponse = associationMemberManageService.checkUserPermissionInAssociation(9, 1, "write", response);
-        Assert.assertEquals(404, response.getStatus());
+        Assert.assertEquals(401, response.getStatus());
         Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
         associationMemberManageService.addOneToDepartment(1, 0, 1, response);
@@ -232,7 +232,7 @@ public class AssociationMemberManageServiceImplTest {
         departmentRepository.save(new Department(1,"hello","das",0));
 
         ApiResponse = associationMemberManageService.getUserDepartment(3, 2, response);
-        Assert.assertEquals(404, response.getStatus());
+        Assert.assertEquals(401, response.getStatus());
         Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
         ApiResponse = associationMemberManageService.getUserDepartment(1, 2, response);
