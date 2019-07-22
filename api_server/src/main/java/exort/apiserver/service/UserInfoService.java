@@ -34,7 +34,7 @@ public interface UserInfoService {
 	}
 
 	public UserInfo getUserInfo(int id);
-	public UserInfo updateUserInfo(UserInfo info);
+	public UserInfo updateUserInfo(int id,UserInfo info);
 	public boolean  disableUser(int id,boolean disabled);
 }
 

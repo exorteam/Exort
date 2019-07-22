@@ -27,8 +27,7 @@ public class UserInfoController {
 
 	@PostMapping("/info/{id}")
 	public UserInfo updateUserInfoById(@PathVariable("id") int id,@RequestBody UserInfo info){
-		if(info.getId() != id)return null;
-		return service.updateUserInfo(info);
+		return service.updateUserInfo(id,info);
 	}
 
 	@PatchMapping("/info/{id}")
