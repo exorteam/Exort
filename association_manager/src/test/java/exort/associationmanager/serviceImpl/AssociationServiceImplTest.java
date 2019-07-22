@@ -130,45 +130,45 @@ public class AssociationServiceImplTest {
 //       Assert.assertEquals(association.getDescription(),"混沌陨石");
 //   }
 //
-   @Test
-   public void testPatchAssociation(){
-       AssociationList associations =new AssociationList();
-       AssociationFilterParams params = new AssociationFilterParams();
-       params.setState(1);
-       params.setTags(Arrays.asList("a","g"));
-       params.setKeyword("qqwrv");
-       ResponseBody responseBody = service.listAssociations(params,0,6);
-       associations = (AssociationList) responseBody.getData();
-       String assoId=associations.getContent().get(0).getId();
+//    @Test
+//    public void testPatchAssociation(){
+//        AssociationList associations =new AssociationList();
+//        AssociationFilterParams params = new AssociationFilterParams();
+//        params.setState(1);
+//        params.setTags(Arrays.asList("a","g"));
+//        params.setKeyword("qqwrv");
+//        ResponseBody responseBody = service.listAssociations(params,0,6);
+//        associations = (AssociationList) responseBody.getData();
+//        String assoId=associations.getContent().get(0).getId();
 
-       responseBody = service.patchAssociation(assoId,"block","!*+");
-       Assert.assertEquals(responseBody.getError(),"");
-       Assert.assertEquals(responseBody.getMessage(),"");
-       Association association = (Association) service.getAssociation(assoId).getData();
-       Assert.assertEquals(association.getState(),(Integer)0);
-   }
+//        responseBody = service.patchAssociation(assoId,"block","!*+");
+//        Assert.assertEquals(responseBody.getError(),"");
+//        Assert.assertEquals(responseBody.getMessage(),"");
+//        Association association = (Association) service.getAssociation(assoId).getData();
+//        Assert.assertEquals(association.getState(),(Integer)0);
+//    }
 //
-//   @Test
-//   public void testHandleAssociation(){
-//       MyObject myObject = new MyObject();
-//       myObject.setDescription(UUID.randomUUID().toString());
-//       myObject.setLogo(UUID.randomUUID().toString());
-//       myObject.setName("qqwrv");
-//       myObject.setTags(Arrays.asList("a","f"));
-//
-//       Application application= new Application();
-//       application.setApplicantId("111");
-//       application.setCreatedTime("111");
-//       application.setHandledTime("1wq");
-//       application.setId("qwewq");
-//       application.setMaterialIds(Arrays.asList("aqwe","qwef"));
-//       application.setState("pending");
-//       application.setObject(myObject);
-//       application.setType("createAssociation");
-//
-//       ResponseBody responseBody = service.handleAsoociationApplication("5d3134216372d61d78c1030f","accept",application);
-//
-//   }
+  @Test
+  public void testHandleAssociation(){
+      MyObject myObject = new MyObject();
+      myObject.setDescription(UUID.randomUUID().toString());
+      myObject.setLogo(UUID.randomUUID().toString());
+      myObject.setName("qqwrv");
+      myObject.setTags(Arrays.asList("a","f"));
+
+      Application application= new Application();
+      application.setApplicantId("111");
+      application.setCreatedTime("111");
+      application.setHandledTime("1wq");
+      application.setId("qwewq");
+      application.setMaterialIds(Arrays.asList("aqwe","qwef"));
+      application.setState("pending");
+      application.setObject(myObject);
+      application.setType("createAssociation");
+
+      ResponseBody responseBody = service.handleAsoociationApplication("5d3134216372d61d78c1030f","accept",application);
+
+  }
 
 
 }
