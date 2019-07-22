@@ -12,14 +12,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@Profile("testOne") // 指定单元测试活动所匹配的数据源
 public class AssociationManagerApplicationTests {
 
 	@Autowired
