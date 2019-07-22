@@ -1,4 +1,4 @@
-package exort.activity.config;
+package exort.apiserver.service;
 
 import java.util.Date;
 import java.util.List;

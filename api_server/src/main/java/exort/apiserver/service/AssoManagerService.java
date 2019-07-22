@@ -2,11 +2,8 @@ package exort.apiserver.service;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RestController;
-
 import lombok.Data;
 
-@RestController
 public interface AssoManagerService{
 
     @Data
