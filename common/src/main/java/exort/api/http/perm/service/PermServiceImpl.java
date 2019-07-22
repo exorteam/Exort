@@ -165,7 +165,6 @@ public class PermServiceImpl implements PermService {
 
     @Override
     public ApiResponse<Role> createRole(@NotNull Role roleArg) {
-        roleArg.setName(null);
         return rest.exchange(
                 url("/roles"),
                 HttpMethod.POST, new HttpEntity<>(roleArg),
@@ -237,7 +236,6 @@ public class PermServiceImpl implements PermService {
 
     @Override
     public ApiResponse<Permission> createPermission(@NotNull Permission permArg) {
-        permArg.setName(null);
         return rest.exchange(
                 url("/permissions"),
                 HttpMethod.POST, new HttpEntity<>(permArg),
