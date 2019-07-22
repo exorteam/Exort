@@ -120,9 +120,9 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.2.0</version>
                 <configuration>
-                    <imageName>exort/association_member_manager</imageName>
+                    <imageName>exort/association-member-manager</imageName>
                     <baseImage>java</baseImage>
-                    <maintainer>Bert-Z</maintainer>
+                    <maintainer>bertzhang</maintainer>
                     <exposes>
                         <expose>8900</expose>
                     </exposes>

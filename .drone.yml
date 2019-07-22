@@ -1,5 +1,5 @@
 kind: pipeline
-name: exort-association_member_manager
+name: exort-association-member-manager
 
 steps:
 - name: build
@@ -15,7 +15,7 @@ steps:
     path: /etc/hosts
   commands:
   - cd ./association_member_manager
-  - mvn clean package docker:removeImage -DimageName=exort/association_member_manager docker:build -DpushImage
+  - mvn clean package docker:removeImage -DimageName=exort/association-member-manager docker:build -DpushImage
 
 trigger:
   branch:
