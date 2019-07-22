@@ -13,4 +13,13 @@ public class Permission {
     private String name;
     private String category;
     private String description;
+
+    public Permission(String name) {
+        this.name = name;
+    }
+
+    public Permission(String name, String category) {
+        this.name = name;
+        this.category = category;
+    }
 }
