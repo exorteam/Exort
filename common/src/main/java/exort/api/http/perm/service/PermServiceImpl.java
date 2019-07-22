@@ -7,7 +7,9 @@ import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -26,7 +28,12 @@ public class PermServiceImpl implements PermService {
     @Setter
     private String endpoint;
 
-    private RestTemplate rest = new RestTemplate();;
+    private RestTemplate rest;
+
+    @Autowired
+    public PermServiceImpl(RestTemplateBuilder builder) {
+        rest = builder.errorHandler(new PermServiceResponseErrorHandler()).build();
+    }
 
     private String url(String path) {
         return "http://" + endpoint + path;

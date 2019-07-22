@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface PermService {
 
+    String getEndpoint();
+
     /* Get methods */
 
     // [user] => [scopes]
