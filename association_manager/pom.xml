@@ -79,16 +79,16 @@
                        <expose>8080</expose>
                    </exposes>
                    <imageTags>
-                       <imageTag>${project.version}</imageTag>
+                       <imageTag>0.0.1-SNAPSHOT</imageTag>
                        <!--<imageTag>latest</imageTag>-->
                    </imageTags>
-                   <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                   <entryPoint>["java", "-jar", "/association-manager-0.0.1-SNAPSHOT.jar"]</entryPoint>
                    <rm>true</rm>
                    <resources>
                           <resource>
                             <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
+                            <directory>target</directory>
+                            <include>association-manager-0.0.1-SNAPSHOT.jar</include>
                           </resource>
                    </resources>
                  </configuration>
