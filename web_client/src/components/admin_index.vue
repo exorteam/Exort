@@ -42,14 +42,7 @@
       <Layout>
         <Sider collapsible :collapsed-width="78" v-model="isCollapsed">
           <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
-            <MenuItem name="1-2">
-              <Icon type="ios-navigate"></Icon>
-              <span>用户管理</span>
-            </MenuItem>
-            <MenuItem name="1-3">
-              <Icon type="ios-navigate"></Icon>
-              <span>社团信息管理</span>
-            </MenuItem>
+            <sysside></sysside>
           </Menu>
         </Sider>
         <Layout>
@@ -61,7 +54,6 @@
               <BreadcrumbItem>Layout</BreadcrumbItem>
             </Breadcrumb>
             <Card>
-
               <div style="height: 100%;">
                 <router-view/>
               </div>
@@ -74,12 +66,12 @@
 </template>
 
 <script>
-  // import assoside from './components/adminindex/assoSidebar'
-  // import sysside from './components/adminindex/sysSidebar'
+  import assoside from './sidebar/assoSidebar'
+  import sysside from './sidebar/sysSidebar'
 
   export default {
     name: "app",
-    // components: {assoside, sysside},
+    components: {assoside, sysside},
     data() {
       return {
         admin: 0,
