@@ -111,24 +111,24 @@ public class AssociationServiceImplTest {
 //
 //   }
 //
-   @Test
-   public void testEditAssociation(){
-       AssociationList associations = new AssociationList();
-       AssociationFilterParams params = new AssociationFilterParams();
-       params.setState(1);
-       params.setTags(Arrays.asList("a","g"));
-       params.setKeyword("qqwrv");
-       ResponseBody responseBody = service.listAssociations(params,0,6);
-       associations = (AssociationList) responseBody.getData();
-       String assoId=associations.getContent().get(0).getId();
-
-       responseBody = service.editAssociation(assoId,"eewrd","混沌陨石",Arrays.asList("e","w"),"None");
-       Association association = (Association) responseBody.getData();
-       Assert.assertEquals(responseBody.getError(),"");
-       Assert.assertEquals(responseBody.getMessage(),"");
-       Assert.assertEquals(association.getName(),"eewrd");
-       Assert.assertEquals(association.getDescription(),"混沌陨石");
-   }
+//   @Test
+//   public void testEditAssociation(){
+//       AssociationList associations = new AssociationList();
+//       AssociationFilterParams params = new AssociationFilterParams();
+//       params.setState(1);
+//       params.setTags(Arrays.asList("a","g"));
+//       params.setKeyword("qqwrv");
+//       ResponseBody responseBody = service.listAssociations(params,0,6);
+//       associations = (AssociationList) responseBody.getData();
+//       String assoId=associations.getContent().get(0).getId();
+//
+//       responseBody = service.editAssociation(assoId,"eewrd","混沌陨石",Arrays.asList("e","w"),"None");
+//       Association association = (Association) responseBody.getData();
+//       Assert.assertEquals(responseBody.getError(),"");
+//       Assert.assertEquals(responseBody.getMessage(),"");
+//       Assert.assertEquals(association.getName(),"eewrd");
+//       Assert.assertEquals(association.getDescription(),"混沌陨石");
+//   }
 //
    @Test
    public void testPatchAssociation(){
