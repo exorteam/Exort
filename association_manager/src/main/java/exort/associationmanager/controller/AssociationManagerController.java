@@ -91,9 +91,9 @@ public class AssociationManagerController{
         return service.handleAsoociationApplication(body.getUserId(),body.getEvent(),body.getApplication());
     }
 
-    @GetMapping("/test")
-    public boolean createData(){
-        return service.createTestData();
-    }
+//    @GetMapping("/test")
+//    public boolean createData(){
+//        return service.createTestData();
+//    }
 
 }
