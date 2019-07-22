@@ -24,7 +24,7 @@ public class AssociationServiceImplTest {
 
    @Test
    public void testCreateAssociation(){
-       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString(),);
+       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
        Assert.assertEquals(responseBody.getError(),"");
        Assert.assertEquals(responseBody.getMessage(),"");
    }
