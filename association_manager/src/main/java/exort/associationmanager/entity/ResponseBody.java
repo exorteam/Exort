@@ -25,5 +25,4 @@ public class ResponseBody<T> {
         this.data = data;
     }
 
-
 }
