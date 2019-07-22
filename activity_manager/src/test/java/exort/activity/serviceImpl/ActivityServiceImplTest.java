@@ -79,10 +79,10 @@ public class ActivityServiceImplTest {
         select.setCreateTime(null);
         select.setStartTime(null);
         select.setSignupTime(null);
-        select.setPublishState(-1);
-        select.setSignupState(-1);
-        select.setState(-1);
-        select.setIfReview(1);
+        select.setPublishState(0);
+        select.setSignupState(0);
+        select.setState(0);
+        select.setIfReview(2);
         select.setIfOnlyMem(1);
 
         Response response = as.getActivities(select, 9, 0, 0);

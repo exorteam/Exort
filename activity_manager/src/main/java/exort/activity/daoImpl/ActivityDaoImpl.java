@@ -65,17 +65,17 @@ public class ActivityDaoImpl implements ActivityDao {
                 query.addCriteria(Criteria.where("createTime").gte(select.getStartTime().getStart()).and("createTime")
                         .lte(select.getStartTime().getEnd()));
             }
-            if (select.getPublishState() != -1) {
+            if (select.getPublishState() != 0) {
                 query.addCriteria(Criteria.where("publishState").is(select.getPublishState()));
             }
-            if (select.getSignupState() != -1) {
+            if (select.getSignupState() != 0) {
                 query.addCriteria(Criteria.where("signupState").is(select.getSignupState()));
             }
-            if (select.getIfReview() != -1) {
-                query.addCriteria(Criteria.where("ifReview").is(select.getIfReview() == 1));
+            if (select.getIfReview() != 0) {
+                query.addCriteria(Criteria.where("ifReview").is(select.getIfReview() == 2));
             }
-            if (select.getIfOnlyMem() != -1) {
-                query.addCriteria(Criteria.where("ifOnlyMem").is(select.getIfOnlyMem() == 1));
+            if (select.getIfOnlyMem() != 0) {
+                query.addCriteria(Criteria.where("ifOnlyMem").is(select.getIfOnlyMem() == 2));
             }
             if (select.getKeyword() != null) {
                 query.addCriteria(Criteria.where("content").regex(select.getKeyword()));
