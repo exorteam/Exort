@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import exort.associationmanager.entity.*;
-import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 import org.junit.Assert;
 import org.junit.Test;
