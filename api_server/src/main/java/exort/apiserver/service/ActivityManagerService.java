@@ -1,4 +1,4 @@
-package exort.apiserver.service;
+package exort.activity.config;
 
 import java.util.Date;
 import java.util.List;
@@ -8,12 +8,12 @@ public interface ActivityManagerService {
     public Response createNewActivity(Activity activity);
     public Response updateActivity(Activity activity,String activityid);
     public Response getActivities(Select select,int pagesize,int pagenum,int sortby);
-    public Response publishActivity(String activityid,Request request);
-    public Response addParticipants(String activityid,Request request);
-    public Response addRealParticipants(String activityid,Request request);
-    public Response deleteParticipants(String activityid,Request request);
-    public Response getActivityParticipants(int pagesize,int pagenum,String activityid,Request request);
-    public Response getActivityRealParticipants(int pagesize,int pagenum,String activityid,Request request);
+    public Response publishActivity(String activityid, String type);
+    public Response addParticipants(String activityid, List<Integer> participantIds);
+    public Response addRealParticipants(String activityid, List<Integer> realParticipantIds);
+    public Response deleteParticipants(String activityid, List<Integer> participantIds);
+    public Response getActivityParticipants(int pagesize,int pagenum,String activityid, List<Integer> participantIds);
+    public Response getActivityRealParticipants(int pagesize,int pagenum,String activityid, List<Integer> realParticipantIds);
     public Response acceptSignup(Operation operation);
     public Response getActivity(String acticityid);
 
@@ -77,32 +77,32 @@ public interface ActivityManagerService {
         private List<Integer> realParticipantIds;
         private List<String> tags;
         private String image;
-	}
+    }
 
-	public class TimeRange{
+    public class TimeRange{
 
-		private Date start;
-		private Date end;
+        private Date start;
+        private Date end;
 
-	}
-	public class Select {
+    }
+    public class Select {
 
-		private String keyword;
-		private List<String> tags;
-		private TimeRange createTime;
-		private TimeRange startTime;
-		private TimeRange signupTime;
-		private int publishState;
-		private int signupState;
-		private int state;
-		private int ifReview;
-		private int ifOnlyMem;
-	}
+        private String keyword;
+        private List<String> tags;
+        private TimeRange createTime;
+        private TimeRange startTime;
+        private TimeRange signupTime;
+        private int publishState;
+        private int signupState;
+        private int state;
+        private int ifReview;
+        private int ifOnlyMem;
+    }
 
-	public class ActivityTime {
+    public class ActivityTime {
 
-		private int type;
-		private List<TimeRange> time;
+        private int type;
+        private List<TimeRange> time;
 
-	}
+    }
 }

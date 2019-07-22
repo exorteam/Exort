@@ -30,7 +30,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<CallbackParam> requestEntity = new HttpEntity<>(callbackParam, headers);
 
-        String url = "http://localhost:8900/application/accept";
+        String url = "http://202.120.40.8:30725/application/accept";
         MultiValueMap<String, CallbackParam<ApplicationDepartmentInfo>> paramMap = new LinkedMultiValueMap<>();
         paramMap.add("callbackParam", callbackParam);
 
@@ -56,7 +56,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/json");
-        String url = "http://localhost:8900/associations/" + associationId + "/departments";
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments";
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
 
@@ -81,7 +81,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/departments/" + departmentId;
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments/" + departmentId;
 
         try {
             ResponseEntity<ApiResponse<Department>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<Department>>() {
@@ -106,7 +106,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Department> requestEntity = new HttpEntity<>(departmentInfo, headers);
-        String url = "http://localhost:8900/associations/"+associationId+"/departments";
+        String url = "http://202.120.40.8:30725/associations/"+associationId+"/departments";
 
         try {
             ResponseEntity<ApiResponse<Department>> responseEntity = restTemplate.exchange(url, method, requestEntity, new ParameterizedTypeReference<ApiResponse<Department>>() {
@@ -136,7 +136,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity requestEntity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/departments/" + departmentId;
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments/" + departmentId;
 
         try {
             ResponseEntity<ApiResponse<Department>> responseEntity = restTemplate.exchange(url, method, requestEntity, new ParameterizedTypeReference<ApiResponse<Department>>() {
@@ -166,7 +166,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         departmentInfo.setDepartmentId(departmentId);
         HttpEntity<Department> requestEntity = new HttpEntity<>(departmentInfo, headers);
 
-        String url = "http://localhost:8900/associations/" + associationId + "/departments/" + departmentId;
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments/" + departmentId;
 
         try {
             ResponseEntity<ApiResponse<Department>> responseEntity = restTemplate.exchange(url, method, requestEntity, new ParameterizedTypeReference<ApiResponse<Department>>() {
@@ -195,7 +195,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/departments/" + departmentId + "/members";
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments/" + departmentId + "/members";
 
         try {
 
@@ -223,7 +223,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity requestEntity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/departments/" + departmentId + "/members/" + userId;
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments/" + departmentId + "/members/" + userId;
 
         try {
             ResponseEntity<ApiResponse<Boolean>> responseEntity = restTemplate.exchange(url, method, requestEntity, new ParameterizedTypeReference<ApiResponse<Boolean>>() {
@@ -250,7 +250,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Integer> requestEntity = new HttpEntity<>(userId, headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/departments/" + departmentId + "/members";
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/departments/" + departmentId + "/members";
 
         try {
             ResponseEntity<ApiResponse<Boolean>> responseEntity = restTemplate.exchange(url, method, requestEntity, new ParameterizedTypeReference<ApiResponse<Boolean>>() {
@@ -286,7 +286,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/members/" + userId + "/permissions/" + permission;
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/members/" + userId + "/permissions/" + permission;
 
         try {
             ResponseEntity<ApiResponse<Boolean>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<Boolean>>() {
@@ -329,7 +329,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/users/" + userId + "/associations";
+        String url = "http://202.120.40.8:30725/users/" + userId + "/associations";
 
         try {
             ResponseEntity<ApiResponse<List<Integer>>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<List<Integer>>>() {
@@ -354,7 +354,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/users/" + userId + "/associations/" + associationId + "/departments";
+        String url = "http://202.120.40.8:30725/users/" + userId + "/associations/" + associationId + "/departments";
 
         try {
             ResponseEntity<ApiResponse<List<Department>>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<List<Department>>>() {
@@ -394,7 +394,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.DELETE;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/members/" + userId;
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/members/" + userId;
 
         try {
             ResponseEntity<ApiResponse<Boolean>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<Boolean>>() {
@@ -434,7 +434,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.POST;
         HttpEntity<Integer> entity = new HttpEntity<>(userId, headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/members";
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/members";
 
         try {
             ResponseEntity<ApiResponse<Boolean>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<Boolean>>() {
@@ -469,7 +469,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.GET;
         HttpEntity entity = new HttpEntity(headers);
-        String url = "http://localhost:8900/associations/" + associationId + "/members";
+        String url = "http://202.120.40.8:30725/associations/" + associationId + "/members";
 
         try {
             ResponseEntity<ApiResponse<List<Integer>>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<List<Integer>>>() {
@@ -493,7 +493,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
         headers.set("Accept", "application/json");
         HttpMethod method = HttpMethod.POST;
         HttpEntity<InitAssociationInfo> entity = new HttpEntity<>(initAssociationInfo, headers);
-        String url = "http://localhost:8900/associations";
+        String url = "http://202.120.40.8:30725/associations";
 
         try {
             ResponseEntity<ApiResponse<Boolean>> responseEntity = this.restTemplate.exchange(url, method, entity, new ParameterizedTypeReference<ApiResponse<Boolean>>() {
