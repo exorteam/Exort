@@ -22,7 +22,7 @@ public class AssociationServiceImplTest {
    @Autowired
    private AssociationService service;
 
-   @Test
+//   @Test
 //   public void testCreateAssociation(){
 //       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
 //       Assert.assertEquals(responseBody.getError(),"");
@@ -49,8 +49,8 @@ public class AssociationServiceImplTest {
 //
 //    }
 
-   @Test
-   public void testListAssociation(){
+//   @Test
+//   public void testListAssociation(){
 //       Association new_association = new Association();
 //       new_association.setName("qqwrv"+"list");
 //       new_association.setDescription(UUID.randomUUID().toString());
