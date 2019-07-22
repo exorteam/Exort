@@ -82,7 +82,7 @@ public class ActivityServiceImplTest {
         select.setPublishState(0);
         select.setSignupState(0);
         select.setState(0);
-        select.setIfReview(2);
+        select.setIfReview(1);
         select.setIfOnlyMem(1);
 
         Response response = as.getActivities(select, 9, 0, 0);

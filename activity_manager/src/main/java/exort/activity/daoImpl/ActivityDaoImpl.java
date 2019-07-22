@@ -71,11 +71,14 @@ public class ActivityDaoImpl implements ActivityDao {
             if (select.getSignupState() != 0) {
                 query.addCriteria(Criteria.where("signupState").is(select.getSignupState()));
             }
+            if (select.getState() != 0) {
+                query.addCriteria(Criteria.where("state").is(select.getState()));
+            }
             if (select.getIfReview() != 0) {
-                query.addCriteria(Criteria.where("ifReview").is(select.getIfReview() == 2));
+                query.addCriteria(Criteria.where("ifReview").is(select.getIfReview() == 1));
             }
             if (select.getIfOnlyMem() != 0) {
-                query.addCriteria(Criteria.where("ifOnlyMem").is(select.getIfOnlyMem() == 2));
+                query.addCriteria(Criteria.where("ifOnlyMem").is(select.getIfOnlyMem() == 1));
             }
             if (select.getKeyword() != null) {
                 query.addCriteria(Criteria.where("content").regex(select.getKeyword()));
