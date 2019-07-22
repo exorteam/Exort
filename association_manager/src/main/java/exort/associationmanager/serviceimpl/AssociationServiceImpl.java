@@ -4,11 +4,13 @@ import java.util.*;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import exort.associationmanager.entity.*;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
+import org.springframework.web.client.RestTemplate;
 
 import static java.lang.Math.min;
 
@@ -182,13 +184,25 @@ public class AssociationServiceImpl implements AssociationService{
 
         return new ResponseBody(new HashMap(),"","");
     };
+
+    private boolean hasAuth(String user_id,String scope,String permission){
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        HttpMethod method = HttpMethod.GET;
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<AssociationInfo> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/users/"+user_id+"/scopes/"+scope+"/permissions/"+permission,method,requestEntity,ResponseBody.class);
+
+        return response.getBody().getError()=="";
+    };
+
     public ResponseBody handleAsoociationApplication(String user_id, String type, Application app ){
         ResponseBody responseBody = new ResponseBody();
         switch (type) {
             case "accept": //create association
                 switch (app.getType()) {
                     case "createAssociation":
-                        if (true) {    //有权限，待修改
+                        if (hasAuth(user_id,"system","createAssociation")) {    //有权限，待修改
                             List<String> tags =new ArrayList();
                             MyObject assoInfo = app.getObject();
                             responseBody=createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
@@ -197,7 +211,7 @@ public class AssociationServiceImpl implements AssociationService{
                         }
                         return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                     case "unblockAssociation":
-                        if (true) {
+                        if (hasAuth(user_id,"system","unblockAssociation")) {
                             MyObject blockInfo = app.getObject();
                             Association asso = assoRepository.findById(blockInfo.getAssociationId().toString());
                             asso.setState(1);
@@ -209,7 +223,7 @@ public class AssociationServiceImpl implements AssociationService{
                 }
             case "refuse":
             case "cancel":
-                if (true) {
+                if (hasAuth(user_id,"system","createAssociation")) {
                     return new ResponseBody(new HashMap(), "", "");
                 }
                 return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
