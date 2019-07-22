@@ -3,13 +3,12 @@ package exort.association_member_manager.serviceimpl;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
+import exort.api.http.review.entity.CallbackParam;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -32,20 +31,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Override
     public ApiResponse<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-
-//        String url="localhost:8900/application/accept";
-//        MultiValueMap<String,Object> paramMap=new LinkedMultiValueMap<>();
-//        paramMap.add("userId",userId);
-//        paramMap.add("event",event);
-//        paramMap.add("application",application);
-//
-//        try{
-//            ApiResponse apiResponse=  restTemplate.postForObject(url,paramMap,apiResponse.class);
-//            System.out.println(apiResponse);
-//
-//        }catch (HttpClientErrorException e){
-//            System.out.println(e);
-//        }
 
         // outside
         boolean userInAsso = false;
@@ -74,17 +59,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         return apiResponse;
     }
 
-//    @Override
-//    public ApiResponse refuseApplication(int applyId) {
-//        ApiResponse apiResponse = new ApiResponse();
-//
-//        Application application = applicationRepository.findById(applyId).get();
-//        application.setState(Application.REFUSED);
-//        applicationRepository.save(application);
-//
-//        apiResponse.setMessage("Success Refuse");
-//        return apiResponse;
-//    }
 
     @Override
     public ApiResponse<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response) {
@@ -298,7 +272,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
                 }
 
             } else {
-                response.setStatus(404);
+                response.setStatus(401);
 
                 apiResponse.setError("DepartmentNotFound");
                 apiResponse.setMessage("不存在该部门");
@@ -401,7 +375,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
 
             if (!existUserInAsso) {
-                response.setStatus(404);
+                response.setStatus(402);
 
                 apiResponse.setError("UserNotFound");
                 apiResponse.setMessage("用户不在该社团中");
@@ -423,7 +397,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             }
 
         } else {
-            response.setStatus(404);
+            response.setStatus(401);
 
             apiResponse.setError("AssociationNotFound");
             apiResponse.setMessage("不存在该社团");
@@ -512,7 +486,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             }
 
         } else {
-            response.setStatus(404);
+            response.setStatus(401);
 
             apiResponse.setError("AssociationNotFound");
             apiResponse.setMessage("不存在该社团");
@@ -570,10 +544,10 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             apiResponse.setData(true);
 
         } else {
-            response.setStatus(404);
+            response.setStatus(401);
 
             apiResponse.setError("UserNotFound");
-            apiResponse.setMessage("用户没有参与该社团");
+            apiResponse.setMessage("社团中不存在该用户");
         }
 
         return apiResponse;
@@ -675,9 +649,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         }
 
         response.setStatus(200);
-        Department manageDepartment = new Department(associationId, "管理层", "管理部门的最基础部门", 0);
+        Department manageDepartment = new Department(associationId,0, "管理层", "管理部门的最基础部门", 0);
 
-        Department allUsers = new Department(associationId, "所有成员", "社团中所有成员", 0);
+        Department allUsers = new Department(associationId,1, "所有成员", "社团中所有成员", 0);
 
         departmentRepository.save(manageDepartment);
         departmentRepository.save(allUsers);

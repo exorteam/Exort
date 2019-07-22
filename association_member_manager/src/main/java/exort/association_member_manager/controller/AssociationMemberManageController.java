@@ -2,8 +2,10 @@ package exort.association_member_manager.controller;
 
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.member.entity.DepartmentInfo;
+import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.api.http.review.entity.CallbackParam;
+import exort.association_member_manager.api_server.ApiServer;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import io.swagger.annotations.Api;
@@ -22,11 +24,9 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST,value = "/application/accept")
     @ApiOperation(value = "通过某个申请")
-    public ApiResponse<Boolean> adoptApplication(@RequestBody CallbackParam<ApplicationDepartmentInfo> appli, HttpServletResponse response) {
-
+    public ApiResponse adoptApplication(@RequestBody CallbackParam<ApplicationDepartmentInfo> appli, HttpServletResponse response) {
         return associationMemberManageService.adoptApplication(appli.getUserId().intValue(),appli.getEvent(),appli.getApplication(),response);
     }
-
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
@@ -64,7 +64,7 @@ public class AssociationMemberManageController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/asssociations/{associationId}/departments/{departmentId}/members")
+    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "得到某个部门的成员列表")
     public ApiResponse<List<Integer>> getSpecMemberList(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, HttpServletResponse response) {
         return associationMemberManageService.getSpecMemberList(associationId, departmentId, response);
@@ -128,9 +128,9 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations")
     @ApiOperation(value = "初始化部门")
-    public ApiResponse<Boolean> initDepartment(@RequestParam(value = "associationId") int associationId, @RequestParam(value = "userId") int userId, HttpServletResponse response) {
+    public ApiResponse<Boolean> initDepartment(@RequestBody InitAssociationInfo initAssociationInfo, HttpServletResponse response) {
 
-        return associationMemberManageService.initDepartment(associationId, userId, response);
+        return associationMemberManageService.initDepartment(initAssociationInfo.getAssociationId(), initAssociationInfo.getUserId(), response);
     }
 
 }
