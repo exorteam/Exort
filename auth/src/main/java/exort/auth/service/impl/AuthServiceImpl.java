@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import exort.auth.component.JwtKeyUtil;
 import exort.auth.entity.AuthResponse;
 import exort.auth.entity.UserAccount;
+import exort.auth.entity.UserInfo;
 import exort.auth.repository.AccountRepository;
+import exort.auth.repository.InfoRepository;
 import exort.auth.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,6 +20,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private AccountRepository accountRepository;
+	@Autowired
+	private InfoRepository infoRepository;
 	@Autowired
 	private JwtKeyUtil jwtKeyUtil;
 
@@ -61,6 +65,10 @@ public class AuthServiceImpl implements AuthService {
 		account.setPassword(pwd);
 		account.setId(id);
 		accountRepository.save(account);
+
+		UserInfo info = new UserInfo();
+		info.setId(id);
+		info.setEnabled(true);
 
 		return id;
 	}
