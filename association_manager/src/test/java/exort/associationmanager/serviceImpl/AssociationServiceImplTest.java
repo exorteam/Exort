@@ -51,14 +51,14 @@ public class AssociationServiceImplTest {
 
    @Test
    public void testListAssociation(){
-       Association new_association = new Association();
-       new_association.setName("qqwrv"+"list");
-       new_association.setDescription(UUID.randomUUID().toString());
-       new_association.setLogo(UUID.randomUUID().toString());
-       new_association.setTags( Arrays.asList("a","f"));
-       for (int i = 0; i <10 ; i++) {
-           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
-       }
+//       Association new_association = new Association();
+//       new_association.setName("qqwrv"+"list");
+//       new_association.setDescription(UUID.randomUUID().toString());
+//       new_association.setLogo(UUID.randomUUID().toString());
+//       new_association.setTags( Arrays.asList("a","f"));
+//       for (int i = 0; i <10 ; i++) {
+//           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
+//       }
 
 
 
