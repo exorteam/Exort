@@ -59,9 +59,7 @@ public class AssociationServiceImplTest {
 //       for (int i = 0; i <10 ; i++) {
 //           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
 //       }
-
-
-
+       System.out.println("I'm here");
        AssociationList associations =new AssociationList();
        AssociationFilterParams params = new AssociationFilterParams();
        params.setState(1);
