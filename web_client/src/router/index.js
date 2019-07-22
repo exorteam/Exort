@@ -21,14 +21,23 @@ import AppliManagement from '../components/association_member_management/applica
 import UserList from '../components/user_management/UserList.vue'
 import PermList from '../components/user_management/PermList.vue'
 
+import SignIn from  '../components/auth/signin/signin'
+import SignUp from  '../components/auth/signup/signup'
+
 Vue.use(Router);
 
 export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      name: 'Index',
+      path: '/signIn',
+      name: 'SignIn',
+      component:SignIn
+    },
+    {
+      path: '/signUp',
+      name: 'SignUp',
+      component:SignUp
     },
     {
       path: "/admin",
