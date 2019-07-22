@@ -276,11 +276,11 @@
       |`createTime`_TimeRange_|创建时间| null |
       |`signupTime`_TimeRange_|报名时间| null |
       |`startTime`_TimeRange_|开始时间| null |
-      |`publishState`_int_| 活动状态(0/unpublished, 1/published)| -1 |
-      |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
-      |`state`_int_| 活动状态(0未开始，1进行中，2已结束) | -1 |
-      |`ifReview`_bool_|报名是否需要审核| -1 |
-      |`ifOnlyMem`_bool_|活动是否仅社团成员可参加| -1 |
+      |`publishState`_int_| 活动状态(1/unpublished, 2/published)|0|
+      |`signupState`_int_| 报名状态(1报名未开始，2报名中，3报名已结束)| 0|
+      |`state`_int_| 活动状态(1未开始，2进行中，3已结束) | 0 |
+      |`ifReview`_bool_|报名是否需要审核| 0|
+      |`ifOnlyMem`_bool_|活动是否仅社团成员可参加| 0|
 
    - Response  
 
