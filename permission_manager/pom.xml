@@ -10,7 +10,7 @@
     </parent>
     <groupId>exort</groupId>
     <artifactId>permission_manager</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>permission_manager</name>
     <description>Permission manager for Exort</description>
 

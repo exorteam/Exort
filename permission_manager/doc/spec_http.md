@@ -62,7 +62,7 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 [_PagedData\<string\>_](#PagedData)|用户的域列表|
+   |200 _string[]_|用户的域列表|
 
 - Examples
 
@@ -71,7 +71,7 @@ _用户在这些域中有至少一个角色_
 
 - HTTP Request
 
-   **GET** `/users/{userId}/scopes`
+   **GET** `/scopes`
 
 - Query Parameters
 
@@ -84,7 +84,7 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 _string[]_|用户的域列表|
+   |200 [_PagedData\<string\>_](#PagedData)|用户的域列表|
 
 - Examples
 
