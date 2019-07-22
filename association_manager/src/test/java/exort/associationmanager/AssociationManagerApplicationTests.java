@@ -17,8 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class AssociationManagerApplicationTests {
 
-	@Autowired
-	private AssociationRepository repository;
+//	@Autowired
+//	private AssociationRepository repository;
 	@Autowired
 	private AssociationService service;
 
@@ -122,7 +122,7 @@ public class AssociationManagerApplicationTests {
 
 			Assert.assertEquals(responseBody.getError(),"");
 			Assert.assertEquals(responseBody.getMessage(),"");
-			Assert.assertEquals(repository.findById(assoId),null);
+//			Assert.assertEquals(repository.findById(assoId),null);
 		}
 
 	}
