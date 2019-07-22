@@ -1,7 +1,8 @@
 package exort.apiserver.service;
 
-import lombok.Data;
 import java.util.Date;
+
+import lombok.Data;
 
 public interface UserInfoService {
 
@@ -20,6 +21,15 @@ public interface UserInfoService {
 		private String 	qqId;
 		private String 	wechatId;
 		private boolean enabled;
+
+	}
+
+	@Data
+	public class RestResponse<T> {
+
+		private T	   data;
+		private String error;
+		private String message;
 
 	}
 

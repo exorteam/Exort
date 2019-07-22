@@ -22,10 +22,6 @@ public class InfoServiceImpl implements InfoService {
 	}
 
 	public boolean updateUserInfo(UserInfo info){
-		if(!infoRepository.existsById(info.getId())){
-			return false;
-		}
-
 		infoRepository.save(info);
 		return true;
 	}
