@@ -65,7 +65,9 @@ public class AssociationServiceImplTest {
        params.setState(1);
        params.setTags(Arrays.asList("a","g"));
        params.setKeyword("qqwrv"+"list");
+       System.out.println("I'm here");
        ResponseBody responseBody = service.listAssociations(params,0,6);
+       System.out.println("I'm here");
        associations = (AssociationList) responseBody.getData();
        Assert.assertEquals(associations.getContent().size(),6);
 //		Assert.assertEquals(associations.getTotalSize(),(Integer) 12);
