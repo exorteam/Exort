@@ -1,35 +1,21 @@
 package exort.apiserver.service;
 
-import exort.apiserver.entity.UserInfo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+import exort.apiserver.serviceimpl.AssociationServiceImpl;
 
 public interface AssociationManagerService {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class ResponseBody<T> {
-        private T data;
-        private String error;
-        private String message;
-    }
+    public AssociationServiceImpl.Response<AssociationServiceImpl.Association> getAssociation(String assoId);
 
-    public  ResponseBody getAssociation(String assoId);
+    public AssociationServiceImpl.Response<AssociationServiceImpl.AssociationList> listAssociations(String _body, Integer pageNum, Integer pageSize);
 
-    public ResponseBody listAssociations(String _body,Integer pageNum,Integer pageSize);
+    public AssociationServiceImpl.Response<AssociationServiceImpl.Association> createAssociation(String _body);
 
-    public ResponseBody createAssociation(String _body);
+    public AssociationServiceImpl.Response<Object> deleteAssociation(String assoId );
 
-    public ResponseBody deleteAssociation(String assoId );
+    public AssociationServiceImpl.Response<AssociationServiceImpl.Association> editAssociation(String assoId, String _body);
 
-    public ResponseBody editAssociation(String assoId, String _body);
+    public AssociationServiceImpl.Response<Object> patchAssociation(String assoId, String _body);
 
-    public  ResponseBody patchAssociation(String assoId,String _body);
+    public AssociationServiceImpl.Response<Object> handleAsoociationApplication(String _body);
 
-    public  ResponseBody handleAsoociationApplication(String user_id, String type, Application app );
-    //public int auth(String username,String password); // return code { -1:error, 0:user, 1:admin }
 }
