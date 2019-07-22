@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 
-import static com.google.common.primitives.Ints.min;
+import static java.lang.Math.min;
+
 
 @Service
 public class AssociationServiceImpl implements AssociationService{

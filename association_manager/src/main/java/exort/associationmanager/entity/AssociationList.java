@@ -1,6 +1,5 @@
 package exort.associationmanager.entity;
 
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.List;
