@@ -1,16 +1,12 @@
 package exort.associationmanager.serviceimpl;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
-import exort.associationmanager.entity.*;
 import org.bson.types.ObjectId;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import exort.associationmanager.entity.*;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 
