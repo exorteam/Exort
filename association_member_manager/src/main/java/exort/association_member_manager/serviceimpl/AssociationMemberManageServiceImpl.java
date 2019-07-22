@@ -1,8 +1,8 @@
 package exort.association_member_manager.serviceimpl;
 
-import exort.api.http.entity.Application;
-import exort.api.http.entity.ApplicationDepartmentInfo;
-import exort.api.http.entity.ResponseCode;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.review.entity.Application;
+import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
@@ -11,6 +11,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,70 +28,30 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Autowired
     private RestTemplate restTemplate;
 
-//    @Override
-//    public ResponseCode getSpecApplication(int applyId) {
-//        ResponseCode responseCode = new ResponseCode();
-//        responseCode.setMessage("Success.");
-//        HashMap<String, Application> data = new HashMap<>();
-//        data.put("application", applicationRepository.findById(applyId).get());
-//        responseCode.setData(data);
-//
-//        return responseCode;
-//    }
-
-    //条件拼接
-//    @Override
-//    public ResponseCode getSomeApplications(Optional<Integer> userId, Optional<Integer> associationId, Optional<Integer> departmentId, Optional<Date> startTime, Optional<Date> endTime, int page, int size) {
-//        ResponseCode responseCode = new ResponseCode();
-//
-//        Specification<Application> specification = new Specification<Application>() {
-//            @Override
-//            public Predicate toPredicate(Root<Application> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-//                List<Predicate> list = new ArrayList<>();
-//
-//                if (userId.isPresent()) {
-//                    list.add(criteriaBuilder.equal(root.get("userId").as(Integer.class), userId.get()));
-//                }
-//                if (associationId.isPresent() && departmentId.isPresent()) {
-//                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class), associationId.get()));
-//                    list.add(criteriaBuilder.equal(root.get("departmentId").as(Integer.class), departmentId.get()));
-//                }
-//
-//                if (associationId.isPresent()) {
-//                    list.add(criteriaBuilder.equal(root.get("associationId").as(Integer.class), associationId.get()));
-//                }
-//
-//                if (startTime.isPresent() && endTime.isPresent()) {
-//                    list.add(criteriaBuilder.between(root.get("applyTime").as(Date.class), startTime.get(), endTime.get()));
-//                }
-//
-//                criteriaQuery.where(criteriaBuilder.and(list.toArray(new Predicate[list.size()])));
-//
-//                return criteriaQuery.getRestriction();
-//            }
-//        };
-//
-//        Pageable pageable = PageRequest.of(page, size);
-//
-//        Page<Application> applications = applicationRepository.findAll(specification, pageable);
-//
-//
-//        HashMap<String, Page<Application>> data = new HashMap<>();
-//        data.put("application", applications);
-//        responseCode.setData(data);
-//
-//        return responseCode;
-//    }
 
     @Override
-    public ResponseCode<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+
+//        String url="localhost:8900/application/accept";
+//        MultiValueMap<String,Object> paramMap=new LinkedMultiValueMap<>();
+//        paramMap.add("userId",userId);
+//        paramMap.add("event",event);
+//        paramMap.add("application",application);
+//
+//        try{
+//            ApiResponse apiResponse=  restTemplate.postForObject(url,paramMap,apiResponse.class);
+//            System.out.println(apiResponse);
+//
+//        }catch (HttpClientErrorException e){
+//            System.out.println(e);
+//        }
 
         // outside
         boolean userInAsso = false;
 //        String url="http://localhost:8900/users/"+userId+"/scopes";
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            userInAsso=true;
 //        }catch (HttpClientErrorException e){
 //            userInAsso=false;
@@ -99,73 +61,75 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!userInAsso) {
             response.setStatus(200);
 
-            responseCode = addOneToAssociation(application.getObject().getAssociationId(), userId, response);
+//            System.out.println(application);
+
+            apiResponse = addOneToAssociation(application.getObject().getAssociationId(), userId, response);
         } else {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUser");
-            responseCode.setMessage("用户已存在");
+            apiResponse.setError("InvalidUser");
+            apiResponse.setMessage("用户已存在");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
 //    @Override
-//    public ResponseCode refuseApplication(int applyId) {
-//        ResponseCode responseCode = new ResponseCode();
+//    public ApiResponse refuseApplication(int applyId) {
+//        ApiResponse apiResponse = new ApiResponse();
 //
 //        Application application = applicationRepository.findById(applyId).get();
 //        application.setState(Application.REFUSED);
 //        applicationRepository.save(application);
 //
-//        responseCode.setMessage("Success Refuse");
-//        return responseCode;
+//        apiResponse.setMessage("Success Refuse");
+//        return apiResponse;
 //    }
 
     @Override
-    public ResponseCode<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response) {
-        ResponseCode<List<Department>> responseCode = new ResponseCode<>();
+    public ApiResponse<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response) {
+        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
 
         List<Department> departments = departmentRepository.findAllByAssociationId(associationId);
 
         if (departments.size() == 0) {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("该社团不存在");
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("该社团不存在");
 
         } else {
             response.setStatus(200);
 
-            responseCode.setData(departments);
+            apiResponse.setData(departments);
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Department> getSpecDepartmentInfo(int associationId, int departmentId, HttpServletResponse response) {
-        ResponseCode<Department> responseCode = new ResponseCode<>();
+    public ApiResponse<Department> getSpecDepartmentInfo(int associationId, int departmentId, HttpServletResponse response) {
+        ApiResponse<Department> apiResponse = new ApiResponse<>();
 
         Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
 
         if (department == null) {
             response.setStatus(404);
 
-            responseCode.setError("DepartmentNotFound");
-            responseCode.setMessage("该部门不存在");
+            apiResponse.setError("DepartmentNotFound");
+            apiResponse.setMessage("该部门不存在");
         } else {
             response.setStatus(200);
 
-            responseCode.setData(department);
+            apiResponse.setData(department);
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Department> createDepartment(int associationId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
-        ResponseCode<Department> responseCode = new ResponseCode<>();
+    public ApiResponse<Department> createDepartment(int associationId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
+        ApiResponse<Department> apiResponse = new ApiResponse<>();
 
         if (departmentRepository.existsByAssociationId(associationId)) {
 
@@ -179,59 +143,59 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
                 response.setStatus(200);
 
-                responseCode.setData(department);
+                apiResponse.setData(department);
 
             } else {
                 response.setStatus(400);
 
-                responseCode.setError("InvalidDepartment");
-                responseCode.setMessage("部门创建信息不合法");
+                apiResponse.setError("InvalidDepartment");
+                apiResponse.setMessage("部门创建信息不合法");
             }
 
         } else {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("该社团不存在");
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("该社团不存在");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Department> deleteDepartment(int associationId, int departmentId, HttpServletResponse response) {
-        ResponseCode<Department> responseCode = new ResponseCode<>();
+    public ApiResponse<Department> deleteDepartment(int associationId, int departmentId, HttpServletResponse response) {
+        ApiResponse<Department> apiResponse = new ApiResponse<>();
 
         Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
 
         if (department == null) {
             response.setStatus(404);
 
-            responseCode.setError("DepartmentNotFound");
-            responseCode.setMessage("不存在该部门");
+            apiResponse.setError("DepartmentNotFound");
+            apiResponse.setMessage("不存在该部门");
         } else {
             response.setStatus(200);
 
-            responseCode.setData(department);
+            apiResponse.setData(department);
 
             departmentRepository.delete(department);
         }
 
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Department> editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
-        ResponseCode<Department> responseCode = new ResponseCode<>();
+    public ApiResponse<Department> editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
+        ApiResponse<Department> apiResponse = new ApiResponse<>();
 
         Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
 
         if (department == null) {
             response.setStatus(404);
 
-            responseCode.setError("DepartmentNotFound");
-            responseCode.setMessage("不存在该部门");
+            apiResponse.setError("DepartmentNotFound");
+            apiResponse.setMessage("不存在该部门");
         } else {
 
             if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId)) {
@@ -244,23 +208,23 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
                 departmentRepository.save(department);
 
-                responseCode.setData(department);
+                apiResponse.setData(department);
 
             } else {
                 response.setStatus(400);
 
-                responseCode.setError("InvalidParentId");
-                responseCode.setMessage("无效父节点");
+                apiResponse.setError("InvalidParentId");
+                apiResponse.setMessage("无效父节点");
             }
 
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<List<Integer>> getSpecMemberList(int associationId, int departmentId, HttpServletResponse response) {
-        ResponseCode<List<Integer>> responseCode = new ResponseCode<>();
+    public ApiResponse<List<Integer>> getSpecMemberList(int associationId, int departmentId, HttpServletResponse response) {
+        ApiResponse<List<Integer>> apiResponse = new ApiResponse<>();
 
         if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
 
@@ -270,38 +234,38 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             String url = "http://localhost:8900/scopes/" + associationId + "/roles/" + departmentId + "/users";
             List<Integer> userList = new ArrayList<>();
 //            try{
-//                ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//                ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //                userList=(List<Integer>)responseEntity.getBody().getData();
 //            }catch (HttpClientErrorException e){
 //                response.setStatus(404);
 //
-//                responseCode.setError("roleNotFound");
-//                responseCode.setMessage("角色不存在");
+//                apiResponse.setError("roleNotFound");
+//                apiResponse.setMessage("角色不存在");
 //
-//                return responseCode;
+//                return apiResponse;
 //            }
 
-            responseCode.setData(userList);
+            apiResponse.setData(userList);
 
         } else {
             response.setStatus(404);
 
-            responseCode.setError("DepartmentNotFound");
-            responseCode.setMessage("不存在该部门");
+            apiResponse.setError("DepartmentNotFound");
+            apiResponse.setMessage("不存在该部门");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existUser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -314,7 +278,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
                 boolean existUserInAsso = true;
 //                String url = "http://localhost:8900/scopes/" + associationId + "/roles/" + departmentId + "/users";
 //                try {
-//                    ResponseEntity<ResponseCode> responseEntity = this.restTemplate.getForEntity(url, ResponseCode.class);
+//                    ResponseEntity<ApiResponse> responseEntity = this.restTemplate.getForEntity(url, apiResponse.class);
 //                    existUserInAsso = true;
 //                } catch (HttpClientErrorException e) {
 //                    existUserInAsso = false;
@@ -324,41 +288,41 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
                 if (existUserInAsso) {
                     response.setStatus(200);
 
-                    responseCode.setData(true);
+                    apiResponse.setData(true);
 
                 } else {
                     response.setStatus(404);
 
-                    responseCode.setError("UserNotFound");
-                    responseCode.setMessage("社团中不存在该用户");
+                    apiResponse.setError("UserNotFound");
+                    apiResponse.setMessage("社团中不存在该用户");
                 }
 
             } else {
                 response.setStatus(404);
 
-                responseCode.setError("DepartmentNotFound");
-                responseCode.setMessage("不存在该部门");
+                apiResponse.setError("DepartmentNotFound");
+                apiResponse.setMessage("不存在该部门");
             }
 
         } else {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existUser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -377,45 +341,45 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 //                HttpEntity<String> formEntity = new HttpEntity<String>(data, headers);
 //                String url = "http://localhost:8900/users/?id=" + userId;
 //                try {
-//                    ResponseEntity<ResponseCode> responseEntity = this.restTemplate.postForEntity(url, ResponseCode.class);
+//                    ResponseEntity<ApiResponse> responseEntity = this.restTemplate.postForEntity(url, apiResponse.class);
 //
 //                } catch (HttpClientErrorException e) {
 //                    existUser = false;
 //                }
 
-                responseCode.setData(true);
+                apiResponse.setData(true);
             } else {
                 response.setStatus(404);
 
-                responseCode.setError("DepartmentNotFound");
-                responseCode.setMessage("不存在该部门");
+                apiResponse.setError("DepartmentNotFound");
+                apiResponse.setMessage("不存在该部门");
             }
 
         } else {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
 //    @Override
-//    public ResponseCode changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response) {
-//        ResponseCode responseCode = new ResponseCode();
-//        return responseCode;
+//    public ApiResponse changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response) {
+//        ApiResponse apiResponse = new ApiResponse();
+//        return apiResponse;
 //    }
 
     @Override
-    public ResponseCode<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existUser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -424,10 +388,10 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!existUser) {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
 
-            return responseCode;
+            return apiResponse;
         }
 
         if (departmentRepository.existsByAssociationId(associationId)) {
@@ -439,9 +403,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             if (!existUserInAsso) {
                 response.setStatus(404);
 
-                responseCode.setError("UserNotFound");
-                responseCode.setMessage("用户不在该社团中");
-                return responseCode;
+                apiResponse.setError("UserNotFound");
+                apiResponse.setMessage("用户不在该社团中");
+                return apiResponse;
 
             }
 
@@ -450,33 +414,33 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             if (hasPermission) {
                 response.setStatus(200);
 
-                responseCode.setData(true);
+                apiResponse.setData(true);
             } else {
                 response.setStatus(404);
 
-                responseCode.setError("PermissionNotFound");
-                responseCode.setMessage("没有该权限");
+                apiResponse.setError("PermissionNotFound");
+                apiResponse.setMessage("没有该权限");
             }
 
         } else {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("不存在该社团");
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("不存在该社团");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<List<Integer>> getUserAssociation(int userId, HttpServletResponse response) {
-        ResponseCode<List<Integer>> responseCode = new ResponseCode<>();
+    public ApiResponse<List<Integer>> getUserAssociation(int userId, HttpServletResponse response) {
+        ApiResponse<List<Integer>> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existuser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -485,9 +449,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!existuser) {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
-            return responseCode;
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
+            return apiResponse;
         }
 
         //outside
@@ -495,20 +459,20 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         response.setStatus(200);
 
-        responseCode.setData(associationId);
+        apiResponse.setData(associationId);
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<List<Department>> getUserDepartment(int associationId, int userId, HttpServletResponse response) {
-        ResponseCode<List<Department>> responseCode = new ResponseCode<>();
+    public ApiResponse<List<Department>> getUserDepartment(int associationId, int userId, HttpServletResponse response) {
+        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existuser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -517,9 +481,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!existuser) {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
-            return responseCode;
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
+            return apiResponse;
         }
 
         if (departmentRepository.existsByAssociationId(associationId)) {
@@ -528,7 +492,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             boolean userInAsso = true;
 //        String url="http://localhost:8900/users/"+userId+"/scopes";
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            userInAsso=true;
 //        }catch (HttpClientErrorException e){
 //            userInAsso=false;
@@ -538,34 +502,34 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
                 response.setStatus(200);
 
                 List<Department> departments = new ArrayList<>();
-                responseCode.setData(departments);
+                apiResponse.setData(departments);
 
             } else {
                 response.setStatus(404);
 
-                responseCode.setError("UserNotFound");
-                responseCode.setMessage("用户没有参与该社团");
+                apiResponse.setError("UserNotFound");
+                apiResponse.setMessage("用户没有参与该社团");
             }
 
         } else {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("不存在该社团");
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("不存在该社团");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Boolean> deleteOneInAssociation(int associationId, int userId, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> deleteOneInAssociation(int associationId, int userId, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existuser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -574,24 +538,24 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!existuser) {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
-            return responseCode;
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
+            return apiResponse;
         }
 
         if (!departmentRepository.existsByAssociationId(associationId)) {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("不存在该社团");
-            return responseCode;
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("不存在该社团");
+            return apiResponse;
         }
 
         // outside
         boolean userInAsso = true;
         //        String url="http://localhost:8900/users/"+userId+"/scopes";
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            userInAsso=true;
 //        }catch (HttpClientErrorException e){
 //            userInAsso=false;
@@ -603,27 +567,27 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             // outside
             // delete user in asso
 
-            responseCode.setData(true);
+            apiResponse.setData(true);
 
         } else {
             response.setStatus(404);
 
-            responseCode.setError("UserNotFound");
-            responseCode.setMessage("用户没有参与该社团");
+            apiResponse.setError("UserNotFound");
+            apiResponse.setMessage("用户没有参与该社团");
         }
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Boolean> addOneToAssociation(int associationId, int userId, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> addOneToAssociation(int associationId, int userId, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existuser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -632,17 +596,17 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!existuser) {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
-            return responseCode;
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
+            return apiResponse;
         }
 
         if (!departmentRepository.existsByAssociationId(associationId)) {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("不存在该社团");
-            return responseCode;
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("不存在该社团");
+            return apiResponse;
         }
 
         response.setStatus(200);
@@ -650,53 +614,53 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         // outside
         // add user to asso
 
-        responseCode.setData(true);
+        apiResponse.setData(true);
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<List<Integer>> getAssoUserList(int associationId, HttpServletResponse response) {
-        ResponseCode<List<Integer>> responseCode = new ResponseCode<>();
+    public ApiResponse<List<Integer>> getAssoUserList(int associationId, HttpServletResponse response) {
+        ApiResponse<List<Integer>> apiResponse = new ApiResponse<>();
 
         if (!departmentRepository.existsByAssociationId(associationId)) {
             response.setStatus(404);
 
-            responseCode.setError("AssociationNotFound");
-            responseCode.setMessage("不存在该社团");
-            return responseCode;
+            apiResponse.setError("AssociationNotFound");
+            apiResponse.setMessage("不存在该社团");
+            return apiResponse;
         }
 
         // outside
         // get users in asso
         List<Integer> users = new ArrayList<>();
 //            try{
-//                ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//                ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //                userList=(List<Integer>)responseEntity.getBody().getData();
 //            }catch (HttpClientErrorException e){
 //                response.setStatus(404);
 //
-//                responseCode.setError("roleNotFound");
-//                responseCode.setMessage("角色不存在");
+//                apiResponse.setError("roleNotFound");
+//                apiResponse.setMessage("角色不存在");
 //
-//                return responseCode;
+//                return apiResponse;
 //            }
 
         response.setStatus(200);
-        responseCode.setData(users);
+        apiResponse.setData(users);
 
-        return responseCode;
+        return apiResponse;
     }
 
     @Override
-    public ResponseCode<Boolean> initDepartment(int associationId, int userId, HttpServletResponse response) {
-        ResponseCode<Boolean> responseCode = new ResponseCode<>();
+    public ApiResponse<Boolean> initDepartment(int associationId, int userId, HttpServletResponse response) {
+        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
         // outside
         boolean existuser = true;
 //        String url="http://localhost:8900/users/?id="+userId;
 //        try{
-//            ResponseEntity<ResponseCode> responseEntity=this.restTemplate.getForEntity(url,ResponseCode.class);
+//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
 //            existUser=true;
 //        }catch (HttpClientErrorException e){
 //            existUser=false;
@@ -705,9 +669,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         if (!existuser) {
             response.setStatus(400);
 
-            responseCode.setError("InvalidUserId");
-            responseCode.setMessage("不存在该用户");
-            return responseCode;
+            apiResponse.setError("InvalidUserId");
+            apiResponse.setMessage("不存在该用户");
+            return apiResponse;
         }
 
         response.setStatus(200);
@@ -718,8 +682,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         departmentRepository.save(manageDepartment);
         departmentRepository.save(allUsers);
 
-        responseCode.setData(true);
+        apiResponse.setData(true);
 
-        return responseCode;
+        return apiResponse;
     }
 }

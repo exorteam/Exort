@@ -1,8 +1,8 @@
 package exort.association_member_manager.serviceimpl;
 
-import exort.api.http.entity.Application;
-import exort.api.http.entity.ApplicationDepartmentInfo;
-import exort.api.http.entity.ResponseCode;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.review.entity.Application;
+import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
@@ -40,30 +40,30 @@ public class AssociationMemberManageServiceImplTest {
     @Test
     public void adoptApplication() {
 
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
 
         Application<ApplicationDepartmentInfo> application = new Application<>();
-        application.setId(123);
-        application.setApplicantId(2);
+        application.setId(123L);
+        application.setApplicantId(2L);
         application.setType("acceptApplication");
         ApplicationDepartmentInfo applicationDepartmentInfo = new ApplicationDepartmentInfo();
         applicationDepartmentInfo.setAssociationId(1);
         applicationDepartmentInfo.setDepartmentId(0);
         application.setObject(applicationDepartmentInfo);
 
-        responseCode = associationMemberManageService.adoptApplication(1, "create", application, response);
+        ApiResponse = associationMemberManageService.adoptApplication(1, "create", application, response);
 
         Assert.assertEquals(response.getStatus(), 200);
-        Assert.assertEquals(responseCode.getData(), true);
+        Assert.assertEquals(ApiResponse.getData(), true);
     }
 
     @Test
     public void getDepartmentTree() {
-        ResponseCode<List<Department>> responseCode;
+        ApiResponse<List<Department>> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
@@ -71,111 +71,111 @@ public class AssociationMemberManageServiceImplTest {
         associationMemberManageService.getDepartmentTree(1, response);
         Assert.assertEquals(200, response.getStatus());
 
-        responseCode = associationMemberManageService.getDepartmentTree(10, response);
+        ApiResponse = associationMemberManageService.getDepartmentTree(10, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
     }
 
     @Test
     public void getSpecDepartmentInfo() {
-        ResponseCode<Department> responseCode;
+        ApiResponse<Department> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.getSpecDepartmentInfo(2, 2, response);
+        ApiResponse = associationMemberManageService.getSpecDepartmentInfo(2, 2, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("DepartmentNotFound", responseCode.getError());
+        Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.getSpecDepartmentInfo(1, 0, response);
+        ApiResponse = associationMemberManageService.getSpecDepartmentInfo(1, 0, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(1, responseCode.getData().getAssociationId());
+        Assert.assertEquals(1, ApiResponse.getData().getAssociationId());
     }
 
     @Test
     public void createDepartment() {
-        ResponseCode<Department> responseCode;
+        ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.createDepartment(3, "hello", "asd", 2, response);
+        ApiResponse = associationMemberManageService.createDepartment(3, "hello", "asd", 2, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.createDepartment(1, "hello", "asd", 20, response);
+        ApiResponse = associationMemberManageService.createDepartment(1, "hello", "asd", 20, response);
         Assert.assertEquals(400, response.getStatus());
-        Assert.assertEquals("InvalidDepartment", responseCode.getError());
+        Assert.assertEquals("InvalidDepartment", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.createDepartment(1, "hello", "hello try", 0, response);
+        ApiResponse = associationMemberManageService.createDepartment(1, "hello", "hello try", 0, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("hello", responseCode.getData().getName());
+        Assert.assertEquals("hello", ApiResponse.getData().getName());
 
     }
 
     @Test
     public void deleteDepartment() {
-        ResponseCode<Department> responseCode;
+        ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.deleteDepartment(1, 10, response);
+        ApiResponse = associationMemberManageService.deleteDepartment(1, 10, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("DepartmentNotFound", responseCode.getError());
+        Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.deleteDepartment(1, 0, response);
+        ApiResponse = associationMemberManageService.deleteDepartment(1, 0, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(0, responseCode.getData().getDepartmentId());
+        Assert.assertEquals(0, ApiResponse.getData().getDepartmentId());
     }
 
     @Test
     public void editDepartment() {
-        ResponseCode<Department> responseCode;
+        ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.editDepartment(1, 0, "black", "back", 200, response);
+        ApiResponse = associationMemberManageService.editDepartment(1, 0, "black", "back", 200, response);
         Assert.assertEquals(400, response.getStatus());
-        Assert.assertEquals("InvalidParentId", responseCode.getError());
+        Assert.assertEquals("InvalidParentId", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.editDepartment(1, 66, "black", "back", 1, response);
+        ApiResponse = associationMemberManageService.editDepartment(1, 66, "black", "back", 1, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("DepartmentNotFound", responseCode.getError());
+        Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.editDepartment(1, 0, "black", "back", 0, response);
+        ApiResponse = associationMemberManageService.editDepartment(1, 0, "black", "back", 0, response);
 
 
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("black", responseCode.getData().getName());
+        Assert.assertEquals("black", ApiResponse.getData().getName());
     }
 
     @Test
     public void getSpecMemberList() {
-        ResponseCode<List<Integer>> responseCode;
+        ApiResponse<List<Integer>> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.getSpecMemberList(2, 3, response);
+        ApiResponse = associationMemberManageService.getSpecMemberList(2, 3, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("DepartmentNotFound", responseCode.getError());
+        Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.getSpecMemberList(1, 0, response);
+        ApiResponse = associationMemberManageService.getSpecMemberList(1, 0, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), responseCode.getData());
+        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
 
     }
 
     @Test
     public void removeOneFromDepartment() {
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.removeOneFromDepartment(1, 8, 1, response);
+        ApiResponse = associationMemberManageService.removeOneFromDepartment(1, 8, 1, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("DepartmentNotFound", responseCode.getError());
+        Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
         associationMemberManageService.removeOneFromDepartment(1, 0, 1, response);
         Assert.assertEquals(200, response.getStatus());
@@ -184,14 +184,14 @@ public class AssociationMemberManageServiceImplTest {
 
     @Test
     public void addOneToDepartment() {
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.addOneToDepartment(1, 8, 1, response);
+        ApiResponse = associationMemberManageService.addOneToDepartment(1, 8, 1, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("DepartmentNotFound", responseCode.getError());
+        Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
         associationMemberManageService.addOneToDepartment(1, 0, 1, response);
         Assert.assertEquals(200, response.getStatus());
@@ -199,14 +199,14 @@ public class AssociationMemberManageServiceImplTest {
 
     @Test
     public void checkUserPermissionInAssociation() {
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.checkUserPermissionInAssociation(9, 1, "write", response);
+        ApiResponse = associationMemberManageService.checkUserPermissionInAssociation(9, 1, "write", response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
         associationMemberManageService.addOneToDepartment(1, 0, 1, response);
         Assert.assertEquals(200, response.getStatus());
@@ -215,89 +215,89 @@ public class AssociationMemberManageServiceImplTest {
 
     @Test
     public void getUserAssociation() {
-        ResponseCode<List<Integer>> responseCode;
+        ApiResponse<List<Integer>> ApiResponse;
 
-        responseCode = associationMemberManageService.getUserAssociation(2, response);
+        ApiResponse = associationMemberManageService.getUserAssociation(2, response);
 
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), responseCode.getData());
+        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
 
     }
 
     @Test
     public void getUserDepartment() {
-        ResponseCode<List<Department>> responseCode;
+        ApiResponse<List<Department>> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.getUserDepartment(3, 2, response);
+        ApiResponse = associationMemberManageService.getUserDepartment(3, 2, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.getUserDepartment(1, 2, response);
+        ApiResponse = associationMemberManageService.getUserDepartment(1, 2, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), responseCode.getData());
+        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
 
     }
 
     @Test
     public void deleteOneInAssociation() {
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.deleteOneInAssociation(3, 2, response);
+        ApiResponse = associationMemberManageService.deleteOneInAssociation(3, 2, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.deleteOneInAssociation(1, 2, response);
+        ApiResponse = associationMemberManageService.deleteOneInAssociation(1, 2, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(true, responseCode.getData());
+        Assert.assertEquals(true, ApiResponse.getData());
 
     }
 
     @Test
     public void addOneToAssociation() {
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.addOneToAssociation(3, 2, response);
+        ApiResponse = associationMemberManageService.addOneToAssociation(3, 2, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.addOneToAssociation(1, 2, response);
+        ApiResponse = associationMemberManageService.addOneToAssociation(1, 2, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(true, responseCode.getData());
+        Assert.assertEquals(true, ApiResponse.getData());
     }
 
     @Test
     public void getAssoUserList() {
-        ResponseCode<List<Integer>> responseCode;
+        ApiResponse<List<Integer>> ApiResponse;
 
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1,"hello","das",0));
 
-        responseCode = associationMemberManageService.getAssoUserList(3, response);
+        ApiResponse = associationMemberManageService.getAssoUserList(3, response);
         Assert.assertEquals(404, response.getStatus());
-        Assert.assertEquals("AssociationNotFound", responseCode.getError());
+        Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
-        responseCode = associationMemberManageService.getAssoUserList(1, response);
+        ApiResponse = associationMemberManageService.getAssoUserList(1, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), responseCode.getData());
+        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
     }
 
     @Test
     public void initDepartment() {
-        ResponseCode<Boolean> responseCode;
+        ApiResponse<Boolean> ApiResponse;
         int ran=(int)(Math.random()*100+10);
 
-        responseCode=associationMemberManageService.initDepartment(ran,3,response);
+        ApiResponse=associationMemberManageService.initDepartment(ran,3,response);
 
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(true, responseCode.getData());
+        Assert.assertEquals(true, ApiResponse.getData());
     }
 }

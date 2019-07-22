@@ -1,20 +1,15 @@
-package exort.association_member_manager.service;
+package exort.association_member_manager.api_server;
 
-
-import exort.api.http.common.entity.*;
+import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.association_member_manager.entity.Department;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-public interface AssociationMemberManageService {
+public interface ApiServer {
     public ApiResponse<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response);
-
-//    public ApiResponse refuseApplication(int applyId);
 
     public ApiResponse<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response);
 
@@ -31,8 +26,6 @@ public interface AssociationMemberManageService {
     public ApiResponse<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response);
 
     public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response);
-
-//    public ApiResponse changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response);
 
     public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response);
 

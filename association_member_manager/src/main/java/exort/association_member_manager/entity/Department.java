@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @IdClass(DepartmentId.class)
 @ApiModel(value = "Department", description = "部门信息实体对象")
-public class Department extends exort.api.http.entity.Department {
+public class Department extends exort.api.http.member.entity.DepartmentInfo {
 
     @Id
     int associationId;

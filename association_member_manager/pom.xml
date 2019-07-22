@@ -148,12 +148,13 @@
         <repository>
             <id>exort</id>
             <name>Exort</name>
-            <url>http://cirno.wang/repository/maven-public/</url>
+            <url>http://cirno.wang:18080/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
