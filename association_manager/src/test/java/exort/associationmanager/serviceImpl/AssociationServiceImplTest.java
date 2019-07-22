@@ -23,26 +23,20 @@ public class AssociationServiceImplTest {
 
    @Test
    public void testCreateAssociation(){
+       ResponseBody responseBody = service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(),UUID.randomUUID().toString(), Arrays.asList("a","f"));
+       Assert.assertEquals(responseBody.getError(),"");
+       Assert.assertEquals(responseBody.getMessage(),"");
+   }
+
+   @Test
+   public void testGetAssociation(){
        Association association = new Association();
-       association.setName("qqwrv"+"create");
+       association.setName("qqwrv"+"get");
        association.setDescription(UUID.randomUUID().toString());
        association.setLogo(UUID.randomUUID().toString());
        association.setTags( Arrays.asList("a","f"));
-       ResponseBody responseBody = service.createAssociation(association.getName(),association.getDescription(),association.getTags(),association.getLogo());
-       Assert.assertEquals(responseBody.getError(),"");
-       Assert.assertEquals(responseBody.getMessage(),"");
-//		Assert.assertFalse(repository.existsByName(association.getName()));
-   }
-
-//    @Test
-//    public void testGetAssociation(){
-//        Association association = new Association();
-//        association.setName("qqwrv"+"get");
-//        association.setDescription(UUID.randomUUID().toString());
-//        association.setLogo(UUID.randomUUID().toString());
-//        association.setTags( Arrays.asList("a","f"));
-//        ResponseBody responseBody = new ResponseBody();
-//        service.createAssociation(association.getName(),association.getDescription(),association.getTags(),association.getLogo());
+       ResponseBody responseBody = new ResponseBody();
+       service.createAssociation(association.getName(),association.getDescription(),association.getTags(),association.getLogo());
 
 //        AssociationList associations =new AssociationList();
 //        AssociationFilterParams params = new AssociationFilterParams();
