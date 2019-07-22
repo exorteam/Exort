@@ -39,7 +39,9 @@ public class AssociationServiceImpl implements AssociationService{
         return  responseBody;
     }
 
-    public ResponseBody listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize){
+    public ResponseBody<AssociationList> listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize){
+        AssociationList assoList = new AssociationList();
+
         ResponseBody responseBody = new ResponseBody();
 
         List<Association> associations = assoRepository.findAll();
@@ -49,8 +51,11 @@ public class AssociationServiceImpl implements AssociationService{
         if(state != null && state != 2){
             associations.removeIf(association -> !state.equals(association.getState()));
             if(associations.isEmpty()){
-
-                return responseBody.setAndGetResponsebody(associations,"","");
+                assoList.setPageNumber(0);
+                assoList.setPageSize(0);
+                assoList.setTotalSize(0);
+                assoList.setContent(associations);
+                return new ResponseBody<>(assoList,"","");
             }
         }
 
@@ -58,7 +63,11 @@ public class AssociationServiceImpl implements AssociationService{
         if(keyword != null){
             associations.removeIf(association -> !association.getName().contains(keyword)&&!association.getDescription().contains(keyword));
             if(associations.isEmpty()){
-                return responseBody.setAndGetResponsebody(associations,"","");
+                assoList.setPageNumber(0);
+                assoList.setPageSize(0);
+                assoList.setTotalSize(0);
+                assoList.setContent(associations);
+                return new ResponseBody<>(assoList,"","");
             }
         }
 
@@ -72,7 +81,11 @@ public class AssociationServiceImpl implements AssociationService{
                     }
                 }
                 if (associations.isEmpty()) {
-                    return responseBody.setAndGetResponsebody(associations, "", "");
+                    assoList.setPageNumber(0);
+                    assoList.setPageSize(0);
+                    assoList.setTotalSize(0);
+                    assoList.setContent(associations);
+                    return new ResponseBody<>(assoList,"","");
                 }
             }
         }
@@ -84,7 +97,7 @@ public class AssociationServiceImpl implements AssociationService{
 
         realPageSize = min(pageSize,max);
         realPageNum = pageNum * pageSize / realPageSize;
-        AssociationList assoList = new AssociationList();
+
 
         int subFirst = realPageNum * realPageSize;
         int subLast = min((realPageNum + 1) * realPageSize,totalSize);
@@ -98,11 +111,7 @@ public class AssociationServiceImpl implements AssociationService{
         assoList.setTotalSize(totalSize);
         assoList.setPageSize(realPageSize);
         assoList.setPageNumber(realPageNum);
-
-
-
-
-        return responseBody.setAndGetResponsebody(assoList,"","");
+        return new ResponseBody<>(assoList,"","");
     }
 
 
@@ -110,7 +119,7 @@ public class AssociationServiceImpl implements AssociationService{
         ResponseBody responseBody = new ResponseBody();
 
         if( name == null || description == null || tags == null || logo == null){
-            return responseBody.setAndGetResponsebody(null,"invalidFormat","无效的申请格式");
+            return new ResponseBody<>(null,"invalidFormat","无效的申请格式");
         }
 
         Association association= new Association();
@@ -127,11 +136,11 @@ public class AssociationServiceImpl implements AssociationService{
 
         assoRepository.save(association);
         responseBody.setData(association);
-        return responseBody.setAndGetResponsebody(association,"","");
+        return new ResponseBody<>(association,"","");
     }
 
     private ResponseBody  noAssoMessage (ResponseBody responseBody){
-        return responseBody.setAndGetResponsebody(null,"notFound","社团不存在");
+        return new ResponseBody(null,"notFound","社团不存在");
     }
 
     public ResponseBody deleteAssociation(String assoId ){
@@ -141,7 +150,7 @@ public class AssociationServiceImpl implements AssociationService{
         }
         assoRepository.deleteById(assoId);
         responseBody.setData(new HashMap());
-        return responseBody.setAndGetResponsebody(new HashMap(),"","");
+        return new ResponseBody(new HashMap(),"","");
     }
     public ResponseBody editAssociation(String assoId, String name, String description, List<String> tags, String logo){
         ResponseBody responseBody = new ResponseBody();
@@ -154,7 +163,7 @@ public class AssociationServiceImpl implements AssociationService{
         association.setName(name);
         association.setLogo(logo);
         assoRepository.save(association);
-        return responseBody.setAndGetResponsebody(association,"","");
+        return new ResponseBody(association,"","");
     };
 
     public  ResponseBody patchAssociation(String assoId,String type,String reason){
@@ -175,7 +184,7 @@ public class AssociationServiceImpl implements AssociationService{
                 assoRepository.save(association);
         }
 
-        return responseBody.setAndGetResponsebody(new HashMap(),"","");
+        return new ResponseBody(new HashMap(),"","");
     };
     public ResponseBody handleAsoociationApplication(String user_id, String type, Application app ){
         ResponseBody responseBody = new ResponseBody();
@@ -190,7 +199,7 @@ public class AssociationServiceImpl implements AssociationService{
 
                             return responseBody;
                         }
-                        return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                        return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                     case "unblockAssociation":
                         if (true) {
                             MyObject blockInfo = app.getObject();
@@ -198,18 +207,18 @@ public class AssociationServiceImpl implements AssociationService{
                             asso.setState(1);
 
                             assoRepository.save(asso);
-                            return responseBody.setAndGetResponsebody(new HashMap(), "", "");
+                            return new ResponseBody(new HashMap(), "", "");
                         }
-                        return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                        return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                 }
             case "refuse":
             case "cancel":
                 if (true) {
-                    return responseBody.setAndGetResponsebody(new HashMap(), "", "");
+                    return new ResponseBody(new HashMap(), "", "");
                 }
-                return responseBody.setAndGetResponsebody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
             default:
-                return responseBody.setAndGetResponsebody(null, "invalidType", "无效的申请类型");
+                return new ResponseBody(null, "invalidType", "无效的申请类型");
         }
     };
     public  boolean createTestData(){
