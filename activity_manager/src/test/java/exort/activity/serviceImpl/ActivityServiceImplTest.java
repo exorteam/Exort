@@ -48,7 +48,7 @@ public class ActivityServiceImplTest {
         List<String> tags = new ArrayList<>();
         tags.add("运动");
 
-        Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully", 1, 2, 0,
+        Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully", 1, 2, 1,
                 true, false, 10, materialTemplateIds, participantIds, realParticipantIds, tags, "");
 
         globalid = activity.getId();
