@@ -9,7 +9,9 @@ import exort.associationmanager.entity.Application;
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.ResponseBody;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface AssociationService{
     public  ResponseBody getAssociation(String assoId);
 
