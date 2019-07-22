@@ -92,7 +92,6 @@ steps:
   - name: server-hosts
     path: /etc/hosts
   commands:
-  - cd ./association_manager
   - cd ./test_for_mongo
   - mvn clean package docker:removeImage -DimageName=exort/association-manager docker:build -DpushImage
 
