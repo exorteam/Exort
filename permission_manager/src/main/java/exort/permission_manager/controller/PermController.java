@@ -21,7 +21,7 @@ public class PermController {
     @PostMapping("/permissions")
     public ApiResponse<Permission> createPermission(
             @RequestBody Permission permArg) {
-        if (!Pattern.matches("[a-zA-Z][a-zA-Z0-9_]*", permArg.getName())) {
+        if (permArg.getName() == null || !Pattern.matches("[a-zA-Z][a-zA-Z0-9_]*", permArg.getName())) {
             throw new ApiError(400, "invalidName", "Invalid name for permission. A valid name should be /\\w[\\d\\w_]*/");
         }
         if (permArg.getCategory() == null) {

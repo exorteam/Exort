@@ -24,7 +24,7 @@ public class RoleController {
     @PostMapping("/roles")
     public ApiResponse<Role> createRole(
             @RequestBody Role roleArg) {
-        if (!Pattern.matches("[a-zA-Z][a-zA-Z0-9_]*", roleArg.getName())) {
+        if (roleArg.getName() == null || !Pattern.matches("[a-zA-Z][a-zA-Z0-9_]*", roleArg.getName())) {
             throw new ApiError(400, "invalidName", "Invalid name for role. A valid name should be /\\w[\\d\\w_]*/");
         }
         if (roleArg.getDescription() == null) {
