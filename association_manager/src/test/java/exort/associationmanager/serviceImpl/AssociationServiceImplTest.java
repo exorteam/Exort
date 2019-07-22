@@ -38,20 +38,20 @@ public class AssociationServiceImplTest {
        ResponseBody responseBody = new ResponseBody();
        service.createAssociation(association.getName(),association.getDescription(),association.getTags(),association.getLogo());
 
-//        AssociationList associations =new AssociationList();
-//        AssociationFilterParams params = new AssociationFilterParams();
-//        params.setState(1);
-//        params.setTags(Arrays.asList("a","g"));
-//        params.setKeyword("qqwrv"+"get");
-//        responseBody = service.listAssociations(params,0,6);
-//        associations = (AssociationList) responseBody.getData();
-//        String assoId=associations.getContent().get(0).getId();
-// //		association = new Association();
-//        responseBody = service.getAssociation(assoId);
-//        association = (Association) responseBody.getData();
-//        Assert.assertEquals(association.getName(),"qqwrv"+"get");
+       AssociationList associations =new AssociationList();
+       AssociationFilterParams params = new AssociationFilterParams();
+       params.setState(1);
+       params.setTags(Arrays.asList("a","g"));
+       params.setKeyword("qqwrv"+"get");
+       responseBody = service.listAssociations(params,0,6);
+       associations = (AssociationList) responseBody.getData();
+       String assoId=associations.getContent().get(0).getId();
+//		association = new Association();
+       responseBody = service.getAssociation(assoId);
+       association = (Association) responseBody.getData();
+       Assert.assertEquals(association.getName(),"qqwrv"+"get");
 
-//    }
+   }
 
 //    @Test
 //    public void testListAssociation(){
