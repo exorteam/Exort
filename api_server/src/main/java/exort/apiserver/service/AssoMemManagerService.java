@@ -72,7 +72,7 @@ public interface AssoMemManagerService {
 
     public ApiResponse<List<Department>> getDepartmentTree(int associationId);
 
-    public ApiResponse<Department> getSpecDepartment(int associationId, int departmentId);
+    public ApiResponse<Department> getSpecDepartmentInfo(int associationId, int departmentId);
 
     public ApiResponse<Department> createDepartment(int associationId, Department departmentInfo);
 

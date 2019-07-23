@@ -74,7 +74,7 @@ public class AssoMemManagerServiceImpl implements AssoMemManagerService {
     }
 
     @Override
-    public ApiResponse<Department> getSpecDepartment(int associationId, int departmentId) {
+    public ApiResponse<Department> getSpecDepartmentInfo(int associationId, int departmentId) {
         ApiResponse<Department> apiResponse = new ApiResponse<>();
 
         HttpHeaders headers = new HttpHeaders();

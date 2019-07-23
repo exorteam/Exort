@@ -2,113 +2,119 @@ package exort.apiserver.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import exort.apiserver.service.AssoMemManagerService;
+import exort.apiserver.service.AssoMemManagerService.*;
+
 @RestController
 @RequestMapping(path="/asso-mem")
 public class AssoMemManagerController {
     @Autowired
 	private AssoMemManagerService service;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/application/accept")
+	@PostMapping("/accept")
     public ApiResponse adoptApplication(@RequestBody CallbackParam<ApplicationDepartmentInfo> appli) {
-        return apiServer.adoptApplication(appli);
+        return service.adoptApplication(appli);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
-    public ApiResponse<List<Department>> getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
-        return apiServer.getDepartmentTree(associationId);
+	@GetMapping("/{id}/departments")
+    public ApiResponse<List<Department>> getDepartmentTree(@PathVariable(value = "id") int associationId) {
+        return service.getDepartmentTree(associationId);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}")
+	@GetMapping("/{associationId}/departments/{departmentId}")
     public ApiResponse<Department> getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
-        return apiServer.getSpecDepartmentInfo(associationId, departmentId);
+        return service.getSpecDepartmentInfo(associationId, departmentId);
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments")
-    public ApiResponse<Department> createDepartment(@PathVariable int associationId, @RequestBody DepartmentInfo departmentInfo) {
-        return apiServer.createDepartment(associationId, departmentInfo);
+	@PostMapping("/{associationId}/departments")
+    public ApiResponse<Department> createDepartment(@PathVariable int associationId, @RequestBody Department departmentInfo) {
+        return service.createDepartment(associationId, departmentInfo);
     }
 
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}")
+	@DeleteMapping("/{associationId}/departments/{departmentId}")
     public ApiResponse<Department> deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
-        return apiServer.deleteDepartment(associationId, departmentId);
+        return service.deleteDepartment(associationId, departmentId);
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/associations/{associationId}/departments/{departmentId}")
-    public ApiResponse<Department> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
+	@PutMapping("/{associationId}/departments/{departmentId}")
+    public ApiResponse<Department> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody Department departmentInfo) {
 
-        return apiServer.editDepartment(associationId, departmentId,departmentInfo);
+        return service.editDepartment(associationId, departmentId,departmentInfo);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}/members")
+	@GetMapping("/{associationId}/departments/{departmentId}/members")
     public ApiResponse<List<Integer>> getSpecMemberList(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
-        return apiServer.getSpecMemberList(associationId, departmentId);
+        return service.getSpecMemberList(associationId, departmentId);
     }
 
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}/members/{userId}")
+	@DeleteMapping("/{associationId}/departments/{departmentId}/members/{userId}")
     public ApiResponse<Boolean> removeOneFromDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @PathVariable(value = "userId") int userId) {
-        return apiServer.removeOneFromDepartment(associationId, departmentId, userId);
+        return service.removeOneFromDepartment(associationId, departmentId, userId);
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments/{departmentId}/members")
-    @ApiOperation(value = "为某个部门添加成员")
+	@PostMapping("/{associationId}/departments/{departmentId}/members")
     public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestParam(value = "userId") int userId) {
-        return apiServer.addOneToDepartment(associationId, departmentId, userId);
+        return service.addOneToDepartment(associationId, departmentId, userId);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members/{userId}/permissions/{permission}")
-    @ApiOperation(value = "判断该用户在某个社团是否有某个权限")
+	@GetMapping("/{associationId}/members/{userId}/permissions/{permission}")
     public ApiResponse<Boolean> checkUserPermissionInAssociation(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId, @PathVariable(value = "permission") String permission) {
-        return apiServer.checkUserPermissionInAssociation(associationId, userId, permission);
+        return service.checkUserPermissionInAssociation(associationId, userId, permission);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations")
-    @ApiOperation(value = "查询用户所属社团")
+	@GetMapping("/users/{userId}/associations")
     public ApiResponse<List<Integer>> getUserAssociation(@PathVariable(value = "userId") int userId) {
-        return apiServer.getUserAssociation(userId);
+        return service.getUserAssociation(userId);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations/{associationId}/departments")
-    @ApiOperation(value = "查询用户在指定社团中所属部门")
+    @GetMapping("/users/{userId}/associations/{associationId}/departments")
     public ApiResponse<List<Department>> getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
-        return apiServer.getUserDepartment(associationId, userId);
+        return service.getUserDepartment(associationId, userId);
     }
 
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/members/{userId}")
-    @ApiOperation(value = "在社团中删除某个成员")
+    @DeleteMapping("/associations/{associationId}/members/{userId}")
     public ApiResponse<Boolean> deleteOneInAssociation(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
-        return apiServer.deleteOneInAssociation(associationId, userId);
+        return service.deleteOneInAssociation(associationId, userId);
     }
 
 
-    @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/members")
-    @ApiOperation(value = "为社团添加一个成员")
+    @PostMapping("/{associationId}/members")
     public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestParam(value = "userId") int userId) {
-        return apiServer.addOneToAssociation(associationId, userId);
+        return service.addOneToAssociation(associationId, userId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members")
-    @ApiOperation(value = "得到社团成员列表")
+    @GetMapping("/{associationId}/members")
     public ApiResponse<List<Integer>> getAssUserList(@PathVariable(value = "associationId") int associationId) {
 
-        return apiServer.getAssoUserList(associationId);
+        return service.getAssoUserList(associationId);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/associations")
-    @ApiOperation(value = "初始化部门")
+    @PostMapping("/")
     public ApiResponse<Boolean> initDepartment(@RequestBody InitAssociationInfo initAssociationInfo) {
 
-        return apiServer.initDepartment(initAssociationInfo);
+        return service.initDepartment(initAssociationInfo);
     }
 
 }
