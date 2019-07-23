@@ -400,7 +400,7 @@
    即修改活动的状态
 
    - Http Request
-      **PATCH** `/activities/{activityid}`
+      **PUT** `/activities/{activityid}`
 
    - Body Parameters
 
@@ -415,7 +415,7 @@
       |200-(无实际返回值)|操作成功|
       |400-(错误信息)|操作失败|
    ```json
-   >>> PATCH /activities/32
+   >>>PUT /activities/32
    {
       "type":"publish"
    }
