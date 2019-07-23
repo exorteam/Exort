@@ -27,13 +27,7 @@ public class PermServiceImpl implements PermService {
     @Setter
     private String endpoint;
 
-    private RestTemplate rest;
-
-    @Autowired
-    public PermServiceImpl() {
-        rest = new RestTemplate();
-        rest.setErrorHandler(new PermServiceResponseErrorHandler());
-    }
+    private RestTemplate rest = new RestTemplate();;
 
     private String url(String path) {
         return "http://" + endpoint + path;

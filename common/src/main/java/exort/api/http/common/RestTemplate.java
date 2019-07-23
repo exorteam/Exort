@@ -3,14 +3,18 @@ package exort.api.http.common;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.ResponseErrorHandler;
 
+import java.io.IOException;
 import java.net.URI;
 
 public class RestTemplate extends org.springframework.web.client.RestTemplate {
     public RestTemplate() {
         super();
         setRequestFactory(new HttpComponentsClientRestfulHttpRequestFactory());
+        setErrorHandler(new PermServiceResponseErrorHandler());
     }
 
     private static final class HttpComponentsClientRestfulHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
@@ -33,5 +37,18 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
             return HttpMethod.GET.name();
         }
     }
+
+    private static final class PermServiceResponseErrorHandler implements ResponseErrorHandler {
+        @Override
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            return false;
+        }
+
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+
+        }
+    }
+
 }
 
