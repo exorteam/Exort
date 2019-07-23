@@ -113,8 +113,9 @@ export default {
                     tags: this.form.tags
                 }
                 Axios
-                    .post('http://localhost:8080/activities', data)
+                    .post('http://202.120.40.8:30727/activities', data)
                     .then(response => {
+                        console.log("Successfully!")
                         console.log(response.data.data)
                     })
                     .catch(e => {

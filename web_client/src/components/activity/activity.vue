@@ -241,10 +241,10 @@ export default {
             let data = this.select
             data.tags = this.tag.tagList
             axios.
-                get('http://localhost:8000/activities', {
+                get('http://202.120.40.8:30727/activities', {
                     params:{
                         pagenum:0,
-                        pagesize:10,
+                        pagesize:9,
                         _body: btoa(JSON.stringify({data}))
                     }
                 })
@@ -267,23 +267,23 @@ export default {
             publishSelected: null,
             signupSelected: null,
             startSelected: null,
-            ifReview: -1,
-            ifOnlyMem: -1,
+            ifReview: 0,
+            ifOnlyMem: 0,
         }
-        // axios
-        //     .get('http://localhost:8000/activities', {
-        //         params:{
-        //             pagenum:0,
-        //             pagesize:9,
-        //             _body: btoa(JSON.stringify({data}))
-        //         }
-        //     })
-        //     .then(response => {
-        //         this.cardList = response.data
-        //     })
-        //     .catch(e => {
-        //         console.log(e)
-        //     })
+        axios
+            .get('http://202.120.40.8:30727/activities', {
+                params:{
+                    pagenum:0,
+                    pagesize:9,
+                    _body: btoa(JSON.stringify({data}))
+                }
+            })
+            .then(response => {
+                this.cardList = response.data
+            })
+            .catch(e => {
+                console.log(e)
+            })
     },
 }
 </script>
