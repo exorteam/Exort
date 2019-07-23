@@ -1,6 +1,8 @@
 package exort.auth.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,15 +27,15 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private JwtKeyUtil jwtKeyUtil;
 
-	public String login(String usr,String pwd){
+	public Map login(String usr,String pwd){
 		if(usr == null || pwd == null){
-			return "Username and password should not be empty";
+			return new HashMap<>();
 		}
 		if(!accountRepository.existsByUsername(usr)){
-			return "No such username";
+			return new HashMap<>();
 		}
 		if(!accountRepository.findByUsername(usr).getPassword().equals(pwd)){
-			return "Wrong password";
+			return new HashMap<>();
 		}
 
 		// generate jwt
@@ -45,7 +47,10 @@ public class AuthServiceImpl implements AuthService {
 			.signWith(SignatureAlgorithm.HS256, jwtKeyUtil.getKey())
 			.compact();
 
-		return jwtToken;
+		HashMap<String,String> response = new HashMap<>();
+		response.put("token",jwtToken);
+
+		return response;
 	}
 
 	public int register(String usr,String pwd){

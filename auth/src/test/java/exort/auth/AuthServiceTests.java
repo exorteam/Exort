@@ -1,6 +1,7 @@
 package exort.auth;
 
 import java.util.UUID;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +43,9 @@ public class AuthServiceTests {
 		registerResult = service.register(account.getUsername(),account.getPassword());
 		Assert.assertEquals(registerResult,-2);
 
-		String token = service.login(account.getUsername(),account.getPassword());
+		Map<String,String> response = service.login(account.getUsername(),account.getPassword());
+		String token = response.get("token");
+		Assert.assertNotNull(token);
 		AuthResponse authRes = service.auth(token);
 		Assert.assertEquals(account.getUsername(),authRes.getUsername());
 		Assert.assertEquals(account.getId(),authRes.getId());

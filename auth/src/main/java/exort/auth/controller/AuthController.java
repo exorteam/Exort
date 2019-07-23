@@ -1,5 +1,7 @@
 package exort.auth.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +17,7 @@ public class AuthController {
 	private AuthService service;
 
 	@PostMapping("/login")
-	public String login(@RequestBody UserAccount account){
+	public Map login(@RequestBody UserAccount account){
 		return service.login(account.getUsername(),account.getPassword());
 	}
 
