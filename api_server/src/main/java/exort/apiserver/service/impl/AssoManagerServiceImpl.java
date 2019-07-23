@@ -24,7 +24,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.POST;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<AssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/associations",method,requestEntity,ResponseBody.class);
+        ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/associations",method,requestEntity,ResponseBody.class);
 
 		return response.getBody();
 	}
@@ -34,7 +34,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.GET;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<AssociationFilterParams> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/associations?pageNum="+pageNum.toString()+"&pageSize="+pageSize.toString(),method,requestEntity,ResponseBody.class);
+        ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/associations?pageNum="+pageNum.toString()+"&pageSize="+pageSize.toString(),method,requestEntity,ResponseBody.class);
 
 		return response.getBody();
 	}
@@ -44,7 +44,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.GET;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,ResponseBody.class);
+		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/associations/"+assoId,method,requestEntity,ResponseBody.class);
         return response.getBody();
     }
 
@@ -53,7 +53,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.DELETE;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,ResponseBody.class);
+		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/associations/"+assoId,method,requestEntity,ResponseBody.class);
         return response.getBody();
     }
 
@@ -62,7 +62,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.PUT;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<AssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,ResponseBody.class);
+		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/associations/"+assoId,method,requestEntity,ResponseBody.class);
         return response.getBody();
     }
 
@@ -71,7 +71,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.PATCH;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<PatchAssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,ResponseBody.class);
+		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/associations/"+assoId,method,requestEntity,ResponseBody.class);
         return response.getBody();
 
     }
@@ -81,7 +81,7 @@ public class AssoManagerServiceImpl implements AssoManagerService {
         HttpMethod method = HttpMethod.POST;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<ApplicationAssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30728/callback",method,requestEntity,ResponseBody.class);
+		ResponseEntity<ResponseBody> response = restTemplate.exchange("http://202.120.40.8:30725/callback",method,requestEntity,ResponseBody.class);
         return response.getBody();
 
 	}
