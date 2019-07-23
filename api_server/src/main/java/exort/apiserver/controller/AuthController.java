@@ -1,5 +1,6 @@
 package exort.apiserver.controller;
 
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,12 +17,12 @@ public class AuthController {
 	private AuthService authService;
 
 	@PostMapping("/login")
-	public String login(@RequestBody AuthRequest req){
+	public Map login(@RequestBody AuthRequest req){
 		return authService.login(req);
 	}
 
 	@PostMapping("/register")
-	public int register(@RequestBody AuthRequest req){
+	public String register(@RequestBody AuthRequest req){
 		return authService.register(req);
 	}
 

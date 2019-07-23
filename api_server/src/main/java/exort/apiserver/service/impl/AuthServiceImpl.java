@@ -1,5 +1,6 @@
 package exort.apiserver.service.impl;
 
+import java.util.Map;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,21 +18,21 @@ public class AuthServiceImpl implements AuthService {
 
 	private RestTemplate rt = new RestTemplate();
 	
-	public String login(AuthRequest req){
+	public Map login(AuthRequest req){
 		HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.POST;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<AuthRequest> requestEntity = new HttpEntity<>(req,headers);
-		ResponseEntity<String> response = rt.exchange("http://202.120.40.8:30728/login",method,requestEntity,String.class);
+		ResponseEntity<Map> response = rt.exchange("http://202.120.40.8:30728/login",method,requestEntity,Map.class);
 		return response.getBody();
 	}
 
-	public int register(AuthRequest req){
+	public String register(AuthRequest req){
 		HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.POST;
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<AuthRequest> requestEntity = new HttpEntity<>(req,headers);
-		ResponseEntity<Integer> response = rt.exchange("http://202.120.40.8:30728/register",method,requestEntity,Integer.class);
+		ResponseEntity<String> response = rt.exchange("http://202.120.40.8:30728/register",method,requestEntity,String.class);
 		return response.getBody();
 	}
 

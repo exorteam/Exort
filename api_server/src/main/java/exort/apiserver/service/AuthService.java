@@ -1,12 +1,13 @@
 package exort.apiserver.service;
 
+import java.util.Map;
 import exort.apiserver.entity.AuthRequest;
 import exort.apiserver.entity.AuthResponse;
 
 public interface AuthService {
 
-	public String       login(AuthRequest req);
-	public int          register(AuthRequest req);
+	public Map          login(AuthRequest req);
+	public String       register(AuthRequest req);
 	public AuthResponse auth(String token);
 
 }
