@@ -1,14 +1,18 @@
 package exort.auth.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import exort.auth.component.JwtKeyUtil;
 import exort.auth.entity.AuthResponse;
+import exort.auth.entity.UserAccount;
 import exort.auth.entity.UserInfo;
-import exort.auth.repository.UserRepository;
+import exort.auth.repository.AccountRepository;
+import exort.auth.repository.InfoRepository;
 import exort.auth.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -17,23 +21,25 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class AuthServiceImpl implements AuthService {
 	@Autowired
-	private UserRepository repository;
+	private AccountRepository accountRepository;
+	@Autowired
+	private InfoRepository infoRepository;
 	@Autowired
 	private JwtKeyUtil jwtKeyUtil;
 
-	public String login(String usr,String pwd){
+	public Map login(String usr,String pwd){
 		if(usr == null || pwd == null){
-			return "Username and password should not be empty";
+			return new HashMap<>();
 		}
-		if(!repository.existsByUsername(usr)){
-			return "No such username";
+		if(!accountRepository.existsByUsername(usr)){
+			return new HashMap<>();
 		}
-		if(!repository.findByUsername(usr).getPassword().equals(pwd)){
-			return "Wrong password";
+		if(!accountRepository.findByUsername(usr).getPassword().equals(pwd)){
+			return new HashMap<>();
 		}
 
 		// generate jwt
-		final UserInfo user = repository.findByUsername(usr);
+		final UserAccount user = accountRepository.findByUsername(usr);
 		String jwtToken = Jwts.builder()
 			.setSubject(user.getUsername())
 			.claim("id", user.getId())
@@ -41,26 +47,33 @@ public class AuthServiceImpl implements AuthService {
 			.signWith(SignatureAlgorithm.HS256, jwtKeyUtil.getKey())
 			.compact();
 
-		return jwtToken;
+		HashMap<String,String> response = new HashMap<>();
+		response.put("token",jwtToken);
+
+		return response;
 	}
 
 	public int register(String usr,String pwd){
 		if(usr == null || pwd == null){
 			return -1; // Username and password should not be empty
 		}
-		if(repository.existsByUsername(usr)){
+		if(accountRepository.existsByUsername(usr)){
 			return -2; // Username exists
 		}
 
 		int id = 2;
-		while(repository.existsById(id)){
+		while(accountRepository.existsById(id)){
 			++id;
 		}
+		UserAccount account = new UserAccount();
+		account.setUsername(usr);
+		account.setPassword(pwd);
+		account.setId(id);
+		accountRepository.save(account);
+
 		UserInfo info = new UserInfo();
-		info.setUsername(usr);
-		info.setPassword(pwd);
 		info.setId(id);
-		repository.save(info);
+		info.setEnabled(true);
 
 		return id;
 	}
