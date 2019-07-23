@@ -1,6 +1,9 @@
 package exort.apiserver.service;
 
 import exort.apiserver.serviceimpl.AssociationServiceImpl;
+import org.springframework.stereotype.Service;
+
+@Service
 
 public interface AssociationManagerService {
 

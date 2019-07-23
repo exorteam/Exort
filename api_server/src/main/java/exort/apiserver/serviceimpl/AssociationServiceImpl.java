@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import net.minidev.json.JSONUtil;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.google.gson.*;
 
@@ -15,6 +16,8 @@ import com.google.gson.*;
 
 import java.util.List;
 
+
+@Service
 public class AssociationServiceImpl implements AssociationManagerService {
 
     @Data
@@ -150,7 +153,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         AssociationInfo requestBody = new AssociationInfo(_body);
         HttpEntity<AssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/associations",method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/associations",method,requestEntity,Response.class);
 
         return response.getBody();
     }
@@ -160,7 +163,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         AssociationFilterParams requestBody = new AssociationFilterParams(_body);
         HttpEntity<AssociationFilterParams> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/associations?pageNum="+pageNum.toString()+"&pageSize="+pageSize.toString(),method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/associations?pageNum="+pageNum.toString()+"&pageSize="+pageSize.toString(),method,requestEntity,Response.class);
 
         return response.getBody();
     }
@@ -169,7 +172,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         HttpMethod method = HttpMethod.GET;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/associations/"+assoId,method,requestEntity,Response.class);
         return response.getBody();
     }
 
@@ -177,7 +180,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         HttpMethod method = HttpMethod.DELETE;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/associations/"+assoId,method,requestEntity,Response.class);
         return response.getBody();
     }
 
@@ -186,7 +189,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         AssociationInfo requestBody = new AssociationInfo(_body);
         HttpEntity<AssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/associations/"+assoId,method,requestEntity,Response.class);
         return response.getBody();
     }
 
@@ -195,7 +198,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         PatchAssociationInfo requestBody = new PatchAssociationInfo(_body);
         HttpEntity<PatchAssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/associations/"+assoId,method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/associations/"+assoId,method,requestEntity,Response.class);
         return response.getBody();
 
     }
@@ -205,7 +208,7 @@ public class AssociationServiceImpl implements AssociationManagerService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         ApplicationAssociationInfo requestBody = new ApplicationAssociationInfo(_body);
         HttpEntity<ApplicationAssociationInfo> requestEntity = new HttpEntity<>(requestBody,headers);
-        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30728/callback",method,requestEntity,Response.class);
+        ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:8080/callback",method,requestEntity,Response.class);
         return response.getBody();
 
     }
