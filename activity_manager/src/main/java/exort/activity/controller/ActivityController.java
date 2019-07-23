@@ -27,7 +27,7 @@ public class ActivityController {
         activity.setId(activityid);
         return as.upsertActivity(activity);
     }
-//3 待测
+//3
     @ResponseBody
     @GetMapping(value = "/activities")
     public Response getActivities(@RequestBody Select select, @PathParam(value = "pagesize")int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby")int sortby){
@@ -35,8 +35,9 @@ public class ActivityController {
     }
 //4
     @ResponseBody
-    @PatchMapping(value = "/activities/{activityid}")
+    @PutMapping(value = "/activities/{activityid}/state")
     public Response publishActivity(@PathVariable(value = "activityid")String activityid, @RequestBody Request request){
+        System.out.println(request.getType());
         return as.changeActivityState(activityid, request.getType());
     }
 //5

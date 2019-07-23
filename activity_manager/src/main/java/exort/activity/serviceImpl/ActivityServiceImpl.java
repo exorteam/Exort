@@ -61,6 +61,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Response addUserIds(String activityid, List<Integer> userIds, int type){
         try{
+            System.out.println(userIds);
             Activity activity = ad.getActivity(activityid);
             if(activity!=null){
                 if(type==1){
