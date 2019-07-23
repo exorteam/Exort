@@ -1,5 +1,6 @@
 package exort.api.http.perm.service;
 
+import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.OperationBatch;
 import exort.api.http.common.entity.PagedData;
@@ -9,12 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.constraints.NotNull;
@@ -31,8 +30,9 @@ public class PermServiceImpl implements PermService {
     private RestTemplate rest;
 
     @Autowired
-    public PermServiceImpl(RestTemplateBuilder builder) {
-        rest = builder.errorHandler(new PermServiceResponseErrorHandler()).build();
+    public PermServiceImpl() {
+        rest = new RestTemplate();
+        rest.setErrorHandler(new PermServiceResponseErrorHandler());
     }
 
     private String url(String path) {
