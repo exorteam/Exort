@@ -14,11 +14,25 @@ public class PageQuery {
     private Integer pageSize;
     private String sortBy;
 
+    public PageQuery(String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public PageQuery(Integer pageSize) {
+        this.pageSize =  pageSize;
+    }
+
     public PageQuery(Integer pageNum, Integer pageSize) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
     }
 
+    public PageQuery(Integer pageSize, String sortBy) {
+        this.pageSize = pageSize;
+        this.sortBy = sortBy;
+    }
+
+    // Relocate (pageNum, pageSize) to a proper value by (defaultSize, maxSize)
     public static PageQuery relocate(PageQuery pq, Integer defaultSize, Integer maxSize) {
         int num = pq.getPageNum() == null ? 0 : pq.getPageNum();
         int size = pq.getPageSize() == null ? defaultSize : pq.getPageSize();

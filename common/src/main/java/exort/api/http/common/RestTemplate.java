@@ -1,20 +1,107 @@
 package exort.api.http.common;
 
+import exort.api.http.common.entity.PageQuery;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
 
 public class RestTemplate extends org.springframework.web.client.RestTemplate {
+
+    private String protocol = "http";
+    private String endpoint = "localhost";
+
+    private void init() {
+        setRequestFactory(new HttpComponentsClientRestfulHttpRequestFactory());
+        setErrorHandler(new ServiceResponseErrorHandler());
+    }
     public RestTemplate() {
         super();
-        setRequestFactory(new HttpComponentsClientRestfulHttpRequestFactory());
-        setErrorHandler(new PermServiceResponseErrorHandler());
+        init();
+    }
+    public RestTemplate(String endpoint) {
+        super();
+        this.endpoint = endpoint;
+        init();
+    }
+    public RestTemplate(String protocol, String endpoint) {
+        super();
+        this.protocol = protocol;
+        this.endpoint = endpoint;
+        init();
+    }
+
+
+    public String root() {
+        return protocol + "://" + endpoint;
+    }
+
+    public String url(String path) {
+        return root() + path;
+    }
+
+    public String url(String path, PageQuery pq) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url(path));
+        if (pq.getPageNum() != null) {
+            builder = builder.queryParam("pageNum", pq.getPageNum());
+        }
+        if (pq.getPageSize() != null) {
+            builder = builder.queryParam("pageSize", pq.getPageSize());
+        }
+        if (pq.getSortBy() != null) {
+            builder = builder.queryParam("sortBy", pq.getSortBy());
+        }
+        return builder.build().toString();
+    }
+
+    protected <RT, ST> RT request(ST body, HttpMethod method,
+                               String path,
+                               Object... pathVariables) {
+        return exchange(url(path),
+                method, new HttpEntity<>(body),
+                new ParameterizedTypeReference<RT>() { },
+                pathVariables
+        ).getBody();
+    }
+
+    protected <RT, ST> RT request(ST body, HttpMethod method,
+                               PageQuery pageQuery,
+                               String path,
+                               Object... pathVariables) {
+        return exchange(url(path, pageQuery),
+                method, new HttpEntity<>(body),
+                new ParameterizedTypeReference<RT>() { },
+                pathVariables
+        ).getBody();
+    }
+
+    protected <RT> RT request(HttpMethod method,
+                           String path,
+                           Object... pathVariables) {
+        return exchange(url(path),
+                method, null,
+                new ParameterizedTypeReference<RT>() { },
+                pathVariables
+        ).getBody();
+    }
+
+    protected <RT> RT request(HttpMethod method,
+                           PageQuery pageQuery,
+                           String path,
+                           Object... pathVariables) {
+        return exchange(url(path, pageQuery),
+                method, null,
+                new ParameterizedTypeReference<RT>() { },
+                pathVariables
+        ).getBody();
     }
 
     private static final class HttpComponentsClientRestfulHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
@@ -27,6 +114,7 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
         }
     }
 
+    // Prevent from ignoring request body for get method
     private static final class HttpGetRequestWithEntity extends HttpEntityEnclosingRequestBase {
         public HttpGetRequestWithEntity(final URI uri) {
             super.setURI(uri);
@@ -38,16 +126,15 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
         }
     }
 
-    private static final class PermServiceResponseErrorHandler implements ResponseErrorHandler {
+    // Prevent from throwing exceptions when got non-4xx responses
+    private static final class ServiceResponseErrorHandler implements ResponseErrorHandler {
         @Override
         public boolean hasError(ClientHttpResponse response) throws IOException {
             return false;
         }
 
         @Override
-        public void handleError(ClientHttpResponse response) throws IOException {
-
-        }
+        public void handleError(ClientHttpResponse response) throws IOException { }
     }
 
 }
