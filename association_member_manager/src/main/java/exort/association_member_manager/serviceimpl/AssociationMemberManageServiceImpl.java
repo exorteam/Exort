@@ -2,6 +2,9 @@ package exort.association_member_manager.serviceimpl;
 
 import com.google.common.collect.Lists;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
@@ -18,16 +21,32 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Member;
 import java.util.*;
 
 @Service
 public class AssociationMemberManageServiceImpl implements AssociationMemberManageService {
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    final private static String MEMBER = "association_member";
+    final private static String MANAGER = "association_root";
+
+    private String roleName(int associationId, int departmentId) {
+        switch (departmentId) {
+            case 1:
+                return MANAGER;
+            case 2:
+                return MEMBER;
+            default:
+                return "association_" + associationId + "_" + departmentId;
+        }
+    }
+
+    private String scope(int associationId) {
+        return "association_" + associationId;
+    }
 
     @Autowired
-    private RestTemplate restTemplate;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
     private PermService ps;
@@ -35,14 +54,13 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Override
     public ApiResponse<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+//        ps.hasRole(application.getApplicantId(), scope(application.getObject().getAssociationId()), MEMBER);
+//        ps.grantRoles(application.getApplicantId(), scope(application.getObject().getAssociationId()), Arrays.asList(MEMBER));
 
         // outside
         boolean userInAsso = false;
-        List<String> userAssos = ps.getScopes(Long.valueOf(userId)).getData();
-        for (int i = 0; i < userAssos.size(); i++) {
-            if (Integer.valueOf(userAssos.get(i)) == application.getObject().getAssociationId()) {
-                userInAsso = true;
-            }
+        if (ps.hasRole(application.getApplicantId(), scope(application.getObject().getAssociationId()), MEMBER).getData() != null) {
+            userInAsso = true;
         }
 
         if (!userInAsso) {
@@ -107,12 +125,13 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         if (departmentRepository.existsByAssociationId(associationId)) {
 
-            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId)) {
+            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId) || parentId == 0) {
 
                 Department department = new Department(associationId, departmentName, departmentDesc, parentId);
                 Department maxDepartment = departmentRepository.findFirstByAssociationIdOrderByDepartmentIdDesc(associationId);
 
-                department.setDepartmentId((maxDepartment != null ? maxDepartment.getDepartmentId() + 1 : 0));
+                department.setDepartmentId((maxDepartment != null ? maxDepartment.getDepartmentId() + 1 : 1));
+                System.out.println(maxDepartment);
                 departmentRepository.save(department);
 
                 response.setStatus(200);
@@ -205,9 +224,10 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             response.setStatus(200);
 
             // outside
-            List<Long> users = ps.getUsers(Integer.toString(associationId), Integer.toString(departmentId)).getData().getContent();
+            PagedData<Long> pagedusers = ps.getUsers(scope(associationId), roleName(associationId, departmentId), new PageQuery(50)).getData();
+
             List<Integer> userList = new ArrayList<>();
-            for (Long user : users) {
+            for (Long user : pagedusers.getContent()) {
                 userList.add(user.intValue());
             }
 
@@ -230,29 +250,15 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existUser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existUser = false;
-        }
 
-//        String url="http://localhost:8900/users/?id="+userId;
-//        try{
-//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
-//            existUser=true;
-//        }catch (HttpClientErrorException e){
-//            existUser=false;
-//        }
 
         if (existUser) {
 
             if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
                 // outside
-                boolean existUserInAsso = false;
-                for (int i = 0; i < assos.size(); i++) {
-                    if (Integer.valueOf(assos.get(i)) == associationId) {
-                        existUserInAsso = true;
-                        break;
-                    }
+                boolean existUserInAsso = true;
+                if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() == null) {
+                    existUserInAsso = false;
                 }
 
                 if (existUserInAsso) {
@@ -290,10 +296,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existUser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existUser = false;
-        }
+
 
         if (existUser) {
 
@@ -303,7 +306,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
                 // outside
                 // add_user_to_department
-                ps.grantRoles(Long.valueOf(userId), Integer.toString(associationId), Arrays.asList(Integer.toString(departmentId)));
+                ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MEMBER));
 
                 apiResponse.setData(true);
             } else {
@@ -323,11 +326,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         return apiResponse;
     }
 
-//    @Override
-//    public ApiResponse changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response) {
-//        ApiResponse apiResponse = new ApiResponse();
-//        return apiResponse;
-//    }
 
     @Override
     public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response) {
@@ -335,17 +333,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existUser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existUser = false;
-        }
-//        String url="http://localhost:8900/users/?id="+userId;
-//        try{
-//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
-//            existUser=true;
-//        }catch (HttpClientErrorException e){
-//            existUser=false;
-//        }
+
 
         if (!existUser) {
             response.setStatus(400);
@@ -360,11 +348,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
             // outside
             boolean existUserInAsso = false;
-            for (int i = 0; i < assos.size(); i++) {
-                if (Integer.valueOf(assos.get(i)) == associationId) {
-                    existUserInAsso = true;
-                    break;
-                }
+            if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() != null) {
+                existUserInAsso = true;
             }
 
 
@@ -381,7 +366,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             boolean hasPermission = false;
 
             try {
-                ps.hasPermission(Long.valueOf(userId), Integer.toString(associationId), permission);
+                ps.hasPermission(Long.valueOf(userId), scope(associationId), permission);
                 hasPermission = true;
             } catch (Exception e) {
                 hasPermission = false;
@@ -414,17 +399,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existuser = false;
-        }
-//        String url="http://localhost:8900/users/?id="+userId;
-//        try{
-//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
-//            existUser=true;
-//        }catch (HttpClientErrorException e){
-//            existUser=false;
-//        }
 
         if (!existuser) {
             response.setStatus(400);
@@ -436,7 +410,15 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         //outside
         List<Integer> associationId = new ArrayList<>();
-        for(String asso : assos){
+        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
+        if (assos == null) {
+            response.setStatus(400);
+
+            apiResponse.setError(ps.getScopes(Long.valueOf(userId)).getError());
+            apiResponse.setMessage(ps.getScopes(Long.valueOf(userId)).getMessage());
+            return apiResponse;
+        }
+        for (String asso : assos) {
             associationId.add(Integer.valueOf(asso));
         }
 
@@ -453,17 +435,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existuser = false;
-        }
-//        String url="http://localhost:8900/users/?id="+userId;
-//        try{
-//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
-//            existUser=true;
-//        }catch (HttpClientErrorException e){
-//            existUser=false;
-//        }
+
 
         if (!existuser) {
             response.setStatus(400);
@@ -477,19 +449,10 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
             // outside
             boolean userInAsso = false;
-            for (int i = 0; i < assos.size(); i++) {
-                if (Integer.valueOf(assos.get(i)) == associationId) {
-                    userInAsso = true;
-                    break;
-                }
+            if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() != null) {
+                userInAsso = true;
             }
-//        String url="http://localhost:8900/users/"+userId+"/scopes";
-//        try{
-//            ResponseEntity<ApiResponse> responseEntity=this.restTemplate.getForEntity(url,apiResponse.class);
-//            userInAsso=true;
-//        }catch (HttpClientErrorException e){
-//            userInAsso=false;
-//        }
+
 
             if (userInAsso) {
                 response.setStatus(200);
@@ -520,10 +483,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existuser = false;
-        }
 
         if (!existuser) {
             response.setStatus(400);
@@ -543,11 +502,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean userInAsso = false;
-        for (int i = 0; i < assos.size(); i++) {
-            if (Integer.valueOf(assos.get(i)) == associationId) {
-                userInAsso = true;
-                break;
-            }
+        if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() != null) {
+            userInAsso = true;
         }
 
 
@@ -556,6 +512,12 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
             // outside
             // delete user in asso
+            List<Role> roles = ps.getRoles(Long.valueOf(userId), scope(associationId)).getData();
+            List<String> rolenames = new ArrayList<>();
+            for (Role role : roles) {
+                rolenames.add(role.getName());
+            }
+            ps.revokeRoles(Long.valueOf(userId), scope(associationId), rolenames);
 
             apiResponse.setData(true);
 
@@ -575,10 +537,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existuser = false;
-        }
+
 
         if (!existuser) {
             response.setStatus(400);
@@ -600,6 +559,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         // add user to asso
+        ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MEMBER));
 
         apiResponse.setData(true);
 
@@ -621,8 +581,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         // outside
         // get users in asso
         List<Integer> users = new ArrayList<>();
-        List<Long> longs=ps.getUsers(Integer.toString(associationId)).getData().getContent();
-        for(Long l : longs){
+        List<Long> longs = ps.getUsers(scope(associationId), new PageQuery(50)).getData().getContent();
+        for (Long l : longs) {
             users.add(l.intValue());
         }
 
@@ -638,10 +598,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         // outside
         boolean existuser = true;
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos.size() == 0) {
-            existuser = false;
-        }
 
 
         if (!existuser) {

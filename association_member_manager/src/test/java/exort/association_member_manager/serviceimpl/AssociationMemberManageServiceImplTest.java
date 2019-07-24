@@ -1,6 +1,8 @@
 package exort.association_member_manager.serviceimpl;
 
+import com.google.common.collect.Lists;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.association_member_manager.entity.Department;
@@ -17,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -29,6 +32,28 @@ public class AssociationMemberManageServiceImplTest {
 
     @Autowired
     DepartmentRepository departmentRepository;
+
+    @Autowired
+    private PermService ps;
+
+    final private static String MEMBER = "association_member";
+    final private static String MANAGER = "association_root";
+
+
+    private String roleName(int associationId, int departmentId) {
+        switch (departmentId) {
+            case 1:
+                return MANAGER;
+            case 2:
+                return MEMBER;
+            default:
+                return "association_" + associationId + "_" + departmentId;
+        }
+    }
+
+    private String scope(int associationId) {
+        return "association_" + associationId;
+    }
 
     @Before
     public void setUp() {
@@ -43,7 +68,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
 
         Application<ApplicationDepartmentInfo> application = new Application<>();
@@ -66,7 +91,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<List<Department>> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         associationMemberManageService.getDepartmentTree(1, response);
         Assert.assertEquals(200, response.getStatus());
@@ -82,7 +107,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Department> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.getSpecDepartmentInfo(2, 2, response);
         Assert.assertEquals(404, response.getStatus());
@@ -97,7 +122,7 @@ public class AssociationMemberManageServiceImplTest {
     public void createDepartment() {
         ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, 1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.createDepartment(3, "hello", "asd", 2, response);
         Assert.assertEquals(404, response.getStatus());
@@ -117,7 +142,7 @@ public class AssociationMemberManageServiceImplTest {
     public void deleteDepartment() {
         ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.deleteDepartment(1, 10, response);
         Assert.assertEquals(404, response.getStatus());
@@ -132,7 +157,7 @@ public class AssociationMemberManageServiceImplTest {
     public void editDepartment() {
         ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.editDepartment(1, 0, "black", "back", 200, response);
         Assert.assertEquals(400, response.getStatus());
@@ -154,7 +179,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<List<Integer>> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.getSpecMemberList(2, 3, response);
         Assert.assertEquals(404, response.getStatus());
@@ -171,13 +196,17 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, 1, "hello", "das", 0));
+        departmentRepository.save(new Department(1, 2, "hello", "das", 0));
 
-        ApiResponse = associationMemberManageService.removeOneFromDepartment(1, 8, 1, response);
+        int userId=3,associationId=1;
+        ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MANAGER,MEMBER));
+
+        ApiResponse = associationMemberManageService.removeOneFromDepartment(associationId, 8, userId, response);
         Assert.assertEquals(401, response.getStatus());
         Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
-        associationMemberManageService.removeOneFromDepartment(1, 0, 1, response);
+        associationMemberManageService.removeOneFromDepartment(associationId, 2, userId, response);
         Assert.assertEquals(200, response.getStatus());
 
     }
@@ -187,7 +216,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.addOneToDepartment(1, 8, 1, response);
         Assert.assertEquals(404, response.getStatus());
@@ -202,7 +231,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.checkUserPermissionInAssociation(9, 1, "write", response);
         Assert.assertEquals(401, response.getStatus());
@@ -229,7 +258,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<List<Department>> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, 1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.getUserDepartment(3, 2, response);
         Assert.assertEquals(401, response.getStatus());
@@ -246,7 +275,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.deleteOneInAssociation(3, 2, response);
         Assert.assertEquals(404, response.getStatus());
@@ -263,7 +292,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<Boolean> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.addOneToAssociation(3, 2, response);
         Assert.assertEquals(404, response.getStatus());
@@ -279,7 +308,7 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse<List<Integer>> ApiResponse;
 
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1,"hello","das",0));
+        departmentRepository.save(new Department(1, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.getAssoUserList(3, response);
         Assert.assertEquals(404, response.getStatus());
@@ -293,9 +322,9 @@ public class AssociationMemberManageServiceImplTest {
     @Test
     public void initDepartment() {
         ApiResponse<Boolean> ApiResponse;
-        int ran=(int)(Math.random()*100+10);
+        int ran = (int) (Math.random() * 100 + 10);
 
-        ApiResponse=associationMemberManageService.initDepartment(ran,3,response);
+        ApiResponse = associationMemberManageService.initDepartment(ran, 3, response);
 
         Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals(true, ApiResponse.getData());
