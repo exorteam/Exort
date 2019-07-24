@@ -1,87 +1,136 @@
 <template>
-<div>
-       <i-form :model="formItem" :label-width="80" >
-        <Form-item label="社团名称">
-            <i-input :value.sync="formItem.name" placeholder="请输入"></i-input>
-        </Form-item>
-        <!-- <Form-item label="社团图片">
-            <i-input :value.sync="formItem.input" placeholder="请输入"></i-input>
-        </Form-item> -->
-        <Form-item label="社团描述" :autosize="{minRows: 2,maxRows: 5}">
-            <i-input :value.sync="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
-        </Form-item>
-        <Form-item label="社团标签">
-            <Tag v-for="item in formItem.tags" :key="item.key" type="border" closable color="blue">{{ item  }}</Tag>
-            <i-input v-model="newtag" placeholder="请输入"></i-input>
-            <i-button icon="ios-plus-empty" type="primary" size="small" @click="AddNewTag">添加标签</i-button>
-        </Form-item>
+    <Modal v-model="form.onshow" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
+        <Form v-model="form" :label-width="112">
+            <FormItem label="社团名称">
+                <Input v-model="form.name"/>
+            </FormItem>
+            <FormItem label="社团描述">
+                <Input v-model="form.description"/>
+            </FormItem>
+            <FormItem label="社团标签">
+                <div>
+                    <div style="display:inline">
+                        <Button @click="form.tag.tag_show=true" style="width: 80px;position:relative ;top:5px">选择标签</Button>
+                        <TagChoose :tag="form.tag"/>
+                    </div>
+                    <div v-if="form.tag.tagList.length" style="display:inline">
+                        <Tag v-for="tag in form.tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
+                    </div>
+                </div>
+            </FormItem>
+            <FormItem label="社团Logo">
+                <b-form-file v-model="file" ref="file-input" class="mb-2"></b-form-file>
 
-        <Upload
-            multiple
-            type="drag"
-            action="//jsonplaceholder.typicode.com/posts/" style="text-align: center;">
-            <div style="padding: 20px 0">
-                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                <p>点击或将社团logo及申请材料拖拽到这里上传</p>
-            </div>
-        </Upload>
-        <Form-item>
-            <b-button v-b-modal.modal-1 variant="success" >提交</b-button>
-            <b-modal id="modal-1" title="提交信息" hide-footer>
-              <p class="my-4">提交成功</p>
-              <b-button class="mt-3" variant="outline-primary" block @click="ReturnList">返回列表</b-button>
-            </b-modal>
+                <b-button @click="clearFiles" class="mr-2">Reset via method</b-button>
 
-            <b-button v-b-modal.modal-2 variant="outline-primary"  style="margin-left: 800px">取消</b-button>
-            <b-modal id="modal-2"  title="确认返回" hide-footer>
-              <p class="my-4">您确定返回社团列表界面吗？（创建信息将不保存）</p>
-              <b-button class="mt-3" variant="outline-primary" block @click="ReturnList">确定</b-button>
-              <b-button class="mt-3" variant="outline-primary" block @click="$bvModal.hide('modal-2')">取消</b-button>
-            </b-modal>
-        </Form-item>
-    </i-form>
-
-</div>
+                <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
+            </FormItem>
+            <FormItem label="报名材料" v-if="form.needMaterial">
+                <Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
+            </FormItem>
+            <FormItem label="社团状态" v-if="form.showState">
+                <Input placeholder="请输入新的状态" v-model="form.assoState"/>
+            </FormItem>
+        </Form>
+    </Modal>
 </template>
-<script>
-    export default {
-        data () {
-            return {
-                modal2: false,
-                modal1: false,
-                modal_loading: false,
-              newtag:'',
-              formItem: {
-                  name:this.$route.params.name,
-                  description:'',
-                  state:'',
-                  tags:[],
 
-              },
+<script>
+import TagChoose from '../activity/tag_choose.vue'
+import axios from 'axios'
+export default {
+    components:{TagChoose},
+    props: {
+        form: Object
+    },
+    data(){
+        return {
+            file: null
+        }
+    },
+    computed: {
+
+    },
+    methods: {
+        clearFiles() {
+            this.$refs['file-input'].reset();
+        },
+        info_ok(){
+            // this.form.onshow = false
+            const _self = this;
+            console.log(_self.form.type);
+
+            if(_self.form.type=="create"){
+                var imgFile;
+                let reader = new FileReader();
+                reader.readAsDataURL(this.file);
+
+                reader.onload=function(e) {        //读取完毕后调用接口
+                    // console.log(_self.form.name);
+                    imgFile = e.target.result;
+                    // console.log(imgFile);
+                    console.log(_self.form.name);
+                    console.log(_self.form.description);
+                    console.log(_self.form.tag.tagList);
+                    console.log(imgFile);
+                    axios
+                    .post('http://localhost:1111/associations',
+                        {
+                            name:_self.form.name,
+                            description:_self.form.description,
+                            tags:_self.form.tag.tagList,
+                            logo:imgFile
+                        }
+                    )
+                    .then(response => {
+                        console.log(response.data)
+                        // this.AssoList = response.data.data.content
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                };
+
+                _self.form.onshow = false
+                _self.$Message.info('创建成功');
+                // _self.$router.go(0);
+
+            }
+            else{
+                var imgFile;
+                let reader = new FileReader();
+                reader.readAsDataURL(this.file);
+                reader.onload=function(e) {
+                    imgFile = e.target.result;
+                    axios
+                    .put('http://localhost:1111/associations/'+_self.form.assoId,{
+                        name:_self.form.name,
+                        description:_self.form.description,
+                        tags:_self.form.tag.tagList,
+                        logo:imgFile
+                    })
+                    .then(response => {
+                        console.log(response.data)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+
+                }
+                _self.form.onshow = false
+                _self.$Message.info('修改成功');
+                // _self.$router.go(0);
+                // this.$emit('showCityName',data);
             }
         },
-        methods: {
-          ReturnList(){
-            this.$router.push({
-              path: '/asso_list',
-              name: 'AssoList',
-            })
-          },
-          ReturnThis(){
-            this.$router.push({
-              path: '/create_asso',
-              name: 'CreateAsso',
-            })
-          },
-          AddNewTag(){
-            this.formItem.tags.push(this.newtag);
-          },
-          del(){
-            this.modal_loading = true;
-          },
-          Confirm(){
-            this.modal1=true;
-          },
-        },
-    }
+        info_cancel(){
+            this.form.name=""
+            this.form.description=""
+            this.form.tagList=""
+            this.form.materials=""
+            this.form.type=""
+            this.form.onshow = false
+        }
+    },
+}
 </script>

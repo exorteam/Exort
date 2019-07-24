@@ -6,12 +6,12 @@ import Activity from '../components/activity/activity.vue'
 import About from '../components/activity/about.vue'
 import Build from '../components/activity/build.vue'
 
-import SysManaAsso from '../components/association_management/sys_manage_association'
-import SysCreateAsso from '../components/association_management/sys_create_association'
-import EditAsso from '../components/association_management/edit_association'
+// import SysManaAsso from '../components/association_management/sys_manage_association'
+// import SysCreateAsso from '../components/association_management/sys_create_association'
+// import EditAsso from '../components/association_management/edit_association'
 import SysAssoList from '../components/association_management/sys_association_list'
 import AssoList from '../components/association_management/association_list'
-import CreateAsso from '../components/association_management/create_association'
+// import CreateAsso from '../components/association_management/create_association'
 
 import AdminIndex from '../components/admin_index'
 
@@ -60,26 +60,26 @@ export default new Router({
           name: 'SysAssoList',
           component: SysAssoList
         },
-        {
-          path: 'create_asso',
-          name: 'CreateAsso',
-          component: CreateAsso
-        },
-        {
-          path: 'sys_mana_asso',
-          name: 'SysManaAsso',
-          component: SysManaAsso
-        },
-        {
-          path: 'edit_asso',
-          name: 'EditAsso',
-          component: EditAsso
-        },
-        {
-          path: 'sys_create_asso',
-          name: 'SysCreateAsso',
-          component: SysCreateAsso
-        },
+        // {
+        //   path: 'create_asso',
+        //   name: 'CreateAsso',
+        //   component: CreateAsso
+        // },
+        // {
+        //   path: 'sys_mana_asso',
+        //   name: 'SysManaAsso',
+        //   component: SysManaAsso
+        // },
+        // {
+        //   path: 'edit_asso',
+        //   name: 'EditAsso',
+        //   component: EditAsso
+        // },
+        // {
+        //   path: 'sys_create_asso',
+        //   name: 'SysCreateAsso',
+        //   component: SysCreateAsso
+        // },
         {
           path: 'application_management',
           name: 'AppliManagement',
