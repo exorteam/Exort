@@ -73,6 +73,7 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
     protected <RT, ST> RT request(ST body, HttpMethod method,
                                String path,
                                Object... pathVariables) {
+        System.out.println(new ParameterizedTypeReference<RT>() { }.toString());
         return exchange(url(path),
                 method, new HttpEntity<>(body),
                 new ParameterizedTypeReference<RT>() { },
