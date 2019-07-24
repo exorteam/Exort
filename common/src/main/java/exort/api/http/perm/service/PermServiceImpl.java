@@ -1,5 +1,6 @@
 package exort.api.http.perm.service;
 
+import exort.api.http.common.ResponseType;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.OperationBatch;
@@ -24,142 +25,166 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse<List<String>> getScopes(Long userId) {
-        return request(HttpMethod.GET, "/users/{userId}/scopes", userId);
+        return request(new ResponseType<List<String>>(),
+                HttpMethod.GET, "/users/{userId}/scopes", userId);
     }
 
     @Override
     public ApiResponse<PagedData<String>> getScopes() {
-        return request(HttpMethod.GET, new PageQuery(), "/scopes");
+        return request(new ResponseType<PagedData<String>>(),
+                HttpMethod.GET, new PageQuery(), "/scopes");
     }
 
     @Override
     public ApiResponse<PagedData<String>> getScopes(PageQuery pageQuery) {
-        return request(HttpMethod.GET, pageQuery, "/scopes");
+        return request(new ResponseType<PagedData<String>>(),
+                HttpMethod.GET, pageQuery, "/scopes");
     }
 
     @Override
     public ApiResponse<List<Role>> getRoles(Long userId, String scope) {
-        return request(HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles",
+        return request(new ResponseType<List<Role>>(),
+                HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles",
                 userId, scope);
     }
 
     @Override
     public ApiResponse<List<Role>> grantRoles(Long userId, String scope, List<String> roleNames) {
-        return request(new OperationBatch<>("add", roleNames),
+        return request(new ResponseType<List<Role>>(),
+                new OperationBatch<>("add", roleNames),
                 HttpMethod.PUT, "/users/{userId}/scopes/{scope}/roles",
                 userId, scope);
     }
 
     @Override
     public ApiResponse<List<Role>> revokeRoles(Long userId, String scope, List<String> roleNames) {
-        return request(new OperationBatch<>("remove", roleNames),
+        return request(new ResponseType<List<Role>>(),
+                new OperationBatch<>("remove", roleNames),
                 HttpMethod.PUT, "/users/{userId}/scopes/{scope}/roles",
                 userId, scope);
     }
 
     @Override
     public ApiResponse hasRole(Long userId, String scope, String roleName) {
-        return request(HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles/{roleName}",
+        return request(new ResponseType(),
+                HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles/{roleName}",
                 userId, scope, roleName);
     }
 
     @Override
     public ApiResponse hasPermission(Long userId, String scope, String permissionName) {
-        return request(HttpMethod.GET, "/users/{userId}/scopes/{scope}/permissions/{permissionName}",
+        return request(new ResponseType<>(),
+                HttpMethod.GET, "/users/{userId}/scopes/{scope}/permissions/{permissionName}",
                 userId, scope, permissionName);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope) {
-        return request(HttpMethod.GET, new PageQuery(), "/scopes/{scope}/users",
+        return request(new ResponseType<PagedData<Long>>(),
+                HttpMethod.GET, new PageQuery(), "/scopes/{scope}/users",
                 scope);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, PageQuery pageQuery) {
-        return request(HttpMethod.GET, pageQuery, "/scopes/{scope}/users",
+        return request(new ResponseType<PagedData<Long>>(),
+                HttpMethod.GET, pageQuery, "/scopes/{scope}/users",
                 scope);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, String roleName) {
-        return request(HttpMethod.GET, new PageQuery(), "/scopes/{scope}/roles/{roleName}/users",
+        return request(new ResponseType<PagedData<Long>>(),
+                HttpMethod.GET, new PageQuery(), "/scopes/{scope}/roles/{roleName}/users",
                 scope, roleName);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, String roleName, PageQuery pageQuery) {
-        return request(HttpMethod.GET, pageQuery, "/scopes/{scope}/roles/{roleName}/users",
+        return request(new ResponseType<PagedData<Long>>(),
+                HttpMethod.GET, pageQuery, "/scopes/{scope}/roles/{roleName}/users",
                 scope, roleName);
     }
 
     @Override
     public ApiResponse<Role> createRole(Role roleArg) {
-        return request(roleArg,
+        return request(new ResponseType<Role>(),
+                roleArg,
                 HttpMethod.POST, "/roles");
     }
 
     @Override
     public ApiResponse deleteRole(String name) {
-        return request(HttpMethod.DELETE, "/roles/{name}", name);
+        return request(new ResponseType(),
+                HttpMethod.DELETE, "/roles/{name}", name);
     }
 
     @Override
     public ApiResponse<Role> updateRole(Role roleArg) {
         String name = roleArg.getName();
         roleArg.setName(null);
-        return  request(roleArg,
+        return  request(new ResponseType<Role>(),
+                roleArg,
                 HttpMethod.PUT, "/roles/{name}", name);
     }
 
     @Override
     public ApiResponse<Role> getRole(String name) {
-        return request(HttpMethod.GET, "/roles/{name}", name);
+        return request(new ResponseType<Role>(),
+                HttpMethod.GET, "/roles/{name}", name);
     }
 
     @Override
     public ApiResponse<List<Permission>> getPermissions(String roleName) {
-        return request(HttpMethod.GET, "/roles/{name}/permissions", roleName);
+        return request(new ResponseType<List<Permission>>(),
+                HttpMethod.GET, "/roles/{name}/permissions", roleName);
     }
 
     @Override
     public ApiResponse<List<Permission>> grantPermissions(String roleName, List<String> permissionNames) {
-        return request(new OperationBatch<>("add", permissionNames),
+        return request(new ResponseType<List<Permission>>(),
+                new OperationBatch<>("add", permissionNames),
                 HttpMethod.PUT, "/roles/{roleName}/permissions", roleName);
     }
 
     @Override
     public ApiResponse<List<Permission>> revokePermissions(String roleName, List<String> permissionNames) {
-        return request(new OperationBatch<>("remove", permissionNames),
+        return request(new ResponseType<List<Permission>>(),
+                new OperationBatch<>("remove", permissionNames),
                 HttpMethod.PUT, "/roles/{roleName}/permissions", roleName);
     }
 
     @Override
     public ApiResponse<Permission> createPermission(Permission permArg) {
-        return this.<ApiResponse<Permission>, Permission>request(permArg,
+        return request(new ResponseType<Permission>(),
+                permArg,
                 HttpMethod.POST, "/permissions");
     }
 
     @Override
     public ApiResponse deletePermission(String name) {
-        return request(HttpMethod.DELETE, "/permissions/{name}", name);
+        return request(new ResponseType<>(),
+                HttpMethod.DELETE, "/permissions/{name}", name);
     }
 
     @Override
     public ApiResponse<Permission> updatePermission(Permission permArg) {
         String name = permArg.getName();
         permArg.setName(null);
-        return request(permArg,
+        return request(new ResponseType<Permission>(),
+                permArg,
                 HttpMethod.PUT, "/permissions/{name}", name);
     }
 
     @Override
     public ApiResponse<Permission> getPermission(String name) {
-        return request(HttpMethod.GET, "/permissions/{name}", name);
+        return request(new ResponseType<Permission>(),
+                HttpMethod.GET, "/permissions/{name}", name);
     }
 
     @Override
     public ApiResponse<List<Permission>> getPermissions() {
-        return request(HttpMethod.GET, "/permissions");
+        return request(new ResponseType<List<Permission>>(),
+                HttpMethod.GET, "/permissions");
     }
 }

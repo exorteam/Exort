@@ -1,7 +1,7 @@
 package exort.api.http.common;
 
+import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
-import lombok.Setter;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -70,47 +70,36 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
         return builder.build().toString();
     }
 
-    protected <RT, ST> RT request(ST body, HttpMethod method,
-                               String path,
-                               Object... pathVariables) {
-        System.out.println(new ParameterizedTypeReference<RT>() { }.toString());
-        return exchange(url(path),
-                method, new HttpEntity<>(body),
-                new ParameterizedTypeReference<RT>() { },
-                pathVariables
-        ).getBody();
+    protected <RT, ST> ApiResponse<RT> request(ResponseType<RT> rt,
+                                               ST body,
+                                               HttpMethod method,
+                                               String path,
+                                               Object... pathVariables) {
+        return exchange(url(path), method, new HttpEntity<>(body), rt, pathVariables).getBody();
     }
 
-    protected <RT, ST> RT request(ST body, HttpMethod method,
-                               PageQuery pageQuery,
-                               String path,
-                               Object... pathVariables) {
-        return exchange(url(path, pageQuery),
-                method, new HttpEntity<>(body),
-                new ParameterizedTypeReference<RT>() { },
-                pathVariables
-        ).getBody();
+    protected <RT, ST> ApiResponse<RT> request(ResponseType<RT> rt,
+                                               ST body,
+                                               HttpMethod method,
+                                               PageQuery pageQuery,
+                                               String path,
+                                               Object... pathVariables) {
+        return exchange(url(path, pageQuery), method, new HttpEntity<>(body), rt, pathVariables).getBody();
     }
 
-    protected <RT> RT request(HttpMethod method,
-                           String path,
-                           Object... pathVariables) {
-        return exchange(url(path),
-                method, null,
-                new ParameterizedTypeReference<RT>() { },
-                pathVariables
-        ).getBody();
+    protected <RT> ApiResponse<RT> request(ResponseType<RT> rt,
+                                           HttpMethod method,
+                                           String path,
+                                           Object... pathVariables) {
+        return exchange(url(path), method, null, rt, pathVariables).getBody();
     }
 
-    protected <RT> RT request(HttpMethod method,
-                           PageQuery pageQuery,
-                           String path,
-                           Object... pathVariables) {
-        return exchange(url(path, pageQuery),
-                method, null,
-                new ParameterizedTypeReference<RT>() { },
-                pathVariables
-        ).getBody();
+    protected <RT> ApiResponse<RT> request(ResponseType<RT> rt,
+                                           HttpMethod method,
+                                           PageQuery pageQuery,
+                                           String path,
+                                           Object... pathVariables) {
+        return exchange(url(path, pageQuery), method, null, rt, pathVariables).getBody();
     }
 
     private static final class HttpComponentsClientRestfulHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
