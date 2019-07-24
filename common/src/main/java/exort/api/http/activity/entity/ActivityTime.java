@@ -11,12 +11,4 @@ public class ActivityTime {
     private int type;
     private List<TimeRange> time;
 
-    @Data
-    private class TimeRange {
-
-        private Date start;
-        private Date end;
-
-    }
-
 }

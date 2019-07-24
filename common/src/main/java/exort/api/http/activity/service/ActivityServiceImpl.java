@@ -5,16 +5,9 @@ import exort.api.http.activity.entity.*;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
-import jdk.nashorn.internal.ir.RuntimeNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 @Service
 public class ActivityServiceImpl extends RestTemplate implements ActivityService {

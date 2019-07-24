@@ -1,12 +1,8 @@
 package exort.api.http.activity.service;
 
-import com.google.common.reflect.TypeToken;
 import exort.api.http.activity.entity.*;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
-import org.springframework.http.HttpMethod;
-
-import java.util.List;
 
 public interface ActivityService {
 

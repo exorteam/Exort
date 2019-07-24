@@ -1,7 +1,5 @@
 package exort.api.http.activity.entity;
 
-import exort.api.http.activity.service.ActivityService;
-
 import java.util.Date;
 import java.util.List;
 
@@ -17,8 +15,8 @@ public class Activity {
     private Date lastModifyTime;
     private String title;
     private String content;
-    private ActivityService.ActivityTime signupTime;
-    private ActivityService.ActivityTime time;
+    private ActivityTime signupTime;
+    private ActivityTime time;
     private int publishState;
     private int signupState;
     private int state;
