@@ -126,7 +126,7 @@ let startSelectLists=[
 
 let cardLists=[
     {
-        id: "5d302c76a5fabe1702283265",
+        id: "5d302c76a5fabe1702283262",
         name:"五一长跑节",
         text:"已结束",
         image: image,
@@ -135,7 +135,7 @@ let cardLists=[
         bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
     },
     {
-        id: "5d302c76a5fabe1702283265",
+        id: "5d302c76a5fabe1702283263",
         name:"MVIG大型数据集标注",
         text:"未开始",
         image: image,
@@ -144,7 +144,7 @@ let cardLists=[
         bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
     },
     {
-        id: "5d302b3ba5fabe1702283262",
+        id: "5d302b3ba5fabe1702283264",
         name:"联名文化衫Line Up",
         text:"进行中",
         image: image,
@@ -153,7 +153,7 @@ let cardLists=[
         bd:"明天，你就要去很远的地方，带上我们的故事。"
     },
     {
-        id: "5d302b3ba5fabe1702283262",
+        id: "5d302b3ba5fabe1702283265",
         name:"校园带队志愿者招募",
         text:"未发布",
         image: image,
@@ -196,7 +196,7 @@ export default {
                     type: 0, 
                     time:[{
                         start: "",
-                        end: "",
+                        end: ""
                     }]
                 },
                 ifReview: "",
