@@ -59,16 +59,20 @@ public class AssociationServiceImpl implements AssociationService{
 //        System.out.println(associations.size());
         String keyword = params.getKeyword();
         if(keyword != null && keyword!=""){
-            System.out.println(associations.size());
-            System.out.println("keyword"+keyword);
-            associations.removeIf(association -> !association.getName().contains(keyword)&&!association.getDescription().contains(keyword));
-            System.out.println(associations.size());
-            if(associations.isEmpty()){
-                assoList.setPageNumber(0);
-                assoList.setPageSize(0);
-                assoList.setTotalSize(0);
-                assoList.setContent(associations);
-                return new ResponseBody<>(assoList,"","");
+            int size = associations.size();
+            if (keyword != null) {
+                for (int i = size - 1; i >= 0; i--) {
+                    if (!associations.get(i).hasKeyword(keyword)) {
+                        associations.remove(i);
+                    }
+                }
+                if (associations.isEmpty()) {
+                    assoList.setPageNumber(0);
+                    assoList.setPageSize(0);
+                    assoList.setTotalSize(0);
+                    assoList.setContent(associations);
+                    return new ResponseBody<>(assoList,"","");
+                }
             }
         }
         System.out.println(associations.size());

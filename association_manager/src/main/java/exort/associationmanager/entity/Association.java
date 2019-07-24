@@ -29,4 +29,13 @@ public class Association {
 		}
 		return false;
 	}
+	public boolean hasKeyword(String keyword){
+		if(this.name==null || this.description==null){
+			return false;
+		}
+		if(this.name.contains(keyword)||this.description.contains(keyword)){
+			return true;
+		}
+		return false;
+	}
 }
