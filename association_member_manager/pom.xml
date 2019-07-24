@@ -12,8 +12,8 @@
     <groupId>Exort</groupId>
     <artifactId>association_member_manager</artifactId>
     <version>0.9.0</version>
-    <name>association_member_manager</name>
-    <description>Demo for association_member_management</description>
+    <name>association-member-manager</name>
+    <description>Demo for association-member-management</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -120,7 +120,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.2.0</version>
                 <configuration>
-                    <imageName>exort/association_member_manager</imageName>
+                    <imageName>exort/association-member-manager</imageName>
                     <baseImage>java</baseImage>
                     <maintainer>bertzhang</maintainer>
                     <exposes>
@@ -130,13 +130,13 @@
                         <imageTag>0.9.0</imageTag>
                         <!--<imageTag>latest</imageTag>-->
                     </imageTags>
-                    <entryPoint>["java", "-jar", "/association_member_manager-0.9.0.jar"]</entryPoint>
+                    <entryPoint>["java", "-jar", "/association-member-manager-0.9.0.jar"]</entryPoint>
                     <rm>true</rm>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
                             <directory>target</directory>
-                            <include>association_member_manager-0.9.0.jar</include>
+                            <include>association-member-manager-0.9.0.jar</include>
                         </resource>
                     </resources>
                 </configuration>
