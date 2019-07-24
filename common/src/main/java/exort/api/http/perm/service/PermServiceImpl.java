@@ -16,10 +16,10 @@ import java.util.List;
 @Service
 public class PermServiceImpl extends RestTemplate implements PermService {
 
-    @Value("${exort.perm.protocol: http}")
+    @Value("${exort.perm.protocol:http}")
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
-    @Value("${exort.perm.endpoint: localhost}")
+    @Value("${exort.perm.endpoint:localhost}")
     public void setLocalhost(String endpoint) { super.setEndpoint(endpoint); }
 
     @Override
