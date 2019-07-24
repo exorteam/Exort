@@ -1,6 +1,6 @@
 package exort.api.http.perm.service;
 
-import exort.api.http.common.ResponseType;
+import com.google.common.reflect.TypeToken;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.OperationBatch;
@@ -21,36 +21,36 @@ public class PermServiceImpl extends RestTemplate implements PermService {
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
     @Value("${exort.perm.endpoint:localhost}")
-    public void setLocalhost(String endpoint) { super.setEndpoint(endpoint); }
+    public void setEndpoint(String endpoint) { super.setEndpoint(endpoint); }
 
     @Override
     public ApiResponse<List<String>> getScopes(Long userId) {
-        return request(new ResponseType<List<String>>(),
+        return request(new TypeToken<List<String>>() { },
                 HttpMethod.GET, "/users/{userId}/scopes", userId);
     }
 
     @Override
     public ApiResponse<PagedData<String>> getScopes() {
-        return request(new ResponseType<PagedData<String>>(),
+        return request(new TypeToken<PagedData<String>>() { },
                 HttpMethod.GET, new PageQuery(), "/scopes");
     }
 
     @Override
     public ApiResponse<PagedData<String>> getScopes(PageQuery pageQuery) {
-        return request(new ResponseType<PagedData<String>>(),
+        return request(new TypeToken<PagedData<String>>() { },
                 HttpMethod.GET, pageQuery, "/scopes");
     }
 
     @Override
     public ApiResponse<List<Role>> getRoles(Long userId, String scope) {
-        return request(new ResponseType<List<Role>>(),
+        return request(new TypeToken<List<Role>>() { },
                 HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles",
                 userId, scope);
     }
 
     @Override
     public ApiResponse<List<Role>> grantRoles(Long userId, String scope, List<String> roleNames) {
-        return request(new ResponseType<List<Role>>(),
+        return request(new TypeToken<List<Role>>() { },
                 new OperationBatch<>("add", roleNames),
                 HttpMethod.PUT, "/users/{userId}/scopes/{scope}/roles",
                 userId, scope);
@@ -58,7 +58,7 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse<List<Role>> revokeRoles(Long userId, String scope, List<String> roleNames) {
-        return request(new ResponseType<List<Role>>(),
+        return request(new TypeToken<List<Role>>() { },
                 new OperationBatch<>("remove", roleNames),
                 HttpMethod.PUT, "/users/{userId}/scopes/{scope}/roles",
                 userId, scope);
@@ -66,56 +66,56 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse hasRole(Long userId, String scope, String roleName) {
-        return request(new ResponseType(),
+        return request(new TypeToken<Object>() { },
                 HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles/{roleName}",
                 userId, scope, roleName);
     }
 
     @Override
     public ApiResponse hasPermission(Long userId, String scope, String permissionName) {
-        return request(new ResponseType<>(),
+        return request(new TypeToken<Object>() { },
                 HttpMethod.GET, "/users/{userId}/scopes/{scope}/permissions/{permissionName}",
                 userId, scope, permissionName);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope) {
-        return request(new ResponseType<PagedData<Long>>(),
+        return request(new TypeToken<PagedData<Long>>() { },
                 HttpMethod.GET, new PageQuery(), "/scopes/{scope}/users",
                 scope);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, PageQuery pageQuery) {
-        return request(new ResponseType<PagedData<Long>>(),
+        return request(new TypeToken<PagedData<Long>>() { },
                 HttpMethod.GET, pageQuery, "/scopes/{scope}/users",
                 scope);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, String roleName) {
-        return request(new ResponseType<PagedData<Long>>(),
+        return request(new TypeToken<PagedData<Long>>() { },
                 HttpMethod.GET, new PageQuery(), "/scopes/{scope}/roles/{roleName}/users",
                 scope, roleName);
     }
 
     @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, String roleName, PageQuery pageQuery) {
-        return request(new ResponseType<PagedData<Long>>(),
+        return request(new TypeToken<PagedData<Long>>() { },
                 HttpMethod.GET, pageQuery, "/scopes/{scope}/roles/{roleName}/users",
                 scope, roleName);
     }
 
     @Override
     public ApiResponse<Role> createRole(Role roleArg) {
-        return request(new ResponseType<Role>(),
+        return request(new TypeToken<Role>() { },
                 roleArg,
                 HttpMethod.POST, "/roles");
     }
 
     @Override
     public ApiResponse deleteRole(String name) {
-        return request(new ResponseType(),
+        return request(new TypeToken<Object>() { },
                 HttpMethod.DELETE, "/roles/{name}", name);
     }
 
@@ -123,47 +123,47 @@ public class PermServiceImpl extends RestTemplate implements PermService {
     public ApiResponse<Role> updateRole(Role roleArg) {
         String name = roleArg.getName();
         roleArg.setName(null);
-        return  request(new ResponseType<Role>(),
+        return  request(new TypeToken<Role>() { },
                 roleArg,
                 HttpMethod.PUT, "/roles/{name}", name);
     }
 
     @Override
     public ApiResponse<Role> getRole(String name) {
-        return request(new ResponseType<Role>(),
+        return request(new TypeToken<Role>() { },
                 HttpMethod.GET, "/roles/{name}", name);
     }
 
     @Override
     public ApiResponse<List<Permission>> getPermissions(String roleName) {
-        return request(new ResponseType<List<Permission>>(),
+        return request(new TypeToken<List<Permission>>() { },
                 HttpMethod.GET, "/roles/{name}/permissions", roleName);
     }
 
     @Override
     public ApiResponse<List<Permission>> grantPermissions(String roleName, List<String> permissionNames) {
-        return request(new ResponseType<List<Permission>>(),
+        return request(new TypeToken<List<Permission>>() { },
                 new OperationBatch<>("add", permissionNames),
                 HttpMethod.PUT, "/roles/{roleName}/permissions", roleName);
     }
 
     @Override
     public ApiResponse<List<Permission>> revokePermissions(String roleName, List<String> permissionNames) {
-        return request(new ResponseType<List<Permission>>(),
+        return request(new TypeToken<List<Permission>>() { },
                 new OperationBatch<>("remove", permissionNames),
                 HttpMethod.PUT, "/roles/{roleName}/permissions", roleName);
     }
 
     @Override
     public ApiResponse<Permission> createPermission(Permission permArg) {
-        return request(new ResponseType<Permission>(),
+        return request(new TypeToken<Permission>() { },
                 permArg,
                 HttpMethod.POST, "/permissions");
     }
 
     @Override
     public ApiResponse deletePermission(String name) {
-        return request(new ResponseType<>(),
+        return request(new TypeToken<Object>() { },
                 HttpMethod.DELETE, "/permissions/{name}", name);
     }
 
@@ -171,20 +171,20 @@ public class PermServiceImpl extends RestTemplate implements PermService {
     public ApiResponse<Permission> updatePermission(Permission permArg) {
         String name = permArg.getName();
         permArg.setName(null);
-        return request(new ResponseType<Permission>(),
+        return request(new TypeToken<Permission>() { },
                 permArg,
                 HttpMethod.PUT, "/permissions/{name}", name);
     }
 
     @Override
     public ApiResponse<Permission> getPermission(String name) {
-        return request(new ResponseType<Permission>(),
+        return request(new TypeToken<Permission>() { },
                 HttpMethod.GET, "/permissions/{name}", name);
     }
 
     @Override
     public ApiResponse<List<Permission>> getPermissions() {
-        return request(new ResponseType<List<Permission>>(),
+        return request(new TypeToken<List<Permission>>() { },
                 HttpMethod.GET, "/permissions");
     }
 }

@@ -1,9 +1,12 @@
 package exort.api.http.common;
 
+import com.google.common.reflect.TypeParameter;
+import com.google.common.reflect.TypeToken;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
@@ -12,6 +15,7 @@ import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 
 public class RestTemplate extends org.springframework.web.client.RestTemplate {
@@ -69,36 +73,90 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
         return builder.build().toString();
     }
 
-    protected <RT, ST> ApiResponse<RT> request(ResponseType<RT> rt,
+    protected <RT, ST> ApiResponse<RT> request(TypeToken<RT> token,
                                                ST body,
                                                HttpMethod method,
                                                String path,
                                                Object... pathVariables) {
-        return exchange(url(path), method, new HttpEntity<>(body), rt, pathVariables).getBody();
+        return exchange(url(path), method, new HttpEntity<>(body), getReference(token), pathVariables).getBody();
     }
 
-    protected <RT, ST> ApiResponse<RT> request(ResponseType<RT> rt,
+    protected <RT, ST> ApiResponse<RT> request(TypeToken<RT> token,
                                                ST body,
                                                HttpMethod method,
                                                PageQuery pageQuery,
                                                String path,
                                                Object... pathVariables) {
-        return exchange(url(path, pageQuery), method, new HttpEntity<>(body), rt, pathVariables).getBody();
+        return exchange(url(path, pageQuery), method, new HttpEntity<>(body), getReference(token), pathVariables).getBody();
     }
 
-    protected <RT> ApiResponse<RT> request(ResponseType<RT> rt,
+    protected <RT> ApiResponse<RT> request(TypeToken<RT> token,
                                            HttpMethod method,
                                            String path,
                                            Object... pathVariables) {
-        return exchange(url(path), method, null, rt, pathVariables).getBody();
+        return exchange(url(path), method, null, getReference(token), pathVariables).getBody();
     }
 
-    protected <RT> ApiResponse<RT> request(ResponseType<RT> rt,
+    protected <RT> ApiResponse<RT> request(TypeToken<RT> token,
                                            HttpMethod method,
                                            PageQuery pageQuery,
                                            String path,
                                            Object... pathVariables) {
-        return exchange(url(path, pageQuery), method, null, rt, pathVariables).getBody();
+        return exchange(url(path, pageQuery), method, null, getReference(token), pathVariables).getBody();
+    }
+
+
+    /*
+     *
+     * Tricks
+     *
+     */
+
+    private static <T> ParameterizedTypeReference<ApiResponse<T>> getReference(TypeToken<T> typeToken) {
+        return ParameterizedTypeReferenceBuilder.fromTypeToken(
+                new TypeToken<ApiResponse<T>>() { }.where(
+                        new TypeParameter<T>() { }, typeToken
+                )
+        );
+    }
+
+    private static class ParameterizedTypeReferenceBuilder {
+
+        public static <T> ParameterizedTypeReference<T> fromTypeToken(TypeToken<T> typeToken) {
+            return new TypeTokenParameterizedTypeReference<>(typeToken);
+        }
+
+        private static class TypeTokenParameterizedTypeReference<T> extends ParameterizedTypeReference<T> {
+
+            private final Type type;
+
+            private TypeTokenParameterizedTypeReference(TypeToken<T> typeToken) {
+                this.type = typeToken.getType();
+            }
+
+            @Override
+            public Type getType() {
+                return type;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return (this == obj || (obj instanceof ParameterizedTypeReference &&
+                        this.type.equals(((ParameterizedTypeReference<?>) obj).getType())));
+            }
+
+            @Override
+            public int hashCode() {
+                return this.type.hashCode();
+            }
+
+            @Override
+            public String toString() {
+                return "ParameterizedTypeReference<" + this.type + ">";
+            }
+
+        }
+
     }
 
     private static final class HttpComponentsClientRestfulHttpRequestFactory extends HttpComponentsClientHttpRequestFactory {
@@ -135,4 +193,3 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
     }
 
 }
-
