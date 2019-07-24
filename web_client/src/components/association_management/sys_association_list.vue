@@ -21,7 +21,7 @@
         <div id="Divide">
            <Divider />
         </div>
-        <b-form-checkbox-group v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>
+        <b-form-checkbox-group @input="get" v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>
         </div>
         <div id="Divide">
            <Divider />
@@ -33,12 +33,6 @@
                 <Icon type="ios-film-outline"></Icon>
                 {{item.name}}（{{StateList(item.state)}}）
             </p>
-
-            <!-- <a href="#" slot="extra"  v-on:click="showEditForm(item)"  >
-                <Icon type="ios-loop-strong"></Icon>
-                Edit
-            </a> -->
-            <!-- <CreateAssociation :form ="item"/> -->
             <div style="text-align: center;height:100px">
                 <img :src="item.logo" style="width:80px;height:80px;"/>
             </div>
@@ -60,7 +54,7 @@
         <div style="margin-top:15px;text-align: center">
         <Page id = "page" show-elevator show-total
         :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-        :current.sync = "pageProp.pageNum"  @on-change="get"></Page>
+        :current.sync = "pageProp.pageNum"  @on-change="getAssociationList"></Page>
         </div>
         </div>
         </Tab-pane>
@@ -406,16 +400,19 @@ export default {
             }
         },
         get(){
-            console.log("qwe")
+            this.getAssociationList()
         },
 
         getAssociationList() {
             // console.log(this.assoSearch);
+            console.log(this.assoStateSelected)
+            this.getState();
             this.assoSearch.pageNum = this.pageProp.pageNum - 1;
             this.assoSearch.pageSize = this.pageProp.pageSize;
             this.assoSearch.tags = this.tag.tagList.join();
+            console.log(this.assoSearch.state)
             this.getState();
-            // console.log(this.assoSearch)
+
 
             axios
             .get('http://localhost:1111/associations',{
