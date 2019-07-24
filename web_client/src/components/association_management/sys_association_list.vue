@@ -60,7 +60,7 @@
         <div style="margin-top:15px;text-align: center">
         <Page id = "page" show-elevator show-total
         :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-        :current.sync = "pageProp.pageNum" ></Page>
+        :current.sync = "pageProp.pageNum"  @on-change="get"></Page>
         </div>
         </div>
         </Tab-pane>
@@ -404,6 +404,9 @@ export default {
             else{
                 this.assoSearch.state = -1
             }
+        },
+        get(){
+            console.log("qwe")
         },
 
         getAssociationList() {
