@@ -2,6 +2,7 @@ package exort.associationmanager.serviceimpl;
 
 import java.util.*;
 
+import exort.api.http.common.entity.ApiResponse;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,13 @@ import exort.associationmanager.service.AssociationService;
 import static java.lang.Math.min;
 
 
-@Service
 public class AssociationServiceImpl implements AssociationService{
     @Autowired
     private AssociationRepository assoRepository;
 //    private AssociationApplicationRepository assoAppRepository;
 
-    public ResponseBody getAssociation(String assoId){
-        ResponseBody responseBody = new ResponseBody();
+    public ApiResponse getAssociation(String assoId){
+        ApiResponse responseBody = new ApiResponse<>();
 
         Association association = assoRepository.findById(assoId);
         if(association==null){
@@ -35,11 +35,11 @@ public class AssociationServiceImpl implements AssociationService{
         return  responseBody;
     }
 
-    public ResponseBody<AssociationList> listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize){
+    public ApiResponse<AssociationList> listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize){
 
         AssociationList assoList = new AssociationList();
 
-        ResponseBody responseBody = new ResponseBody();
+        ApiResponse responseBody = new ApiResponse<>();
 
         List<Association> associations = assoRepository.findAll();
 //        System.out.println(associations.size());
@@ -53,7 +53,7 @@ public class AssociationServiceImpl implements AssociationService{
                 assoList.setPageSize(0);
                 assoList.setTotalSize(0);
                 assoList.setContent(associations);
-                return new ResponseBody<>(assoList,"","");
+                return new ApiResponse<>(assoList,"","");
             }
         }
 //        System.out.println(associations.size());
@@ -71,7 +71,7 @@ public class AssociationServiceImpl implements AssociationService{
                     assoList.setPageSize(0);
                     assoList.setTotalSize(0);
                     assoList.setContent(associations);
-                    return new ResponseBody<>(assoList,"","");
+                    return new ApiResponse<>(assoList,"","");
                 }
             }
         }
@@ -90,7 +90,7 @@ public class AssociationServiceImpl implements AssociationService{
                     assoList.setPageSize(0);
                     assoList.setTotalSize(0);
                     assoList.setContent(associations);
-                    return new ResponseBody<>(assoList,"","");
+                    return new ApiResponse<>(assoList,"","");
                 }
             }
         }
@@ -116,15 +116,15 @@ public class AssociationServiceImpl implements AssociationService{
         assoList.setTotalSize(totalSize);
         assoList.setPageSize(realPageSize);
         assoList.setPageNumber(realPageNum);
-        return new ResponseBody<>(assoList,"","");
+        return new ApiResponse<>(assoList,"","");
     }
 
 
-    public ResponseBody createAssociation(String name,String description,List<String> tags,String logo){
-        ResponseBody responseBody = new ResponseBody();
+    public ApiResponse createAssociation(String name,String description,List<String> tags,String logo){
+        ApiResponse responseBody = new ApiResponse<>();
 
         if( name == null || description == null || tags == null || logo == null){
-            return new ResponseBody<>(null,"invalidFormat","无效的申请格式");
+            return new ApiResponse<>(null,"invalidFormat","无效的申请格式");
         }
 
         Association association= new Association();
@@ -141,24 +141,24 @@ public class AssociationServiceImpl implements AssociationService{
 
         assoRepository.save(association);
         responseBody.setData(association);
-        return new ResponseBody<>(association,"","");
+        return new ApiResponse<>(association,"","");
     }
 
-    private ResponseBody  noAssoMessage (ResponseBody responseBody){
-        return new ResponseBody(null,"notFound","社团不存在");
+    private ApiResponse  noAssoMessage (ApiResponse responseBody){
+        return new ApiResponse<>(null,"notFound","社团不存在");
     }
 
-    public ResponseBody deleteAssociation(String assoId ){
-        ResponseBody responseBody = new ResponseBody();
+    public ApiResponse deleteAssociation(String assoId ){
+        ApiResponse responseBody = new ApiResponse<>();
         if(assoRepository.findById(assoId)==null){
             return  noAssoMessage(responseBody);
         }
         assoRepository.deleteById(assoId);
         responseBody.setData(new HashMap());
-        return new ResponseBody(new HashMap(),"","");
+        return new ApiResponse<>(new HashMap(),"","");
     }
-    public ResponseBody editAssociation(String assoId, String name, String description, List<String> tags, String logo){
-        ResponseBody responseBody = new ResponseBody();
+    public ApiResponse editAssociation(String assoId, String name, String description, List<String> tags, String logo){
+        ApiResponse responseBody = new ApiResponse<>();
         if(assoRepository.findById(assoId)==null){
             return  noAssoMessage(responseBody);
         }
@@ -168,11 +168,11 @@ public class AssociationServiceImpl implements AssociationService{
         association.setName(name);
         association.setLogo(logo);
         assoRepository.save(association);
-        return new ResponseBody(association,"","");
+        return new ApiResponse<>(association,"","");
     };
 
-    public  ResponseBody patchAssociation(String assoId,String type,String reason){
-        ResponseBody responseBody = new ResponseBody();
+    public  ApiResponse patchAssociation(String assoId,String type,String reason){
+        ApiResponse responseBody = new ApiResponse<>();
         Association association = assoRepository.findById(assoId);
         if(assoRepository.findById(assoId)==null){
             return  noAssoMessage(responseBody);
@@ -189,10 +189,10 @@ public class AssociationServiceImpl implements AssociationService{
                 assoRepository.save(association);
         }
 
-        return new ResponseBody(new HashMap(),"","");
+        return new ApiResponse<>(new HashMap(),"","");
     };
-    public ResponseBody handleAsoociationApplication(String user_id, String type, Application app ){
-        ResponseBody responseBody = new ResponseBody();
+    public ApiResponse handleAsoociationApplication(String user_id, String type, Application app ){
+        ApiResponse responseBody = new ApiResponse<>();
         switch (type) {
             case "accept": //create association
                 switch (app.getType()) {
@@ -204,7 +204,7 @@ public class AssociationServiceImpl implements AssociationService{
 
                             return responseBody;
                         }
-                        return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                        return new ApiResponse<>(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                     case "unblockAssociation":
                         if (true) {
                             MyObject blockInfo = app.getObject();
@@ -212,18 +212,18 @@ public class AssociationServiceImpl implements AssociationService{
                             asso.setState(1);
 
                             assoRepository.save(asso);
-                            return new ResponseBody(new HashMap(), "", "");
+                            return new ApiResponse<>(new HashMap(), "", "");
                         }
-                        return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                        return new ApiResponse<>(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                 }
             case "refuse":
             case "cancel":
                 if (true) {
-                    return new ResponseBody(new HashMap(), "", "");
+                    return new ApiResponse<>(new HashMap(), "", "");
                 }
-                return new ResponseBody(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+                return new ApiResponse<>(null, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
             default:
-                return new ResponseBody(null, "invalidType", "无效的申请类型");
+                return new ApiResponse<>(null, "invalidType", "无效的申请类型");
         }
     };
     public  boolean createTestData(){
