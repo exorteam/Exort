@@ -16,6 +16,8 @@ public class JwtConfig {
 		final FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean();
 		registrationBean.setFilter(new JwtFilter());
 		registrationBean.addUrlPatterns("/users/*");
+		registrationBean.addUrlPatterns("/test/auth");
+		registrationBean.addUrlPatterns("/perm/*");
 
 		return registrationBean;
 	}

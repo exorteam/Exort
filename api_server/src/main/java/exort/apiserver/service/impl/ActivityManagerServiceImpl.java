@@ -44,56 +44,58 @@ public class ActivityManagerServiceImpl implements ActivityManagerService {
         return response.getBody();
     }
 
-    public Response publishActivity(String activityid, String type){
+    public Response publishActivity(String activityid, Request request){
         HttpHeaders headers = new HttpHeaders();
-        HttpMethod method = HttpMethod.PATCH;
+        HttpMethod method = HttpMethod.PUT;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(type, headers);
-        ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+ activityid,method,requestEntity, Response.class);
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+ activityid+"/state",method,requestEntity, Response.class);
+//        ResponseEntity<Response> response = rt.exchange("http://localhost:8090/activities/"+ activityid+"/state",method,requestEntity, Response.class);
         return response.getBody();
     }
 
-    public Response addParticipants(String activityid, List<Integer> participantIds){
+    public Response addParticipants(String activityid, Request request){
         HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.POST;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<List<Integer>> requestEntity = new HttpEntity<>(participantIds, headers);
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request, headers);
         ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+activityid+"/participants",method,requestEntity, Response.class);
+//        ResponseEntity<Response> response = rt.exchange("http://localhost:8090/activities/"+activityid+"/participants",method,requestEntity, Response.class);
         return response.getBody();
     }
 
-    public Response addRealParticipants(String activityid, List<Integer> realParticipantIds){
+    public Response addRealParticipants(String activityid, Request request){
         HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.POST;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<List<Integer>> requestEntity = new HttpEntity<>(realParticipantIds, headers);
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request, headers);
         ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+activityid+"/realparticipants",method,requestEntity, Response.class);
         return response.getBody();
     }
 
-    public Response deleteParticipants(String activityid, List<Integer> participantIds){
+    public Response deleteParticipants(String activityid, Request request){
         HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.DELETE;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<List<Integer>> requestEntity = new HttpEntity<>(participantIds, headers);
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request, headers);
         ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+activityid+"/participants",method,requestEntity, Response.class);
         return response.getBody();
     }
 
-    public Response getActivityParticipants(int pagesize, int pagenum, String activityid, List<Integer> participantIds){
+    public Response getActivityParticipants(int pagesize, int pagenum, String activityid, Request request){
         HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.GET;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<List<Integer>> requestEntity = new HttpEntity<>(participantIds, headers);
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request, headers);
         ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+activityid+"/participants"+"?pagesize="+Integer.toString(pagesize) +"&pagenum="+Integer.toString(pagenum), method,requestEntity,Response.class);
         return response.getBody();
     }
 
-    public Response getActivityRealParticipants(int pagesize, int pagenum, String activityid, List<Integer> realParticipantIds){
+    public Response getActivityRealParticipants(int pagesize, int pagenum, String activityid, Request request){
         HttpHeaders headers = new HttpHeaders();
         HttpMethod method = HttpMethod.GET;
         headers.setContentType(MediaType.APPLICATION_JSON);
-           HttpEntity<List<Integer>> requestEntity = new HttpEntity<>(realParticipantIds, headers);
+           HttpEntity<Request> requestEntity = new HttpEntity<>(request, headers);
         ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+activityid+"/realparticipants"+"?pagesize="+Integer.toString(pagesize) +"&pagenum="+Integer.toString(pagenum),method,requestEntity, Response.class);
         return response.getBody();
     }
@@ -112,7 +114,7 @@ public class ActivityManagerServiceImpl implements ActivityManagerService {
         HttpMethod method = HttpMethod.GET;
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-        ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities"+activityid,method,requestEntity, Response.class);
+        ResponseEntity<Response> response = rt.exchange("http://202.120.40.8:30727/activities/"+activityid, method,requestEntity, Response.class);
         return response.getBody();
     }
 }

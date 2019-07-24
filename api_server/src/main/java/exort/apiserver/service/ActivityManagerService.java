@@ -3,27 +3,30 @@ package exort.apiserver.service;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Data;
+
 public interface ActivityManagerService {
 
     public Response createNewActivity(Activity activity);
     public Response updateActivity(Activity activity,String activityid);
     public Response getActivities(Select select,int pagesize,int pagenum,int sortby);
-    public Response publishActivity(String activityid, String type);
-    public Response addParticipants(String activityid, List<Integer> participantIds);
-    public Response addRealParticipants(String activityid, List<Integer> realParticipantIds);
-    public Response deleteParticipants(String activityid, List<Integer> participantIds);
-    public Response getActivityParticipants(int pagesize,int pagenum,String activityid, List<Integer> participantIds);
-    public Response getActivityRealParticipants(int pagesize,int pagenum,String activityid, List<Integer> realParticipantIds);
+    public Response publishActivity(String activityid, Request request);
+    public Response addParticipants(String activityid, Request request);
+    public Response addRealParticipants(String activityid, Request request);
+    public Response deleteParticipants(String activityid, Request request);
+    public Response getActivityParticipants(int pagesize,int pagenum,String activityid, Request request);
+    public Response getActivityRealParticipants(int pagesize,int pagenum,String activityid, Request request);
     public Response acceptSignup(Operation operation);
     public Response getActivity(String acticityid);
 
-
+    @Data
     public class Operation {
 
         private int operatorId;
         private String action;
         private Application application;
 
+        @Data
         public class Application{
             private int id;
             private int applicantId;
@@ -34,12 +37,14 @@ public interface ActivityManagerService {
             private String handledTime;
             private String state;
 
+            @Data
             public class Signup{
                 private String activityId;
             }
         }
     }
 
+    @Data
     public class Request {
         private int userId;
         private String type;
@@ -47,14 +52,14 @@ public interface ActivityManagerService {
         private List<Integer> realParticipantIds;
     }
 
+    @Data
     public class Response<T> {
-
         private T data;
         private String error;
         private String message;
-
     }
 
+    @Data
     public class Activity {
         private String id;
         private List<Integer> associationIds;
@@ -79,12 +84,15 @@ public interface ActivityManagerService {
         private String image;
     }
 
+    @Data
     public class TimeRange{
 
         private Date start;
         private Date end;
 
     }
+
+    @Data
     public class Select {
 
         private String keyword;
@@ -99,6 +107,7 @@ public interface ActivityManagerService {
         private int ifOnlyMem;
     }
 
+    @Data
     public class ActivityTime {
 
         private int type;

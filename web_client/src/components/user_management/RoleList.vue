@@ -1,14 +1,12 @@
 <template>
-<div>
-    <Button icon="md-add" @click="info_creating=true; info_editing_show=true;">New</Button>
+    <div>
+        <Button icon="md-add" @click="info_creating=true; info_editing_show=true;">New</Button>
 
-</div>
+    </div>
 </template>
 
 <script>
-export default {
-    
-}
+    export default {}
 </script>
 
 <style>

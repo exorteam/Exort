@@ -43,9 +43,14 @@ public class AuthServiceTests {
 		registerResult = service.register(account.getUsername(),account.getPassword());
 		Assert.assertEquals(registerResult,-2);
 
-		Map<String,String> response = service.login(account.getUsername(),account.getPassword());
+		Map<String,String> response = service.login(account.getUsername(),account.getPassword()+UUID.randomUUID().toString().substring(0,3));
 		String token = response.get("token");
+		Assert.assertNull(token);
+
+		response = service.login(account.getUsername(),account.getPassword());
+		token = response.get("token");
 		Assert.assertNotNull(token);
+
 		AuthResponse authRes = service.auth(token);
 		Assert.assertEquals(account.getUsername(),authRes.getUsername());
 		Assert.assertEquals(account.getId(),authRes.getId());
