@@ -34,6 +34,11 @@ public class PermServiceImpl extends RestTemplate implements PermService {
     }
 
     @Override
+    public ApiResponse<PagedData<String>> getScopes() {
+        return request(HttpMethod.GET, new PageQuery(), "/scopes");
+    }
+
+    @Override
     public ApiResponse<PagedData<String>> getScopes(PageQuery pageQuery) {
         return request(HttpMethod.GET, pageQuery, "/scopes");
     }
@@ -71,9 +76,21 @@ public class PermServiceImpl extends RestTemplate implements PermService {
     }
 
     @Override
+    public ApiResponse<PagedData<Long>> getUsers(String scope) {
+        return request(HttpMethod.GET, new PageQuery(), "/scopes/{scope}/users",
+                scope);
+    }
+
+    @Override
     public ApiResponse<PagedData<Long>> getUsers(String scope, PageQuery pageQuery) {
         return request(HttpMethod.GET, pageQuery, "/scopes/{scope}/users",
                 scope);
+    }
+
+    @Override
+    public ApiResponse<PagedData<Long>> getUsers(String scope, String roleName) {
+        return request(HttpMethod.GET, new PageQuery(), "/scopes/{scope}/roles/{roleName}/users",
+                scope, roleName);
     }
 
     @Override

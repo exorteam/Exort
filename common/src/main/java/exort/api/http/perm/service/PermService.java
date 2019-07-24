@@ -24,12 +24,15 @@ public interface PermService {
     ApiResponse<List<String>> getScopes(Long userId);
 
     // [scopes] (pagination)
+    ApiResponse<PagedData<String>> getScopes();
     ApiResponse<PagedData<String>> getScopes(PageQuery pageQuery);
 
     // [scope] => [users] (pagination)
+    ApiResponse<PagedData<Long>> getUsers(String scope);
     ApiResponse<PagedData<Long>> getUsers(String scope, PageQuery pageQuery);
 
     // [scope, role] => [users] (pagination)
+    ApiResponse<PagedData<Long>> getUsers(String scope, String roleName);
     ApiResponse<PagedData<Long>> getUsers(String scope, String roleName, PageQuery pageQuery);
 
     // [user, role] => [roles]
