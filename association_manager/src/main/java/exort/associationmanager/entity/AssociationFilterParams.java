@@ -1,17 +1,16 @@
 package exort.associationmanager.entity;
 
-import java.util.Date;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class ArticleFilterParams {
+public class AssociationFilterParams {
 
 	private String keyword;
-	private Integer authorId;
-	private Date startTime;
-	private Date endTime;
+	private List<String> tags;
 	private Integer state;
-	private Integer createMethod;
+
 
 }

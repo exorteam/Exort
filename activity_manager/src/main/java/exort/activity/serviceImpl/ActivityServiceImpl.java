@@ -1,16 +1,13 @@
 package exort.activity.serviceImpl;
 
 import exort.activity.dao.ActivityDao;
-import exort.activity.dao.ActivitySignUpDao;
-import exort.activity.entity.Activity;
+import exort.activity.entity.*;
 import exort.activity.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
+import java.awt.image.RescaleOp;
+import java.util.*;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -18,132 +15,129 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private ActivityDao ad;
 
-    @Autowired
-    private ActivitySignUpDao asd;
-
     @Override
-    public Activity createActivity(Map<String, String> maps){
-        String create_time = maps.get("create_time");
-        String publish_time = maps.get("publish_time");
-        String last_publish_time = maps.get("last_publish_time");
-        String last_modify_time = maps.get("last_modify_time");
-        String signup_start_time = maps.get("signup_start_time");
-        String signup_end_time = maps.get("signup_end_time");
-        String start_time = maps.get("start_time");
-        String end_time = maps.get("end_time");
-        String title = maps.get("title");
-        String content = maps.get("content");
-        int state = Integer.parseInt(maps.get("state"));
-        boolean review = false;
-        boolean only_members = false;
-        int max_participants = Integer.parseInt(maps.get("max_participants"));
-
-        Activity activity = new Activity(create_time, publish_time, last_publish_time,
-                last_modify_time, signup_start_time, signup_end_time, start_time, end_time,
-                title, content, state, review, only_members, max_participants);
-
-        ad.update(activity);
-        return activity;
+    public Response upsertActivity(Activity activity){
+        return ad.update(activity);
     }
 
     @Override
-    public boolean modifyActivity(Activity activity){
-        Activity oldActivity = ad.getActivity(activity.getId());
+    public Response getActivities(Select select, int pagesize, int pagenum, int sortby){
+        PageList<Activity> result =  ad.selectActivities(select, pagesize, pagenum, sortby);
+        if(result==null){
+            return new Response<>(null, "invalid error", "invalid message");
 
-        oldActivity.setCreate_time(activity.getCreate_time());
-        oldActivity.setPublish_time(activity.getPublish_time());
-        oldActivity.setLast_publish_time(activity.getLast_publish_time());
-        oldActivity.setLast_modify_time(activity.getLast_modify_time());
-        oldActivity.setSignup_start_time(activity.getSignup_start_time());
-        oldActivity.setSignup_end_time(activity.getSignup_end_time());
-        oldActivity.setStart_time(activity.getStart_time());
-        oldActivity.setEnd_time(activity.getEnd_time());
-        oldActivity.setTitle(activity.getTitle());
-        oldActivity.setContent(activity.getContent());
-        oldActivity.setState(activity.getState());
-        oldActivity.setReview(activity.isReview());
-        oldActivity.setOnly_members(activity.isOnly_members());
-        oldActivity.setMax_participants(activity.getMax_participants());
-
-        ad.update(oldActivity);
-
-        return true;
-    }
-
-    @Override
-    public Activity getActivity(Long activity_id){
-        return ad.getActivity(activity_id);
-    }
-
-    @Override
-    public boolean publish(Long activity_id){
-        try{
-            Activity activity = ad.getActivity(activity_id);
-            if(activity != null) {
-                activity.setState(3);
-                ad.update(activity);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            return true;
+        }else{
+            return new Response<>(result, "","");
         }
     }
 
     @Override
-    public boolean withdraw(Long activity_id){
+    public Response changeActivityState(String activityid, String type){
         try{
-            Activity activity = ad.getActivity(activity_id);
-            if(activity != null) {
-                activity.setState(4);
-                ad.update(activity);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            return true;
-        }
-    }
-
-    @Override
-    public boolean addParticipants(Long activity_id, List<Long> participant_ids){
-        Activity activity = ad.getActivity(activity_id);
-        if(activity!=null){
-            List<Long> pids = activity.getParticipants_ids();
-            pids.addAll(participant_ids);
-            activity.setParticipants_ids(pids);
-            ad.update(activity);
-
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean removeParticipants(Long activity_id, List<Long> participant_ids){
-        try{
-            Activity activity = ad.getActivity(activity_id);
-            if(activity!=null){
-                List<Long> pids = activity.getParticipants_ids();
-                for(Long participant:participant_ids){
-                    for(Long pid:pids){
-                        if(Objects.equals(participant, pid)){
-                            pids.remove(pid);
-                        }
-                    }
+            Activity activity = ad.getActivity(activityid);
+            if(activity != null){
+                if(type.equals("publish")){
+                    activity.setPublishState(1);
+                    System.out.println(activity.getPublishState());
+                }else{
+                    activity.setPublishState(0);
+                    System.out.println(activity.getAssociationIds());
                 }
-                activity.setParticipants_ids(pids);
                 ad.update(activity);
-                return true;
+                return new Response<>(new HashMap(), "", "");
             }
-            return false;
+            return new Response<>(null, "invalid error1","invalid message");
         }catch(Exception e){
             e.printStackTrace();
-            return false;
+            return new Response<>(null, "invalid error2","invalid message");
+        }
+    }
+
+    @Override
+    public Response addUserIds(String activityid, List<Integer> userIds, int type){
+        try{
+            Activity activity = ad.getActivity(activityid);
+            if(activity!=null){
+                if(type==1){
+                    List<Integer> oldp = activity.getParticipantIds();
+                    List<Integer> temp = new ArrayList<>(oldp);
+                    temp.retainAll(userIds);
+                    oldp.removeAll(temp);
+                    oldp.addAll(userIds);
+                    activity.setParticipantIds(oldp);
+                } else{
+                    List<Integer> oldp = activity.getRealParticipantIds();
+                    oldp.addAll(userIds);
+                    activity.setRealParticipantIds(oldp);
+                }
+                ad.update(activity);
+                return new Response<>(new HashMap(), "","");
+            }
+            return new Response<>(null,"invalid error","invalid message");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Response<>(null,"invalid error","invalid message");
+        }
+    }
+
+    @Override
+    public Response removeParticipants(String activityid, List<Integer> participantIds){
+        try{
+            Activity activity = ad.getActivity(activityid);
+            if(activity != null){
+                List<Integer> oldp = activity.getParticipantIds();
+                oldp.removeAll(participantIds);
+                activity.setParticipantIds(oldp);
+                ad.update(activity);
+                return new Response<>(new HashMap(), "","");
+            }
+            return new Response<>(null,"invalid error","invalid message");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Response<>(null,"invalid error","invalid message");
+        }
+    }
+
+    @Override
+    public Response getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type){
+        try{
+            if(userId==0){
+                PageList<Integer> result =  ad.getActivityUserIds( pagesize, pagenum, activityid, type);
+                if(result == null){
+                    return new Response<>(null, "invalid error", "invalid message");
+                }else{
+                    return new Response<>(result, "", "");
+                }
+            }{
+                List<Integer> result =  ad.checkUserId(activityid, userId, type);
+                if(result==null){
+                    return new Response<>(null,"invalid error", "invalid message");
+                }else{
+                    if(result.size()==0){
+                        return new Response<>(new HashMap(), "","");
+                    }else{
+                        return new Response<>(result,"","");
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Response<>(null, "invalid error", "invalid message");
+        }
+    }
+
+    @Override
+    public Response getActivity(String acticityid){
+        try{
+            Activity activity = ad.getActivity(acticityid);
+            if(acticityid!=null){
+                return new Response<>(activity, "","");
+            }else{
+                return new Response<>(null, "invalid error","invalid message");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Response<>(null, "invalid error","invalid message");
         }
     }
 }
