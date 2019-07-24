@@ -36,6 +36,7 @@ public class AssociationManagerController{
 //origin
     @GetMapping("/associations")
     public ResponseBody listAssociations(@RequestBody AssociationFilterParams body,@RequestParam("pageNum") Integer pageNum,@RequestParam("pageSize") Integer pageSize ){
+//        System.out.println(body.toString());
         return service.listAssociations(body,pageNum,pageSize);
     }
 //naive
