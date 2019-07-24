@@ -1,6 +1,7 @@
 package exort.activity.service;
 
 import exort.activity.entity.Activity;
+import exort.activity.entity.PageList;
 import exort.activity.entity.Response;
 import exort.activity.entity.Select;
 
@@ -8,17 +9,17 @@ import java.util.List;
 
 public interface ActivityService {
 
-    Response changeActivityState(String activityid, String type);
+    Activity upsertActivity(Activity activity);
 
-    Response addUserIds(String activityid, List<Integer> userIds, int type);
+    PageList<Activity> getActivities(Select select, int pagesize, int pagenum, int sortby);
 
-    Response removeParticipants(String activityid, List<Integer> participantIds);
+    boolean changeActivityState(String activityid, String type);
 
-    Response getActivity(String acticityid);
+    boolean addUserIds(String activityid, List<Integer> userIds, int type);
 
-    Response getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type);
+    boolean removeParticipants(String activityid, List<Integer> participantIds);
 
-    Response upsertActivity(Activity activity);
+    PageList<Integer> getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type);
 
-    Response getActivities(Select select, int pagesize, int pagenum, int sortby);
+    Activity getActivity(String acticityid);
 }
