@@ -6,17 +6,13 @@
             </Header>
             <Layout>
                 <Sider collapsible :collapsed-width="78" v-model="isCollapsed">
-                    <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
+                    <Menu theme="dark" width="auto" :class="menuitemClasses">
                         <sysside></sysside>
                     </Menu>
                 </Sider>
                 <Layout>
+                    <br/>
                     <Content :style="{padding: '0 16px 16px'}">
-                        <Breadcrumb :style="{margin: '16px 0'}">
-                            <BreadcrumbItem>Home</BreadcrumbItem>
-                            <BreadcrumbItem>Components</BreadcrumbItem>
-                            <BreadcrumbItem>Layout</BreadcrumbItem>
-                        </Breadcrumb>
                         <Card>
                             <div style="height: 100%;">
                                 <router-view/>

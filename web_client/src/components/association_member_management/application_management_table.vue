@@ -6,24 +6,28 @@
                     <input v-model="searchInput" type="text" class="form-control" placeholder="Search...">
                     <b-button-group class="input-group-btn">
                         <b-button>
-                            <Icon @click="mysearch" type="ios-search"/>
+                            <Icon @click="search()" type="ios-search"/>
                         </b-button>
                     </b-button-group>
                 </div>
             </Col>
         </Row>
-
-        <Table border ref="selection" :columns="columns" :data="rows">
-            <template slot-scope="{ row }" slot="name">
-                <strong>{{ row.name }}</strong>
-            </template>
-            <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
-                <Button type="error" size="small" @click="remove(index)">Delete</Button>
-            </template>
-        </Table>
-        <Button @click="handleSelectAll(true)">Set all selected</Button>
-        <Button @click="handleSelectAll(false)">Cancel all selected</Button>
+        <br/>
+        <Row>
+            <Table border ref="selection" :columns="columns" :data="rows">
+                <template slot-scope="{ row }" slot="name">
+                    <strong>{{ row.name }}</strong>
+                </template>
+                <template slot-scope="{ row, index }" slot="action">
+                    <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
+                    <Button type="error" size="small" @click="remove(index)">Delete</Button>
+                </template>
+            </Table>
+        </Row>
+        <br/>
+        <Row>
+            <Page style="float: right" :total="100" show-total/>
+        </Row>
     </div>
 </template>
 
@@ -86,6 +90,9 @@
             }
         },
         methods: {
+            search(){
+
+            },
             getApplicationInfos() {
                 this.axios.get().then((res) => {
                     this.rows = res.data;
@@ -108,9 +115,6 @@
 
             },
 
-            handleSelectAll(status) {
-                this.$refs.selection.selectAll(status);
-            },
             show(index) {
                 this.$Modal.info({
                     title: 'User Info',
