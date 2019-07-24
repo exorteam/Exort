@@ -66,14 +66,14 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse hasRole(Long userId, String scope, String roleName) {
-        return request(new TypeToken() { },
+        return request(new TypeToken<Object>() { },
                 HttpMethod.GET, "/users/{userId}/scopes/{scope}/roles/{roleName}",
                 userId, scope, roleName);
     }
 
     @Override
     public ApiResponse hasPermission(Long userId, String scope, String permissionName) {
-        return request(new TypeToken() { },
+        return request(new TypeToken<Object>() { },
                 HttpMethod.GET, "/users/{userId}/scopes/{scope}/permissions/{permissionName}",
                 userId, scope, permissionName);
     }
@@ -115,7 +115,7 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse deleteRole(String name) {
-        return request(new TypeToken() { },
+        return request(new TypeToken<Object>() { },
                 HttpMethod.DELETE, "/roles/{name}", name);
     }
 
@@ -163,7 +163,7 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse deletePermission(String name) {
-        return request(new TypeToken() { },
+        return request(new TypeToken<Object>() { },
                 HttpMethod.DELETE, "/permissions/{name}", name);
     }
 
