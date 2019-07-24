@@ -1,6 +1,7 @@
 package exort.api.http.common;
 
 import exort.api.http.common.entity.PageQuery;
+import lombok.Setter;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,6 +40,13 @@ public class RestTemplate extends org.springframework.web.client.RestTemplate {
         init();
     }
 
+    protected void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    protected void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 
     public String root() {
         return protocol + "://" + endpoint;

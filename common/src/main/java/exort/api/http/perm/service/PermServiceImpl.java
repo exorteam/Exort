@@ -7,8 +7,6 @@ import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.entity.Role;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -19,14 +17,10 @@ import java.util.List;
 public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Value("${exort.perm.protocol: http}")
-    @Getter
-    @Setter
-    private String protocol;
+    public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
     @Value("${exort.perm.endpoint: localhost}")
-    @Getter
-    @Setter
-    private String endpoint;
+    public void setLocalhost(String endpoint) { super.setEndpoint(endpoint); }
 
     @Override
     public ApiResponse<List<String>> getScopes(Long userId) {
