@@ -81,7 +81,7 @@ public class AssociationManagerController{
 //        return service.editAssociation(assoId, body.getData().getName(),body.getData().getDescription(),body.getData().getTags(),body.getData().getLogo());
 //    }
 
-    @PatchMapping("/associations/{assoId}")
+    @PutMapping("/associations/{assoId}/state")
     public ResponseBody patchAssociation(@RequestBody PatchAssociationInfo body,@PathVariable(value="assoId") String assoId ){
         return service.patchAssociation(assoId,body.getType(),body.getDescription());
     }
