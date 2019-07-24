@@ -4,7 +4,6 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
