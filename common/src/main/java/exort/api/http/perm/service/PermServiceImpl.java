@@ -136,7 +136,7 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse<Permission> createPermission(Permission permArg) {
-        return request(permArg,
+        return this.<ApiResponse<Permission>, Permission>request(permArg,
                 HttpMethod.POST, "/permissions");
     }
 
