@@ -2,25 +2,25 @@ server:
   port: 8900
 
 
-#spring:
-#  datasource:
-#    url: jdbc:mysql://exort-mysql:30721/BertZ
-#    username: BertZ
-#    password: 1qaz2wsx
-#  jpa:
-#    database: MYSQL
-#    hibernate:
-#      ddl-auto: update
-
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/exort?serverTimezone=UTC
-    username: root
-    password:
+    url: jdbc:mysql://exort-mysql:30721/BertZ
+    username: BertZ
+    password: 1qaz2wsx
   jpa:
     database: MYSQL
     hibernate:
       ddl-auto: update
+
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/exort?serverTimezone=UTC
+#    username: root
+#    password:
+#  jpa:
+#    database: MYSQL
+#    hibernate:
+#      ddl-auto: update
 
 exort:
   perm:

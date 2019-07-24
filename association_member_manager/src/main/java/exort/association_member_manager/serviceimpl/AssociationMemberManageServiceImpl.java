@@ -1,6 +1,5 @@
 package exort.association_member_manager.serviceimpl;
 
-import com.google.common.collect.Lists;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
@@ -8,7 +7,6 @@ import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
-import exort.api.http.review.entity.CallbackParam;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
@@ -23,12 +21,22 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Member;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AssociationMemberManageServiceImpl implements AssociationMemberManageService {
 
     final private static String MEMBER = "association_member";
     final private static String MANAGER = "association_root";
+
+    private String getnum(String origin){
+        String regEx = "[^0-9]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(origin);
+        String result = m.replaceAll("").trim();
+        return result;
+    }
 
     private String roleName(int associationId, int departmentId) {
         switch (departmentId) {
@@ -257,12 +265,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
                 // outside
                 boolean existUserInAsso = true;
-                if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() == null) {
+
+                if (ps.hasRole((long)userId, scope(associationId), MEMBER).getData() == null) {
                     existUserInAsso = false;
                 }
 
                 if (existUserInAsso) {
                     response.setStatus(200);
+                    ps.revokeRoles(Long.valueOf(userId),scope(associationId),Arrays.asList(roleName(associationId,departmentId)));
 
                     apiResponse.setData(true);
 
@@ -418,8 +428,10 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             apiResponse.setMessage(ps.getScopes(Long.valueOf(userId)).getMessage());
             return apiResponse;
         }
+
         for (String asso : assos) {
-            associationId.add(Integer.valueOf(asso));
+            String result=getnum(asso);
+            associationId.add(Integer.valueOf(result));
         }
 
         response.setStatus(200);
@@ -457,7 +469,28 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             if (userInAsso) {
                 response.setStatus(200);
 
+                List<Role> departmentlist=ps.getRoles((long)userId,scope(associationId)).getData();
+
                 List<Department> departments = new ArrayList<>();
+
+                for(Role role : departmentlist){
+                    switch (role.getName()){
+                        case MANAGER:{
+                            departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId,1));
+                            break;
+                        }
+                        case MEMBER:{
+                            departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId,2));
+                            break;
+                        }
+                        default:{
+                            String as=getnum(scope(associationId));
+                            String department=getnum(role.getName());
+                            departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId,Integer.valueOf(department)));
+                        }
+                    }
+                }
+
                 apiResponse.setData(departments);
 
             } else {

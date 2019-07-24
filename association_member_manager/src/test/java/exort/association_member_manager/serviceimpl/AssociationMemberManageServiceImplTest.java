@@ -73,16 +73,16 @@ public class AssociationMemberManageServiceImplTest {
 
         Application<ApplicationDepartmentInfo> application = new Application<>();
         application.setId(123L);
-        application.setApplicantId(2L);
+        application.setApplicantId(5L);
         application.setType("acceptApplication");
         ApplicationDepartmentInfo applicationDepartmentInfo = new ApplicationDepartmentInfo();
         applicationDepartmentInfo.setAssociationId(1);
         applicationDepartmentInfo.setDepartmentId(0);
         application.setObject(applicationDepartmentInfo);
 
-        ApiResponse = associationMemberManageService.adoptApplication(1, "create", application, response);
+        ApiResponse = associationMemberManageService.adoptApplication(3, "create", application, response);
 
-        Assert.assertEquals(response.getStatus(), 200);
+        Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals(ApiResponse.getData(), true);
     }
 
@@ -142,15 +142,17 @@ public class AssociationMemberManageServiceImplTest {
     public void deleteDepartment() {
         ApiResponse<Department> ApiResponse;
         departmentRepository.deleteAll();
-        departmentRepository.save(new Department(1, "hello", "das", 0));
+        departmentRepository.save(new Department(1, 1, "hello", "das", 0));
+        departmentRepository.save(new Department(1, 2, "hello", "das", 0));
+        departmentRepository.save(new Department(1, 3, "hello", "das", 0));
 
         ApiResponse = associationMemberManageService.deleteDepartment(1, 10, response);
         Assert.assertEquals(404, response.getStatus());
         Assert.assertEquals("DepartmentNotFound", ApiResponse.getError());
 
-        ApiResponse = associationMemberManageService.deleteDepartment(1, 0, response);
+        ApiResponse = associationMemberManageService.deleteDepartment(1, 3, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(0, ApiResponse.getData().getDepartmentId());
+        Assert.assertEquals(3, ApiResponse.getData().getDepartmentId());
     }
 
     @Test
@@ -199,8 +201,8 @@ public class AssociationMemberManageServiceImplTest {
         departmentRepository.save(new Department(1, 1, "hello", "das", 0));
         departmentRepository.save(new Department(1, 2, "hello", "das", 0));
 
-        int userId=3,associationId=1;
-        ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MANAGER,MEMBER));
+        int userId = 3, associationId = 1;
+        ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MANAGER, MEMBER));
 
         ApiResponse = associationMemberManageService.removeOneFromDepartment(associationId, 8, userId, response);
         Assert.assertEquals(401, response.getStatus());
@@ -249,7 +251,6 @@ public class AssociationMemberManageServiceImplTest {
         ApiResponse = associationMemberManageService.getUserAssociation(2, response);
 
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
 
     }
 
@@ -260,13 +261,16 @@ public class AssociationMemberManageServiceImplTest {
         departmentRepository.deleteAll();
         departmentRepository.save(new Department(1, 1, "hello", "das", 0));
 
+        ps.grantRoles((long)2,scope(1),Arrays.asList(MEMBER,MANAGER));
+
+
         ApiResponse = associationMemberManageService.getUserDepartment(3, 2, response);
         Assert.assertEquals(401, response.getStatus());
         Assert.assertEquals("AssociationNotFound", ApiResponse.getError());
 
+        ps.grantRoles((long)2,scope(1),Arrays.asList(MEMBER));
         ApiResponse = associationMemberManageService.getUserDepartment(1, 2, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
 
     }
 
@@ -316,7 +320,6 @@ public class AssociationMemberManageServiceImplTest {
 
         ApiResponse = associationMemberManageService.getAssoUserList(1, response);
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals(new ArrayList<>(), ApiResponse.getData());
     }
 
     @Test
