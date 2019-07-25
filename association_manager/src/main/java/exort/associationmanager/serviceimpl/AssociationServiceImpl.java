@@ -3,12 +3,16 @@ package exort.associationmanager.serviceimpl;
 import java.util.*;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.service.PermService;
+import exort.api.http.review.entity.Application;
+import exort.associationmanager.entity.Association;
+import exort.associationmanager.entity.AssociationFilterParams;
+import exort.associationmanager.entity.MyObject;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import exort.associationmanager.entity.*;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 import org.springframework.stereotype.Service;
@@ -27,13 +31,13 @@ public class AssociationServiceImpl implements AssociationService{
         Association association = assoRepository.findById(assoId);
         return  association;
     }
-    public AssociationList listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize){
+    public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
         List<Association> associations = assoRepository.findAll();
         Integer state = params.getState();
         if(state != null && state != 2){
             associations.removeIf(association -> !state.equals(association.getState()));
             if(associations.isEmpty()){
-                return new AssociationList(associations,0,0,0);
+                return new PagedData<>(0,0,Long.valueOf(0),associations);
             }
         }
         String keyword = params.getKeyword();
@@ -46,7 +50,7 @@ public class AssociationServiceImpl implements AssociationService{
                     }
                 }
                 if (associations.isEmpty()) {
-                    return new AssociationList(associations,0,0,0);
+                    return new PagedData<>(0,0,Long.valueOf(0),associations);
                 }
             }
         }
@@ -61,7 +65,7 @@ public class AssociationServiceImpl implements AssociationService{
                     }
                 }
                 if (associations.isEmpty()) {
-                    return new AssociationList(associations,0,0,0);
+                    return new PagedData<>(0,0,Long.valueOf(0),associations);
                 }
             }
         }
@@ -79,7 +83,7 @@ public class AssociationServiceImpl implements AssociationService{
             subFirst = 0;
             subLast = 0;
         }
-        return new AssociationList(associations.subList(subFirst,subLast),totalSize,realPageSize,realPageNum);
+        return new PagedData<Association>(realPageNum,realPageSize,Long.valueOf(totalSize),associations.subList(subFirst,subLast));
     }
     public Association createAssociation(String name,String description,List<String> tags,String logo){
         Association association= new Association(new ObjectId().toString(),name,description,logo,tags,1,null);
@@ -135,7 +139,7 @@ public class AssociationServiceImpl implements AssociationService{
         }
     };
 
-    public boolean handleAsoociationApplication(Long user_id, String type, Application app ){
+    public boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app ){
         switch (type) {
             case "accept": //create association
                 switch (app.getType()) {

@@ -1,7 +1,11 @@
 package exort.associationmanager.controller;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.Operation;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.review.entity.CallbackParam;
 import exort.associationmanager.entity.*;
 import exort.associationmanager.service.AssociationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +26,7 @@ public class AssociationManagerController{
 //    }
 
     @GetMapping("/associations")
-    public ApiResponse<AssociationList> listAssociations(@RequestBody AssociationFilterParams body, @RequestParam("pageNum") Integer pageNum, @RequestParam("pageSize") Integer pageSize ){
+    public ApiResponse<PagedData<Association>> listAssociations(@RequestBody AssociationFilterParams body, PageQuery page){
 //        System.out.println(body.toString());
         if(body.getState() > 2 ||body.getState()<-1){
             throw new ApiError(400,"invalidState","无效的状态");
@@ -39,7 +43,8 @@ public class AssociationManagerController{
         if(body.getTags() == null){
             body.setTags(new LinkedList<>());
         }
-        AssociationList associationList = service.listAssociations(body,pageNum,pageSize);
+        page = PageQuery.relocate(page, 6, 500);
+        PagedData<Association> associationList = service.listAssociations(body,page.getPageNum(),page.getPageSize());
         return new ApiResponse<>(associationList);
     }
     @GetMapping("/associations/{assoId}")
@@ -96,18 +101,18 @@ public class AssociationManagerController{
 
 
     @PutMapping("/associations/{assoId}/state")
-    public ApiResponse<Object> patchAssociation(@RequestBody PatchAssociationInfo body, @PathVariable(value="assoId") String assoId ){
-        if(body.getType() == null || body.getType()!="block" || body.getType() != "unblock"){
+    public ApiResponse<Object> patchAssociation(@RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
+        if(body.getOperation() == null || body.getOperation()!="block" || body.getOperation() != "unblock"){
             throw new ApiError(400,"invlaidType","无效的申请类型");
         }
-        if(!service.patchAssociation(assoId,body.getType(),body.getDescription())){
+        if(!service.patchAssociation(assoId,body.getOperation(),body.getArg())){
             throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
         }
         return new ApiResponse(new HashMap<>());
     }
 
     @PostMapping("/callback")
-    public ApiResponse<Object> handleAssociationApplication(@RequestBody ApplicationAssociationInfo body){
+    public ApiResponse<Object> handleAssociationApplication(@RequestBody CallbackParam<MyObject> body){
         if( !(Arrays.asList("refuse", "accept", "cancel","create").contains (body.getEvent()))){
             throw new ApiError(400,"invalidEvent","无效的申请类型");
         }
