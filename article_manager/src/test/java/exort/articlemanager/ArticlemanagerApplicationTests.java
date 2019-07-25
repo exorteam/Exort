@@ -70,4 +70,31 @@ public class ArticlemanagerApplicationTests {
 
 	}
 
+	@Test
+	public void testGet() {
+		repository.saveAll(articles);
+		for(int i=0;i<ARTICLE_NUM;i++){
+			Article contrast = service.getArticle(articles.get(i).getId());
+			Assert.assertEquals(articles.get(i),contrast);
+		}
+	}
+
+	@Test
+	public void testUpdate() {
+		repository.saveAll(articles);
+		for(int i=0;i<ARTICLE_NUM;i++){
+			Article e = articles.get(i);
+			String title = UUID.randomUUID().toString();
+			String content = UUID.randomUUID().toString();
+			e.setTitle(title);
+			e.setContent(content);
+			articles.set(i,e);
+			Assert.assertTrue(service.updateArticle(e.getId(),title,content));
+		}
+		for(int i=0;i<ARTICLE_NUM;i++){
+			Article e = articles.get(i);
+			Article contrast = repository.findById(e.getId()).get();
+			Assert.assertEquals(e,contrast);
+		}
+	}
 }

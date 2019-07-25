@@ -52,6 +52,8 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = repository.findById(articleId).get();
 		article.setTitle(title);
 		article.setContent(content);
+		
+		repository.save(article);
 
 		return true;
 	}
