@@ -4,7 +4,6 @@ import exort.api.http.common.entity.PagedData;
 import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
-import exort.associationmanager.entity.AssociationList;
 import exort.associationmanager.entity.MyObject;
 
 import java.util.List;
