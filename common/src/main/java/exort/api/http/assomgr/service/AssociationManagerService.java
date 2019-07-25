@@ -2,7 +2,10 @@ package exort.api.http.assomgr.service;
 
 import exort.api.http.assomgr.entity.*;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.review.entity.CallbackParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +19,7 @@ public interface AssociationManagerService {
 
     ApiResponse<Association> getAssociation(String assoId);
 
-    ApiResponse<AssociationList> listAssociations(AssociationFilterParams body, PageQuery pageQuery);
+    ApiResponse<PagedData<Association>> listAssociations(AssociationFilterParams body, PageQuery pageQuery);
 
     ApiResponse<Association> createAssociation(AssociationInfo body);
 
@@ -24,8 +27,10 @@ public interface AssociationManagerService {
 
     ApiResponse<Association> editAssociation(String assoId, AssociationInfo body);
 
-    ApiResponse<Object> patchAssociation(String assoId, PatchAssociationInfo body);
+    ApiResponse<Object> patchAssociation(String assoId, Operation<String> body);
 
-    ApiResponse<Object> handleAsoociationApplication(ApplicationAssociationInfo body);
+//    ApiResponse<Object> handleCreateAsoociationApplication(CallbackParam<AssociationInfo> body);
+//
+//    ApiResponse<Object> handleUnblockAsoociationApplication(CallbackParam<Operation<String>> body);
 
 }
