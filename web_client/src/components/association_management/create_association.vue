@@ -19,6 +19,7 @@
                 </div>
             </FormItem>
             <FormItem label="社团Logo">
+
                 <b-form-file v-model="file" ref="file-input" class="mb-2"></b-form-file>
 
                 <b-button @click="clearFiles" class="mr-2">Reset via method</b-button>
@@ -63,8 +64,9 @@ export default {
             if(_self.form.type=="create"){
                 var imgFile;
                 let reader = new FileReader();
-                reader.readAsDataURL(this.file);
-
+                if(file!=null){
+                    reader.readAsDataURL(this.file);
+                }
                 reader.onload=function(e) {        //读取完毕后调用接口
                     // console.log(_self.form.name);
                     imgFile = e.target.result;
@@ -99,7 +101,9 @@ export default {
             else{
                 var imgFile;
                 let reader = new FileReader();
-                reader.readAsDataURL(this.file);
+                if(file!=null){
+                    reader.readAsDataURL(this.file);
+                }
                 reader.onload=function(e) {
                     imgFile = e.target.result;
                     axios
