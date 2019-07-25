@@ -57,7 +57,7 @@ public class AutoIncIdGenerator {
 	}
 
 	private boolean createNewAutoId(String name){
-		log.info("Create new id for name: "+name);
+		log.info("Create new mongo AutoIncId for name: "+name);
 		AutoIdEntity e = new AutoIdEntity(name,START_NUM);
 		return (mt.save(e,TABLE_NAME) != null);
 	}

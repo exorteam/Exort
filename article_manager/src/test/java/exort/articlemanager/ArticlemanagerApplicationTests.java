@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,15 +27,17 @@ public class ArticlemanagerApplicationTests {
 	@Autowired
 	private ArticleService service;
 	@Autowired
-	private AutoIncIdGenerator idGenerator;
+	private AutoIncIdGenerator autoIncId;
 
-	private final int ARTICLE_NUM = 10;
-	private List<Article> articles = new ArrayList<>();
+	private final int 		ARTICLE_NUM 	= 10;
+	private final String 	AUTO_ID_NAME 	= "article_test";
+	private List<Article> 	articles 		= new ArrayList<>();
 
 	@Before
 	public void createTestArticles(){
 		for(int i=0;i<ARTICLE_NUM;i++){
 			Article article = new Article();
+			article.setId(autoIncId.getNextId(AUTO_ID_NAME));
 			article.setTitle(UUID.randomUUID().toString());
 			article.setContent(UUID.randomUUID().toString());
 			article.setAuthors(new ArrayList<Integer>());
@@ -46,24 +49,24 @@ public class ArticlemanagerApplicationTests {
 	public void clearTestArticles(){
 		repository.deleteAll(articles);
 		articles.clear();
+		autoIncId.removeName(AUTO_ID_NAME);
 	}
 
 
 	@Test
 	public void testCreate() {
-		//idGenerator.getNextId("test");
-		//List<Integer> ids = new ArrayList<>();
+		List<Integer> ids = new ArrayList<>();
 		for(int i=0;i<ARTICLE_NUM;i++){
-			//int id = service.createArticle(articles.get(i)).getId();
-			//Article e = articles.get(i);
-			//e.setId(id);
-			//articles.set(i,e);
-			//ids.add(id);
+			int id = service.createArticle(articles.get(i)).getId();
+			Article e = articles.get(i);
+			e.setId(id);
+			articles.set(i,e);
+			ids.add(id);
 		}
-		//for(int i=0;i<ARTICLE_NUM;i++){
-		//    Article contrast = repository.findById(ids.get(i)).get();
-		//    Assert.assertEquals(contrast,articles.get(i));
-		//}
+		for(int i=0;i<ARTICLE_NUM;i++){
+			Article contrast = repository.findById(ids.get(i)).get();
+			Assert.assertEquals(contrast,articles.get(i));
+		}
 
 	}
 

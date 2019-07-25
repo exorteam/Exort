@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import exort.articlemanager.component.AutoIncIdGenerator;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.entity.ArticleFilterParams;
 import exort.articlemanager.repository.ArticleRepository;
@@ -15,6 +16,10 @@ import exort.articlemanager.service.ArticleService;
 public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	private ArticleRepository repository;
+	@Autowired
+	private AutoIncIdGenerator autoId;
+
+	private final String AUTO_ID_NAME = "article_auto_id";
 
 	public Article createArticle(Article article){
 		if(article.getTitle() == null || article.getContent() == null || article.getAuthors() == null){
@@ -22,16 +27,13 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 		Date currentTime = new Date();
+		article.setId(autoId.getNextId(AUTO_ID_NAME));
 		article.setCreateTime(currentTime);
 		article.setPublishTime(null);
 		article.setLastPublishTime(currentTime);
 		article.setLastModifyTime(currentTime);
 		article.setState(0);
 		article.setCreateMethod(0);
-
-		//Integer articleId = 1;
-		//while(repository.existsById(articleId)){++articleId;}
-		//article.setId(articleId);
 
 		return repository.save(article);
 
