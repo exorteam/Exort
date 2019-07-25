@@ -3,11 +3,13 @@ package exort.associationmanager.entity;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class Association {
 	@Id
 	private String id;

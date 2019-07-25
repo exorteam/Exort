@@ -8,9 +8,8 @@ import exort.associationmanager.entity.Application;
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.AssociationList;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public interface AssociationService{
     public Association getAssociation(String assoId);
 
@@ -20,10 +19,10 @@ public interface AssociationService{
 
     public boolean deleteAssociation(String assoId );
 
-    public ApiResponse editAssociation(String assoId, String name,String description,List<String> tags,String logo);
+    public Association editAssociation(String assoId, String name,String description,List<String> tags,String logo);
 
-    public  ApiResponse patchAssociation(String assoId,String type,String descripion);
+    public  boolean patchAssociation(String assoId,String type,String descripion);
 
-    public  ApiResponse handleAsoociationApplication(String user_id, String type, Application app );
+    public  boolean handleAsoociationApplication(Long user_id, String type, Application app );
 
 }
