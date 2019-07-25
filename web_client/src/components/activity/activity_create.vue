@@ -5,25 +5,22 @@
                 <Input v-model="form.title"/>
             </FormItem>
             <FormItem label="报名时间">
-                <DatePicker type="daterange" v-model="signupDate" placeholder="yyyy-mm-dd"></DatePicker>            
-                <TimePicker format="HH:mm" v-model="signupTime" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
+                <Date-picker v-model="form.signupTime.time" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
             </FormItem>
-            <FormItem label="选择活动时间类型:">
+            <!-- 当前只有一种时间实现 -->
+            <!-- <FormItem label="选择活动时间类型:">
                 <Select v-model="form.time.type" style="width:200px">
                     <Option v-for="item in timeTypeList" :value="item.value" :key="item.value">{{ item.text }}</Option>
                 </Select>
-            </FormItem>
+            </FormItem> -->
 
             <FormItem label="活动时间" v-if="form.time.type==0">
-                <div>
-                    <Date-picker type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
-                </div>
+                <Date-picker v-model="form.time.time" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
             </FormItem>
 
-            <FormItem label="活动时间" v-if="form.time.type==1">
+            <!-- <FormItem label="活动时间" v-if="form.time.type==1">
                 <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
                 <div v-for="timeStamp in form.time.time" :key="timeStamp.start" :row="timeStamp">
-                    <!-- <Date-picker v-model="timeStamp" type="date" placeholder="选择日期" style="width: 200px"></Date-picker> -->
                     <DatePicker  type="date" placeholder="yyyy-mm-dd"></DatePicker>
                     <Button type="dashed" @click="delete_timeStamp(form.time.time)">-</Button>
                 </div>
@@ -42,7 +39,7 @@
                     <Button type="dashed" @click="delete_timeStamp(form.time.time)">-</Button>
                 </div>
                 <Button type="dashed" @click="more_timeStamp">+</Button>
-            </FormItem>
+            </FormItem> -->
             
             <FormItem label="报名是否需要审核:">
                 <Checkbox v-model="form.ifReview"/>
@@ -88,6 +85,25 @@
 import Axios from 'axios';
 import TimeRange from './time_range'
 
+let timeTypeList = [
+{
+    value: 0,
+    text: '开展一次，时间连续'
+},
+{
+    value: 1,
+    text: '多次开展，日期不连续'
+},
+{
+    value: 2,
+    text: '连续多天开展，每天时间固定相同'
+},
+{
+    value: 3,
+    text: '多天开展，每天时间不相同'
+}
+]
+
 export default {
     components: { TimeRange },
     props: {
@@ -95,28 +111,8 @@ export default {
     },
     data(){
             return {
-                    signupTime:'',
-                    signupDate:'',
                     picture: '',
                     fileList: [],
-                    timeTypeList: [
-                        {
-                            value: 0,
-                            text: '开展一次，时间连续'
-                        },
-                        {
-                            value: 1,
-                            text: '多次开展，日期不连续'
-                        },
-                        {
-                            value: 2,
-                            text: '连续多天开展，每天时间固定相同'
-                        },
-                        {
-                            value: 3,
-                            text: '多天开展，每天时间不相同'
-                        }
-                    ]
             }
     },
     methods: {
@@ -189,8 +185,8 @@ export default {
                 signupTime: {
                     type: 0,
                     time:[{
-                        start: this.signupDate[0],
-                        end: this.signupDate[1],
+                        start: this.form.signupTime.time[0],
+                        end: this.form.signupTime.time[1],
                     }]
                 },
                 time: {
