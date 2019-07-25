@@ -43,17 +43,21 @@ public interface PermService {
 
     // [permissions]
     ApiResponse<List<Permission>> getPermissions();
+    ApiResponse<List<Permission>> getPermissionsByCategory(String category);
 
-    // [user, scope, role] => [{} / null]
-    ApiResponse hasRole(Long userId, String scope, String roleName);
-    // [user, scope, permission] => [{} / null]
-    ApiResponse hasPermission(Long userId, String scope, String permissionName);
+    // [roles]
+    ApiResponse<List<Role>> getRolesByCategory(String category);
 
     // [role]
     ApiResponse<Role> getRole(String name);
 
     // [permission]
     ApiResponse<Permission> getPermission(String name);
+
+    // [user, scope, role] => [{} / null]
+    ApiResponse hasRole(Long userId, String scope, String roleName);
+    // [user, scope, permission] => [{} / null]
+    ApiResponse hasPermission(Long userId, String scope, String permissionName);
 
     /* Modify methods */
 
@@ -82,4 +86,8 @@ public interface PermService {
     // - [role] <- [permissions]
     ApiResponse<List<Permission>> revokePermissions(String roleName, List<String> permissionNames);
 
+    // - [user, scope]
+    ApiResponse removeUser(Long userId, String scope);
+    // - user
+    ApiResponse removeUser(Long userId);
 }
