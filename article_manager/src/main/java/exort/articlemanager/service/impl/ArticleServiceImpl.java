@@ -79,19 +79,19 @@ public class ArticleServiceImpl implements ArticleService {
 
 		Date startTime = params.getStartTime();
 		if(startTime != null){
-			articles.removeIf(article -> startTime.after(article.getLastPublishTime()));
+			articles.removeIf(article -> startTime.after(article.getCreateTime()));
 			if(articles.isEmpty())return articles;
 		}
 
 		Date endTime = params.getEndTime();
 		if(endTime != null){
-			articles.removeIf(article -> endTime.before(article.getLastPublishTime()));
+			articles.removeIf(article -> endTime.before(article.getCreateTime()));
 			if(articles.isEmpty())return articles;
 		}
 
 		String keyword = params.getKeyword();
 		if(keyword != null){
-			articles.removeIf(article -> !article.getTitle().contains(keyword)||!article.getContent().contains(keyword));
+			articles.removeIf(article -> !article.getTitle().contains(keyword)&&!article.getContent().contains(keyword));
 			if(articles.isEmpty())return articles;
 		}
 
