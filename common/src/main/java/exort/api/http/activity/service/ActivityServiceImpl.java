@@ -31,7 +31,7 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<PagedData<Activity>> getActivities(Select select, PageQuery pageQuery) {
+    public ApiResponse<PagedData<Activity>> getActivities(Filter select, PageQuery pageQuery) {
         return request(new TypeToken<PagedData<Activity>>(){}, select, HttpMethod.GET, pageQuery, "/activities");
     }
 

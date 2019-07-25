@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class Select {
+public class Filter {
 
     private String keyword;
     private List<String> tags;

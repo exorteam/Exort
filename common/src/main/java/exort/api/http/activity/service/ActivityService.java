@@ -12,7 +12,7 @@ public interface ActivityService {
 
     public ApiResponse<Activity> updateActivity(Activity activity, String activityid);
 
-    public ApiResponse<PagedData<Activity>> getActivities(Select select, PageQuery pageQuery);
+    public ApiResponse<PagedData<Activity>> getActivities(Filter select, PageQuery pageQuery);
 
     public ApiResponse<Object> publishActivity(String activityid, RequestActivity requestActivity);
 
