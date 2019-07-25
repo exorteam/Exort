@@ -3,6 +3,7 @@ package exort.activity.controller;
 import exort.activity.entity.*;
 import exort.activity.service.ActivityService;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.errorhandler.ApiError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,36 +20,50 @@ public class ActivityController {
 //1
     @ResponseBody
     @PostMapping(value = "/activities")
-    public ApiResponse createNewActivity(@RequestBody Activity activity){
-        Activity newActivity = as.upsertActivity(activity);
-        if(newActivity==null){
-            return new ApiResponse<>("create new activity failed", "创建活动失败");
-        }else{
-            return new ApiResponse<>(newActivity);
+    public ApiResponse<Activity> createNewActivity(@RequestBody Activity activity){
+        try{
+            Activity newActivity = as.upsertActivity(activity);
+            if(newActivity==null){
+                return new ApiResponse<>("create new activity failed", "创建活动失败");
+            }else{
+                return new ApiResponse<>(newActivity);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ApiError(401, "create new activity failed", "创建活动失败");
         }
     }
 //2
     @ResponseBody
     @PutMapping(value = "/activities/{activityid}")
     public ApiResponse updateActivity(@RequestBody Activity activity, @PathVariable(value = "activityid") String activityid){
-        activity.setId(activityid);
-        Activity newActivity = as.upsertActivity(activity);
-        if(newActivity==null){
-            return new ApiResponse<>("update activity "+activityid+" failed", "修改活动失败");
-        }else{
-            return new ApiResponse<>(newActivity);
+        try{
+            activity.setId(activityid);
+            Activity newActivity = as.upsertActivity(activity);
+            if(newActivity==null){
+                return new ApiResponse<>("update activity "+activityid+" failed", "修改活动失败");
+            }else{
+                return new ApiResponse<>(newActivity);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ApiError(401, "update activity "+activityid+" failed", "修改活动失败");
         }
     }
 //3
     @ResponseBody
     @GetMapping(value = "/activities")
     public ApiResponse getActivities(@RequestBody Select select, @PathParam(value = "pagesize")int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby")int sortby){
-
-        PageList<Activity> result = as.getActivities(select, pagesize, pagenum, sortby);
-        if(result==null){
-            return new ApiResponse<>("get activities failed.", "查询多个活动失败");
-        }else{
-            return new ApiResponse<>(result);
+        try{
+            PageList<Activity> result = as.getActivities(select, pagesize, pagenum, sortby);
+            if(result==null){
+                return new ApiResponse<>("get activities failed.", "查询多个活动失败");
+            }else{
+                return new ApiResponse<>(result);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ApiError(401, "get activities failed.", "查询多个活动失败");
         }
     }
 //4
@@ -63,7 +78,8 @@ public class ActivityController {
                 return new ApiResponse<>("change activity "+activityid+" failed","修改活动发布状态失败");
             }
         }catch (Exception e){
-            return new ApiResponse<>("change activity "+activityid+" failed","修改活动发布状态失败");
+            e.printStackTrace();
+            throw new ApiError(401, "change activity "+activityid+" failed","修改活动发布状态失败");
         }
     }
 //5
@@ -78,7 +94,8 @@ public class ActivityController {
                 return new ApiResponse<>("add activity participants failed","增加活动参加者失败");
             }
         }catch (Exception e){
-            return new ApiResponse<>("add activity participants failed","增加活动参加者失败");
+            e.printStackTrace();
+            throw new ApiError(401, "add activity participants failed","增加活动参加者失败");
         }
     }
 //6
@@ -93,7 +110,8 @@ public class ActivityController {
                 return new ApiResponse<>("add activity real participants failed","增加活动实际参加者失败");
             }
         }catch (Exception e){
-            return new ApiResponse<>("add activity real participants failed","增加活动实际参加者失败");
+            e.printStackTrace();
+            throw new ApiError(401, "add activity real participants failed","增加活动实际参加者失败");
         }
     }
 //7
@@ -108,7 +126,8 @@ public class ActivityController {
                 return new ApiResponse<>("remove activity participants failed","删除活动参加者失败");
             }
         }catch (Exception e){
-            return new ApiResponse<>("remove activity participants failed","删除活动参加者失败");
+            e.printStackTrace();
+            throw new ApiError(401, "remove activity participants failed","删除活动参加者失败");
         }
     }
 //8
@@ -124,7 +143,7 @@ public class ActivityController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new ApiResponse<>("get activity"+activityid+" participants failed.","查询活动参加者失败");
+            throw new ApiError(401, "get activity"+activityid+" participants failed.","查询活动参加者失败");
         }
     }
 //9
@@ -140,23 +159,28 @@ public class ActivityController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new ApiResponse<>("get activity"+activityid+" participants failed.","查询活动参加者失败");
+            throw new ApiError(401, "get activity"+activityid+" participants failed.","查询活动参加者失败");
         }
     }
 //10
     @ResponseBody
     @PostMapping(value = "/callback/acceptsignup")
     public ApiResponse acceptSignup(@RequestBody Operation operation){
-        System.out.println(operation.getApplication().getCreateTime());
-        String activityid = operation.getApplication().getSignup().getActivityId();
-        int userId = operation.getApplication().getApplicantId();
-        List<Integer> user = new ArrayList<>();
-        user.add(userId);
-        boolean result = as.addUserIds(activityid,user,1);
-        if(result){
-            return new ApiResponse<>(new HashMap());
-        }else{
-            return new ApiResponse<>("callback accept signup failed.","接受申请回调失败");
+        try{
+            System.out.println(operation.getApplication().getCreateTime());
+            String activityid = operation.getApplication().getSignup().getActivityId();
+            int userId = operation.getApplication().getApplicantId();
+            List<Integer> user = new ArrayList<>();
+            user.add(userId);
+            boolean result = as.addUserIds(activityid,user,1);
+            if(result){
+                return new ApiResponse<>(new HashMap());
+            }else{
+                return new ApiResponse<>("callback accept signup failed.","接受申请回调失败");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ApiError(401, "callback accept signup failed.","接受申请回调失败");
         }
     }
 // 11
@@ -171,7 +195,8 @@ public class ActivityController {
                 return new ApiResponse<>(activity);
             }
         }catch (Exception e){
-            return new ApiResponse<>("get activity "+activityid+" failed","查询单个活动失败");
+            e.printStackTrace();
+            throw new ApiError(401, "get activity "+activityid+" failed","查询单个活动失败");
         }
     }
 }
