@@ -25,112 +25,120 @@ public class AssociationServiceImplTest {
     private PermService permService;
 
    @Test
-   public void testCreateAssociation(){
+   public void testCreateAssociation1(){
        service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
        String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
        Association association = service.getAssociation(assoId);
        Assert.assertEquals(association.getName(),"qqwrvcreate");
        Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
    }
-
     @Test
-    public void testGetAssociation(){
-        service.createAssociation("qqwrv"+"get",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
-
-
-        AssociationList associations = new AssociationList();
-        AssociationFilterParams params = new AssociationFilterParams();
-        params.setState(1);
-        params.setTags(Arrays.asList("a","g"));
-        params.setKeyword("qqwrv"+"get");
-        associations = service.listAssociations(params,0,6);
-        String assoId=associations.getContent().get(0).getId();
- //		association = new Association();
+    public void testCreateAssociation2(){
+        service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
+        String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
         Association association = service.getAssociation(assoId);
-        Assert.assertEquals(association.getName(),"qqwrv"+"get");
-
+        Assert.assertEquals(association.getName(),"qqwrvcreate");
+        Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
     }
 
-  @Test
-  public void testListAssociation(){
-       Association new_association = new Association();
-       new_association.setName("qqwrv"+"list");
-       new_association.setDescription(UUID.randomUUID().toString());
-       new_association.setLogo(UUID.randomUUID().toString());
-       new_association.setTags( Arrays.asList("a","f"));
-
-       for (int i = 0; i <10 ; i++) {
-           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
-       }
-
-       AssociationList associations =new AssociationList();
-       AssociationFilterParams params = new AssociationFilterParams();
-       params.setState(1);
-       params.setTags(Arrays.asList("a","g"));
-       params.setKeyword("qqwrv"+"list");
-       associations= service.listAssociations(params,0,6);
-       Assert.assertEquals(associations.getContent().size(),6);
-       Assert.assertEquals(associations.getPageNumber(),(Integer) 0);
-       Assert.assertEquals(associations.getPageSize(),(Integer) 6);
-  }
+//    @Test
+//    public void testGetAssociation(){
+//        service.createAssociation("qqwrv"+"get",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
 //
-   @Test
-   public void testDeleteAssociation(){
-
-       Association new_association = new Association();
-       new_association.setName("qqwrv"+"delete");
-       new_association.setDescription(UUID.randomUUID().toString());
-       new_association.setLogo(UUID.randomUUID().toString());
-       new_association.setTags( Arrays.asList("a","f"));
-       for (int i = 0; i <10 ; i++) {
-           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
-       }
-
-
-
-       AssociationList associations =new AssociationList();
-       AssociationFilterParams params = new AssociationFilterParams();
-       params.setState(1);
-       params.setTags(Arrays.asList("a","g"));
-       params.setKeyword("qqwrv"+"delete");
-       associations = service.listAssociations(params,0,9);
-
-       for (int i = 0; i <9 ; i++) {
-           String assoId=associations.getContent().get(i).getId();
-           if(!service.deleteAssociation(assoId)){
-               Assert.assertEquals(true,false);
-           }
-       }
-   }
 //
-   @Test
-   public void testEditAssociation(){
-       AssociationList associations = new AssociationList();
-       AssociationFilterParams params = new AssociationFilterParams();
-       params.setState(1);
-       params.setTags(Arrays.asList("a","g"));
-       params.setKeyword("qqwrv");
-       associations = service.listAssociations(params,0,6);
-       String assoId=associations.getContent().get(0).getId();
-       Association association = service.editAssociation(assoId,"eewrd","混沌陨石",Arrays.asList("e","w"),"None");
-       Assert.assertEquals(association.getName(),"eewrd");
-       Assert.assertEquals(association.getDescription(),"混沌陨石");
-   }
+//        AssociationList associations = new AssociationList();
+//        AssociationFilterParams params = new AssociationFilterParams();
+//        params.setState(1);
+//        params.setTags(Arrays.asList("a","g"));
+//        params.setKeyword("qqwrv"+"get");
+//        associations = service.listAssociations(params,0,6);
+//        String assoId=associations.getContent().get(0).getId();
+// //		association = new Association();
+//        Association association = service.getAssociation(assoId);
+//        Assert.assertEquals(association.getName(),"qqwrv"+"get");
 //
-    @Test
-    public void testPatchAssociation(){
-        AssociationList associations =new AssociationList();
-        AssociationFilterParams params = new AssociationFilterParams();
-        params.setState(1);
-        params.setTags(Arrays.asList("a","g"));
-        params.setKeyword("qqwrv");
-        associations = service.listAssociations(params,0,6);
-        String assoId=associations.getContent().get(0).getId();
+//    }
 
-        service.patchAssociation(assoId,"block","!*+");
-        Association association = service.getAssociation(assoId);
-        Assert.assertEquals(association.getState(),(Integer)0);
-    }
+//  @Test
+//  public void testListAssociation(){
+//       Association new_association = new Association();
+//       new_association.setName("qqwrv"+"list");
+//       new_association.setDescription(UUID.randomUUID().toString());
+//       new_association.setLogo(UUID.randomUUID().toString());
+//       new_association.setTags( Arrays.asList("a","f"));
+//
+//       for (int i = 0; i <10 ; i++) {
+//           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
+//       }
+//
+//       AssociationList associations =new AssociationList();
+//       AssociationFilterParams params = new AssociationFilterParams();
+//       params.setState(1);
+//       params.setTags(Arrays.asList("a","g"));
+//       params.setKeyword("qqwrv"+"list");
+//       associations= service.listAssociations(params,0,6);
+//       Assert.assertEquals(associations.getContent().size(),6);
+//       Assert.assertEquals(associations.getPageNumber(),(Integer) 0);
+//       Assert.assertEquals(associations.getPageSize(),(Integer) 6);
+//  }
+////
+//   @Test
+//   public void testDeleteAssociation(){
+//
+//       Association new_association = new Association();
+//       new_association.setName("qqwrv"+"delete");
+//       new_association.setDescription(UUID.randomUUID().toString());
+//       new_association.setLogo(UUID.randomUUID().toString());
+//       new_association.setTags( Arrays.asList("a","f"));
+//       for (int i = 0; i <10 ; i++) {
+//           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
+//       }
+//
+//
+//
+//       AssociationList associations =new AssociationList();
+//       AssociationFilterParams params = new AssociationFilterParams();
+//       params.setState(1);
+//       params.setTags(Arrays.asList("a","g"));
+//       params.setKeyword("qqwrv"+"delete");
+//       associations = service.listAssociations(params,0,9);
+//
+//       for (int i = 0; i <9 ; i++) {
+//           String assoId=associations.getContent().get(i).getId();
+//           if(!service.deleteAssociation(assoId)){
+//               Assert.assertEquals(true,false);
+//           }
+//       }
+//   }
+////
+//   @Test
+//   public void testEditAssociation(){
+//       AssociationList associations = new AssociationList();
+//       AssociationFilterParams params = new AssociationFilterParams();
+//       params.setState(1);
+//       params.setTags(Arrays.asList("a","g"));
+//       params.setKeyword("qqwrv");
+//       associations = service.listAssociations(params,0,6);
+//       String assoId=associations.getContent().get(0).getId();
+//       Association association = service.editAssociation(assoId,"eewrd","混沌陨石",Arrays.asList("e","w"),"None");
+//       Assert.assertEquals(association.getName(),"eewrd");
+//       Assert.assertEquals(association.getDescription(),"混沌陨石");
+//   }
+////
+//    @Test
+//    public void testPatchAssociation(){
+//        AssociationList associations =new AssociationList();
+//        AssociationFilterParams params = new AssociationFilterParams();
+//        params.setState(1);
+//        params.setTags(Arrays.asList("a","g"));
+//        params.setKeyword("qqwrv");
+//        associations = service.listAssociations(params,0,6);
+//        String assoId=associations.getContent().get(0).getId();
+//
+//        service.patchAssociation(assoId,"block","!*+");
+//        Association association = service.getAssociation(assoId);
+//        Assert.assertEquals(association.getState(),(Integer)0);
+//    }
 //
   @Test
   public void testHandleAssociation(){
