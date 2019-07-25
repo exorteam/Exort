@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
-    public ApiResponse<List<Department>> getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
+    public ApiResponse<List<DepartmentInfo>> getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
 
         List<Department> departments = associationMemberManageService.getDepartmentTree(associationId);
 
@@ -55,33 +56,64 @@ public class AssociationMemberManageController {
             throw new ApiError(404, "AssociationNotFound", "该社团不存在");
         }
 
-        return new ApiResponse<List<Department>>(departments);
+        List<DepartmentInfo> departmentInfos = new ArrayList<>();
+
+        for (Department department : departments) {
+            DepartmentInfo departmentInfo = new DepartmentInfo();
+
+            departmentInfo.setDepartmentId(department.getDepartmentId());
+            departmentInfo.setAssociationId(department.getAssociationId());
+            departmentInfo.setParentId(department.getParentId());
+            departmentInfo.setName(department.getName());
+            departmentInfo.setDescription(department.getDescription());
+        }
+
+        return new ApiResponse<List<DepartmentInfo>>(departmentInfos);
 
     }
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "得到某个部门的信息")
-    public ApiResponse<Department> getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
         Department department = associationMemberManageService.getSpecDepartmentInfo(associationId, departmentId);
 
         if (department == null) {
             throw new ApiError(404, "DepartmentNotFound", "该部门不存在");
         } else {
-            return new ApiResponse<Department>(department);
+
+            DepartmentInfo departmentInfo = new DepartmentInfo();
+
+            departmentInfo.setDepartmentId(department.getDepartmentId());
+            departmentInfo.setAssociationId(department.getAssociationId());
+            departmentInfo.setParentId(department.getParentId());
+            departmentInfo.setName(department.getName());
+            departmentInfo.setDescription(department.getDescription());
+
+            return new ApiResponse<DepartmentInfo>(departmentInfo);
         }
     }
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "创建部门")
-    public ApiResponse<Department> createDepartment(@PathVariable int associationId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> createDepartment(@PathVariable int associationId, @RequestBody DepartmentInfo departmentInfo) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(404, "AssociationNotFound", "该社团不存在");
         }
 
         if (associationMemberManageService.checkDepartment(associationId, departmentInfo.getParentId()) || departmentInfo.getParentId() == 0) {
-            return new ApiResponse<Department>(associationMemberManageService.createDepartment(associationId, departmentInfo.getName(), departmentInfo.getDescription(), departmentInfo.getParentId()));
+            Department department = associationMemberManageService.createDepartment(associationId, departmentInfo.getName(), departmentInfo.getDescription(), departmentInfo.getParentId());
+
+            DepartmentInfo retDepartmentInfo = new DepartmentInfo();
+
+            retDepartmentInfo.setDepartmentId(department.getDepartmentId());
+            retDepartmentInfo.setAssociationId(department.getAssociationId());
+            retDepartmentInfo.setParentId(department.getParentId());
+            retDepartmentInfo.setName(department.getName());
+            retDepartmentInfo.setDescription(department.getDescription());
+
+            return new ApiResponse<DepartmentInfo>(retDepartmentInfo);
 
         } else {
             throw new ApiError(400, "InvalidDepartment", "部门创建信息不合法");
@@ -92,20 +124,30 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "删除部门")
-    public ApiResponse<Department> deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
 
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
         }
 
-        return new ApiResponse<Department>(associationMemberManageService.deleteDepartment(associationId, departmentId));
+        Department department = associationMemberManageService.deleteDepartment(associationId, departmentId);
+
+        DepartmentInfo retDepartmentInfo = new DepartmentInfo();
+
+        retDepartmentInfo.setDepartmentId(department.getDepartmentId());
+        retDepartmentInfo.setAssociationId(department.getAssociationId());
+        retDepartmentInfo.setParentId(department.getParentId());
+        retDepartmentInfo.setName(department.getName());
+        retDepartmentInfo.setDescription(department.getDescription());
+
+        return new ApiResponse<DepartmentInfo>(retDepartmentInfo);
 
     }
 
 
     @RequestMapping(method = RequestMethod.PUT, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "编辑部门")
-    public ApiResponse<Department> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
         }
@@ -114,7 +156,18 @@ public class AssociationMemberManageController {
             throw new ApiError(400, "InvalidParentId", "无效父节点");
         }
 
-        return new ApiResponse<>(associationMemberManageService.editDepartment(associationId, departmentId, departmentInfo.getName(), departmentInfo.getDescription(), departmentInfo.getParentId()));
+        Department department = associationMemberManageService.editDepartment(associationId, departmentId, departmentInfo.getName(), departmentInfo.getDescription(), departmentInfo.getParentId());
+
+        DepartmentInfo retDepartmentInfo = new DepartmentInfo();
+
+        retDepartmentInfo.setDepartmentId(department.getDepartmentId());
+        retDepartmentInfo.setAssociationId(department.getAssociationId());
+        retDepartmentInfo.setParentId(department.getParentId());
+        retDepartmentInfo.setName(department.getName());
+        retDepartmentInfo.setDescription(department.getDescription());
+
+        return new ApiResponse<DepartmentInfo>(retDepartmentInfo);
+
     }
 
 
@@ -191,7 +244,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations/{associationId}/departments")
     @ApiOperation(value = "查询用户在指定社团中所属部门")
-    public ApiResponse<List<Department>> getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<List<DepartmentInfo>> getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(401, "AssociationNotFound", "不存在该社团");
         }
@@ -200,7 +253,22 @@ public class AssociationMemberManageController {
             throw new ApiError(404, "UserNotFound", "用户没有参与该社团");
         }
 
-        return new ApiResponse<>(associationMemberManageService.getUserDepartment(associationId, userId));
+        List<Department> departments = associationMemberManageService.getUserDepartment(associationId, userId);
+
+
+        List<DepartmentInfo> departmentInfos = new ArrayList<>();
+
+        for (Department department : departments) {
+            DepartmentInfo departmentInfo = new DepartmentInfo();
+
+            departmentInfo.setDepartmentId(department.getDepartmentId());
+            departmentInfo.setAssociationId(department.getAssociationId());
+            departmentInfo.setParentId(department.getParentId());
+            departmentInfo.setName(department.getName());
+            departmentInfo.setDescription(department.getDescription());
+        }
+
+        return new ApiResponse<List<DepartmentInfo>>(departmentInfos);
     }
 
 
