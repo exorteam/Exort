@@ -5,6 +5,8 @@ import exort.api.http.activity.entity.*;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpMethod;
@@ -29,8 +31,8 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<PageList<Activity>> getActivities(Select select, PageQuery pageQuery) {
-        return request(new TypeToken<PageList<Activity>>(){}, select, HttpMethod.GET, pageQuery, "/activities");
+    public ApiResponse<PagedData<Activity>> getActivities(Select select, PageQuery pageQuery) {
+        return request(new TypeToken<PagedData<Activity>>(){}, select, HttpMethod.GET, pageQuery, "/activities");
     }
 
     @Override
@@ -54,17 +56,17 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<PageList<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PageList<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
+    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
+        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
     }
 
     @Override
-    public ApiResponse<PageList<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PageList<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
+    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
+        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
     }
 
     @Override
-    public ApiResponse<Object> acceptSignup(Operation operation) {
+    public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation) {
         return request(new TypeToken<Object>(){}, operation, HttpMethod.POST, "/callback/acceptsignup");
     }
 
