@@ -590,30 +590,31 @@
 
    ``` json
    >>> POST /callback
-  {
-	   "userId":"129",
-     "event":"accept",
-     "application":{
-     "Id":"12dasdsd3",
-     "applicantId":"111",
-     "type":"createAssociation",
-     "object":{
-          "name":"Association1",
-          "description":"nothing to say",
-          "logo":"image1(base64)",
-          "tags":[
-              "T1",
-              "T2"
+   {
+      "userId":123,
+      "event":"accept",
+      "application":{
+         "Id":"123",
+         "applicantId":"111",
+         "type":"createAssociation",
+         "object":{
+            "name":"Association111111",
+            "description":"nothing to say",
+            "logo":"image1(base64)",
+            "tags":[
+               "T1",
+               "T2"
             ]
-      },
-      "materialIds":[
-           "123",
-           "1233"
-      ],
-      "createdTime":"1111-2-23",
-      "handledTime":"1223-3-22",
-      "state":"_pending_"}
-  }
+         },
+         "materialIds":[
+            123,
+            1233
+         ],
+         "createTime":"1111-2-23",
+         "handleTime":"1223-3-22",
+         "state":"_pending_"
+      }
+   }
    <<< 200
    {
       "association":{
@@ -633,30 +634,31 @@
 
    ```json
    >>> POST /callback
-  {
-	   "userId":"129",
-     "event":"accept",
-     "application":{
-     "Id":"12dasdsd3",
-     "applicantId":"111",
-     "type":"createAssociation",
-     "object":{
-          "name":"Association1",
-          "description":"nothing to say",
-          "logo":"image1(base64)",
-          "tags":[
-              "T1",
-              "T2"
+   {
+      "userId":123,
+      "event":"accept",
+      "application":{
+         "Id":"123",
+         "applicantId":"111",
+         "type":"createAssociation",
+         "object":{
+            "name":"Association111111",
+            "description":"nothing to say",
+            "logo":"image1(base64)",
+            "tags":[
+               "T1",
+               "T2"
             ]
-      },
-      "materialIds":[
-           "123",
-           "1233"
-      ],
-      "createdTime":"1111-2-23",
-      "handledTime":"1223-3-22",
-      "state":"_pending_"}
-  }
+         },
+         "materialIds":[
+            123,
+            1233
+         ],
+         "createTime":"1111-2-23",
+         "handleTime":"1223-3-22",
+         "state":"_pending_"
+      }
+   }
    <<< 200
    {
      "data": {} ,
