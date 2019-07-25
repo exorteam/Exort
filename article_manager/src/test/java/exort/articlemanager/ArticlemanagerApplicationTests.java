@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +17,7 @@ import exort.articlemanager.component.AutoIncIdGenerator;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.repository.ArticleRepository;
 import exort.articlemanager.service.ArticleService;
+import exort.articlemanager.service.ArticleService.ArticleStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,6 +42,7 @@ public class ArticlemanagerApplicationTests {
 			article.setTitle(UUID.randomUUID().toString());
 			article.setContent(UUID.randomUUID().toString());
 			article.setAuthors(new ArrayList<Integer>());
+			article.setState(ArticleStatus.UNPUBLISHED);
 			articles.add(article);
 		}
 	}
@@ -97,4 +99,23 @@ public class ArticlemanagerApplicationTests {
 			Assert.assertEquals(e,contrast);
 		}
 	}
+
+	@Test
+	public void testPublishAndWithdraw() {
+		repository.saveAll(articles);
+		for(int i=0;i<ARTICLE_NUM;i++){
+			final int id = articles.get(i).getId();
+			final Article e1 = repository.findById(id).get();
+			Assert.assertEquals(e1.getState(),ArticleStatus.UNPUBLISHED);
+
+			service.publishArticle(id);
+			final Article e2 = repository.findById(id).get();
+			Assert.assertEquals(e2.getState(),ArticleStatus.PUBLISHED);
+
+			service.withdrawArticle(id);
+			final Article e3 = repository.findById(id).get();
+			Assert.assertEquals(e3.getState(),ArticleStatus.UNPUBLISHED);
+		}
+	}
+
 }

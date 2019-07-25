@@ -32,7 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setPublishTime(null);
 		article.setLastPublishTime(currentTime);
 		article.setLastModifyTime(currentTime);
-		article.setState(0);
+		article.setState(ArticleStatus.UNPUBLISHED);
 		article.setCreateMethod(0);
 
 		return repository.save(article);
@@ -110,7 +110,7 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = repository.findById(articleId).get();
 		if(article.getState() != 0)return false;
 
-		article.setState(1);
+		article.setState(ArticleStatus.PUBLISHED);
 		repository.save(article);
 
 		return true;
@@ -122,7 +122,7 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = repository.findById(articleId).get();
 		if(article.getState() != 1)return false;
 
-		article.setState(0);
+		article.setState(ArticleStatus.UNPUBLISHED);
 		repository.save(article);
 
 		return true;
