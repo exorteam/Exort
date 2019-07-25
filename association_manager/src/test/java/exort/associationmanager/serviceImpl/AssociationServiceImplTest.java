@@ -24,22 +24,22 @@ public class AssociationServiceImplTest {
     @Autowired
     private PermService permService;
 
-   @Test
-   public void testCreateAssociation1(){
-       service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
-       String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
-       Association association = service.getAssociation(assoId);
-       Assert.assertEquals(association.getName(),"qqwrvcreate");
-       Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
-   }
-    @Test
-    public void testCreateAssociation2(){
-        service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
-        String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
-        Association association = service.getAssociation(assoId);
-        Assert.assertEquals(association.getName(),"qqwrvcreate");
-        Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
-    }
+//    @Test
+//    public void testCreateAssociation1(){
+//        service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
+//        String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
+//        Association association = service.getAssociation(assoId);
+//        Assert.assertEquals(association.getName(),"qqwrvcreate");
+//        Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
+//    }
+    // @Test
+    // public void testCreateAssociation2(){
+    //     service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
+    //     String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
+    //     Association association = service.getAssociation(assoId);
+    //     Assert.assertEquals(association.getName(),"qqwrvcreate");
+    //     Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
+    // }
 
 //    @Test
 //    public void testGetAssociation(){
@@ -140,41 +140,41 @@ public class AssociationServiceImplTest {
 //        Assert.assertEquals(association.getState(),(Integer)0);
 //    }
 //
-  @Test
-  public void testHandleAssociation(){
-      MyObject myObject = new MyObject();
-      myObject.setDescription(UUID.randomUUID().toString());
-      myObject.setLogo(UUID.randomUUID().toString());
-      myObject.setName("qqwrvhandle");
-      myObject.setTags(Arrays.asList("a","f"));
+//   @Test
+//   public void testHandleAssociation(){
+//       MyObject myObject = new MyObject();
+//       myObject.setDescription(UUID.randomUUID().toString());
+//       myObject.setLogo(UUID.randomUUID().toString());
+//       myObject.setName("qqwrvhandle");
+//       myObject.setTags(Arrays.asList("a","f"));
 
-      Application application= new Application();
-      application.setApplicantId("111");
-      application.setCreatedTime("111");
-      application.setHandledTime("1wq");
-      application.setId("qwewq");
-      application.setMaterialIds(Arrays.asList("aqwe","qwef"));
-      application.setState("pending");
-      application.setObject(myObject);
-      application.setType("createAssociation");
+//       Application application= new Application();
+//       application.setApplicantId("111");
+//       application.setCreatedTime("111");
+//       application.setHandledTime("1wq");
+//       application.setId("qwewq");
+//       application.setMaterialIds(Arrays.asList("aqwe","qwef"));
+//       application.setState("pending");
+//       application.setObject(myObject);
+//       application.setType("createAssociation");
 
-      permService.createRole(new Role("SysManager","the admin of exort system"));
-      permService.grantRoles(Long.valueOf(12345),"System",Arrays.asList("SysManager"));
-
-
+//       permService.createRole(new Role("SysManager","the admin of exort system"));
+//       permService.grantRoles(Long.valueOf(12345),"System",Arrays.asList("SysManager"));
 
 
-      if (service.handleAsoociationApplication( Long.valueOf( 12345),"accept",application)){
-          String assoId = service.listAssociations(new AssociationFilterParams("qqwrvhandle",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
-          Association association = service.getAssociation(assoId);
-          Assert.assertEquals(association.getName(),"qqwrvhandle");
-          Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
-      }
-      else {
-          Assert.assertEquals(true,false);
-      }
 
-  }
+
+//       if (service.handleAsoociationApplication( Long.valueOf( 12345),"accept",application)){
+//           String assoId = service.listAssociations(new AssociationFilterParams("qqwrvhandle",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
+//           Association association = service.getAssociation(assoId);
+//           Assert.assertEquals(association.getName(),"qqwrvhandle");
+//           Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
+//       }
+//       else {
+//           Assert.assertEquals(true,false);
+//       }
+
+//   }
 
 
 }
