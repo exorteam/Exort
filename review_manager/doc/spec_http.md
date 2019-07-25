@@ -25,7 +25,7 @@
    |`materialIds` _int[]_|申请材料ID列表|
    |`createdTime` _string_|申请时间|
    |`handledTime` _string_|处理时间|
-   |`state` _string_|状态,可以是 _pnding_, _accepted_, _refused_, _canceled_|
+   |`state` _string_|状态,可以是 _pending_, _accepted_, _refused_, _canceled_|
 
 - <a id='ApplicationList'></a>**ApplicationList**
 
