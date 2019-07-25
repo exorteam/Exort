@@ -28,7 +28,7 @@ public class AssociationServiceImpl implements AssociationService{
     private AssociationRepository assoRepository;
     public Association getAssociation(String assoId){
         ApiResponse responseBody = new ApiResponse<>();
-        Association association = assoRepository.findById(assoId);
+        Association association = assoRepository.findById(assoId).get();
         return  association;
     }
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
@@ -101,7 +101,7 @@ public class AssociationServiceImpl implements AssociationService{
         if(assoRepository.findById(assoId)==null){
             return null;
         }
-        Association association = assoRepository.findById(assoId);
+        Association association = assoRepository.findById(assoId).get();
         association.setDescription(description);
         association.setTags(tags);
         association.setName(name);
@@ -111,7 +111,7 @@ public class AssociationServiceImpl implements AssociationService{
     }
 
     public  boolean patchAssociation(String assoId,String type,String reason){
-        Association association = assoRepository.findById(assoId);
+        Association association = assoRepository.findById(assoId).get();
         if(assoRepository.findById(assoId)==null){
             return  false;
         }
@@ -155,7 +155,7 @@ public class AssociationServiceImpl implements AssociationService{
                             throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                         }
                         MyObject blockInfo = app.getObject();
-                        Association asso = assoRepository.findById(blockInfo.getAssociationId());
+                        Association asso = assoRepository.findById(blockInfo.getAssociationId()).get();
                         asso.setState(1);
                         assoRepository.save(asso);
                         return true;
