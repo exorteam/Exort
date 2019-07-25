@@ -1,51 +1,50 @@
-package exort.associationmanager.serviceImpl;
-
-import java.nio.channels.AsynchronousSocketChannel;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import exort.api.http.common.entity.PagedData;
-import exort.api.http.perm.entity.Role;
-import exort.api.http.perm.service.PermService;
-import exort.api.http.review.entity.Application;
-import exort.associationmanager.entity.*;
-import exort.associationmanager.service.AssociationService;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class AssociationServiceImplTest {
-
-   @Autowired
-   private AssociationService service;
-    @Autowired
-    private PermService permService;
-
-    @Test
-    public void testCreateAssociation1(){
-        service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
+//package exort.associationmanager.serviceImpl;
+//
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.UUID;
+//
+//import exort.api.http.common.entity.PagedData;
+//import exort.api.http.perm.entity.Role;
+//import exort.api.http.perm.service.PermService;
+//import exort.api.http.review.entity.Application;
+//import exort.associationmanager.entity.*;
+//import exort.associationmanager.service.AssociationService;
+//import org.junit.Assert;
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.test.context.junit4.SpringRunner;
+//
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//public class AssociationServiceImplTest {
+//
+//   @Autowired
+//   private AssociationService service;
+//    @Autowired
+//    private PermService permService;
+//
+//    @Test
+//    public void testCreateAssociation1(){
+//        service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
 //        String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
 //        Association association = service.getAssociation(assoId);
 //        Assert.assertEquals(association.getName(),"qqwrvcreate");
 //        Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
-    }
-     @Test
-     public void testCreateAssociation2(){
+//    }
+//     @Test
+//     public void testCreateAssociation2(){
 //         service.createAssociation("qqwrv"+"create",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
-         String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
+//         String assoId = service.listAssociations(new AssociationFilterParams("qqwrvcreate",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
 //         Association association = service.getAssociation(assoId);
 //         Assert.assertEquals(association.getName(),"qqwrvcreate");
 //         Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
-     }
-
-    @Test
-    public void testGetAssociation(){
+//     }
+//
+//    @Test
+//    public void testGetAssociation(){
 //        service.createAssociation("qqwrv"+"get",UUID.randomUUID().toString(), (List<String>)Arrays.asList("a","f"),UUID.randomUUID().toString());
 //
 //
@@ -57,13 +56,13 @@ public class AssociationServiceImplTest {
 //        associations = service.listAssociations(params,0,6);
 //        String assoId=associations.getContent().get(0).getId();
 // //		association = new Association();
-        Association association = service.getAssociation("5d317b1973102a54a0db1037");
+//        Association association = service.getAssociation(assoId);
 //        Assert.assertEquals(association.getName(),"qqwrv"+"get");
-
-    }
-
-  @Test
-  public void testListAssociation(){
+//
+//    }
+//
+//  @Test
+//  public void testListAssociation(){
 //       Association new_association = new Association();
 //       new_association.setName("qqwrv"+"list");
 //       new_association.setDescription(UUID.randomUUID().toString());
@@ -73,29 +72,29 @@ public class AssociationServiceImplTest {
 //       for (int i = 0; i <10 ; i++) {
 //           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
 //       }
-
-       PagedData<Association> associations =new PagedData<>();
-       AssociationFilterParams params = new AssociationFilterParams();
-       params.setState(1);
-       params.setTags(Arrays.asList("a","g"));
-       params.setKeyword("qqwrv"+"list");
-       associations= service.listAssociations(params,0,6);
-       Assert.assertEquals(associations.getContent().size(),6);
-       Assert.assertEquals(associations.getPageNum(),(Integer) 0);
-       Assert.assertEquals(associations.getPageSize(),(Integer) 6);
-  }
+//
+//       PagedData<Association> associations =new PagedData<>();
+//       AssociationFilterParams params = new AssociationFilterParams();
+//       params.setState(1);
+//       params.setTags(Arrays.asList("a","g"));
+//       params.setKeyword("qqwrv"+"list");
+//       associations= service.listAssociations(params,0,6);
+//       Assert.assertEquals(associations.getContent().size(),6);
+//       Assert.assertEquals(associations.getPageNum(),(Integer) 0);
+//       Assert.assertEquals(associations.getPageSize(),(Integer) 6);
+//  }
 //
 //   @Test
 //   public void testDeleteAssociation(){
 //
-////       Association new_association = new Association();
-////       new_association.setName("qqwrv"+"delete");
-////       new_association.setDescription(UUID.randomUUID().toString());
-////       new_association.setLogo(UUID.randomUUID().toString());
-////       new_association.setTags( Arrays.asList("a","f"));
-////       for (int i = 0; i <10 ; i++) {
-////           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
-////       }
+//       Association new_association = new Association();
+//       new_association.setName("qqwrv"+"delete");
+//       new_association.setDescription(UUID.randomUUID().toString());
+//       new_association.setLogo(UUID.randomUUID().toString());
+//       new_association.setTags( Arrays.asList("a","f"));
+//       for (int i = 0; i <10 ; i++) {
+//           service.createAssociation(new_association.getName(),new_association.getDescription(),new_association.getTags(),new_association.getLogo());
+//       }
 //
 //
 //
@@ -114,8 +113,8 @@ public class AssociationServiceImplTest {
 //       }
 //   }
 ////
-   @Test
-   public void testEditAssociation(){
+//   @Test
+//   public void testEditAssociation(){
 //       PagedData<Association> associations = new PagedData<>();
 //       AssociationFilterParams params = new AssociationFilterParams();
 //       params.setState(1);
@@ -123,13 +122,13 @@ public class AssociationServiceImplTest {
 //       params.setKeyword("qqwrv");
 //       associations = service.listAssociations(params,0,6);
 //       String assoId=associations.getContent().get(0).getId();
-       Association association = service.editAssociation("5d317b1973102a54a0db1037","eewrd","混沌陨石",Arrays.asList("e","w"),"None");
-       Assert.assertEquals(association.getName(),"eewrd");
-       Assert.assertEquals(association.getDescription(),"混沌陨石");
-   }
-//
-    @Test
-    public void testPatchAssociation(){
+//       Association association = service.editAssociation(assoId,"eewrd","混沌陨石",Arrays.asList("e","w"),"None");
+//       Assert.assertEquals(association.getName(),"eewrd");
+//       Assert.assertEquals(association.getDescription(),"混沌陨石");
+//   }
+////
+//    @Test
+//    public void testPatchAssociation(){
 //        PagedData<Association> associations =new PagedData<>();
 //        AssociationFilterParams params = new AssociationFilterParams();
 //        params.setState(1);
@@ -137,47 +136,47 @@ public class AssociationServiceImplTest {
 //        params.setKeyword("qqwrv");
 //        associations = service.listAssociations(params,0,6);
 //        String assoId=associations.getContent().get(0).getId();
-
-        service.patchAssociation("5d317b1973102a54a0db1037","block","!*+");
+//
+//        service.patchAssociation(assoId,"block","!*+");
 //        Association association = service.getAssociation(assoId);
 //        Assert.assertEquals(association.getState(),(Integer)0);
-    }
-
-   @Test
-   public void testHandleAssociation(){
-       MyObject myObject = new MyObject();
-       myObject.setDescription(UUID.randomUUID().toString());
-       myObject.setLogo(UUID.randomUUID().toString());
-       myObject.setName("qqwrvhandle");
-       myObject.setTags(Arrays.asList("a","f"));
-
-       Application application= new Application();
-       application.setApplicantId(Long.valueOf(111));
-       application.setCreatedTime(null);
-       application.setHandledTime(null);
-       application.setId(Long.valueOf(123));
-       application.setMaterialIds(Arrays.asList("aqwe","qwef"));
-       application.setState("pending");
-       application.setObject(myObject);
-       application.setType("createAssociation");
-
-       permService.createRole(new Role("SysManager","the admin of exort system"));
-       permService.grantRoles(Long.valueOf(12345),"System",Arrays.asList("SysManager"));
-
-
-
-
-       if (service.handleAsoociationApplication( Long.valueOf( 12345),"accept",application)){
+//    }
+//
+//   @Test
+//   public void testHandleAssociation(){
+//       MyObject myObject = new MyObject();
+//       myObject.setDescription(UUID.randomUUID().toString());
+//       myObject.setLogo(UUID.randomUUID().toString());
+//       myObject.setName("qqwrvhandle");
+//       myObject.setTags(Arrays.asList("a","f"));
+//
+//       Application application= new Application();
+//       application.setApplicantId(Long.valueOf(111));
+//       application.setCreatedTime(null);
+//       application.setHandledTime(null);
+//       application.setId(Long.valueOf(123));
+//       application.setMaterialIds(Arrays.asList("aqwe","qwef"));
+//       application.setState("pending");
+//       application.setObject(myObject);
+//       application.setType("createAssociation");
+//
+//       permService.createRole(new Role("SysManager","the admin of exort system"));
+//       permService.grantRoles(Long.valueOf(12345),"System",Arrays.asList("SysManager"));
+//
+//
+//
+//
+//       if (service.handleAsoociationApplication( Long.valueOf( 12345),"accept",application)){
 //           String assoId = service.listAssociations(new AssociationFilterParams("qqwrvhandle",(List<String>)Arrays.asList("a","f"),1),0,1).getContent().get(0).getId();
 //           Association association = service.getAssociation("");
 //           Assert.assertEquals(association.getName(),"qqwrvhandle");
 //           Assert.assertEquals(association.getTags(),(List<String>)Arrays.asList("a","f"));
-       }
-       else {
-           Assert.assertEquals(true,false);
-       }
-
-   }
-
-
-}
+//       }
+//       else {
+//           Assert.assertEquals(true,false);
+//       }
+//
+//   }
+//
+//
+//}
