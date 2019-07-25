@@ -88,7 +88,7 @@ public class ActivityDaoImpl implements ActivityDao {
             }
             System.out.println(query);
 
-            List<Activity> activities = mongoTemplate.find(query, Activity.class);
+            List<Activity> activities = mongoTemplate.find(query, Activity.class, "activity");
             if(activities==null){
                 return new PageList<>(pagesize, pagenum, 0, null);
             }
