@@ -4,7 +4,11 @@ import com.google.common.reflect.TypeToken;
 import exort.api.http.assomgr.entity.*;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.review.entity.CallbackParam;
+import org.graalvm.compiler.nodeinfo.StructuralInput;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -24,8 +28,8 @@ public class AssociationServiceImpl extends RestTemplate implements AssociationM
     }
 
     @Override
-    public ApiResponse<AssociationList> listAssociations(AssociationFilterParams body, PageQuery pageQuery){
-        return request(new TypeToken<AssociationList>() {}, body,
+    public ApiResponse<PagedData<Association>> listAssociations(AssociationFilterParams body, PageQuery pageQuery){
+        return request(new TypeToken<PagedData<Association>>() {}, body,
                 HttpMethod.GET, pageQuery, "/associations");
     }
     @Override
@@ -44,14 +48,19 @@ public class AssociationServiceImpl extends RestTemplate implements AssociationM
                 HttpMethod.PUT, "/associations/{assoId}", assoId);
     }
     @Override
-    public ApiResponse<Object> patchAssociation(String assoId, PatchAssociationInfo body){
+    public ApiResponse<Object> patchAssociation(String assoId, Operation<String> body){
         return request(new TypeToken<Object>() {}, body,
                 HttpMethod.PUT, "/associations/{assoId}/state", assoId);
 
     }
-    @Override
-    public ApiResponse<Object> handleAsoociationApplication(ApplicationAssociationInfo body){
-        return request(new TypeToken<Object>() {}, body,
-                HttpMethod.POST, "/associations/callback");
-    }
+//    @Override
+//    public ApiResponse<Object> handleCreateAsoociationApplication(CallbackParam<AssociationInfo> body){
+//        return request(new TypeToken<Object>() {}, body,
+//                HttpMethod.POST, "/associations/callback");
+//    }
+//    @Override
+//    public ApiResponse<Object> handleUnblockAsoociationApplication(CallbackParam<Operation<String>> body){
+//        return request(new TypeToken<Object>() {}, body,
+//                HttpMethod.POST, "/associations/callback");
+//    }
 }
