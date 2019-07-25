@@ -11,15 +11,8 @@ import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Member;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,12 +23,22 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     final private static String MEMBER = "association_member";
     final private static String MANAGER = "association_root";
 
-    private String getnum(String origin){
+    private String getnum(String origin) {
         String regEx = "[^0-9]";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(origin);
         String result = m.replaceAll("").trim();
         return result;
+    }
+
+    @Override
+    public boolean checkAsso(int associationId) {
+        return departmentRepository.existsByAssociationId(associationId);
+    }
+
+    @Override
+    public boolean checkDepartment(int associationId, int departmentId) {
+        return departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId);
     }
 
     private String roleName(int associationId, int departmentId) {
@@ -59,557 +62,199 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Autowired
     private PermService ps;
 
+    public boolean checkUserInAsso(long userId, int associationId) {
+        return (ps.hasRole(userId, scope(associationId), MEMBER).getData() != null);
+    }
+
+    public boolean checkUserInAsso(int userId, int associationId) {
+        return (ps.hasRole((long) userId, scope(associationId), MEMBER).getData() != null);
+    }
+
+    public List<Department> findDepartmentList(int associationId) {
+        return departmentRepository.findAllByAssociationId(associationId);
+    }
+
     @Override
-    public ApiResponse<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-//        ps.hasRole(application.getApplicantId(), scope(application.getObject().getAssociationId()), MEMBER);
-//        ps.grantRoles(application.getApplicantId(), scope(application.getObject().getAssociationId()), Arrays.asList(MEMBER));
+    public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application) {
 
-        // outside
-        boolean userInAsso = false;
-        if (ps.hasRole(application.getApplicantId(), scope(application.getObject().getAssociationId()), MEMBER).getData() != null) {
-            userInAsso = true;
-        }
-
-        if (!userInAsso) {
-            response.setStatus(200);
-
-            apiResponse = addOneToAssociation(application.getObject().getAssociationId(), userId, response);
-        } else {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUser");
-            apiResponse.setMessage("用户已存在");
-        }
-
-        return apiResponse;
+        return addOneToAssociation(application.getObject().getAssociationId(), userId);
     }
 
 
     @Override
-    public ApiResponse<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response) {
-        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
+    public List<Department> getDepartmentTree(int associationId) {
 
-        List<Department> departments = departmentRepository.findAllByAssociationId(associationId);
-
-        if (departments.size() == 0) {
-            response.setStatus(404);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("该社团不存在");
-
-        } else {
-            response.setStatus(200);
-
-            apiResponse.setData(departments);
-        }
-
-        return apiResponse;
+        return findDepartmentList(associationId);
     }
 
     @Override
-    public ApiResponse<Department> getSpecDepartmentInfo(int associationId, int departmentId, HttpServletResponse response) {
-        ApiResponse<Department> apiResponse = new ApiResponse<>();
+    public Department getSpecDepartmentInfo(int associationId, int departmentId) {
+        Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
+
+        return department;
+    }
+
+    @Override
+    public Department createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
+
+
+        Department department = new Department(associationId, departmentName, departmentDesc, parentId);
+        Department maxDepartment = departmentRepository.findFirstByAssociationIdOrderByDepartmentIdDesc(associationId);
+
+        department.setDepartmentId((maxDepartment != null ? maxDepartment.getDepartmentId() + 1 : 1));
+        System.out.println(maxDepartment);
+        departmentRepository.save(department);
+
+        return department;
+    }
+
+    @Override
+    public Department findDepartment(int associationId, int departmentId) {
+        return departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
+    }
+
+    @Override
+    public Department deleteDepartment(int associationId, int departmentId) {
+
+        Department department = findDepartment(associationId, departmentId);
+
+        departmentRepository.delete(department);
+
+        return department;
+    }
+
+    @Override
+    public Department editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId) {
 
         Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
 
-        if (department == null) {
-            response.setStatus(404);
 
-            apiResponse.setError("DepartmentNotFound");
-            apiResponse.setMessage("该部门不存在");
-        } else {
-            response.setStatus(200);
+        department.setName(departmentName);
+        department.setDescription(departmentDesc);
+        department.setParentId(parentId);
 
-            apiResponse.setData(department);
-        }
+        departmentRepository.save(department);
 
-        return apiResponse;
+
+        return department;
     }
 
     @Override
-    public ApiResponse<Department> createDepartment(int associationId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
-        ApiResponse<Department> apiResponse = new ApiResponse<>();
-
-        if (departmentRepository.existsByAssociationId(associationId)) {
-
-            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId) || parentId == 0) {
-
-                Department department = new Department(associationId, departmentName, departmentDesc, parentId);
-                Department maxDepartment = departmentRepository.findFirstByAssociationIdOrderByDepartmentIdDesc(associationId);
-
-                department.setDepartmentId((maxDepartment != null ? maxDepartment.getDepartmentId() + 1 : 1));
-                System.out.println(maxDepartment);
-                departmentRepository.save(department);
-
-                response.setStatus(200);
-
-                apiResponse.setData(department);
-
-            } else {
-                response.setStatus(400);
-
-                apiResponse.setError("InvalidDepartment");
-                apiResponse.setMessage("部门创建信息不合法");
-            }
-
-        } else {
-            response.setStatus(404);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("该社团不存在");
-        }
-
-        return apiResponse;
-    }
-
-    @Override
-    public ApiResponse<Department> deleteDepartment(int associationId, int departmentId, HttpServletResponse response) {
-        ApiResponse<Department> apiResponse = new ApiResponse<>();
-
-        Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
-
-        if (department == null) {
-            response.setStatus(404);
-
-            apiResponse.setError("DepartmentNotFound");
-            apiResponse.setMessage("不存在该部门");
-        } else {
-            response.setStatus(200);
-
-            apiResponse.setData(department);
-
-            departmentRepository.delete(department);
-        }
-
-
-        return apiResponse;
-    }
-
-    @Override
-    public ApiResponse<Department> editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response) {
-        ApiResponse<Department> apiResponse = new ApiResponse<>();
-
-        Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
-
-        if (department == null) {
-            response.setStatus(404);
-
-            apiResponse.setError("DepartmentNotFound");
-            apiResponse.setMessage("不存在该部门");
-        } else {
-
-            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, parentId)) {
-
-                response.setStatus(200);
-
-                department.setName(departmentName);
-                department.setDescription(departmentDesc);
-                department.setParentId(parentId);
-
-                departmentRepository.save(department);
-
-                apiResponse.setData(department);
-
-            } else {
-                response.setStatus(400);
-
-                apiResponse.setError("InvalidParentId");
-                apiResponse.setMessage("无效父节点");
-            }
-
-        }
-
-        return apiResponse;
-    }
-
-    @Override
-    public ApiResponse<List<Integer>> getSpecMemberList(int associationId, int departmentId, HttpServletResponse response) {
-        ApiResponse<List<Integer>> apiResponse = new ApiResponse<>();
-
-        if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
-
-            response.setStatus(200);
-
-            // outside
-            PagedData<Long> pagedusers = ps.getUsers(scope(associationId), roleName(associationId, departmentId), new PageQuery(50)).getData();
-
-            List<Integer> userList = new ArrayList<>();
-            for (Long user : pagedusers.getContent()) {
-                userList.add(user.intValue());
-            }
-
-
-            apiResponse.setData(userList);
-
-        } else {
-            response.setStatus(404);
-
-            apiResponse.setError("DepartmentNotFound");
-            apiResponse.setMessage("不存在该部门");
-        }
-
-        return apiResponse;
-    }
-
-    @Override
-    public ApiResponse<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+    public List<Integer> getSpecMemberList(int associationId, int departmentId) {
 
         // outside
-        boolean existUser = true;
+        PagedData<Long> pagedusers = ps.getUsers(scope(associationId), roleName(associationId, departmentId), new PageQuery(50)).getData();
 
-
-        if (existUser) {
-
-            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
-                // outside
-                boolean existUserInAsso = true;
-
-                if (ps.hasRole((long)userId, scope(associationId), MEMBER).getData() == null) {
-                    existUserInAsso = false;
-                }
-
-                if (existUserInAsso) {
-                    response.setStatus(200);
-                    ps.revokeRoles(Long.valueOf(userId),scope(associationId),Arrays.asList(roleName(associationId,departmentId)));
-
-                    apiResponse.setData(true);
-
-                } else {
-                    response.setStatus(404);
-
-                    apiResponse.setError("UserNotFound");
-                    apiResponse.setMessage("社团中不存在该用户");
-                }
-
-            } else {
-                response.setStatus(401);
-
-                apiResponse.setError("DepartmentNotFound");
-                apiResponse.setMessage("不存在该部门");
-            }
-
-        } else {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
+        List<Integer> userList = new ArrayList<>();
+        for (Long user : pagedusers.getContent()) {
+            userList.add(user.intValue());
         }
 
-        return apiResponse;
+        return userList;
     }
 
     @Override
-    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+    public Boolean removeOneFromDepartment(int associationId, int departmentId, int userId) {
 
+        ps.revokeRoles((long) userId, scope(associationId), Arrays.asList(roleName(associationId, departmentId)));
+
+        return true;
+    }
+
+    @Override
+    public Boolean addOneToDepartment(int associationId, int departmentId, int userId) {
         // outside
-        boolean existUser = true;
+        // add_user_to_department
+        ps.grantRoles((long) userId, scope(associationId), Arrays.asList(MEMBER));
 
+        return true;
+    }
 
-        if (existUser) {
+    @Override
+    public boolean checkUserPerm(int userId, int associationId, String permission) {
+        return (ps.hasPermission((long) userId, scope(associationId), permission).getData() != null);
+    }
 
-            if (departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId)) {
+    @Override
+    public Boolean checkUserPermissionInAssociation(int associationId, int userId, String permission) {
 
-                response.setStatus(200);
-
-                // outside
-                // add_user_to_department
-                ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MEMBER));
-
-                apiResponse.setData(true);
-            } else {
-                response.setStatus(404);
-
-                apiResponse.setError("DepartmentNotFound");
-                apiResponse.setMessage("不存在该部门");
-            }
-
-        } else {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-        }
-
-        return apiResponse;
+        return true;
     }
 
 
     @Override
-    public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-
-        // outside
-        boolean existUser = true;
-
-
-        if (!existUser) {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-
-            return apiResponse;
-        }
-
-        if (departmentRepository.existsByAssociationId(associationId)) {
-
-            // outside
-            boolean existUserInAsso = false;
-            if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() != null) {
-                existUserInAsso = true;
-            }
-
-
-            if (!existUserInAsso) {
-                response.setStatus(402);
-
-                apiResponse.setError("UserNotFound");
-                apiResponse.setMessage("用户不在该社团中");
-                return apiResponse;
-
-            }
-
-            // outside
-            boolean hasPermission = false;
-
-            try {
-                ps.hasPermission(Long.valueOf(userId), scope(associationId), permission);
-                hasPermission = true;
-            } catch (Exception e) {
-                hasPermission = false;
-            }
-
-            if (hasPermission) {
-                response.setStatus(200);
-
-                apiResponse.setData(true);
-            } else {
-                response.setStatus(404);
-
-                apiResponse.setError("PermissionNotFound");
-                apiResponse.setMessage("没有该权限");
-            }
-
-        } else {
-            response.setStatus(401);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("不存在该社团");
-        }
-
-        return apiResponse;
-    }
-
-    @Override
-    public ApiResponse<List<Integer>> getUserAssociation(int userId, HttpServletResponse response) {
-        ApiResponse<List<Integer>> apiResponse = new ApiResponse<>();
-
-        // outside
-        boolean existuser = true;
-
-        if (!existuser) {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-            return apiResponse;
-        }
+    public List<Integer> getUserAssociation(List<String> assos) {
 
         //outside
         List<Integer> associationId = new ArrayList<>();
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
-        if (assos == null) {
-            response.setStatus(400);
-
-            apiResponse.setError(ps.getScopes(Long.valueOf(userId)).getError());
-            apiResponse.setMessage(ps.getScopes(Long.valueOf(userId)).getMessage());
-            return apiResponse;
-        }
 
         for (String asso : assos) {
-            String result=getnum(asso);
+            String result = getnum(asso);
             associationId.add(Integer.valueOf(result));
         }
 
-        response.setStatus(200);
-
-        apiResponse.setData(associationId);
-
-        return apiResponse;
+        return associationId;
     }
 
     @Override
-    public ApiResponse<List<Department>> getUserDepartment(int associationId, int userId, HttpServletResponse response) {
-        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
+    public List<Department> getUserDepartment(int associationId, int userId) {
 
-        // outside
-        boolean existuser = true;
+        List<Role> departmentlist = ps.getRoles((long) userId, scope(associationId)).getData();
 
+        List<Department> departments = new ArrayList<>();
 
-        if (!existuser) {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-            return apiResponse;
+        if (departmentlist.size() == 0) {
+            return departments;
         }
 
-        if (departmentRepository.existsByAssociationId(associationId)) {
-
-            // outside
-            boolean userInAsso = false;
-            if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() != null) {
-                userInAsso = true;
-            }
-
-
-            if (userInAsso) {
-                response.setStatus(200);
-
-                List<Role> departmentlist=ps.getRoles((long)userId,scope(associationId)).getData();
-
-                List<Department> departments = new ArrayList<>();
-
-                for(Role role : departmentlist){
-                    switch (role.getName()){
-                        case MANAGER:{
-                            departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId,1));
-                            break;
-                        }
-                        case MEMBER:{
-                            departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId,2));
-                            break;
-                        }
-                        default:{
-                            String as=getnum(scope(associationId));
-                            String department=getnum(role.getName());
-                            departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId,Integer.valueOf(department)));
-                        }
-                    }
+        for (Role role : departmentlist) {
+            switch (role.getName()) {
+                case MANAGER: {
+                    departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId, 1));
+                    break;
                 }
-
-                apiResponse.setData(departments);
-
-            } else {
-                response.setStatus(404);
-
-                apiResponse.setError("UserNotFound");
-                apiResponse.setMessage("用户没有参与该社团");
+                case MEMBER: {
+                    departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId, 2));
+                    break;
+                }
+                default: {
+                    String as = getnum(scope(associationId));
+                    String department = getnum(role.getName());
+                    departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId, Integer.valueOf(department.substring(as.length()))));
+                }
             }
-
-        } else {
-            response.setStatus(401);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("不存在该社团");
         }
 
-        return apiResponse;
+        return departments;
     }
 
     @Override
-    public ApiResponse<Boolean> deleteOneInAssociation(int associationId, int userId, HttpServletResponse response) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+    public Boolean deleteOneInAssociation(int associationId, int userId) {
 
         // outside
-        boolean existuser = true;
-
-        if (!existuser) {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-            return apiResponse;
+        // delete user in asso
+        List<Role> roles = ps.getRoles(Long.valueOf(userId), scope(associationId)).getData();
+        List<String> rolenames = new ArrayList<>();
+        for (Role role : roles) {
+            rolenames.add(role.getName());
         }
+        ps.revokeRoles(Long.valueOf(userId), scope(associationId), rolenames);
 
-        if (!departmentRepository.existsByAssociationId(associationId)) {
-            response.setStatus(404);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("不存在该社团");
-            return apiResponse;
-        }
-
-        // outside
-        boolean userInAsso = false;
-        if (ps.hasRole(Long.valueOf(userId), scope(associationId), MEMBER).getData() != null) {
-            userInAsso = true;
-        }
-
-
-        if (userInAsso) {
-            response.setStatus(200);
-
-            // outside
-            // delete user in asso
-            List<Role> roles = ps.getRoles(Long.valueOf(userId), scope(associationId)).getData();
-            List<String> rolenames = new ArrayList<>();
-            for (Role role : roles) {
-                rolenames.add(role.getName());
-            }
-            ps.revokeRoles(Long.valueOf(userId), scope(associationId), rolenames);
-
-            apiResponse.setData(true);
-
-        } else {
-            response.setStatus(401);
-
-            apiResponse.setError("UserNotFound");
-            apiResponse.setMessage("社团中不存在该用户");
-        }
-
-        return apiResponse;
+        return true;
     }
 
     @Override
-    public ApiResponse<Boolean> addOneToAssociation(int associationId, int userId, HttpServletResponse response) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-
-        // outside
-        boolean existuser = true;
-
-
-        if (!existuser) {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-            return apiResponse;
-        }
-
-        if (!departmentRepository.existsByAssociationId(associationId)) {
-            response.setStatus(404);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("不存在该社团");
-            return apiResponse;
-        }
-
-        response.setStatus(200);
+    public Boolean addOneToAssociation(int associationId, int userId) {
 
         // outside
         // add user to asso
-        ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MEMBER));
+        ps.grantRoles((long) userId, scope(associationId), Arrays.asList(MEMBER));
 
-        apiResponse.setData(true);
-
-        return apiResponse;
+        return true;
     }
 
     @Override
-    public ApiResponse<List<Integer>> getAssoUserList(int associationId, HttpServletResponse response) {
-        ApiResponse<List<Integer>> apiResponse = new ApiResponse<>();
-
-        if (!departmentRepository.existsByAssociationId(associationId)) {
-            response.setStatus(404);
-
-            apiResponse.setError("AssociationNotFound");
-            apiResponse.setMessage("不存在该社团");
-            return apiResponse;
-        }
+    public List<Integer> getAssoUserList(int associationId) {
 
         // outside
         // get users in asso
@@ -619,29 +264,13 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             users.add(l.intValue());
         }
 
-        response.setStatus(200);
-        apiResponse.setData(users);
-
-        return apiResponse;
+        return users;
     }
 
     @Override
-    public ApiResponse<Boolean> initDepartment(int associationId, int userId, HttpServletResponse response) {
+    public Boolean initDepartment(int associationId, int userId) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
 
-        // outside
-        boolean existuser = true;
-
-
-        if (!existuser) {
-            response.setStatus(400);
-
-            apiResponse.setError("InvalidUserId");
-            apiResponse.setMessage("不存在该用户");
-            return apiResponse;
-        }
-
-        response.setStatus(200);
         Department manageDepartment = new Department(associationId, 1, "管理层", "管理部门的最基础部门", 0);
 
         Department allUsers = new Department(associationId, 2, "所有成员", "社团中所有成员", 0);
@@ -651,6 +280,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
         apiResponse.setData(true);
 
-        return apiResponse;
+        return true;
     }
 }

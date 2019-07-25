@@ -1,50 +1,56 @@
 package exort.association_member_manager.service;
 
-
-import exort.api.http.common.entity.*;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.association_member_manager.entity.Department;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface AssociationMemberManageService {
-    public ApiResponse<Boolean> adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application, HttpServletResponse response);
 
-//    public ApiResponse refuseApplication(int applyId);
+    public List<Department> findDepartmentList(int associationId);
 
-    public ApiResponse<List<Department>> getDepartmentTree(int associationId, HttpServletResponse response);
+    public Department findDepartment(int associationId, int departmentId);
 
-    public ApiResponse<Department> getSpecDepartmentInfo(int associationId, int departmentId, HttpServletResponse response);
+    public boolean checkUserInAsso(long userId, int associationId);
 
-    public ApiResponse<Department> createDepartment(int associationId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response);
+    public boolean checkUserInAsso(int userId, int associationId);
 
-    public ApiResponse<Department> deleteDepartment(int associationId, int departmentId, HttpServletResponse response);
+    public boolean checkUserPerm(int userId,int associationId,String permission);
 
-    public ApiResponse<Department> editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId, HttpServletResponse response);
+    public boolean checkAsso(int associationId);
 
-    public ApiResponse<List<Integer>> getSpecMemberList(int associationId, int departmentId, HttpServletResponse response);
+    public boolean checkDepartment(int associationId, int departmentId);
 
-    public ApiResponse<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId, HttpServletResponse response);
+    public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application);
 
-    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, int userId, HttpServletResponse response);
+    public List<Department> getDepartmentTree(int associationId);
 
-//    public ApiResponse changeOneToDepartment(int associationId, int directionDepartmentId, int userId, HttpServletResponse response);
+    public Department getSpecDepartmentInfo(int associationId, int departmentId);
 
-    public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission, HttpServletResponse response);
+    public Department createDepartment(int associationId, String departmentName, String departmentDesc, int parentId);
 
-    public ApiResponse<List<Integer>> getUserAssociation(int userId, HttpServletResponse response);
+    public Department deleteDepartment(int associationId, int departmentId);
 
-    public ApiResponse<List<Department>> getUserDepartment(int associationId, int userId, HttpServletResponse response);
+    public Department editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId);
 
-    public ApiResponse<Boolean> deleteOneInAssociation(int associationId, int userId, HttpServletResponse response);
+    public List<Integer> getSpecMemberList(int associationId, int departmentId);
 
-    public ApiResponse<Boolean> addOneToAssociation(int associationId, int userId, HttpServletResponse response);
+    public Boolean removeOneFromDepartment(int associationId, int departmentId, int userId);
 
-    public ApiResponse<List<Integer>> getAssoUserList(int associationId, HttpServletResponse response);
+    public Boolean addOneToDepartment(int associationId, int departmentId, int userId);
 
-    public ApiResponse<Boolean> initDepartment(int associationId, int userId, HttpServletResponse response);
+    public Boolean checkUserPermissionInAssociation(int associationId, int userId, String permission);
+
+    public List<Integer> getUserAssociation(List<String> assos);
+
+    public List<Department> getUserDepartment(int associationId, int userId);
+
+    public Boolean deleteOneInAssociation(int associationId, int userId);
+
+    public Boolean addOneToAssociation(int associationId, int userId);
+
+    public List<Integer> getAssoUserList(int associationId);
+
+    public Boolean initDepartment(int associationId, int userId);
 }
