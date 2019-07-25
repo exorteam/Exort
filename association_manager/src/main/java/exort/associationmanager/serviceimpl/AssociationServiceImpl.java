@@ -38,11 +38,13 @@ public class AssociationServiceImpl implements AssociationService{
     }
 
     public ResponseBody<AssociationList> listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize){
+
         AssociationList assoList = new AssociationList();
 
         ResponseBody responseBody = new ResponseBody();
 
         List<Association> associations = assoRepository.findAll();
+//        System.out.println(associations.size());
 
         Integer state = params.getState();
 
@@ -56,19 +58,26 @@ public class AssociationServiceImpl implements AssociationService{
                 return new ResponseBody<>(assoList,"","");
             }
         }
-
+//        System.out.println(associations.size());
         String keyword = params.getKeyword();
-        if(keyword != null){
-            associations.removeIf(association -> !association.getName().contains(keyword)&&!association.getDescription().contains(keyword));
-            if(associations.isEmpty()){
-                assoList.setPageNumber(0);
-                assoList.setPageSize(0);
-                assoList.setTotalSize(0);
-                assoList.setContent(associations);
-                return new ResponseBody<>(assoList,"","");
+        if(keyword != null && keyword!=""){
+            int size = associations.size();
+            if (keyword != null) {
+                for (int i = size - 1; i >= 0; i--) {
+                    if (!associations.get(i).hasKeyword(keyword)) {
+                        associations.remove(i);
+                    }
+                }
+                if (associations.isEmpty()) {
+                    assoList.setPageNumber(0);
+                    assoList.setPageSize(0);
+                    assoList.setTotalSize(0);
+                    assoList.setContent(associations);
+                    return new ResponseBody<>(assoList,"","");
+                }
             }
         }
-
+        System.out.println(associations.size());
         List<String> tags = params.getTags();
         if(!((tags.size()==0) || (tags.size()==1&&tags.get(0)==""))) {
             int size = associations.size();
@@ -87,7 +96,7 @@ public class AssociationServiceImpl implements AssociationService{
                 }
             }
         }
-
+        System.out.println(associations.size());
         int totalSize = associations.size();
 
         int max =20;
