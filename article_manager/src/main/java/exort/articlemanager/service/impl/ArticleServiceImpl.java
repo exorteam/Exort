@@ -29,9 +29,9 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setState(0);
 		article.setCreateMethod(0);
 
-		Integer articleId = 1;
-		while(repository.existsById(articleId)){++articleId;}
-		article.setId(articleId);
+		//Integer articleId = 1;
+		//while(repository.existsById(articleId)){++articleId;}
+		//article.setId(articleId);
 
 		return repository.save(article);
 
