@@ -78,8 +78,16 @@
                 </div>
                 <div>
                   <i-table :columns="pendingAppColumn" :data="pendingAppData"></i-table>
-                  </div>
-              </div>
+                </div>
+                <div id="Divide">
+                  <Divider />
+                </div>
+                <div style="margin-top:15px;text-align: center">
+                <Page id = "page" show-elevator show-total
+                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+                :current.sync = "pageProp.pageNum" ></Page>
+                </div>
+            </div>
             </b-tab>
             <b-tab title="已处理">
 
@@ -100,7 +108,15 @@
                 </div>
                 <div>
                   <i-table :columns="handledAppColumns" :data="pendingAppData"></i-table>
-                  </div>
+                </div>
+                <div id="Divide">
+                  <Divider />
+                </div>
+                <div style="margin-top:15px;text-align: center">
+                <Page id = "page" show-elevator show-total
+                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+                :current.sync = "pageProp.pageNum" ></Page>
+                </div>
               </div>
 
             </b-tab>
@@ -315,7 +331,50 @@ export default {
                 { text: '已拒绝申请', value: 'refused' },
             ],
             inputDefaultValue : "",
-            AssoList: [],
+            AssoList: [
+                {
+                    name:"Test",
+                    description:"描述",
+                    tags:["q","w"],
+                    logo:Solid
+
+                },
+                {
+                    name:"Test",
+                    description:"描述",
+                    tags:["q","w"],
+                    logo:Solid
+
+                },
+                {
+                    name:"Test",
+                    description:"描述",
+                    tags:["q","w"],
+                    logo:Solid
+
+                },
+                {
+                    name:"Test",
+                    description:"描述",
+                    tags:["q","w"],
+                    logo:Solid
+
+                },
+                {
+                    name:"Test",
+                    description:"描述",
+                    tags:["q","w"],
+                    logo:Solid
+
+                },
+                {
+                    name:"Test",
+                    description:"描述",
+                    tags:["q","w"],
+                    logo:Solid
+
+                }
+            ],
             assoSearch:{
                 keyword:"",
                 tags:"asd",

@@ -19,12 +19,11 @@
                 </div>
             </FormItem>
             <FormItem label="社团Logo">
+                <div>
+                <b-form-file v-model="file" ref="file-input" style="width:270px"></b-form-file>
+                <b-button @click="clearFiles" style="height:33px ; margin-bottom:8px;margin-left:11px" >Reset</b-button>
+                </div>
 
-                <b-form-file v-model="file" ref="file-input" class="mb-2"></b-form-file>
-
-                <b-button @click="clearFiles" class="mr-2">Reset via method</b-button>
-
-                <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
             </FormItem>
             <FormItem label="报名材料" v-if="form.needMaterial">
                 <Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
@@ -37,6 +36,7 @@
 </template>
 
 <script>
+// <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
 import TagChoose from '../activity/tag_choose.vue'
 import axios from 'axios'
 export default {
