@@ -4,8 +4,7 @@ import exort.activity.entity.PageList;
 
 import exort.activity.dao.ActivityDao;
 import exort.activity.entity.Activity;
-import exort.activity.entity.Response;
-import exort.activity.entity.Select;
+import exort.activity.entity.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -50,7 +49,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public PageList<Activity> selectActivities(Select select, int pagesize, int pagenum, int sortby) {
+    public PageList<Activity> selectActivities(Filter select, int pagesize, int pagenum, int sortby) {
         try {
             Query query = new Query();
             if (select.getCreateTime() != null) {

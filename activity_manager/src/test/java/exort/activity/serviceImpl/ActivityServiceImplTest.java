@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,10 +54,8 @@ public class ActivityServiceImplTest {
 
         globalid = activity.getId();
 
-        Response response = as.upsertActivity(activity);
-        System.out.println(response.getData());
-        assertEquals(Activity.class, response.getData().getClass());
-
+        Activity activity1 = as.upsertActivity(activity);
+        assertEquals(Activity.class, activity1.getClass());
     }
 
     @Test
@@ -65,28 +64,28 @@ public class ActivityServiceImplTest {
 
         String type1 = "publish";
         String type2 = "withdraw";
-        Response response = as.changeActivityState(globalid, type2);
-        assertEquals(response.getError(), "");
-        Response response1 = as.changeActivityState(globalid, type1);
-        assertEquals(response1.getError(), "");
+        boolean response = as.changeActivityState(globalid, type2);
+        assertTrue(response);
+        boolean response1 = as.changeActivityState(globalid, type1);
+        assertTrue(response1);
     }
 
     @Test
     public void getActivities() {
-        Select select = new Select();
-        select.setKeyword(null);
-        select.setTags(null);
-        select.setCreateTime(null);
-        select.setStartTime(null);
-        select.setSignupTime(null);
-        select.setPublishState(0);
-        select.setSignupState(0);
-        select.setState(0);
-        select.setIfReview(1);
-        select.setIfOnlyMem(1);
+        Filter filter = new Filter();
+        filter.setKeyword(null);
+        filter.setTags(null);
+        filter.setCreateTime(null);
+        filter.setStartTime(null);
+        filter.setSignupTime(null);
+        filter.setPublishState(0);
+        filter.setSignupState(0);
+        filter.setState(0);
+        filter.setIfReview(1);
+        filter.setIfOnlyMem(1);
 
-        Response response = as.getActivities(select, 9, 0, 0);
-        assertEquals("", response.getError());
+        PageList<Activity> response = as.getActivities(filter, 9, 0, 0);
+        assertTrue(response.getPageSize()>0);
     }
 
     @Test
@@ -96,10 +95,10 @@ public class ActivityServiceImplTest {
         List<Integer> userIds = new ArrayList<>();
         userIds.add(35);
         userIds.add(42);
-        Response response1 = as.addUserIds(globalid, userIds, 1);
-        Response response2 = as.addUserIds(globalid, userIds, 2);
-        assertEquals("", response1.getError());
-        assertEquals("", response2.getError());
+        boolean response1 = as.addUserIds(globalid, userIds, 1);
+        boolean response2 = as.addUserIds(globalid, userIds, 2);
+        assertTrue(response1);
+        assertTrue(response2);
     }
 
     @Test
@@ -108,26 +107,26 @@ public class ActivityServiceImplTest {
 
         List<Integer> userIds = new ArrayList<>();
         userIds.add(35);
-        Response response = as.removeParticipants(globalid, userIds);
-        assertEquals("", response.getError());
+        boolean ifok = as.removeParticipants(globalid, userIds);
+        assertTrue(ifok);
     }
 
     @Test
     public void getActivityUserIds() {
         upsertActivity();
 
-        Response response1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
-        Response response2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
-        assertEquals("", response1.getError());
-        assertEquals(new HashMap(), response2.getData());
+        PageList<Integer> pageList1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
+        PageList<Integer> pageList2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
+        assertTrue(pageList1.getPageSize()>0);
+        assertEquals(ArrayList.class, pageList2.getContent().getClass());
     }
 
     @Test
     public void getActivity() {
         upsertActivity();
 
-        Response response = as.getActivity(globalid);
-        assertEquals("", response.getError());
+        Activity activity = as.getActivity(globalid);
+        assertEquals(Activity.class, activity.getClass());
     }
 
 }

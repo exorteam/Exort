@@ -6,7 +6,6 @@ import exort.activity.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.RescaleOp;
 import java.util.*;
 
 @Service
@@ -21,7 +20,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public PageList<Activity> getActivities(Select select, int pagesize, int pagenum, int sortby){
+    public PageList<Activity> getActivities(Filter select, int pagesize, int pagenum, int sortby){
          return ad.selectActivities(select, pagesize, pagenum, sortby);
     }
 

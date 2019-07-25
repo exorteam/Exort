@@ -53,7 +53,7 @@ public class ActivityController {
 //3
     @ResponseBody
     @GetMapping(value = "/activities")
-    public ApiResponse getActivities(@RequestBody Select select, @PathParam(value = "pagesize")int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby")int sortby){
+    public ApiResponse getActivities(@RequestBody Filter select, @PathParam(value = "pagesize")int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby")int sortby){
         try{
             PageList<Activity> result = as.getActivities(select, pagesize, pagenum, sortby);
             if(result==null){
