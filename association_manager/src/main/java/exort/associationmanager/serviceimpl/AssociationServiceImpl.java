@@ -69,9 +69,9 @@ public class AssociationServiceImpl implements AssociationService{
             }
         }
         List<String> tags = params.getTags();
-        if(!(tags.size()==1&&tags.get(0)=="")) {
-            int size = associations.size();
-            if (tags != null) {
+        if (tags != null) {
+            if(!(tags.size()==1&&tags.get(0)=="")) {
+                int size = associations.size();
                 for (int i = size - 1; i >= 0; i--) {
                     if (!associations.get(i).hasTags(tags)) {
                         associations.remove(i);
