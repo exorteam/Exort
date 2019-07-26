@@ -32,14 +32,34 @@
 
     export default {
         name: "app",
-        components: {assoside, sysside,adminnav},
+        components: {assoside, sysside, adminnav},
         data() {
             return {
-                isCollapsed: false
+                isCollapsed: false,
+                username: 'unknown'
             };
         },
         methods: {
-
+            auth: function () {
+                const token = window.localStorage.getItem('token');
+                console.log('admin-index found token: ' + token);
+                if (!token) {
+                    this.$router.push({name: "SignIn"});
+                    return;
+                }
+                this.axios({
+                    method: 'post',
+                    url: 'http://localhost:8080/auth',
+                    data: token
+                }).then((res) => {
+                    if (res.data.username) {
+                        this.username = res.data.username;
+                    }
+                    else {
+                        this.$router.push({name: "SignIn"});
+                    }
+                })
+            }
         },
         computed: {
             menuitemClasses: function () {
@@ -48,7 +68,11 @@
                     this.isCollapsed ? 'collapsed-menu' : ''
                 ]
             }
+        },
+        mounted: function () {
+            this.auth();
         }
+
     }
 </script>
 

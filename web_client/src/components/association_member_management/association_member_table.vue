@@ -130,10 +130,10 @@
                     onOk: () => {
                         // console.log(this.specdept);
                         this.axios({
-                            method:"post",
-                            data:this.specdept,
-                            url:url
-                        }).then((res)=>{
+                            method: "post",
+                            data: this.specdept,
+                            url: url
+                        }).then((res) => {
 
                         })
                     }

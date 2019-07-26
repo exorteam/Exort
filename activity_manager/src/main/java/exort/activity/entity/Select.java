@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Select {
 
-    private int associationId;
     private String keyword;
     private List<String> tags;
     private TimeRange createTime;
@@ -15,12 +14,6 @@ public class Select {
     private int state;
     private int ifReview;
     private int ifOnlyMem;
-
-    public int getAssociationId() { return associationId; }
-
-    public void setAssociationId(int associationId) {
-        this.associationId = associationId;
-    }
 
     public String getKeyword() {
         return keyword;

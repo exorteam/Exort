@@ -4,7 +4,6 @@ import Router from 'vue-router'
 // import Index from '@/components/index'
 import Activity from '../components/activity/activity.vue'
 import About from '../components/activity/about.vue'
-import Build from '../components/activity/build.vue'
 
 import SysManaAsso from '../components/association_management/sys_manage_association'
 import SysCreateAsso from '../components/association_management/sys_create_association'
@@ -30,6 +29,11 @@ export default new Router({
     mode: 'history',
     routes: [
         {
+            path: '/',
+            name: 'Home',
+            redirect: '/signIn'
+        },
+        {
             path: '/signIn',
             name: 'SignIn',
             component: SignIn
@@ -48,11 +52,6 @@ export default new Router({
                     path: 'activity',
                     name: 'activity',
                     component: Activity
-                },
-                {
-                    path: 'activity/build',
-                    name: 'build',
-                    component: Build
                 },
                 {
                     path: 'activity/about',

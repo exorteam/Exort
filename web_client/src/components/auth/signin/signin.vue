@@ -13,7 +13,7 @@
     import SignInTable from './signin_table'
 
     export default {
-        name: "signIn",
+        name: "SignIn",
         components: {SignInTable},
         // data () {
         // },

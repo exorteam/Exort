@@ -67,7 +67,7 @@ const store = new Vuex.Store({
   actions: {
     setStatus({commit}) {
       commit('set_activityid', sessionStorage.getItem('activityid'))
-      commit('set_associationid', sessionStorage.getItem('associationid'))
+      //commit('set_associationid', sessionStorage.getItem('associationid'))
     }
   }
 })
