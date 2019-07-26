@@ -67,9 +67,15 @@ public class PermController {
     }
 
     @GetMapping("/permissions")
-    public ApiResponse<List<Permission>> listPermissions() {
+    public ApiResponse<List<Permission>> listPermissions(
+            @RequestBody(required = false) Permission permArg) {
         List<Permission> res = new ArrayList<>();
-        List<ExortPerm> perms = ps.list();
+        List<ExortPerm> perms;
+        if (permArg == null || permArg.getCategory() == null) {
+            perms = ps.list();
+        } else {
+            perms = ps.list(permArg.getCategory());
+        }
         for (ExortPerm perm: perms) {
             res.add(new Permission(perm.getId(), perm.getCategory(), perm.getDescription()));
         }

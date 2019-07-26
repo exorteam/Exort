@@ -43,9 +43,9 @@ class UserScopeRoleRepositoryTest {
         em.persist(new ExortPerm("perm1", "cat1", "desc1"));
         em.persist(new ExortPerm("perm2", "cat2", "desc2"));
         em.persist(new ExortPerm("perm3", "cat1", "desc3"));
-        em.persist(new ExortRole("role1", "desc1"));
-        em.persist(new ExortRole("role2", "desc2"));
-        em.persist(new ExortRole("role3", "desc3"));
+        em.persist(new ExortRole("role1", "cat1", "desc1"));
+        em.persist(new ExortRole("role2", "cat2", "desc2"));
+        em.persist(new ExortRole("role3", "cat1", "desc3"));
         em.persist(new RolePerm("role1", "perm1"));
         em.persist(new RolePerm("role2", "perm3"));
         em.persist(new RolePerm("role3", "perm1"));
@@ -192,6 +192,20 @@ class UserScopeRoleRepositoryTest {
         usrr.deleteByRoleId("role1");
         // safe to delete role
         rr.deleteById("role1");
+        assertEquals(4, usrr.findAll().size());
+    }
+
+    @Test
+    void deleteByUserId() {
+        // delete by user id
+        usrr.deleteByUserId(1L);
+        assertEquals(3, usrr.findAll().size());
+    }
+
+    @Test
+    void deleteByUserIdAndScope() {
+        // delete by user id and scope
+        usrr.deleteByUserIdAndScope(1L, "scope1");
         assertEquals(4, usrr.findAll().size());
     }
 

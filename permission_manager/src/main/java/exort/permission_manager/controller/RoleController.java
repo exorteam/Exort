@@ -27,15 +27,18 @@ public class RoleController {
         if (roleArg.getName() == null || !Pattern.matches("[a-zA-Z][a-zA-Z0-9_]*", roleArg.getName())) {
             throw new ApiError(400, "invalidName", "Invalid name for role. A valid name should be /\\w[\\d\\w_]*/");
         }
+        if (roleArg.getCategory() == null) {
+            roleArg.setCategory("");
+        }
         if (roleArg.getDescription() == null) {
             roleArg.setDescription("");
         }
-        ExortRole role = rs.create(roleArg.getName(), roleArg.getDescription());
+        ExortRole role = rs.create(roleArg.getName(), roleArg.getCategory(), roleArg.getDescription());
 
         if (role == null) {
             throw new ApiError(409, "conflict", "Role named \"" + roleArg.getName() + "\" exists.");
         }
-        return new ApiResponse<>(new Role(role.getId(), role.getDescription()));
+        return new ApiResponse<>(new Role(role.getId(), role.getCategory(), role.getDescription()));
     }
 
     @DeleteMapping("/roles/{name}")
@@ -53,7 +56,7 @@ public class RoleController {
         if (role == null) {
             throw new ApiError(404, "roleNotFound", "Role named \"" + name + "\" not exists.");
         }
-        return new ApiResponse<>(new Role(role.getId(), role.getDescription()));
+        return new ApiResponse<>(new Role(role.getId(), role.getCategory(), role.getDescription()));
     }
 
     @GetMapping("/roles/{name}")
@@ -63,7 +66,24 @@ public class RoleController {
         if (role == null) {
             throw new ApiError(404, "roleNotFound", "Role named \"" + name + "\" not exists.");
         }
-        return new ApiResponse<>(new Role(role.getId(), role.getDescription()));
+        return new ApiResponse<>(new Role(role.getId(), role.getCategory(), role.getDescription()));
+    }
+
+    @GetMapping("/roles")
+    public ApiResponse<List<Role>> liseRoles(
+            @RequestBody(required = false) Role roleArg) {
+        String category;
+        if (roleArg == null || roleArg.getCategory() == null) {
+            category = "";
+        } else {
+            category = roleArg.getCategory();
+        }
+        List<ExortRole> roles = rs.list(category);
+        List<Role> res = new ArrayList<>();
+        for (ExortRole role: roles) {
+            res.add(new Role(role.getId(), role.getCategory(), role.getDescription()));
+        }
+        return new ApiResponse<>(res);
     }
 
     @PutMapping("/roles/{name}/permissions")

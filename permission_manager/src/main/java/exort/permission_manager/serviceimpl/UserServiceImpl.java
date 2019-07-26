@@ -70,4 +70,16 @@ public class UserServiceImpl implements UserService {
         }
         return listRoles(userId, scope);
     }
+
+    @Transactional
+    @Override
+    public void revokeAllRoles(Long userId, String scope) {
+        usrr.deleteByUserIdAndScope(userId, scope);
+    }
+
+    @Transactional
+    @Override
+    public void revokeAllRoles(Long userId) {
+        usrr.deleteByUserId(userId);
+    }
 }

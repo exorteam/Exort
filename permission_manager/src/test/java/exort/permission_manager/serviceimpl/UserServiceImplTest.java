@@ -50,9 +50,9 @@ class UserServiceImplTest {
         pr.save(new ExortPerm("perm1", "cat1", "desc1"));
         pr.save(new ExortPerm("perm2", "cat2", "desc2"));
         pr.save(new ExortPerm("perm3", "cat1", "desc3"));
-        rr.save(new ExortRole("role1", "desc1"));
-        rr.save(new ExortRole("role2", "desc2"));
-        rr.save(new ExortRole("role3", "desc3"));
+        rr.save(new ExortRole("role1", "cat1", "desc1"));
+        rr.save(new ExortRole("role2", "cat2", "desc2"));
+        rr.save(new ExortRole("role3", "cat1", "desc3"));
         rpr.save(new RolePerm("role1", "perm1"));
         rpr.save(new RolePerm("role2", "perm3"));
         rpr.save(new RolePerm("role3", "perm1"));
@@ -132,6 +132,20 @@ class UserServiceImplTest {
         assertEquals(1, roles.size());
         assertEquals(us.listRoles(1L, "scope1"), roles);
         assertArrayEquals(new ExortRole[]{role1}, roles.toArray());
+    }
+
+    @Test
+    void revokeAllRoles() {
+        us.revokeAllRoles(1L);
+        assertEquals(0, usrr.findRolesByUserIdAndScope(1L, "scope1").size());
+        assertEquals(0, usrr.findRolesByUserIdAndScope(1L, "scope2").size());
+    }
+
+    @Test
+    void revokeAllRolesOnScope() {
+        us.revokeAllRoles(1L, "scope1");
+        assertEquals(0, usrr.findRolesByUserIdAndScope(1L, "scope1").size());
+        assertEquals(1, usrr.findRolesByUserIdAndScope(1L, "scope2").size());
     }
 
     @Test

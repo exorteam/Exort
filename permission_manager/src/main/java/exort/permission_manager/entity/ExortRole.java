@@ -15,6 +15,8 @@ public class ExortRole {
     @Id
     private String id;
 
+    private String category;
+
     private String description;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
@@ -23,8 +25,10 @@ public class ExortRole {
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private List<UserScopeRole> usrs;
 
-    public ExortRole(String id, String description) {
+    public ExortRole(String id, String category, String description) {
         this.id = id;
+        this.category = category;
         this.description = description;
     }
+
 }
