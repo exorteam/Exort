@@ -1,6 +1,6 @@
 # 权限管理模块 HTTP RESTful 接口设计
 
-该模块维护了一个 `(用户, 域) 1->* 角色 1->* 权限` 的关系模型。
+该模块维护了一个 `(用户, 域) n->n 角色 n->n 权限` 的关系模型。
 
 执行系统操作需要权限, 这些权限依靠角色组织起来。每个角色相当于是一系列权限的集合，同时角色也是系统向用户提供权限的粒度。
 
@@ -32,14 +32,15 @@
    |Field|Description|
    |--|--|
    |`name` _string_|权限名、权限ID|
-   |`description` _string_|权限描述|
    |`category` _string_|分类, 方便用于展示的组织形式|
+   |`description` _string_|权限描述|
 
 - <a id='Role'></a>**Role**
 
    |Field|Description|
    |--|--|
    |`name` _string_|角色名、角色ID|
+   |`category` _string_|分类, 方便用于查询的组织形式|
    |`description` _string_|角色描述|
 
 ## 用户
@@ -239,6 +240,47 @@ _用户在这些域中有至少一个角色_
 
 - Examples
 
+### 从指定域中移除用户所有角色
+
+- HTTP Request
+
+   **DELETE** `/scopes/{scope}/users/{userId}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`scope` _string_|域|
+   |`userId` _int_|用户ID|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 _{}_|移除成功|
+
+- Examples
+
+### 移除用户在所有域的所有角色
+
+- HTTP Request
+
+   **DELETE** `/users/{userId}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`scope` _string_|域|
+   |`userId` _int_|用户ID|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 _{}_|移除成功|
+
+- Examples
 
 ## 角色
 
@@ -253,6 +295,7 @@ _用户在这些域中有至少一个角色_
    |Parameter|Description|
    |--|--|
    |`name` _string_|角色名、角色ID|
+   |`category` _string_|角色分类|
    |`description` _string_|角色描述|
 
 - Response
@@ -330,6 +373,26 @@ _用户在这些域中有至少一个角色_
    |--|--|
    |200 [_Role_](#Role)|查询成功|
    |404 "roleNotFound"|角色不存在|
+
+- Examples
+
+### 列出指定分类的角色列表
+
+- HTTP Request
+
+   **GET** `/roles`
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`category` _string_|角色所属的分类, 默认为空字符串 _""_|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 [_Role[]_](#Role)|指定分类下的角色列表|
 
 - Examples
 
@@ -482,6 +545,12 @@ _用户在这些域中有至少一个角色_
 - HTTP Request
 
    **GET** `/permissions`
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`category` _string_|权限所属分类, 不填则获取所有权限, 否则只返回指定分类的权限列表|
 
 - Response
 
