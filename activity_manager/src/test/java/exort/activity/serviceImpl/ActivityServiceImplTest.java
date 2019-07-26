@@ -5,11 +5,13 @@ import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.ActivityTime;
 import exort.api.http.activity.entity.Filter;
 import exort.api.http.activity.entity.TimeRange;
+import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -67,9 +69,11 @@ public class ActivityServiceImplTest {
         String type1 = "publish";
         String type2 = "withdraw";
         boolean response = as.changeActivityState(globalid, type2);
-        assertTrue(response);
+        Activity activity = as.getActivity(globalid);
+        assertEquals(0, activity.getPublishState());
         boolean response1 = as.changeActivityState(globalid, type1);
-        assertTrue(response1);
+        activity = as.getActivity(globalid);
+        assertEquals(1, activity.getPublishState());
     }
 
     @Test
@@ -86,8 +90,9 @@ public class ActivityServiceImplTest {
         filter.setIfReview(1);
         filter.setIfOnlyMem(1);
 
-        PagedData<Activity> response = as.getActivities(filter, 9, 0, 0);
-        assertTrue(response.getPageSize() > 0);
+        PageQuery page = new PageQuery(0,9,"time");
+        PagedData<Activity> response = as.getActivities(filter, page);
+        assertTrue(response.getPageSize() >= 0);
     }
 
     @Test
@@ -117,9 +122,11 @@ public class ActivityServiceImplTest {
     public void getActivityUserIds() {
         upsertActivity();
 
-        PagedData<Integer> pageList1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
-        PagedData<Integer> pageList2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
-        assertTrue(pageList1.getPageSize()>0);
+        PageQuery page = new PageQuery(0, 9);
+        PageQuery page1 = new PageQuery(0, 0);
+        PagedData<Integer> pageList1 = as.getActivityUserIds(globalid, page, 0, 1);
+        PagedData<Integer> pageList2 = as.getActivityUserIds(globalid, page1, 32, 1);
+        assertTrue(pageList1.getPageSize() >= 0);
         assertEquals(ArrayList.class, pageList2.getContent().getClass());
     }
 

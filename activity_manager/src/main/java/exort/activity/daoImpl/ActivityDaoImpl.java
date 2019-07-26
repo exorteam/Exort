@@ -3,7 +3,6 @@ package exort.activity.daoImpl;
 import exort.activity.dao.ActivityDao;
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
-import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;

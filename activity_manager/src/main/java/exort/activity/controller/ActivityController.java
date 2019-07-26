@@ -41,18 +41,18 @@ public class ActivityController {
 //2
     @ResponseBody
     @PutMapping(value = "/activities/{activityid}")
-    public ApiResponse updateActivity(@RequestBody Activity activity, @PathVariable(value = "activityid") String activityid){
+    public ApiResponse updateActivity(@RequestBody Activity activity, @PathVariable(value = "activityid") String activityId){
         try{
-            activity.setId(activityid);
+            activity.setId(activityId);
             Activity newActivity = as.upsertActivity(activity);
             if(newActivity==null){
-                return new ApiResponse<>("update activity "+activityid+" failed", "修改活动失败");
+                return new ApiResponse<>("update activity "+activityId+" failed", "修改活动失败");
             }else{
                 return new ApiResponse<>(newActivity);
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new ApiError(401, "update activity "+activityid+" failed", "修改活动失败");
+            throw new ApiError(401, "update activity "+activityId+" failed", "修改活动失败");
         }
     }
 //3
@@ -75,25 +75,25 @@ public class ActivityController {
 //4
     @ResponseBody
     @PutMapping(value = "/activities/{activityid}/state")
-    public ApiResponse publishActivity(@PathVariable(value = "activityid")String activityid, @RequestBody RequestActivity requestActivity){
+    public ApiResponse publishActivity(@PathVariable(value = "activityid")String activityId, @RequestBody RequestActivity requestActivity){
         try{
-            boolean result = as.changeActivityState(activityid, requestActivity.getType());
+            boolean result = as.changeActivityState(activityId, requestActivity.getType());
             if(result){
                 return new ApiResponse<>(new HashMap());
             }else{
-                return new ApiResponse<>("change activity "+activityid+" failed","修改活动发布状态失败");
+                return new ApiResponse<>("change activity "+activityId+" failed","修改活动发布状态失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new ApiError(401, "change activity "+activityid+" failed","修改活动发布状态失败");
+            throw new ApiError(401, "change activity "+activityId+" failed","修改活动发布状态失败");
         }
     }
 //5
     @ResponseBody
     @PostMapping(value = "/activities/{activityid}/participants")
-    public ApiResponse addParticipants(@PathVariable(value = "activityid") String activityid, @RequestBody RequestActivity requestActivity){
+    public ApiResponse addParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity){
         try{
-            boolean result = as.addUserIds(activityid, requestActivity.getParticipantIds(), 1);
+            boolean result = as.addUserIds(activityId, requestActivity.getParticipantIds(), 1);
             if(result){
                 return new ApiResponse<>(new HashMap());
             }else{
@@ -107,9 +107,9 @@ public class ActivityController {
 //6
     @ResponseBody
     @PostMapping(value = "/activities/{activityid}/realparticipants")
-    public ApiResponse addRealParticipants(@PathVariable(value = "activityid") String activityid, @RequestBody RequestActivity requestActivity){
+    public ApiResponse addRealParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity){
         try{
-            boolean result = as.addUserIds(activityid, requestActivity.getParticipantIds(), 2);
+            boolean result = as.addUserIds(activityId, requestActivity.getParticipantIds(), 2);
             if(result){
                 return new ApiResponse<>(new HashMap());
             }else{
@@ -123,9 +123,9 @@ public class ActivityController {
 //7
     @ResponseBody
     @DeleteMapping(value = "/activities/{activityid}/participants")
-    public ApiResponse deleteParticipants(@PathVariable(value = "activityid")String activityid, @RequestBody RequestActivity requestActivity){
+    public ApiResponse deleteParticipants(@PathVariable(value = "activityid")String activityId, @RequestBody RequestActivity requestActivity){
         try{
-            boolean result = as.removeParticipants(activityid, requestActivity.getParticipantIds());
+            boolean result = as.removeParticipants(activityId, requestActivity.getParticipantIds());
             if(result){
                 return new ApiResponse<>(new HashMap());
             }else{
@@ -139,34 +139,34 @@ public class ActivityController {
 //8
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}/participants")
-    public ApiResponse getActivityParticipants(@PathVariable(value = "activityid") String activityid, PageQuery pageQuery, @RequestBody RequestActivity requestActivity){
+    public ApiResponse getActivityParticipants(@PathVariable(value = "activityid") String activityId, PageQuery pageQuery, @RequestBody RequestActivity requestActivity){
         try{
-            PagedData<Integer> result = as.getActivityUserIds(activityid, pageQuery, requestActivity.getUserId(), 1);
+            PagedData<Integer> result = as.getActivityUserIds(activityId, pageQuery, requestActivity.getUserId(), 1);
             if(result==null){
-                return new ApiResponse<>("get activity"+activityid+" participants failed.","查询活动参加者失败");
+                return new ApiResponse<>("get activity"+activityId+" participants failed.","查询活动参加者失败");
             }else{
                 return new ApiResponse<>(result);
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new ApiError(401, "get activity"+activityid+" participants failed.","查询活动参加者失败");
+            throw new ApiError(401, "get activity"+activityId+" participants failed.","查询活动参加者失败");
         }
     }
 //9
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}/realparticipants")
-    public ApiResponse getActivityRealParticipants(@PathVariable(value = "activityid") String activityid, @RequestBody RequestActivity requestActivity, PageQuery pageQuery){
+    public ApiResponse getActivityRealParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity, PageQuery pageQuery){
         try{
             PageQuery page = PageQuery.relocate(pageQuery, 9, 100);
-            PagedData<Integer> result = as.getActivityUserIds(activityid, pageQuery, requestActivity.getUserId(), 2);
+            PagedData<Integer> result = as.getActivityUserIds(activityId, pageQuery, requestActivity.getUserId(), 2);
             if(result==null){
-                return new ApiResponse<>("get activity"+activityid+" participants failed.","查询活动参加者失败");
+                return new ApiResponse<>("get activity"+activityId+" participants failed.","查询活动参加者失败");
             }else{
                 return new ApiResponse<>(result);
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new ApiError(401, "get activity"+activityid+" participants failed.","查询活动参加者失败");
+            throw new ApiError(401, "get activity"+activityId+" participants failed.","查询活动参加者失败");
         }
     }
 //10
@@ -174,11 +174,11 @@ public class ActivityController {
     @PostMapping(value = "/callback/acceptsignup")
     public ApiResponse acceptSignup(@RequestBody CallbackParam<Signup> callbackParam){
         try{
-            String activityid = callbackParam.getApplication().getObject().getActivityid();
+            String activityId = callbackParam.getApplication().getObject().getActivityId();
             Long userId = callbackParam.getApplication().getApplicantId();
             List<Integer> user = new ArrayList<>();
             user.add(userId.intValue());
-            boolean result = as.addUserIds(activityid, user,1);
+            boolean result = as.addUserIds(activityId, user,1);
             if(result){
                 return new ApiResponse<>(new HashMap());
             }else{
@@ -192,17 +192,17 @@ public class ActivityController {
 // 11
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}")
-    public ApiResponse getActivity(@PathVariable(value = "activityid") String activityid){
+    public ApiResponse getActivity(@PathVariable(value = "activityid") String activityId){
         try{
-            Activity activity = as.getActivity(activityid);
+            Activity activity = as.getActivity(activityId);
             if(activity==null){
-                return new ApiResponse<>("get activity "+activityid+" failed","查询单个活动失败");
+                return new ApiResponse<>("get activity "+activityId+" failed","查询单个活动失败");
             }else{
                 return new ApiResponse<>(activity);
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new ApiError(401, "get activity "+activityid+" failed","查询单个活动失败");
+            throw new ApiError(401, "get activity "+activityId+" failed","查询单个活动失败");
         }
     }
 }
