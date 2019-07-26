@@ -52,7 +52,6 @@ public class ApiErrorHandler implements ErrorController {
     @RequestMapping("/error")
     public String handleHandlerNotFoundException(HttpServletRequest request) {
         Integer code = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        System.err.println("error: " + code);
         if (code != null && code == 404) {
             throw new ApiError(404, "resource_not_found", "No resource matched by URL. Find out the right url through our documents.");
         } else {
