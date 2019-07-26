@@ -42,7 +42,7 @@ public class UserController {
         List<ExortRole> roles = us.listRoles(userId, scope);
         List<Role> res = new ArrayList<>();
         for (ExortRole role: roles) {
-            res.add(new Role(role.getId(), role.getDescription()));
+            res.add(new Role(role.getId(), role.getCategory(), role.getDescription()));
         }
         return new ApiResponse<>(res);
     }
@@ -92,7 +92,7 @@ public class UserController {
         }
         List<Role> res = new ArrayList<>();
         for (ExortRole role: roles) {
-            res.add(new Role(role.getId(), role.getDescription()));
+            res.add(new Role(role.getId(), role.getCategory(), role.getDescription()));
         }
         return new ApiResponse<>(res);
     }
@@ -125,4 +125,18 @@ public class UserController {
                 userIds.getContent()));
     }
 
+    @DeleteMapping("/scopes/{scope}/users/{userId}")
+    public ApiResponse removeUserFromScope(
+            @PathVariable("scope") String scope,
+            @PathVariable("userId") Long userId) {
+        us.revokeAllRoles(userId, scope);
+        return ApiResponse.emptyResponse();
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ApiResponse removeUser(
+            @PathVariable("userId") Long userId) {
+        us.revokeAllRoles(userId);
+        return ApiResponse.emptyResponse();
+    }
 }

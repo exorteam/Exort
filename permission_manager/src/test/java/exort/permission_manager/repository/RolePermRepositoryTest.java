@@ -41,7 +41,9 @@ class RolePermRepositoryTest {
         em.persist(new ExortPerm("perm1", "cat1", "desc1"));
         em.persist(new ExortPerm("perm2", "cat2", "desc2"));
         em.persist(new ExortPerm("perm3", "cat1", "desc3"));
-        em.persist(new ExortRole("role1", "desc1"));
+        em.persist(new ExortRole("role1", "cat1", "desc1"));
+        em.persist(new ExortRole("role8", "cat2", "desc2"));
+        em.persist(new ExortRole("role9", "cat1", "desc3"));
         em.persist(new RolePerm("role1", "perm1"));
         em.persist(new RolePerm("role1", "perm2"));
         em.flush();
@@ -54,6 +56,14 @@ class RolePermRepositoryTest {
         assertEquals("perm1", perms.get(0).getId());
         assertEquals("perm3", perms.get(1).getId());
         assertEquals("perm2", perms.get(2).getId());
+    }
+
+    @Test
+    void findPermsByCategory() {
+        List<ExortPerm> perms = pr.findByCategory("cat1");
+        assertEquals(2, perms.size());
+        assertEquals("perm1", perms.get(0).getId());
+        assertEquals("perm3", perms.get(1).getId());
     }
 
     @Test
@@ -102,7 +112,7 @@ class RolePermRepositoryTest {
         rpr.deleteByPermId("perm1");
         // safe to delete perm
         pr.deleteById("perm1");
-        assertEquals(0, rr.findAll().size());
+        assertEquals(2, rr.findAll().size());
         assertEquals(2, pr.findAll().size());
         assertEquals(0, rpr.findAll().size());
     }
@@ -112,5 +122,13 @@ class RolePermRepositoryTest {
         // use this method to delete a role_perm instead of deleteById
         rpr.deleteByRoleIdAndPermId("role1", "perm1");
         assertEquals(1, rpr.findAll().size());
+    }
+
+    @Test
+    void findRolesByCategory() {
+        List<ExortRole> roles = rr.findByCategory("cat1");
+        assertEquals(2, roles.size());
+        assertEquals("role1", roles.get(0).getId());
+        assertEquals("role9", roles.get(1).getId());
     }
 }

@@ -43,8 +43,8 @@ class PermServiceImplTest {
         pr.save(new ExortPerm("perm2", "cat2", "desc2"));
         pr.save(new ExortPerm("perm3", "cat1", "desc3"));
         pr.save(new ExortPerm("perm4", "cat1", "desc4"));
-        rr.save(new ExortRole("role1", "desc1"));
-        rr.save(new ExortRole("role2", "desc2"));
+        rr.save(new ExortRole("role1", "cat1", "desc1"));
+        rr.save(new ExortRole("role2", "cat2", "desc2"));
         rpr.save(new RolePerm("role1", "perm1"));
         rpr.save(new RolePerm("role1", "perm3"));
         rpr.save(new RolePerm("role2", "perm1"));
@@ -102,9 +102,16 @@ class PermServiceImplTest {
     @Test
     void list() {
         List<ExortPerm> perms = ps.list();
+        assertEquals(4, perms.size());
         assertEquals("perm1", perms.get(0).getId());
         assertEquals("perm3", perms.get(1).getId());
         assertEquals("perm4", perms.get(2).getId());
         assertEquals("perm2", perms.get(3).getId());
+
+        perms = ps.list("cat1");
+        assertEquals(3, perms.size());
+        assertEquals("perm1", perms.get(0).getId());
+        assertEquals("perm3", perms.get(1).getId());
+        assertEquals("perm4", perms.get(2).getId());
     }
 }

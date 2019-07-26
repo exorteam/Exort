@@ -35,15 +35,27 @@ public interface UserScopeRoleRepository extends JpaRepository<UserScopeRole, Lo
     @Query("SELECT usr FROM UserScopeRole usr JOIN RolePerm rp ON usr.roleId = rp.roleId WHERE usr.userId = ?1 AND usr.scope = ?2 AND rp.permId = ?3")
     UserScopeRole findByUserIdAndScopeAndPermId(Long userId, String scope, String permId);
 
-    /* insert and delete */
+    /* insert (user, scope, role) */
     @Modifying
     @Query(value = "INSERT IGNORE INTO user_scope_role(user_id, scope, role_id) VALUES(?1, ?2, ?3)", nativeQuery = true)
     void insertIgnore(Long userId, String scope, String roleId);
 
+    /* delete (user, scope, role) by role */
     @Modifying
     @Query("DELETE FROM UserScopeRole usr WHERE usr.roleId = ?1")
     void deleteByRoleId(String roleId);
 
+    /* delete (user, scope, role) by user */
+    @Modifying
+    @Query("DELETE FROM UserScopeRole usr WHERE usr.userId = ?1")
+    void deleteByUserId(Long userId);
+
+    /* delete (user, scope, role) by (user, scope) */
+    @Modifying
+    @Query("DELETE FROM UserScopeRole usr WHERE usr.userId = ?1 AND usr.scope = ?2")
+    void deleteByUserIdAndScope(Long userId, String scope);
+
+    /* delete (user, scope, role) by (user, scope, role) */
     @Modifying
     @Query("DELETE FROM UserScopeRole usr WHERE usr.userId = ?1 AND usr.scope = ?2 AND usr.roleId = ?3")
     void deleteByUserIdANDScopeAndRoleId(Long userId, String scope, String roleId);

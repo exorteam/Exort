@@ -25,11 +25,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public ExortRole create(String name, String description) {
+    public ExortRole create(String name, String category, String description) {
         if (rr.findById(name).isPresent()) {
             return null;
         }
-        ExortRole role = new ExortRole(name, description);
+        ExortRole role = new ExortRole(name, category, description);
         rr.save(role);
         return role;
     }
@@ -54,6 +54,11 @@ public class RoleServiceImpl implements RoleService {
             return role;
         }
         return null;
+    }
+
+    @Override
+    public List<ExortRole> list(String category) {
+        return rr.findByCategory(category);
     }
 
     @Override

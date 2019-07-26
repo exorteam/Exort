@@ -61,4 +61,9 @@ public class PermServiceImpl implements PermService {
     public List<ExortPerm> list() {
         return pr.findAllOrderByCategory();
     }
+
+    @Override
+    public List<ExortPerm> list(String category) {
+        return pr.findByCategory(category);
+    }
 }

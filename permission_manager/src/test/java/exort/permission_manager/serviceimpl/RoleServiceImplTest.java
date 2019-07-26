@@ -43,9 +43,9 @@ class RoleServiceImplTest {
         pr.save(new ExortPerm("perm1", "cat1", "desc1"));
         pr.save(new ExortPerm("perm2", "cat2", "desc2"));
         pr.save(new ExortPerm("perm3", "cat1", "desc3"));
-        rr.save(new ExortRole("role1", "desc1"));
-        rr.save(new ExortRole("role2", "desc2"));
-        rr.save(new ExortRole("role3", "desc3"));
+        rr.save(new ExortRole("role1", "cat1", "desc1"));
+        rr.save(new ExortRole("role2", "cat2", "desc2"));
+        rr.save(new ExortRole("role3", "cat1", "desc3"));
         rpr.save(new RolePerm("role1", "perm1"));
         rpr.save(new RolePerm("role1", "perm3"));
         rpr.save(new RolePerm("role2", "perm1"));
@@ -54,13 +54,13 @@ class RoleServiceImplTest {
 
     @Test
     void create() {
-        ExortRole role = rs.create("role4", "desc4");
+        ExortRole role = rs.create("role4", "cat1", "desc4");
         assertEquals(4, rr.findAll().size());
         assertEquals(rr.findById("role4").get(), role);
 
         // duplicate
-        assertNull(rs.create("role1", "desc5"));
-        assertNull(rs.create("role4", "desc5"));
+        assertNull(rs.create("role1", "cat1", "desc5"));
+        assertNull(rs.create("role4", "cat1", "desc5"));
     }
 
     @Test
@@ -97,6 +97,14 @@ class RoleServiceImplTest {
     void get() {
         assertEquals(rr.findById("role1").get(), rs.get("role1"));
         assertNull(rs.get("role5"));
+    }
+
+    @Test
+    void list() {
+        List<ExortRole> roles = rr.findByCategory("cat1");
+        assertEquals(2, roles.size());
+        assertEquals("role1", roles.get(0).getId());
+        assertEquals("role3", roles.get(1).getId());
     }
 
     @Test
