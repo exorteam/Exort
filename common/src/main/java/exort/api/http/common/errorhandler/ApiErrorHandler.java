@@ -11,33 +11,43 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.validation.BindException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.jws.WebResult;
 
 @RestControllerAdvice
+@EnableWebMvc
 public class ApiErrorHandler {
 
     @ExceptionHandler({ApiError.class})
-    public ResponseEntity<ApiResponse> handleError(ApiError e, WebRequest request) {
+    public ResponseEntity<ApiResponse> handleApiError(ApiError e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse(e.getError(), e.getMessage()), e.getStatus());
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class})
-    public ResponseEntity<ApiResponse> handleJsonError(HttpMessageNotReadableException e, WebRequest request) {
+    public ResponseEntity<ApiResponse> handleBodyParameterError(HttpMessageNotReadableException e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse("bad_body_parameter", e.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<ApiResponse> handleJsonError(MethodArgumentTypeMismatchException e, WebRequest request) {
+    public ResponseEntity<ApiResponse> handlePathParameterError(MethodArgumentTypeMismatchException e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse("bad_path_parameter", e.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler({BindException.class})
-    public ResponseEntity<ApiResponse> handleJsonError(BindException e, WebRequest request) {
+    public ResponseEntity<ApiResponse> handleQueryParameterError(BindException e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse("bad_query_parameter", e.getMessage()), HttpStatus.valueOf(400));
     }
 
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
-    public ResponseEntity<ApiResponse> handleJsonError(HttpRequestMethodNotSupportedException e, WebRequest request) {
+    public ResponseEntity<ApiResponse> handleMethodError(HttpRequestMethodNotSupportedException e, WebRequest request) {
         return new ResponseEntity<>(new ApiResponse("bad_method", e.getMessage()), HttpStatus.valueOf(405));
+    }
+
+    @ExceptionHandler({NoHandlerFoundException.class})
+    public ResponseEntity<ApiResponse> handlePathError(NoHandlerFoundException e, WebResult request) {
+        return new ResponseEntity<>(new ApiResponse("resource_not_found", "The url matches no resource."), HttpStatus.valueOf(404));
     }
 
     @ExceptionHandler({Exception.class})
