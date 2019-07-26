@@ -9,6 +9,7 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.member.service.AssoMemService;
 import exort.api.http.review.entity.CallbackParam;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ActivityController {
 
     @Autowired
     private ActivityService as;
+
+    @Autowired
+    private AssoMemService ams;
 //1
     @ResponseBody
     @PostMapping(value = "/activities")
@@ -176,6 +180,16 @@ public class ActivityController {
     @PostMapping(value = "/callback/acceptsignup")
     public ApiResponse acceptSignup(@RequestBody CallbackParam<Signup> callbackParam){
         try{
+            Long operatorId = callbackParam.getUserId();
+            Activity activity = as.getActivity(callbackParam.getApplication().getObject().getActivityId());
+            List<Integer> assos = activity.getAssociationIds();
+            for(Integer asso:assos){
+                ApiResponse<Boolean> response = ams.checkUserPermissionInAssociation(asso, operatorId.intValue(), "");
+                if(response.getData()){
+                    throw new ApiError(402, "operator has no permission", "操作者没有权限！");
+                }
+            }
+
             String activityId = callbackParam.getApplication().getObject().getActivityId();
             Long userId = callbackParam.getApplication().getApplicantId();
             List<Integer> user = new ArrayList<>();
