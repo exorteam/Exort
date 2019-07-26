@@ -4,6 +4,7 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.InitAssociationInfo;
+import exort.api.http.member.entity.UserId;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
@@ -66,6 +67,9 @@ public class AssociationMemberManageController {
             departmentInfo.setParentId(department.getParentId());
             departmentInfo.setName(department.getName());
             departmentInfo.setDescription(department.getDescription());
+
+            departmentInfos.add(departmentInfo);
+
         }
 
         return new ApiResponse<List<DepartmentInfo>>(departmentInfos);
@@ -152,7 +156,7 @@ public class AssociationMemberManageController {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
         }
 
-        if (associationMemberManageService.checkDepartment(associationId, departmentInfo.getParentId())) {
+        if (!associationMemberManageService.checkDepartment(associationId, departmentInfo.getParentId())) {
             throw new ApiError(400, "InvalidParentId", "无效父节点");
         }
 
@@ -200,12 +204,12 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "为某个部门添加成员")
-    public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestParam(value = "userId") int userId) {
+    public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody UserId userId) {
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
         }
 
-        return new ApiResponse<>(associationMemberManageService.addOneToDepartment(associationId, departmentId, userId));
+        return new ApiResponse<>(associationMemberManageService.addOneToDepartment(associationId, departmentId, userId.getUserId()));
     }
 
 
@@ -266,6 +270,8 @@ public class AssociationMemberManageController {
             departmentInfo.setParentId(department.getParentId());
             departmentInfo.setName(department.getName());
             departmentInfo.setDescription(department.getDescription());
+
+            departmentInfos.add(departmentInfo);
         }
 
         return new ApiResponse<List<DepartmentInfo>>(departmentInfos);
@@ -289,11 +295,11 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/members")
     @ApiOperation(value = "为社团添加一个成员")
-    public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestParam(value = "userId") int userId) {
+    public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestBody UserId userId) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(404, "AssociationNotFound", "不存在该社团");
         }
-        return new ApiResponse<Boolean>(associationMemberManageService.addOneToAssociation(associationId, userId));
+        return new ApiResponse<Boolean>(associationMemberManageService.addOneToAssociation(associationId, userId.getUserId()));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members")

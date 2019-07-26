@@ -3,6 +3,7 @@ package exort.association_member_manager.controller;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.InitAssociationInfo;
+import exort.api.http.member.entity.UserId;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.api.http.review.entity.CallbackParam;
 import exort.association_member_manager.api_server.ApiServer;
@@ -31,35 +32,35 @@ public class ApiController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
-    public ApiResponse<List<Department>> getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
+    public ApiResponse<List<DepartmentInfo>> getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
         return apiServer.getDepartmentTree(associationId);
     }
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "得到某个部门的信息")
-    public ApiResponse<Department> getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
         return apiServer.getSpecDepartmentInfo(associationId, departmentId);
     }
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "创建部门")
-    public ApiResponse<Department> createDepartment(@PathVariable int associationId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> createDepartment(@PathVariable int associationId, @RequestBody DepartmentInfo departmentInfo) {
         return apiServer.createDepartment(associationId, departmentInfo);
     }
 
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "删除部门")
-    public ApiResponse<Department> deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
         return apiServer.deleteDepartment(associationId, departmentId);
     }
 
 
     @RequestMapping(method = RequestMethod.PUT, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "编辑部门")
-    public ApiResponse<Department> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
 
         return apiServer.editDepartment(associationId, departmentId,departmentInfo);
     }
@@ -81,7 +82,7 @@ public class ApiController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "为某个部门添加成员")
-    public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestParam(value = "userId") int userId) {
+    public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody UserId userId) {
         return apiServer.addOneToDepartment(associationId, departmentId, userId);
     }
 
@@ -102,7 +103,7 @@ public class ApiController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations/{associationId}/departments")
     @ApiOperation(value = "查询用户在指定社团中所属部门")
-    public ApiResponse<List<Department>> getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<List<DepartmentInfo>> getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
         return apiServer.getUserDepartment(associationId, userId);
     }
 
@@ -116,7 +117,7 @@ public class ApiController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/members")
     @ApiOperation(value = "为社团添加一个成员")
-    public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestParam(value = "userId") int userId) {
+    public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestBody UserId userId) {
         return apiServer.addOneToAssociation(associationId, userId);
     }
 

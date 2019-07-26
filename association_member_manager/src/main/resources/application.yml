@@ -25,3 +25,7 @@ spring:
 exort:
   perm:
     endpoint: 202.120.40.8:30726
+  mem:
+    endpoint: localhost:8900
+
+
