@@ -10,6 +10,7 @@ import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
