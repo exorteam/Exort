@@ -43,7 +43,7 @@ public class UserInfoController {
 
 	@PatchMapping("/{id}")
 	public boolean disableUserById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
-		log.info("Operator("+String.valueOf(operatorId)+") disable user("+String.valueOf(userId)+").");
+		log.info("Operator("+String.valueOf(operatorId)+") toggle disability for user("+String.valueOf(userId)+").");
 		return infoSvc.disableUser(userId,disabled);
 	}
 }
