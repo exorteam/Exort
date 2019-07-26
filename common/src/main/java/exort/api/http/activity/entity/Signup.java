@@ -4,5 +4,9 @@ import lombok.Data;
 
 @Data
 public class Signup {
-    private String activityid;
+    private String activityId;
+
+    public Signup(String activityId){
+        this.activityId = activityId;
+    }
 }

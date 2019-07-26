@@ -26,43 +26,43 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<Activity> updateActivity(Activity activity, String activityid) {
-        return request(new TypeToken<Activity>(){}, activity, HttpMethod.PUT, "/activities/{activityid}", activityid);
+    public ApiResponse<Activity> updateActivity(Activity activity, String activityId) {
+        return request(new TypeToken<Activity>(){}, activity, HttpMethod.PUT, "/activities/{activityid}", activityId);
     }
 
     @Override
-    public ApiResponse<PagedData<Activity>> getActivities(Filter select, PageQuery pageQuery) {
-        return request(new TypeToken<PagedData<Activity>>(){}, select, HttpMethod.GET, pageQuery, "/activities");
+    public ApiResponse<PagedData<Activity>> getActivities(Filter filter, PageQuery pageQuery) {
+        return request(new TypeToken<PagedData<Activity>>(){}, filter, HttpMethod.GET, pageQuery, "/activities");
     }
 
     @Override
-    public ApiResponse<Object> publishActivity(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.PUT, "/activities/{activityid}", activityid);
+    public ApiResponse<Object> publishActivity(String activityId, RequestActivity requestActivity) {
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.PUT, "/activities/{activityid}", activityId);
     }
 
     @Override
-    public ApiResponse<Object> addParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}", activityid);
+    public ApiResponse<Object> addParticipants(String activityId, RequestActivity requestActivity) {
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}", activityId);
     }
 
     @Override
-    public ApiResponse<Object> addRealParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}", activityid);
+    public ApiResponse<Object> addRealParticipants(String activityId, RequestActivity requestActivity) {
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}", activityId);
     }
 
     @Override
-    public ApiResponse<Object> deleteParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.DELETE, "/activities/{activityid}", activityid);
+    public ApiResponse<Object> deleteParticipants(String activityId, RequestActivity requestActivity) {
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.DELETE, "/activities/{activityid}", activityId);
     }
 
     @Override
-    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
+    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityId, RequestActivity requestActivity) {
+        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityId);
     }
 
     @Override
-    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
+    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityId, RequestActivity requestActivity) {
+        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityId);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<Activity> getActivity(String activityid) {
-        return request(new TypeToken<Activity>(){}, HttpMethod.GET, "/activities/{activityid}", activityid);
+    public ApiResponse<Activity> getActivity(String activityId) {
+        return request(new TypeToken<Activity>(){}, HttpMethod.GET, "/activities/{activityid}", activityId);
     }
 }
