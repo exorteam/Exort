@@ -12,15 +12,13 @@ public interface AssociationMemberManageService {
 
     public Department findDepartment(int associationId, int departmentId);
 
-    public boolean checkUserInAsso(long userId, int associationId);
+    public Boolean checkUserInAsso(long userId, int associationId);
 
-    public boolean checkUserInAsso(int userId, int associationId);
+    public Boolean checkUserInAsso(int userId, int associationId);
 
-    public boolean checkUserPerm(int userId,int associationId,String permission);
+    public Boolean checkAsso(int associationId);
 
-    public boolean checkAsso(int associationId);
-
-    public boolean checkDepartment(int associationId, int departmentId);
+    public Boolean checkDepartment(int associationId, int departmentId);
 
     public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application);
 
@@ -40,7 +38,7 @@ public interface AssociationMemberManageService {
 
     public Boolean addOneToDepartment(int associationId, int departmentId, int userId);
 
-    public Boolean checkUserPermissionInAssociation(int associationId, int userId, String permission);
+    public boolean checkUserPerm(int userId,int associationId,String permission);
 
     public List<Integer> getUserAssociation(List<String> assos);
 

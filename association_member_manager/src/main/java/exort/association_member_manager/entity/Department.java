@@ -32,9 +32,9 @@ public class Department extends exort.api.http.member.entity.DepartmentInfo {
         this.parentId = parentId;
     }
 
-    public Department(int associationId,int departmentId, String name, String description, int parentId) {
+    public Department(int associationId, int departmentId, String name, String description, int parentId) {
         this.associationId = associationId;
-        this.departmentId=departmentId;
+        this.departmentId = departmentId;
         this.name = name;
         this.description = description;
         this.parentId = parentId;

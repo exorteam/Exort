@@ -9,7 +9,6 @@ import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.api.http.review.entity.CallbackParam;
-import exort.association_member_manager.api_server.ApiServer;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import io.swagger.annotations.Api;

@@ -12,6 +12,8 @@ import exort.association_member_manager.repository.DepartmentRepository;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -32,12 +34,12 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
-    public boolean checkAsso(int associationId) {
+    public Boolean checkAsso(int associationId) {
         return departmentRepository.existsByAssociationId(associationId);
     }
 
     @Override
-    public boolean checkDepartment(int associationId, int departmentId) {
+    public Boolean checkDepartment(int associationId, int departmentId) {
         return departmentRepository.existsByAssociationIdAndDepartmentId(associationId, departmentId);
     }
 
@@ -62,11 +64,11 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Autowired
     private PermService ps;
 
-    public boolean checkUserInAsso(long userId, int associationId) {
+    public Boolean checkUserInAsso(long userId, int associationId) {
         return (ps.hasRole(userId, scope(associationId), MEMBER).getData() != null);
     }
 
-    public boolean checkUserInAsso(int userId, int associationId) {
+    public Boolean checkUserInAsso(int userId, int associationId) {
         return (ps.hasRole((long) userId, scope(associationId), MEMBER).getData() != null);
     }
 
@@ -75,6 +77,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application) {
 
         return addOneToAssociation(application.getObject().getAssociationId(), userId);
@@ -95,15 +98,16 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Department createDepartment(int associationId, String departmentName, String departmentDesc, int parentId) {
-
 
         Department department = new Department(associationId, departmentName, departmentDesc, parentId);
         Department maxDepartment = departmentRepository.findFirstByAssociationIdOrderByDepartmentIdDesc(associationId);
 
         department.setDepartmentId((maxDepartment != null ? maxDepartment.getDepartmentId() + 1 : 1));
-        System.out.println(maxDepartment);
-        departmentRepository.save(department);
+
+        department = departmentRepository.save(department);
+        ps.createRole(new Role(roleName(associationId, department.getDepartmentId()), scope(associationId), departmentDesc));
 
         return department;
     }
@@ -114,16 +118,19 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Department deleteDepartment(int associationId, int departmentId) {
 
         Department department = findDepartment(associationId, departmentId);
 
         departmentRepository.delete(department);
+        ps.deleteRole(roleName(associationId, departmentId));
 
         return department;
     }
 
     @Override
+    @Transactional
     public Department editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId) {
 
         Department department = departmentRepository.findByAssociationIdAndDepartmentId(associationId, departmentId);
@@ -154,6 +161,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Boolean removeOneFromDepartment(int associationId, int departmentId, int userId) {
 
         ps.revokeRoles((long) userId, scope(associationId), Arrays.asList(roleName(associationId, departmentId)));
@@ -162,10 +170,11 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Boolean addOneToDepartment(int associationId, int departmentId, int userId) {
         // outside
         // add_user_to_department
-        ps.grantRoles((long) userId, scope(associationId), Arrays.asList(MEMBER));
+        ps.grantRoles((long) userId, scope(associationId), Arrays.asList(roleName(associationId, departmentId)));
 
         return true;
     }
@@ -173,12 +182,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     @Override
     public boolean checkUserPerm(int userId, int associationId, String permission) {
         return (ps.hasPermission((long) userId, scope(associationId), permission).getData() != null);
-    }
-
-    @Override
-    public Boolean checkUserPermissionInAssociation(int associationId, int userId, String permission) {
-
-        return true;
     }
 
 
@@ -229,6 +232,7 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Boolean deleteOneInAssociation(int associationId, int userId) {
 
         // outside
@@ -244,13 +248,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Boolean addOneToAssociation(int associationId, int userId) {
 
         // outside
         // add user to asso
-        ps.grantRoles((long) userId, scope(associationId), Arrays.asList(MEMBER));
+        List<Role> roles = ps.grantRoles((long) userId, scope(associationId), Arrays.asList(MEMBER)).getData();
 
-        return true;
+        return (roles.size() != 0);
     }
 
     @Override
@@ -268,17 +273,26 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
+    @Transactional
     public Boolean initDepartment(int associationId, int userId) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+
+        if (checkAsso(associationId)) {
+            List<Department> list = getDepartmentTree(associationId);
+            for (Department department : list) {
+                departmentRepository.delete(department);
+            }
+        }
 
         Department manageDepartment = new Department(associationId, 1, "管理层", "管理部门的最基础部门", 0);
 
         Department allUsers = new Department(associationId, 2, "所有成员", "社团中所有成员", 0);
 
         departmentRepository.save(manageDepartment);
-        departmentRepository.save(allUsers);
+        ps.createRole(new Role(roleName(associationId, manageDepartment.getDepartmentId()), scope(associationId), manageDepartment.getDescription()));
 
-        apiResponse.setData(true);
+        departmentRepository.save(allUsers);
+        ps.createRole(new Role(roleName(associationId, allUsers.getDepartmentId()), scope(associationId), allUsers.getDescription()));
+
 
         return true;
     }
