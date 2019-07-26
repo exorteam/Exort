@@ -7,6 +7,7 @@ import exort.api.http.activity.entity.Filter;
 import exort.api.http.activity.entity.TimeRange;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class ActivityServiceImplTest {
         Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully", 1, 2, 1,
                 true, false, 10, materialTemplateIds, participantIds, realParticipantIds, tags, "");
 
+        activity.setId((new ObjectId()).toString());
         globalid = activity.getId();
 
         Activity activity1 = as.upsertActivity(activity);
