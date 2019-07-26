@@ -30,7 +30,8 @@
    |`materialTemplateIds`_int[]_| 报名材料模板 |
    |`participantIds`_int[]_| 参与者ID列表 |
    |`actualParticipantIds`_int[]_| 实际参加者ID列表 |
-   |`tags`__String[]__| 标签列表 |
+   |`tags`_String[]_| 标签列表 |
+   |`image`_String_| 活动图片 |
 
    - **AvtivityList** 活动列表
       - `pagenum` _int_  实际的页码
@@ -56,6 +57,7 @@
       |`numberOfParticipants`_int_|最大参加人数|
       |`materialTemplateIds`_int[]_|材料模板|
       |`tags`_string[]_|标签|
+      |`image`_String_| 活动图片 |
 
    - Response  
    
@@ -89,7 +91,8 @@
          "ifOnlyMem": false,
          "numberOfParticipants": 30,
          "materialTemplateIds": [3,4,5,6],
-         "tags": ["运动"]
+         "tags": ["运动"],
+         "image": "",
       }
       ```
       ```json   
@@ -127,7 +130,8 @@
                  "materialTemplateIds": [1,2,3],
                  "participantIds": [1,2,3,...],
                  "actualParticipantIds": [1,2,3,...], 
-                 "tags": ["tag1", "tag2", ...]
+                 "tags": ["tag1", "tag2", ...],
+                 "image":"",
              },
              "error":"",
              "message":""
@@ -160,6 +164,7 @@
       |`numberOfParticipants`_int_|最大参加人数|
       |`materialTemplateIds`_int[]_|材料模板|
       |`tags`_string[]_|标签|
+      |`image`_String_| 活动图片 |
 
    - Response
 
@@ -192,7 +197,8 @@
          "ifOnlyMem": false,
          "numberOfParticipants": 30,
          "materialTemplateIds": [3,4,5,6],
-         "tags": ["运动"]
+         "tags": ["运动"],
+         "image":""
       }
       ```
       ```json
@@ -230,7 +236,8 @@
                  "materialTemplateIds": [1,2,3],
                  "participantIds": [1,2,3,...],
                  "actualParticipantIds": [1,2,3,...], 
-                 "tags": ["tag1", "tag2", ...]
+                 "tags": ["tag1", "tag2", ...],
+                 "image":""
              },
              "error": "",
              "message": ""
@@ -269,11 +276,11 @@
       |`createTime`_TimeRange_|创建时间| null |
       |`signupTime`_TimeRange_|报名时间| null |
       |`startTime`_TimeRange_|开始时间| null |
-      |`publishState`_int_| 活动状态(0/unpublished, 1/published)| -1 |
-      |`signupState`_int_| 报名状态(0报名未开始，1报名中，2报名已结束)| -1 |
-      |`state`_int_| 活动状态(0未开始，1进行中，2已结束) | -1 |
-      |`ifReview`_bool_|报名是否需要审核| -1 |
-      |`ifOnlyMem`_bool_|活动是否仅社团成员可参加| -1 |
+      |`publishState`_int_| 活动状态(1/unpublished, 2/published)|0|
+      |`signupState`_int_| 报名状态(1报名未开始，2报名中，3报名已结束)| 0|
+      |`state`_int_| 活动状态(1未开始，2进行中，3已结束) | 0 |
+      |`ifReview`_bool_|报名是否需要审核| 0|
+      |`ifOnlyMem`_bool_|活动是否仅社团成员可参加| 0|
 
    - Response  
 
@@ -283,7 +290,7 @@
       |400-(错误信息)|创建失败|
    
       ```json
-      >>> GET /activitiespagesize=10&pagenum=2&osrtby=1
+      >>> GET /activities?pagesize=10&pagenum=2&osrtby=1
       {
           "associationId":[2,3],
           "tags":["运动"],
@@ -339,7 +346,8 @@
                         "materialTemplateIds": [1,2,3],
                         "participantIds": [1,2,3,...],
                         "actualParticipantIds": [1,2,3,...], 
-                        "tags": ["tag1", "tag2", ...]
+                        "tags": ["tag1", "tag2", ...],
+                        "image":""
                     },
                     {
                         "id": 21,
@@ -370,7 +378,8 @@
                         "materialTemplateIds": [1,2,3],
                         "participantIds": [1,2,3,...],
                         "actualParticipantIds": [1,2,3,...], 
-                        "tags": ["tag1", "tag2", ...]
+                        "tags": ["tag1", "tag2", ...],
+                        "image":""
                     }
                 ]
             },
@@ -391,7 +400,7 @@
    即修改活动的状态
 
    - Http Request
-      **PATCH** `/activities/{activityid}`
+      **PUT** `/activities/{activityid}`
 
    - Body Parameters
 
@@ -406,7 +415,7 @@
       |200-(无实际返回值)|操作成功|
       |400-(错误信息)|操作失败|
    ```json
-   >>> PATCH /activities/32
+   >>>PUT /activities/32
    {
       "type":"publish"
    }
@@ -770,7 +779,8 @@
               "materialTemplateIds": [1,2,3],
               "participantIds": [1,2,3,...],
               "actualParticipantIds": [1,2,3,...], 
-              "tags": ["tag1", "tag2", ...]
+              "tags": ["tag1", "tag2", ...],
+              "image":""
           },
           "error": "",
           "massage": "",

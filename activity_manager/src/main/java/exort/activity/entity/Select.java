@@ -3,7 +3,7 @@ package exort.activity.entity;
 import java.util.List;
 
 public class Select {
-    private Long associationId;
+
     private String keyword;
     private List<String> tags;
     private TimeRange createTime;
@@ -14,14 +14,6 @@ public class Select {
     private int state;
     private int ifReview;
     private int ifOnlyMem;
-
-    public Long getAssociationId() {
-        return associationId;
-    }
-
-    public void setAssociationId(Long associationId) {
-        this.associationId = associationId;
-    }
 
     public String getKeyword() {
         return keyword;

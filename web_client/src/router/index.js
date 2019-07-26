@@ -4,7 +4,6 @@ import Router from 'vue-router'
 // import Index from '@/components/index'
 import Activity from '../components/activity/activity.vue'
 import About from '../components/activity/about.vue'
-import Build from '../components/activity/build.vue'
 
 import SysManaAsso from '../components/association_management/sys_manage_association'
 import SysCreateAsso from '../components/association_management/sys_create_association'
@@ -21,87 +20,101 @@ import AppliManagement from '../components/association_member_management/applica
 import UserList from '../components/user_management/UserList.vue'
 import PermList from '../components/user_management/PermList.vue'
 
+import SignIn from '../components/auth/signin/signin'
+import SignUp from '../components/auth/signup/signup'
+
 Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
-  routes: [
-    {
-      path: '/',
-      name: 'Index',
-    },
-    {
-      path: "/admin",
-      name: 'Admin',
-      component: AdminIndex,
-      children: [
+    mode: 'history',
+    routes: [
         {
-          path: 'activity',
-          name: 'activity',
-          component: Activity
+            path: '/',
+            name: 'Home',
+            redirect: '/signIn'
         },
         {
-          path: 'activity/build',
-          name: 'build',
-          component: Build
+            path: '/signIn',
+            name: 'SignIn',
+            component: SignIn
         },
         {
-          path: 'activity/about',
-          name: 'about',
-          component: About
+            path: '/signUp',
+            name: 'SignUp',
+            component: SignUp
         },
         {
-          path: 'asso_list',
-          name: 'AssoList',
-          component: AssoList
-        },
-        {
-          path: 'sys_asso_list',
-          name: 'SysAssoList',
-          component: SysAssoList
-        },
-        {
-          path: 'create_asso',
-          name: 'CreateAsso',
-          component: CreateAsso
-        },
-        {
-          path: 'sys_mana_asso',
-          name: 'SysManaAsso',
-          component: SysManaAsso
-        },
-        {
-          path: 'edit_asso',
-          name: 'EditAsso',
-          component: EditAsso
-        },
-        {
-          path: 'sys_create_asso',
-          name: 'SysCreateAsso',
-          component: SysCreateAsso
-        },
-        {
-          path: 'application_management',
-          name: 'AppliManagement',
-          component: AppliManagement
-        },
-        {
-          path: 'association_member_management',
-          name: 'AssociaMemManage',
-          component: AssociaMemManage
-        },
-        {
-          path: 'user_list',
-          name: 'UserList',
-          component: UserList
-        },
-        {
-          path: 'perm_list',
-          name: 'PermList',
-          component: PermList
-        }
+            path: "/admin",
+            name: 'Admin',
+            component: AdminIndex,
+            children: [
+                {
+                    path: 'activity',
+                    name: 'activity',
+                    component: Activity
+                },
+                {
+                    path: 'activity/build',
+                    name: 'build',
+                    component: Build
+                },
+                {
+                    path: 'activity/about',
+                    name: 'about',
+                    component: About
+                },
+                {
+                    path: 'asso_list',
+                    name: 'AssoList',
+                    component: AssoList
+                },
+                {
+                    path: 'sys_asso_list',
+                    name: 'SysAssoList',
+                    component: SysAssoList
+                },
+                {
+                    path: 'create_asso',
+                    name: 'CreateAsso',
+                    component: CreateAsso
+                },
+                {
+                    path: 'sys_mana_asso',
+                    name: 'SysManaAsso',
+                    component: SysManaAsso
+                },
+                {
+                    path: 'edit_asso',
+                    name: 'EditAsso',
+                    component: EditAsso
+                },
+                {
+                    path: 'sys_create_asso',
+                    name: 'SysCreateAsso',
+                    component: SysCreateAsso
+                },
+                {
+                    path: 'application_management',
+                    name: 'AppliManagement',
+                    component: AppliManagement
+                },
+                {
+                    path: 'association_member_management',
+                    name: 'AssociaMemManage',
+                    component: AssociaMemManage
+                },
+                {
+                    path: 'user_list',
+                    name: 'UserList',
+                    component: UserList
+                },
+                {
+                    path: 'perm_list',
+                    name: 'PermList',
+                    component: PermList
+                }
 
-      ]
-    }
-  ]
+            ]
+        }
+    ]
 })
