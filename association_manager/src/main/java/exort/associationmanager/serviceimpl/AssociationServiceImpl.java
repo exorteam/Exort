@@ -69,7 +69,7 @@ public class AssociationServiceImpl implements AssociationService{
         }
         System.out.println(associations.size());
         List<String> tags = params.getTags();
-        if(!((tags.size()==0) || (tags.size()==1&&tags.get(0)==""))) {
+        if(!(tags == null || (tags.size()==1&&tags.get(0)==""))) {
             int size = associations.size();
             if (tags != null) {
                 for (int i = size - 1; i >= 0; i--) {
