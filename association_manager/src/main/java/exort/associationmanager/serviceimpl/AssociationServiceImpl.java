@@ -45,6 +45,8 @@ public class AssociationServiceImpl implements AssociationService{
         return association;
     }
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
+
+        System.out.println("我进来了");
         List<Association> associations = assoRepository.findAll();
         Integer state = params.getState();
         if(state != null && state != 2){
@@ -53,6 +55,7 @@ public class AssociationServiceImpl implements AssociationService{
                 return new PagedData<>(0,0,Long.valueOf(0),associations);
             }
         }
+        System.out.println("我调整好状态了");
         String keyword = params.getKeyword();
         if(keyword != null && keyword!=""){
             int size = associations.size();
@@ -67,7 +70,7 @@ public class AssociationServiceImpl implements AssociationService{
                 }
             }
         }
-        System.out.println(associations.size());
+        System.out.println("我搞定关键字了");
         List<String> tags = params.getTags();
         if(!(tags == null || (tags.size()==1&&tags.get(0)==""))) {
             int size = associations.size();
@@ -82,7 +85,7 @@ public class AssociationServiceImpl implements AssociationService{
                 }
             }
         }
-        System.out.println(associations.size());
+        System.out.println("我打上标签了");
         int totalSize = associations.size();
 
         int max =20;
