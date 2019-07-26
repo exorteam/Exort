@@ -1,4 +1,43 @@
 kind: pipeline
+name: exort-auth
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  commands:
+  - cd ./auth
+  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
+
+trigger:
+  branch:
+  - auth
+  
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+
+---
+
+kind: pipeline
 name: exort-association-member-manager
 
 steps:
