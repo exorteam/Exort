@@ -2,23 +2,21 @@ package exort.api.http.common.errorhandler;
 
 import exort.api.http.common.entity.ApiResponse;
 
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.validation.BindException;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.jws.WebResult;
+import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
-@EnableWebMvc
-public class ApiErrorHandler {
+@RestController
+public class ApiErrorHandler implements ErrorController {
 
     @ExceptionHandler({ApiError.class})
     public ResponseEntity<ApiResponse> handleApiError(ApiError e, WebRequest request) {
@@ -45,14 +43,30 @@ public class ApiErrorHandler {
         return new ResponseEntity<>(new ApiResponse("bad_method", e.getMessage()), HttpStatus.valueOf(405));
     }
 
-    @ExceptionHandler({NoHandlerFoundException.class})
-    public ResponseEntity<ApiResponse> handlePathError(NoHandlerFoundException e, WebResult request) {
-        return new ResponseEntity<>(new ApiResponse("resource_not_found", "The url matches no resource."), HttpStatus.valueOf(404));
-    }
-
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ApiResponse> handleOtherError(Exception e, WebRequest request) {
         e.printStackTrace();
         return new ResponseEntity<>(new ApiResponse("internal_server_error", e.getMessage()), HttpStatus.valueOf(500));
+    }
+
+    @RequestMapping("/handler_not_found_exception")
+    public ApiResponse handleHandlerNotFoundException(HttpServletRequest request) {
+        Integer code = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        if (code != null && code == 404) {
+            throw new ApiError(404, "resource_not_found", "No resource matched by URL: " + request.getRequestURL());
+        } else {
+            Exception e = (Exception) request.getAttribute("javax.servlet.error.exception");
+            String message = "unknown error";
+            if (e != null) {
+                message = e.getMessage();
+                e.printStackTrace();
+            }
+            throw new ApiError(500, "internal_server_error", message);
+        }
+    }
+
+    @Override
+    public String getErrorPath() {
+        return "/handler_not_found_exception";
     }
 }
