@@ -3,8 +3,6 @@ package exort.api.http.activity.entity;
 import java.util.Date;
 import java.util.List;
 
-import org.bson.types.ObjectId;
-
 import lombok.Data;
 
 @Data
@@ -35,7 +33,6 @@ public class Activity {
                     int publishState, int signupState, int state, boolean ifReview, boolean ifOnlyMem, int maxParticipants,
                     List<Integer> materialTemplateIds, List<Integer> participantIds, List<Integer> realParticipantIds,
                     List<String> tags, String image) {
-        this.id = (new ObjectId()).toString();
         this.associationIds = associationIds;
         this.createTime = new Date();
         this.publishTime = new Date();
