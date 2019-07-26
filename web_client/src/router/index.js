@@ -4,7 +4,6 @@ import Router from 'vue-router'
 // import Index from '@/components/index'
 import Activity from '../components/activity/activity.vue'
 import About from '../components/activity/about.vue'
-import Build from '../components/activity/build.vue'
 
 // import SysManaAsso from '../components/association_management/sys_manage_association'
 // import SysCreateAsso from '../components/association_management/sys_create_association'
@@ -20,6 +19,9 @@ import AppliManagement from '../components/association_member_management/applica
 
 import UserList from '../components/user_management/UserList.vue'
 import PermList from '../components/user_management/PermList.vue'
+
+import SignIn from '../components/auth/signin/signin'
+import SignUp from '../components/auth/signup/signup'
 
 Vue.use(Router);
 
@@ -101,7 +103,7 @@ export default new Router({
           component: PermList
         }
 
-      ]
-    }
-  ]
+            ]
+        }
+    ]
 })

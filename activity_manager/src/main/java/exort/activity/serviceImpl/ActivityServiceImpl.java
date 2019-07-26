@@ -6,7 +6,6 @@ import exort.activity.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.RescaleOp;
 import java.util.*;
 
 @Service
@@ -16,23 +15,17 @@ public class ActivityServiceImpl implements ActivityService {
     private ActivityDao ad;
 
     @Override
-    public Response upsertActivity(Activity activity){
+    public Activity upsertActivity(Activity activity){
         return ad.update(activity);
     }
 
     @Override
-    public Response getActivities(Select select, int pagesize, int pagenum, int sortby){
-        PageList<Activity> result =  ad.selectActivities(select, pagesize, pagenum, sortby);
-        if(result==null){
-            return new Response<>(null, "invalid error", "invalid message");
-
-        }else{
-            return new Response<>(result, "","");
-        }
+    public PageList<Activity> getActivities(Filter select, int pagesize, int pagenum, int sortby){
+         return ad.selectActivities(select, pagesize, pagenum, sortby);
     }
 
     @Override
-    public Response changeActivityState(String activityid, String type){
+    public boolean changeActivityState(String activityid, String type){
         try{
             Activity activity = ad.getActivity(activityid);
             if(activity != null){
@@ -44,100 +37,96 @@ public class ActivityServiceImpl implements ActivityService {
                     System.out.println(activity.getAssociationIds());
                 }
                 ad.update(activity);
-                return new Response<>(new HashMap(), "", "");
+                return true;
             }
-            return new Response<>(null, "invalid error1","invalid message");
+            return false;
         }catch(Exception e){
             e.printStackTrace();
-            return new Response<>(null, "invalid error2","invalid message");
+            return false;
         }
     }
 
     @Override
-    public Response addUserIds(String activityid, List<Integer> userIds, int type){
+    public boolean addUserIds(String activityid, List<Integer> userIds, int type){
         try{
+            System.out.println(userIds);
             Activity activity = ad.getActivity(activityid);
             if(activity!=null){
                 if(type==1){
                     List<Integer> oldp = activity.getParticipantIds();
-                    List<Integer> temp = new ArrayList<>(oldp);
-                    temp.retainAll(userIds);
-                    oldp.removeAll(temp);
-                    oldp.addAll(userIds);
+                    if(oldp!=null){
+                        List<Integer> temp = new ArrayList<>(oldp);
+                        temp.retainAll(userIds);
+                        oldp.removeAll(temp);
+                        oldp.addAll(userIds);
+                    }else{
+                        oldp = userIds;
+                    }
                     activity.setParticipantIds(oldp);
                 } else{
                     List<Integer> oldp = activity.getRealParticipantIds();
-                    oldp.addAll(userIds);
+                    if(oldp!=null){
+                        oldp.addAll(userIds);
+                    }else{
+                        oldp = userIds;
+                    }
                     activity.setRealParticipantIds(oldp);
                 }
                 ad.update(activity);
-                return new Response<>(new HashMap(), "","");
+                return true;
             }
-            return new Response<>(null,"invalid error","invalid message");
+            return false;
         }catch (Exception e){
             e.printStackTrace();
-            return new Response<>(null,"invalid error","invalid message");
+            return false;
         }
     }
 
     @Override
-    public Response removeParticipants(String activityid, List<Integer> participantIds){
+    public boolean removeParticipants(String activityid, List<Integer> participantIds){
         try{
             Activity activity = ad.getActivity(activityid);
             if(activity != null){
                 List<Integer> oldp = activity.getParticipantIds();
-                oldp.removeAll(participantIds);
-                activity.setParticipantIds(oldp);
-                ad.update(activity);
-                return new Response<>(new HashMap(), "","");
+                if(oldp!=null){
+                    oldp.removeAll(participantIds);
+                    activity.setParticipantIds(oldp);
+                    ad.update(activity);
+                    return true;
+                }else{
+                    return false;
+                }
             }
-            return new Response<>(null,"invalid error","invalid message");
+            return false;
         }catch (Exception e){
             e.printStackTrace();
-            return new Response<>(null,"invalid error","invalid message");
+            return false;
         }
     }
 
     @Override
-    public Response getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type){
+    public PageList<Integer> getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type){
         try{
             if(userId==0){
-                PageList<Integer> result =  ad.getActivityUserIds( pagesize, pagenum, activityid, type);
-                if(result == null){
-                    return new Response<>(null, "invalid error", "invalid message");
-                }else{
-                    return new Response<>(result, "", "");
-                }
+                return ad.getActivityUserIds( pagesize, pagenum, activityid, type);
             }{
-                List<Integer> result =  ad.checkUserId(activityid, userId, type);
-                if(result==null){
-                    return new Response<>(null,"invalid error", "invalid message");
-                }else{
-                    if(result.size()==0){
-                        return new Response<>(new HashMap(), "","");
-                    }else{
-                        return new Response<>(result,"","");
-                    }
-                }
+                List<Integer> result = ad.checkUserId(activityid, userId, type);
+                return new PageList<>(pagesize, pagenum, 1, result);
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new Response<>(null, "invalid error", "invalid message");
+            return null;
         }
     }
 
     @Override
-    public Response getActivity(String acticityid){
+    public Activity getActivity(String acticityid){
         try{
-            Activity activity = ad.getActivity(acticityid);
-            if(acticityid!=null){
-                return new Response<>(activity, "","");
-            }else{
-                return new Response<>(null, "invalid error","invalid message");
-            }
+            System.out.println(ad);
+            return ad.getActivity(acticityid);
         }catch (Exception e){
             e.printStackTrace();
-            return new Response<>(null, "invalid error","invalid message");
+            return null;
         }
     }
 }

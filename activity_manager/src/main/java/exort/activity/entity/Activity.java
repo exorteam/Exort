@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.List;
 
 @Document(collection = "activity")
@@ -14,13 +15,13 @@ public class Activity {
 
     private List<Integer> associationIds;
 
-    private String createTime;
+    private Date createTime;
 
-    private String publishTime;
+    private Date publishTime;
 
-    private String lastPublishTime;
+    private Date lastPublishTime;
 
-    private String lastModifyTime;
+    private Date lastModifyTime;
 
     private String title;
 
@@ -50,16 +51,18 @@ public class Activity {
 
     private List<String> tags;
 
+    private String image;
+
     public Activity(List<Integer> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
             int publishState, int signupState, int state, boolean ifReview, boolean ifOnlyMem, int maxParticipants,
             List<Integer> materialTemplateIds, List<Integer> participantIds, List<Integer> realParticipantIds,
-            List<String> tags) {
+            List<String> tags, String image) {
         this.id = (new ObjectId()).toString();
         this.associationIds = associationIds;
-        this.createTime = "2019-07-01";
-        this.publishTime = "2019-07-01";
-        this.lastPublishTime = "2019-07-01";
-        this.lastModifyTime = "2019-07-01";
+        this.createTime = new Date();
+        this.publishTime = new Date();
+        this.lastPublishTime = new Date();
+        this.lastModifyTime = new Date();
         this.signupTime = signupTime;
         this.time = time;
         this.title = title;
@@ -74,6 +77,7 @@ public class Activity {
         this.participantIds = participantIds;
         this.realParticipantIds = realParticipantIds;
         this.tags = tags;
+        this.image = image;
     }
 
     public List<Integer> getAssociationIds() {
@@ -84,35 +88,35 @@ public class Activity {
         this.associationIds = associationIds;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public String getPublishTime() {
+    public Date getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(String publishTime) {
+    public void setPublishTime(Date publishTime) {
         this.publishTime = publishTime;
     }
 
-    public String getLastPublishTime() {
+    public Date getLastPublishTime() {
         return lastPublishTime;
     }
 
-    public void setLastPublishTime(String lastPublishTime) {
+    public void setLastPublishTime(Date lastPublishTime) {
         this.lastPublishTime = lastPublishTime;
     }
 
-    public String getLastModifyTime() {
+    public Date getLastModifyTime() {
         return lastModifyTime;
     }
 
-    public void setLastModifyTime(String lastModifyTime) {
+    public void setLastModifyTime(Date lastModifyTime) {
         this.lastModifyTime = lastModifyTime;
     }
 
@@ -234,5 +238,13 @@ public class Activity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
