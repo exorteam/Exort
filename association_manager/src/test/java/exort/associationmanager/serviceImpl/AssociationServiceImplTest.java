@@ -78,26 +78,26 @@ public class AssociationServiceImplTest {
         }
     }
 //
-//    @Test
-//    public void testUpdate() {
-//        repository.saveAll(associations);
-//        for(int i=0;i<ASSOCIATION_NUM;i++){
-//            final Association e = associations.get(i);
-//            final String title = UUID.randomUUID().toString();
-//            final String content = UUID.randomUUID().toString();
-//            e.setName(title);
-//            e.setDescription(content);
-//            e.setLogo(content);
-//            e.setTags(Arrays.asList("a","s","d"));
-//            service.editAssociation(e.getId(),e.getName(),e.getDescription(),e.getTags(),e.getLogo());
-//            associations.set(i,e);
-//        }
-//        for(int i=0;i<ASSOCIATION_NUM;i++){
-//            Association e = associations.get(i);
-//            Association contrast = repository.findById(e.getId()).get();
-//            Assert.assertEquals(e,contrast);
-//        }
-//    }
+    @Test
+    public void testUpdate() {
+        repository.saveAll(associations);
+        for(int i=0;i<ASSOCIATION_NUM;i++){
+            final Association e = associations.get(i);
+            final String title = UUID.randomUUID().toString();
+            final String content = UUID.randomUUID().toString();
+            e.setName(title);
+            e.setDescription(content);
+            e.setLogo(content);
+            e.setTags(Arrays.asList("a","s","d"));
+            service.editAssociation(e.getId(),e.getName(),e.getDescription(),e.getTags(),e.getLogo());
+            associations.set(i,e);
+        }
+        for(int i=0;i<ASSOCIATION_NUM;i++){
+            Association e = associations.get(i);
+            Association contrast = repository.findById(e.getId()).get();
+            Assert.assertEquals(e,contrast);
+        }
+    }
 ////
 //    @Test
 //    public void testBlockAndUnblock() {
