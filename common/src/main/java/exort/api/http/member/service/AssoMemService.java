@@ -3,6 +3,7 @@ package exort.api.http.member.service;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.InitAssociationInfo;
+import exort.api.http.member.entity.UserId;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.api.http.review.entity.CallbackParam;
 
@@ -25,7 +26,7 @@ public interface AssoMemService {
 
     public ApiResponse<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId);
 
-    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, int userId);
+    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, UserId userId);
 
     public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission);
 
@@ -35,7 +36,7 @@ public interface AssoMemService {
 
     public ApiResponse<Boolean> deleteOneInAssociation(int associationId, int userId);
 
-    public ApiResponse<Boolean> addOneToAssociation(int associationId, int userId);
+    public ApiResponse<Boolean> addOneToAssociation(int associationId, UserId userId);
 
     public ApiResponse<List<Integer>> getAssoUserList(int associationId);
 
