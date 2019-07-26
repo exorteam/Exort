@@ -5,6 +5,7 @@ import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.InitAssociationInfo;
+import exort.api.http.member.entity.UserId;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,7 +75,7 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, int userId) {
+    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, UserId userId) {
         return request(new TypeToken<Boolean>() {
         }, userId, HttpMethod.POST, "/associations/{associationId}/departments/{departmentId}/members", associationId, departmentId);
     }
@@ -104,7 +105,7 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public ApiResponse<Boolean> addOneToAssociation(int associationId, int userId) {
+    public ApiResponse<Boolean> addOneToAssociation(int associationId, UserId userId) {
         return request(new TypeToken<Boolean>() {
         }, userId, HttpMethod.POST, "/associations/{associationId}/members", associationId);
     }
