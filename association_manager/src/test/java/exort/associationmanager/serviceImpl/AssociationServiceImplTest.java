@@ -69,14 +69,14 @@ public class AssociationServiceImplTest {
 
     }
 
-//    @Test
-//    public void testGet() {
-//        repository.saveAll(associations);
-//        for(int i=0;i<ASSOCIATION_NUM;i++){
-//            final Association contrast = service.getAssociation(associations.get(i).getId());
-//            Assert.assertEquals(associations.get(i),contrast);
-//        }
-//    }
+    @Test
+    public void testGet() {
+        repository.saveAll(associations);
+        for(int i=0;i<ASSOCIATION_NUM;i++){
+            final Association contrast = service.getAssociation(associations.get(i).getId());
+            Assert.assertEquals(associations.get(i),contrast);
+        }
+    }
 //
 //    @Test
 //    public void testUpdate() {
