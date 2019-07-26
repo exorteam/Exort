@@ -160,7 +160,7 @@ public class AssociationServiceImpl implements AssociationService{
                         createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
                         return true;
                     case "unblockAssociation":
-                        if (hasAuth(user_id,"system","SysManager")) {
+                        if (!hasAuth(user_id,"system","SysManager")) {
                             throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
                         }
                         MyObject blockInfo = app.getObject();
@@ -169,6 +169,7 @@ public class AssociationServiceImpl implements AssociationService{
                         assoRepository.save(asso);
                         return true;
                 }
+                throw new ApiError(400,"invalidType","无效的申请类型");
             case "refuse":
                 switch (app.getType()) {
                     case "createAssociation":
@@ -182,6 +183,7 @@ public class AssociationServiceImpl implements AssociationService{
                         }
                         return true;
                 }
+                throw new ApiError(400,"invalidType","无效的申请类型");
             case "cancel":
                 switch (app.getType()) {
                     case "createAssociation":
@@ -195,6 +197,7 @@ public class AssociationServiceImpl implements AssociationService{
                         }
                         return true;
                 }
+                throw new ApiError(400,"invalidType","无效的申请类型");
             default:
                 throw new ApiError(400,"invalidType","无效的申请类型");
         }
