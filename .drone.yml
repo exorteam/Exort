@@ -84,7 +84,7 @@ steps:
   when:
     event:
     - pull_request
-  image: thomasf/drone-mvn
+  image: maven
   volumes:
   - name: cache
     path: /root/.m2
@@ -94,16 +94,11 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
-  environment:
-    FTP_USER:
-      from_secret: conf_user
-    FTP_PASS:
-      from_secret: conf_pass
+  - name: env
+    path: /env
   commands:
   - cd ./permission_manager
-  - echo FTP_USER
-  - echo FTP_PASS
-  - wget -nH -m --ftp-user=FTP_USER --ftp-password=FTP_PASS ftp://cirno.wang/perm
+  - wget -nH -m --ftp-user=$(cat /env/ftp_user) --ftp-password=$(cat /env/ftp_pass) ftp://cirno.wang/perm
   - mv -f perm src/main/resources
   - mvn clean test
 
@@ -121,14 +116,11 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
-  environment:
-    FTP_USER:
-      from_secret: conf_user
-    FTP_PASS:
-      from_secret: conf_pass
+  - name: env
+    path: /env
   commands:
   - cd ./permission_manager
-  - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
+  - wget -nH -m --ftp-user=$(cat /env/ftp_user) --ftp-password=$(cat /env/ftp_pass) ftp://cirno.wang/perm
   - mv -f perm src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage
 
@@ -149,3 +141,6 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+  - name: env
+    host:
+      path: /home/ubuntu/env
