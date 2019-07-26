@@ -2,7 +2,7 @@ package exort.activity.entity;
 
 import java.util.List;
 
-public class Select {
+public class Filter {
 
     private String keyword;
     private List<String> tags;
