@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Association {
-    private Integer id;
+    private String id;
     private String logo;
     private String description;
     private List<String> tags;
