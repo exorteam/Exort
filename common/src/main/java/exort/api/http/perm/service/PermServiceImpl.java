@@ -184,7 +184,7 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse<List<Permission>> getPermissions() {
-        return getPermissions(null);
+        return getPermissionsByCategory(null);
     }
 
     @Override
