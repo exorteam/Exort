@@ -1,31 +1,46 @@
 package exort.apiserver.config;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
+import exort.apiserver.entity.AuthRequest;
+import exort.apiserver.service.AuthService;
 import lombok.extern.log4j.Log4j2;
 
 @Configuration
 @Log4j2
 public class SysAdminInitConfig {
 
-	public final static String SYS_ADMIN_ROLE_NAME 	= "admin";
-	public final static String SYS_ADMIN_SCOPE_NAME = "sys";
-	public final static int    SYS_ADMIN_USER_ID	= 1;
+	public final static String SYS_ADMIN_USER_USERNAME 	= "admin";
+	public final static String SYS_ADMIN_USER_PASSWORD 	= "123";
+	public final static String SYS_ADMIN_ROLE_NAME 		= "admin";
+	public final static String SYS_ADMIN_SCOPE_NAME 	= "sys";
+	public final static int    SYS_ADMIN_USER_ID		= 1;
 
 	@Autowired
 	private PermService permSvc;
+	@Autowired
+	private AuthService authSvc;
 
 	@Bean
-	public void initSystemPermission() throws ApiError{
+	public void initSystemAdminAccount() throws ApiError {
+		AuthRequest req = new AuthRequest(SYS_ADMIN_USER_USERNAME,SYS_ADMIN_USER_PASSWORD);
+		if(authSvc.login(req).get("token") != null)return;
+		log.info("Cannot found admin account, now registering...");
+
+		if(!authSvc.register(req).equals("Register success")){
+			throw new ApiError(400,"adminAccountInitErr","Failed to create admin account{usr:"+SYS_ADMIN_USER_USERNAME+",pwd:"+SYS_ADMIN_USER_PASSWORD+"}");
+		}
+	}
+
+	@Bean
+	public void initSystemAdminPermission() throws ApiError {
 		if(permSvc.getRole(SYS_ADMIN_ROLE_NAME).getData() == null){
 			log.info("Cannot found admin role, now creating...");
 
