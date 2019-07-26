@@ -199,10 +199,10 @@ export default {
                         end: ""
                     }]
                 },
-                ifReview: "",
-                ifOnlyMem: "",
-                maxParticipants: 30,
-                materials: "",
+                ifReview: false,
+                ifOnlyMem: false,
+                maxParticipants: '',
+                materials: [],
                 tags: []
             },
             tag:{
@@ -249,7 +249,10 @@ export default {
                     }
                 })
                 .then(response => {
-                    this.cardList = response.data
+                    this.cardList = response.data.content
+                    this.totalSize = response.data.totalSize
+                    this.pageNum = response.data.pageNum
+                    this.pageSize = response.data.pageSize
                 })
                 .catch(e => {
                     console.log(e)
@@ -279,7 +282,10 @@ export default {
                 }
             })
             .then(response => {
-                this.cardList = response.data
+                this.cardList = response.data.content
+                this.totalSize = response.data.totalSize
+                this.pageNum = response.data.pageNum
+                this.pageSize = response.data.pageSize
             })
             .catch(e => {
                 console.log(e)

@@ -15,7 +15,8 @@
         <div>
             <activityCreate :form="newform"/>
             <b-button  @click="newform.onshow=true" variant="primary">修改</b-button>
-            <b-button type="submit" @click="handlePublish" variant="danger">发布</b-button>
+            <b-button v-if="form.publishState" @click="handlePublish" type="submit" variant="danger">发布</b-button>
+            <b-button v-if="!form.publishState" @click="handleWithdraw" type="submit" variant="danger">发布</b-button>
         </div>
         <div style="margin-top: 100px">
             <p style="margin-top: 200px">
@@ -92,6 +93,7 @@ let data = [
 import expandRow from './expand_table'
 import activityCreate from './activity_create'
 import Axios from 'axios';
+
 export default {
     name: "about",
     components: { expandRow , activityCreate },
@@ -183,10 +185,9 @@ export default {
             this.newform.maxParticipants = value.maxParticipants
             this.newform.materials = value.materials
 			this.newform.tags = value.tags
-;		},
+        },
         getActivity(){
             let data = (this.$store.getters.get_activityid).toString()
-            // console.log('http://202.120.40.8:30727/activities/' + data)
             //请求activity信息
             Axios
                 .get('http://202.120.40.8:30727/activities/' + data)

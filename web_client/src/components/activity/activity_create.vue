@@ -51,32 +51,21 @@
                 <Input v-model="form.maxParticipants"/>
             </FormItem>
             <FormItem label="上传活动宣传图">
-                <Upload ref="upload"
-                                :limit="1"
-                                :on-error="uploadError"
-                                :on-success="uploadSuccess"
-                                :on-remove="handleRemove"
-                                :before-upload="beforeAvatarUpload"
-                                :show-upload-list="true"
-                                :default-file-list="fileList"
-                                :format="['jpg','jpeg','png']"
-                                :max-size="2048"
-                                multiple 
-                                type="drag"
-                                action="//jsonplaceholder.typicode.com/posts/"
-                                style="text-align: center;">
-                    <div style="padding: 20px 0">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>点击或将活动宣传图拖拽到这里上传</p>
-                    </div>
-                </Upload>
+                <div>
+                    <b-form-file v-model="file" ref="file-input" style="width: 310px; "></b-form-file>
+                    <b-button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</b-button>
+                </div>
             </FormItem>
             <FormItem label="活动简介">
                 <Input v-model="form.content"/>
             </FormItem>
-            <!-- <FormItem label="报名材料">
-                <Input v-model="form.materials"/>
-            </FormItem> -->
+            <FormItem label="选择标签">
+                <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
+                <TagChoose :tag="tag" />
+                <div v-if="tag.tagList.length" style="display:inline">
+                    <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
+                </div>
+            </FormItem>
         </Form>
     </Modal>
 </template>
@@ -84,6 +73,7 @@
 <script>
 import Axios from 'axios';
 import TimeRange from './time_range'
+import TagChoose from './tag_choose'
 
 let timeTypeList = [
 {
@@ -105,81 +95,43 @@ let timeTypeList = [
 ]
 
 export default {
-    components: { TimeRange },
+    name: 'activity_create',
+    components: { TimeRange , TagChoose},
     props: {
             form: Object
     },
     data(){
             return {
-                    picture: '',
+                    file: '',
                     fileList: [],
+                    tag:{
+                        tag_show: false,
+                        tagList:[],
+                    }
             }
     },
     methods: {
-    // 上传成功后的回调
-        uploadSuccess (response, file, fileList) {
-            console.log('上传文件', response, file, fileList)
+        // more_timeStamp() {
+        //     this.form.time.time.push({start: "", end: ""})
+        // },
+        // delete_timeStamp(value){
+        //     let times = this.form.time.time
+        //     let length = this.form.time.time.length
+        //     for(let i=0; i<length; i++){
+        //         if(times[i]==value){
+        //             this.form.time.time.splice(i, 1)
+        //             break
+        //         }
+        //     }
+        // },
 
-            let reader = new FileReader();
-            reader.readAsDataURL(file.raw)
-            reader.onload = (e) => {
-                this.picture = e.target.result
-                console.log(this.picture)
-            }
-        },
-        // 上传错误
-        uploadError (response, file, fileList) {
-            console.log(response)
-            console.log('上传失败，请重试！')
-        },
         // 删除回调
-        handleRemove(file, fileList) {
-            console.log(file)
-            // 删除总展示文件里的当前文件
-            this.file = this.file.filter(item => {
-                return item.name != name
-            })
-            // 删除需要上传文件数据里的当前文件
-            this.uploadFile = this.uploadFile.filter(item => {
-                return item.KeyID != keyID
-            })
-        },
-        // 上传前对文件的大小的判断
-        beforeAvatarUpload (file) {
-            // 选择文件后 这里判断文件类型 保存文件 自定义一个keyid 值 方便后面删除操作
-            let keyID = Math.random().toString().substr(2);
-            file['keyID'] = keyID;
-            // 保存文件到总展示文件数据里
-            this.file.push(file);
-            // 保存文件到需要上传的文件数组里
-            this.uploadFile.push(file)
-            // 返回 falsa 停止自动上传 我们需要手动上传
-            return false;
-        },
-        more_timeStamp() {
-            this.form.time.time.push({start: "", end: ""})
-        },
-        delete_timeStamp(value){
-            let times = this.form.time.time
-            let length = this.form.time.time.length
-            for(let i=0; i<length; i++){
-                if(times[i]==value){
-                    this.form.time.time.splice(i, 1)
-                    break
-                }
-            }
+        clearFile(file, fileList) {
+            this.$refs['file-input'].reset();
         },
         info_ok(){
             this.form.onshow = false
-            if(this.signupTime[0]!=""){
-                let a = this.signupTime[0].split(':')
-                let b = this.signupTime[1].split(':')
-                console.log(a,b)
-                this.signupDate[0].setHours(parseInt(a[0]), parseInt(a[1]), 0, 0)
-                this.signupDate[1].setHours(parseInt(b[0]), parseInt(b[1]), 0, 0)
-                console.log(this.signupDate)
-            }
-            let data={
+            let data = {
                 title: this.form.title,
                 content: this.form.content,
                 signupTime: {
@@ -192,27 +144,35 @@ export default {
                 time: {
                     type: 0, 
                     time:[{
-                        start: "",
-                        end: "",
+                        start: this.form.time.time[0],
+                        end: this.form.time.time[1],
                     }]
                 },
                 ifReview: this.form.ifReview,
                 ifOnlyMem: this.form.ifOnlyMem,
                 maxParticipants: this.form.maxParticipants,
                 materials: this.form.materials,
-                tags: this.form.tags,
-                image: this.picture
+                tags: this.tag.tagList,
             }
-            // Axios
-                // .post('http://202.120.40.8:30727/activities', data)
-                // .then(response => {
-                    // console.log("Successfully!")
-            //         console.log(response.data.data)
-            //     })
-            //     .catch(e => {
-            //         console.log(e)
-            //     })
-            // console.log(data)
+            // var imgFIle
+            let reader = new FileReader()
+            reader.readAsDataURL(this.file)
+            reader.onload=function(e){
+                // imgFIle = e.target.result
+                data.image = e.target.result
+                console.log(data)
+            }
+
+            Axios
+                .post('http://202.120.40.8:30727/activities', data)
+                .then(response => {
+                    console.log("Successfully!")
+                    console.log(response.data.data)
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            console.log(data)
         },
         info_cancel(){
                 this.form.onshow = false
