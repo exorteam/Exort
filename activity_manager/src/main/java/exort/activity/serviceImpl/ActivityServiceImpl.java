@@ -3,6 +3,10 @@ package exort.activity.serviceImpl;
 import exort.activity.dao.ActivityDao;
 import exort.activity.entity.*;
 import exort.activity.service.ActivityService;
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +24,8 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public PageList<Activity> getActivities(Filter select, int pagesize, int pagenum, int sortby){
-         return ad.selectActivities(select, pagesize, pagenum, sortby);
+    public PagedData<Activity> getActivities(Filter filter, PageQuery pageQuery){
+         return ad.selectActivities(filter, pageQuery.getPageSize(), pageQuery.getPageNum(), pageQuery.getSortBy());
     }
 
     @Override
@@ -105,13 +109,13 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public PageList<Integer> getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type){
+    public PagedData<Integer> getActivityUserIds(String activityid, PageQuery pageQuery, Integer userId, int type){
         try{
             if(userId==0){
-                return ad.getActivityUserIds( pagesize, pagenum, activityid, type);
+                return ad.getActivityUserIds(activityid, pageQuery.getPageSize(), pageQuery.getPageNum(), type);
             }{
                 List<Integer> result = ad.checkUserId(activityid, userId, type);
-                return new PageList<>(pagesize, pagenum, 1, result);
+                return new PagedData<Integer>(pageQuery.getPageSize(), pageQuery.getPageNum(), 1L, result);
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -1,7 +1,11 @@
 package exort.activity.serviceImpl;
 
-import exort.activity.entity.*;
 import exort.activity.service.ActivityService;
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.ActivityTime;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.TimeRange;
+import exort.api.http.common.entity.PagedData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +86,7 @@ public class ActivityServiceImplTest {
         filter.setIfReview(1);
         filter.setIfOnlyMem(1);
 
-        PageList<Activity> response = as.getActivities(filter, 9, 0, 0);
+        PagedData<Activity> response = as.getActivities(filter, 9, 0, 0);
         assertTrue(response.getPageSize() > 0);
     }
 
@@ -113,8 +117,8 @@ public class ActivityServiceImplTest {
     public void getActivityUserIds() {
         upsertActivity();
 
-        PageList<Integer> pageList1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
-        PageList<Integer> pageList2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
+        PagedData<Integer> pageList1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
+        PagedData<Integer> pageList2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
         assertTrue(pageList1.getPageSize()>0);
         assertEquals(ArrayList.class, pageList2.getContent().getClass());
     }

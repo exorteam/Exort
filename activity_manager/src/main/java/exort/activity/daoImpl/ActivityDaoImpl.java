@@ -1,10 +1,10 @@
 package exort.activity.daoImpl;
 
-import exort.activity.entity.PageList;
-
 import exort.activity.dao.ActivityDao;
-import exort.activity.entity.Activity;
-import exort.activity.entity.Filter;
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -49,7 +49,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public PageList<Activity> selectActivities(Filter select, int pagesize, int pagenum, int sortby) {
+    public PagedData<Activity> selectActivities(Filter select,  Integer pageSize, Integer pageNum, String sortBy) {
         try {
             Query query = new Query();
             if (select.getCreateTime() != null) {
@@ -90,15 +90,12 @@ public class ActivityDaoImpl implements ActivityDao {
 
             List<Activity> activities = mongoTemplate.find(query, Activity.class, "activity");
             if(activities==null){
-                return new PageList<>(pagesize, pagenum, 0, null);
+                return new PagedData<>(pageSize, pageNum, 0L, null);
             }
-            System.out.println(activities.size());
             int totalsize = activities.size();
-            int pageSize = min(9, pagesize);
-            int pageNum = pagenum * pagesize / pageSize;
             List<Activity> result = activities.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalsize));
 
-            return new PageList<>(pageSize, pageNum, totalsize, result);
+            return new PagedData<Activity>(pageSize, pageNum, (long) totalsize, result);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -119,7 +116,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public PageList<Integer> getActivityUserIds(int pagesize, int pagenum, String activityid, int type) {
+    public PagedData<Integer> getActivityUserIds(String activityid, Integer pageSize, Integer pageNum, int type) {
         try {
             Activity activity = mongoTemplate.findById(activityid, Activity.class);
             if (activity != null) {
@@ -130,15 +127,13 @@ public class ActivityDaoImpl implements ActivityDao {
                     userids = activity.getRealParticipantIds();
                 }
                 int totalsize = userids.size();
-                int pageSize = min(100, pagesize);
-                int pageNum = pagenum * pagesize / pageSize;
                 List<Integer> result;
                 if (userids.size() < pageNum * pageSize) {
                     result = new ArrayList<>();
                 } else {
                     result = userids.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalsize));
                 }
-                return new PageList<Integer>(pageSize, pageNum, totalsize, result);
+                return new PagedData<Integer>(pageSize, pageNum, (long)totalsize, result);
             }
             return null;
         } catch (Exception e) {
@@ -148,7 +143,7 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public List<Integer> checkUserId(String activityid, int userId, int type) {
+    public List<Integer> checkUserId(String activityid, Integer userId, int type) {
         try {
             Activity activity = mongoTemplate.findById(activityid, Activity.class);
             if (activity != null) {
@@ -174,5 +169,4 @@ public class ActivityDaoImpl implements ActivityDao {
             return null;
         }
     }
-
 }

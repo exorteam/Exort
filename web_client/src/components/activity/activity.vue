@@ -210,38 +210,6 @@ export default {
                 tag_show: false,
                 tagList:[],
             },
-            handleSelect() {
-                let data = this.select
-                data.tags = this.tag.tagList
-                axios.get('http://localhost:8000/activities', {
-                    params: {
-                        pagenum: 0,
-                        pagesize: 10,
-                        _body: btoa(JSON.stringify({data}))
-                    }
-                })
-                    .then(response => {
-                        this.cardList = response.data
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-            }
-        },
-        mounted() {
-            let data = {
-                tagList: [],
-                association: [],
-                keyword: "",
-                createTime: "",
-                signupTime: "",
-                startTime: "",
-                publishSelected: null,
-                signupSelected: null,
-                startSelected: null,
-                ifReview: false,
-                ifOnlyMem: false,
-            },
             totalSize: 103,
             pageNum: 2,
             pageSize: 9,
