@@ -112,8 +112,12 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
+  - name: exort-resources
+    path: /resources
   commands:
   - cd ./association_manager
+  - rm -rf src/main/resources
+  - cp -rf /resources/assomgr src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/association-manager docker:build -DpushImage
 
 trigger:
@@ -133,3 +137,6 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+  - name: exort-resources
+    host:
+      path: /home/ubuntu/exort

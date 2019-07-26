@@ -2,11 +2,11 @@ package exort.associationmanager.serviceImpl;
 
 import java.util.*;
 
+import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.MyObject;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
@@ -18,10 +18,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class AssociationServiceImplTest {
 
     @Autowired
