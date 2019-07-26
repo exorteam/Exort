@@ -101,6 +101,8 @@ steps:
       from_secret: conf_pass
   commands:
   - cd ./permission_manager
+  - echo $FTP_USER
+  - echo $FTP_PASS
   - wget -nH -m --ftp-user=$FTP_USER --ftp-password=$FTP_PASS ftp://cirno.wang/perm
   - mv -f perm src/main/resources
   - mvn clean test
