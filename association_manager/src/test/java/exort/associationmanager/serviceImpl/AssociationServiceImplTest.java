@@ -1,5 +1,73 @@
-//package exort.associationmanager.serviceImpl;
-//
+package exort.associationmanager.serviceImpl;
+
+
+import exort.api.http.review.entity.Application;
+import exort.associationmanager.entity.Association;
+import exort.associationmanager.repository.AssociationRepository;
+import exort.associationmanager.service.AssociationService;
+import org.bson.types.ObjectId;
+import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public  class AssociationServiceImplTest {
+    private List<String> Ids = new LinkedList<>();
+    @Autowired
+    AssociationService associationService;
+    @Autowired
+    AssociationRepository associationRepository;
+//    @BeforeEach
+//    void setUp() {
+//        String objectId1 = new ObjectId().toString();
+//        String objectId2 = new ObjectId().toString();
+//        String objectId3 = new ObjectId().toString();
+//        String objectId4 = new ObjectId().toString();
+//        String objectId5 = new ObjectId().toString();
+//        Ids.add(objectId1);
+//        Ids.add(objectId2);
+//        Ids.add(objectId3);
+//        Ids.add(objectId4);
+//        Ids.add(objectId5);
+//        associationRepository.save(new Association(objectId1,"test1","desc1","logo1", Arrays.asList("T1","T2"),1,null));
+//        associationRepository.save(new Association(objectId2,"test2","desc2","logo2", Arrays.asList("T1","T2"),1,null));
+//        associationRepository.save(new Association(objectId3,"test3","desc3","logo3", Arrays.asList("T1","T2"),1,null));
+//        associationRepository.save(new Association(objectId4,"test4","desc4","logo4", Arrays.asList("T1","T2"),1,null));
+//        associationRepository.save(new Association(objectId5,"test5","desc5","logo5", Arrays.asList("T1","T2"),0,"18+"));
+//    }
+
+    @Test
+    public void testCreateAssociation(){
+        int sizeb = associationRepository.findAll().size();
+        associationService.createAssociation("test6","desc6",Arrays.asList("T1","T2"),"logo6");
+        List<Association> associations = associationRepository.findAll();
+        assertEquals(sizeb+1, associations.size());
+//        assertEquals(perms.get(4), perm);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 //import java.util.Arrays;
 //import java.util.List;
 //import java.util.UUID;
