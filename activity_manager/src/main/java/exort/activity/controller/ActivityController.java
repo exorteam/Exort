@@ -10,6 +10,7 @@ import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.review.entity.CallbackParam;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class ActivityController {
     @PostMapping(value = "/activities")
     public ApiResponse<Activity> createNewActivity(@RequestBody Activity activity){
         try{
+            activity.setId((new ObjectId()).toString());
             Activity newActivity = as.upsertActivity(activity);
             if(newActivity==null){
                 return new ApiResponse<>("create new activity failed", "创建活动失败");
