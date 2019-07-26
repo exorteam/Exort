@@ -94,12 +94,12 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
-  - name: env
-    path: /env
+  - name: exort-resources
+    path: /resources
   commands:
   - cd ./permission_manager
-  - wget -nH -m --ftp-user=$(cat /env/ftp_user) --ftp-password=$(cat /env/ftp_pass) ftp://cirno.wang/perm
-  - mv -f perm src/main/resources
+  - rm -rf src/main/resources
+  - cp -rf /resources/perm src/main/resources
   - mvn clean test
 
 - name: build
@@ -116,12 +116,12 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
-  - name: env
-    path: /env
+  - name: exort-resources
+    path: /resources
   commands:
   - cd ./permission_manager
-  - wget -nH -m --ftp-user=$(cat /env/ftp_user) --ftp-password=$(cat /env/ftp_pass) ftp://cirno.wang/perm
-  - mv -f perm src/main/resources
+  - rm -rf src/main/resources
+  - cp -rf /resources/perm src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage
 
 trigger:
@@ -141,6 +141,6 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
-  - name: env
+  - name: exort-resources
     host:
-      path: /home/ubuntu/env
+      path: /home/ubuntu/exort
