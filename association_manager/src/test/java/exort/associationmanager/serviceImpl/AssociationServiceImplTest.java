@@ -2,13 +2,8 @@ package exort.associationmanager.serviceImpl;
 
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
-import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
-import exort.associationmanager.entity.MyObject;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 import org.bson.types.ObjectId;
@@ -19,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -38,7 +32,7 @@ public class AssociationServiceImplTest {
     private List<Association> 	associations 		= new ArrayList<>();
 
     @Before
-    public void createTestArticles(){
+    public void createTestAssociation(){
         for(int i=0;i<ASSOCIATION_NUM;i++){
             Association article = new Association();
             String Id = new ObjectId().toString();
@@ -53,7 +47,7 @@ public class AssociationServiceImplTest {
     }
 
     @After
-    public void clearTestArticles(){
+    public void clearTestAssociation(){
         repository.deleteAll(associations);
         associations.clear();
     }
@@ -75,53 +69,53 @@ public class AssociationServiceImplTest {
 
     }
 
-    @Test
-    public void testGet() {
-        repository.saveAll(associations);
-        for(int i=0;i<ASSOCIATION_NUM;i++){
-            final Association contrast = service.getAssociation(associations.get(i).getId());
-            Assert.assertEquals(associations.get(i),contrast);
-        }
-    }
+//    @Test
+//    public void testGet() {
+//        repository.saveAll(associations);
+//        for(int i=0;i<ASSOCIATION_NUM;i++){
+//            final Association contrast = service.getAssociation(associations.get(i).getId());
+//            Assert.assertEquals(associations.get(i),contrast);
+//        }
+//    }
 //
-    @Test
-    public void testUpdate() {
-        repository.saveAll(associations);
-        for(int i=0;i<ASSOCIATION_NUM;i++){
-            final Association e = associations.get(i);
-            final String title = UUID.randomUUID().toString();
-            final String content = UUID.randomUUID().toString();
-            e.setName(title);
-            e.setDescription(content);
-            e.setLogo(content);
-            e.setTags(Arrays.asList("a","s","d"));
-            service.editAssociation(e.getId(),e.getName(),e.getDescription(),e.getTags(),e.getLogo());
-            associations.set(i,e);
-        }
-        for(int i=0;i<ASSOCIATION_NUM;i++){
-            Association e = associations.get(i);
-            Association contrast = repository.findById(e.getId()).get();
-            Assert.assertEquals(e,contrast);
-        }
-    }
+//    @Test
+//    public void testUpdate() {
+//        repository.saveAll(associations);
+//        for(int i=0;i<ASSOCIATION_NUM;i++){
+//            final Association e = associations.get(i);
+//            final String title = UUID.randomUUID().toString();
+//            final String content = UUID.randomUUID().toString();
+//            e.setName(title);
+//            e.setDescription(content);
+//            e.setLogo(content);
+//            e.setTags(Arrays.asList("a","s","d"));
+//            service.editAssociation(e.getId(),e.getName(),e.getDescription(),e.getTags(),e.getLogo());
+//            associations.set(i,e);
+//        }
+//        for(int i=0;i<ASSOCIATION_NUM;i++){
+//            Association e = associations.get(i);
+//            Association contrast = repository.findById(e.getId()).get();
+//            Assert.assertEquals(e,contrast);
+//        }
+//    }
+////
+//    @Test
+//    public void testBlockAndUnblock() {
+//        repository.saveAll(associations);
+//        for(int i=0;i<ASSOCIATION_NUM;i++){
+//            final String id = associations.get(i).getId();
+//            final Association e1 = repository.findById(id).get();
+//            Assert.assertEquals(e1.getState(), Integer.valueOf(1));
 //
-    @Test
-    public void testBlockAndUnblock() {
-        repository.saveAll(associations);
-        for(int i=0;i<ASSOCIATION_NUM;i++){
-            final String id = associations.get(i).getId();
-            final Association e1 = repository.findById(id).get();
-            Assert.assertEquals(e1.getState(), Integer.valueOf(1));
-
-            service.patchAssociation(id,"block","18+");
-            final Association e2 = repository.findById(id).get();
-            Assert.assertEquals(e2.getState(),Integer.valueOf(0));
-
-            service.patchAssociation(id,"unblock","");
-            final Association e3 = repository.findById(id).get();
-            Assert.assertEquals(e3.getState(),Integer.valueOf(1));
-        }
-    }
+//            service.patchAssociation(id,"block","18+");
+//            final Association e2 = repository.findById(id).get();
+//            Assert.assertEquals(e2.getState(),Integer.valueOf(0));
+//
+//            service.patchAssociation(id,"unblock","");
+//            final Association e3 = repository.findById(id).get();
+//            Assert.assertEquals(e3.getState(),Integer.valueOf(1));
+//        }
+//    }
 
 //    @Test
 //    public void testListWithFilter() {
