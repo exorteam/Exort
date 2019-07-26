@@ -1,15 +1,16 @@
-package exort.apiserver.entity;
+package exort.auth.entity;
 
-import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import lombok.Data;
+
 @Data
-public class UserInfo {
+public class UserAccount {
 
 	@Id
-	private int id;
+	private int    id;
 
-	private int type;
 	private String username;
 	private String password;
+
 }

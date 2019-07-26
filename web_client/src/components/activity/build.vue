@@ -99,43 +99,43 @@
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            form: {
-                title: '',
-                signup_start_time: '',
-                signup_end_time: '',
-                start_time: '',
-                end_time: '',
-                checked1: false,
-                checked2: false,
-                numberOfPeople: 30
-            },
-            foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
-            show: true,
-        }
-    },
-    methods: {
-        onSubmit(evt) {
-            evt.preventDefault()
-            alert(JSON.stringify(this.form))
+    export default {
+        data() {
+            return {
+                form: {
+                    title: '',
+                    signup_start_time: '',
+                    signup_end_time: '',
+                    start_time: '',
+                    end_time: '',
+                    checked1: false,
+                    checked2: false,
+                    numberOfPeople: 30
+                },
+                foods: [{text: 'Select One', value: null}, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+                show: true,
+            }
         },
-        onReset(evt) {
-            evt.preventDefault()
-            // Reset our form values
-            this.form.email = ''
-            this.form.name = ''
-            this.form.food = null
-            this.form.checked = []
-            // Trick to reset/clear native browser form validation state
-            this.show = false
-            this.$nextTick(() => {
-            this.show = true
-            })
+        methods: {
+            onSubmit(evt) {
+                evt.preventDefault()
+                alert(JSON.stringify(this.form))
+            },
+            onReset(evt) {
+                evt.preventDefault()
+                // Reset our form values
+                this.form.email = ''
+                this.form.name = ''
+                this.form.food = null
+                this.form.checked = []
+                // Trick to reset/clear native browser form validation state
+                this.show = false
+                this.$nextTick(() => {
+                    this.show = true
+                })
+            }
         }
     }
-  }
 </script>
 
 <style>

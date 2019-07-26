@@ -41,14 +41,14 @@
     </div>
 </template>
 <script>
-export default {
-    props: {
-        row: Object
+    export default {
+        props: {
+            row: Object
+        }
     }
-}
 </script>
 <style scoped>
-.expand-row{
-    margin-bottom: 16px;
-}
+    .expand-row {
+        margin-bottom: 16px;
+    }
 </style>
