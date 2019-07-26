@@ -24,6 +24,9 @@ public class Association {
 
 	public boolean hasTags(List<String> ask_tags){
 		int len = ask_tags.size();
+		if(len==0){
+			return true;
+		}
 		for (int i = 0; i < len; i++) {
 			if (tags.contains(ask_tags.get(i))){
 				return true;

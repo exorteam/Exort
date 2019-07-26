@@ -44,6 +44,9 @@ public class AssociationManagerController{
             body.setTags(new LinkedList<>());
         }
         page = PageQuery.relocate(page, 6, 500);
+        System.out.println(page);
+        System.out.println(body);
+
         PagedData<Association> associationList = service.listAssociations(body,page.getPageNum(),page.getPageSize());
         return new ApiResponse<>(associationList);
     }
@@ -102,7 +105,12 @@ public class AssociationManagerController{
 
     @PutMapping("/associations/{assoId}/state")
     public ApiResponse<Object> patchAssociation(@RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
-        if(body.getOperation() == null || body.getOperation()!="block" || body.getOperation() != "unblock"){
+        System.out.println(body.getOperation().getClass() );
+        System.out.println("block".getClass());
+        System.out.println(Arrays.asList("block","unblock").contains(body.getOperation() ));
+
+
+        if(body.getOperation() == null | !Arrays.asList("block","unblock").contains(body.getOperation() )){
             throw new ApiError(400,"invlaidType","无效的申请类型");
         }
         if(!service.patchAssociation(assoId,body.getOperation(),body.getArg())){
