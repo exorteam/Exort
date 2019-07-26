@@ -19,6 +19,8 @@ public interface AssociationService{
 
     public Association createAssociation(String name, String description, List<String> tags, String logo);
 
+    public Association createAssociationWithId(String assoId, String name,String description,List<String> tags,String logo);
+
     public boolean deleteAssociation(String assoId );
 
     public Association editAssociation(String assoId, String name,String description,List<String> tags,String logo);

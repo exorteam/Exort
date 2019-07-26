@@ -27,9 +27,22 @@ public class AssociationServiceImpl implements AssociationService{
     @Autowired
     private AssociationRepository assoRepository;
     public Association getAssociation(String assoId){
-        ApiResponse responseBody = new ApiResponse<>();
-        Association association = assoRepository.findById(assoId).get();
+        Association association = new Association();
+        if (assoRepository.existsById(assoId)) {
+            association = assoRepository.findById(assoId).get();
+        }
+        if (association == new Association() ) return null;
         return  association;
+    }
+    public Association createAssociation(String name,String description,List<String> tags,String logo){
+        Association association= new Association(new ObjectId().toString(),name,description,logo,tags,1,null);
+        assoRepository.save(association);
+        return association;
+    }
+    public Association createAssociationWithId(String assoId, String name,String description,List<String> tags,String logo){
+        Association association= new Association(assoId,name,description,logo,tags,1,null);
+        assoRepository.save(association);
+        return association;
     }
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
         List<Association> associations = assoRepository.findAll();
@@ -85,11 +98,7 @@ public class AssociationServiceImpl implements AssociationService{
         }
         return new PagedData<Association>(realPageNum,realPageSize,Long.valueOf(totalSize),associations.subList(subFirst,subLast));
     }
-    public Association createAssociation(String name,String description,List<String> tags,String logo){
-        Association association= new Association(new ObjectId().toString(),name,description,logo,tags,1,null);
-        assoRepository.save(association);
-        return association;
-    }
+
     public boolean deleteAssociation(String assoId ){
         if(assoRepository.findById(assoId)==null){
             return false;
