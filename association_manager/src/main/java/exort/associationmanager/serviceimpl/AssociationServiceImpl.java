@@ -49,6 +49,7 @@ public class AssociationServiceImpl implements AssociationService{
         System.out.println("我进来了");
         List<Association> associations = assoRepository.findAll();
         System.out.println("我从数据库拉完数据了");
+
         Integer state = params.getState();
         if(state != null && state != 2){
             associations.removeIf(association -> !state.equals(association.getState()));
