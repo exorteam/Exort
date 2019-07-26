@@ -99,23 +99,23 @@ public class AssociationServiceImplTest {
         }
     }
 ////
-//    @Test
-//    public void testBlockAndUnblock() {
-//        repository.saveAll(associations);
-//        for(int i=0;i<ASSOCIATION_NUM;i++){
-//            final String id = associations.get(i).getId();
-//            final Association e1 = repository.findById(id).get();
-//            Assert.assertEquals(e1.getState(), Integer.valueOf(1));
-//
-//            service.patchAssociation(id,"block","18+");
-//            final Association e2 = repository.findById(id).get();
-//            Assert.assertEquals(e2.getState(),Integer.valueOf(0));
-//
-//            service.patchAssociation(id,"unblock","");
-//            final Association e3 = repository.findById(id).get();
-//            Assert.assertEquals(e3.getState(),Integer.valueOf(1));
-//        }
-//    }
+    @Test
+    public void testBlockAndUnblock() {
+        repository.saveAll(associations);
+        for(int i=0;i<ASSOCIATION_NUM;i++){
+            final String id = associations.get(i).getId();
+            final Association e1 = repository.findById(id).get();
+            Assert.assertEquals(e1.getState(), Integer.valueOf(1));
+
+            service.patchAssociation(id,"block","18+");
+            final Association e2 = repository.findById(id).get();
+            Assert.assertEquals(e2.getState(),Integer.valueOf(0));
+
+            service.patchAssociation(id,"unblock","");
+            final Association e3 = repository.findById(id).get();
+            Assert.assertEquals(e3.getState(),Integer.valueOf(1));
+        }
+    }
 
 //    @Test
 //    public void testListWithFilter() {
