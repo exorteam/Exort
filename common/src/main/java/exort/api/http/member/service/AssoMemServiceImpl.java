@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
+@Service
 public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
 
     @Value("${exort.mem.protocol:http}")
