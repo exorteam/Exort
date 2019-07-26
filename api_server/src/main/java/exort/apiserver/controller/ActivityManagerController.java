@@ -1,11 +1,17 @@
 package exort.apiserver.controller;
 
-import javax.websocket.server.PathParam;
-
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.RequestActivity;
+import exort.api.http.activity.entity.Signup;
+import exort.api.http.activity.service.ActivityService;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,70 +19,65 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import exort.apiserver.service.ActivityManagerService;
-import exort.apiserver.service.ActivityManagerService.*;
-
 @RestController
 @RequestMapping(path="/activities")
 public class ActivityManagerController {
 
     @Autowired
-    private ActivityManagerService service;
+    private ActivityService service;
 
     @PostMapping("/")
-    public Response createNewActivity(@RequestBody Activity activity){
+    public ApiResponse<Activity> createNewActivity(@RequestBody Activity activity){
         return service.createNewActivity(activity);
     }
 
     @PutMapping("/{id}")
-    public Response updateActivity(@RequestBody Activity activity, @PathVariable("id") String id){
+    public ApiResponse<Activity> updateActivity(@RequestBody Activity activity, @PathVariable("id") String id){
         return service.updateActivity(activity,id);
     }
 
     @GetMapping("/")
-    public Response getActivities(@RequestBody Select select, @PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby") int sortby){
-        return service.getActivities(select,pagesize,pagenum,sortby);
+    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, PageQuery pageQuery){
+        return service.getActivities(filter, pageQuery);
     }
 
     @PutMapping("/{id}/state")
-    public Response publishActivity(@PathVariable("id")String id, @RequestBody Request request){
-//        System.out.println(request.getType());
-        return service.publishActivity(id, request);
+    public ApiResponse<Object> publishActivity(@PathVariable("id")String id, @RequestBody RequestActivity requestActivity){
+        return service.publishActivity(id, requestActivity);
     }
 
     @PostMapping("/{id}/participants")
-    public Response addParticipants(@PathVariable("id") String id, @RequestBody Request request){
-        System.out.println(request.getParticipantIds());
-        return service.addParticipants(id, request);
+    public ApiResponse<Object> addParticipants(@PathVariable("id") String id, @RequestBody RequestActivity requestActivity){
+        return service.addParticipants(id, requestActivity);
     }
 
     @PostMapping("/{id}/realparticipants")
-    public Response addRealParticipants(@PathVariable("id")String id, @RequestBody Request request){
-        return service.addRealParticipants(id, request);
+    public ApiResponse<Object> addRealParticipants(@PathVariable("id")String id, @RequestBody RequestActivity requestActivity){
+        return service.addRealParticipants(id, requestActivity);
     }
 
     @DeleteMapping("/{id}/participants")
-    public Response deleteParticipants(@PathVariable("id")String id, @RequestBody Request request){
-        return service.deleteParticipants(id, request);
+    public ApiResponse<Object> deleteParticipants(@PathVariable("id")String id, @RequestBody RequestActivity requestActivity){
+        return service.deleteParticipants(id, requestActivity);
     }
 
     @GetMapping("/{id}/participants")
-    public Response getActivityParticipants(@PathParam(value = "pagesize")int pagesize,@PathParam(value = "pagenum")int pagenum,@PathVariable("id")String id,@RequestBody Request request){
-        return service.getActivityParticipants(pagesize,pagenum,id, request);
+    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, @PathVariable("id")String id,@RequestBody RequestActivity requestActivity){
+        return service.getActivityParticipants(pageQuery, id, requestActivity);
     }
 
     @GetMapping("/{id}/realparticipants")
-    public Response getActivityRealParticipants(@PathParam(value = "pagesize")int pagesize,@PathParam(value = "pagenum")int pagenum,@PathVariable("id")String id,@RequestBody Request request){
-        return service.getActivityRealParticipants(pagesize,pagenum,id, request);
+    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, @PathVariable("id")String id,@RequestBody RequestActivity requestActivity){
+        return service.getActivityRealParticipants(pageQuery, id, requestActivity);
     }
 
     @PostMapping(value = "/callback/acceptsignup")
-    public Response acceptSignup(@RequestBody Operation operation){
+    public ApiResponse<Object> acceptSignup(@RequestBody CallbackParam<Signup> operation){
         return service.acceptSignup(operation);
     }
 
     @GetMapping(value = "/{id}")
-    public Response getActivity(@PathVariable("id")String id){
+    public ApiResponse<Activity> getActivity(@PathVariable("id")String id){
         return service.getActivity(id);
     }
 
