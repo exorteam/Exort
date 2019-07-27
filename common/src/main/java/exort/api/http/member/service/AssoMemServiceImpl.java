@@ -17,6 +17,9 @@ import java.util.List;
 @Service
 public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
 
+    final private static String MEMBER = "association_member";
+    final private static String MANAGER = "association_root";
+
     @Value("${exort.mem.protocol:http}")
     public void setProtocol(String protocol) {
         super.setProtocol(protocol);
@@ -83,12 +86,6 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public ApiResponse<Boolean> checkUserPermissionInAssociation(int associationId, int userId, String permission) {
-        return request(new TypeToken<Boolean>() {
-        }, HttpMethod.GET, "/associations/{associationId}/members/{userId}/permissions/{permission}", associationId, userId, permission);
-    }
-
-    @Override
     public ApiResponse<List<Integer>> getUserAssociation(int userId) {
         return request(new TypeToken<List<Integer>>() {
         }, HttpMethod.GET, "/users/{userId}/associations", userId);
@@ -122,5 +119,22 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     public ApiResponse<Boolean> initDepartment(InitAssociationInfo initAssociationInfo) {
         return request(new TypeToken<Boolean>() {
         }, initAssociationInfo, HttpMethod.POST, "/associations");
+    }
+
+    @Override
+    public String scope(int associationId) {
+        return "association_" + associationId;
+    }
+
+    @Override
+    public String roleName(int associationId, int departmentId) {
+        switch (departmentId) {
+            case 1:
+                return MANAGER;
+            case 2:
+                return MEMBER;
+            default:
+                return "association_" + associationId + "_" + departmentId;
+        }
     }
 }
