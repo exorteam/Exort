@@ -10,6 +10,7 @@ import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.entity.AuthRequest;
+import exort.apiserver.entity.SystemAdminConstants;
 import exort.apiserver.service.AuthService;
 import lombok.extern.log4j.Log4j2;
 
@@ -17,11 +18,11 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class SysAdminInitConfig {
 
-	public final static String SYS_ADMIN_USER_USERNAME 	= "admin";
-	public final static String SYS_ADMIN_USER_PASSWORD 	= "123";
-	public final static String SYS_ADMIN_ROLE_NAME 		= "admin";
-	public final static String SYS_ADMIN_SCOPE_NAME 	= "sys";
-	public final static int    SYS_ADMIN_USER_ID		= 1;
+	private String SYS_ADMIN_USER_USERNAME 	= SystemAdminConstants.USERNAME;
+	private String SYS_ADMIN_USER_PASSWORD 	= SystemAdminConstants.PASSWORD;
+	private String SYS_ADMIN_ROLE_NAME 		= SystemAdminConstants.ROLE_NAME;
+	private String SYS_ADMIN_SCOPE_NAME 	= SystemAdminConstants.SCOPE_NAME;
+	private int    SYS_ADMIN_USER_ID		= SystemAdminConstants.ID;
 
 	@Autowired
 	private PermService permSvc;

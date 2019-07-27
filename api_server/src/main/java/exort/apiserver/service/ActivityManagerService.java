@@ -3,6 +3,7 @@ package exort.apiserver.service;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 public interface ActivityManagerService {
@@ -53,6 +54,7 @@ public interface ActivityManagerService {
     }
 
     @Data
+	@AllArgsConstructor
     public class Response<T> {
         private T data;
         private String error;

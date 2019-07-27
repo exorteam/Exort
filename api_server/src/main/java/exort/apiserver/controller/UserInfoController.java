@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.perm.service.PermService;
+import exort.apiserver.entity.SystemAdminConstants;
 import exort.apiserver.service.UserInfoService;
 import exort.apiserver.service.UserInfoService.UserInfo;
 import lombok.extern.log4j.Log4j2;
@@ -22,6 +24,8 @@ public class UserInfoController {
 
 	@Autowired
 	private UserInfoService infoSvc;
+	@Autowired
+	private PermService permSvc;
 
 	@GetMapping("/{id}")
 	public UserInfo getUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId){
@@ -38,12 +42,20 @@ public class UserInfoController {
 	@PostMapping("/{id}")
 	public UserInfo updateUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestBody UserInfo info){
 		log.info("Operator("+String.valueOf(operatorId)+") update user info of user("+String.valueOf(userId)+").");
+		if(operatorId != userId){
+			log.warn("Updating operation from another user should be rejected");
+			return null;
+		}
 		return infoSvc.updateUserInfo(userId,info);
 	}
 
 	@PatchMapping("/{id}")
 	public boolean disableUserById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
 		log.info("Operator("+String.valueOf(operatorId)+") toggle disability for user("+String.valueOf(userId)+").");
+		if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME).getData() == null){
+			log.warn("Disabling by non-admin user should be rejected");
+			return false;
+		}
 		return infoSvc.disableUser(userId,disabled);
 	}
 }
