@@ -43,4 +43,16 @@ public class Association {
 		}
 		return false;
 	}
+
+	public exort.api.http.assomgr.entity.Association toCommon(){
+		exort.api.http.assomgr.entity.Association association = new exort.api.http.assomgr.entity.Association();
+		association.setDescription(this.getDescription());
+		association.setId(this.getId());
+		association.setLogo(this.getLogo());
+		association.setName(this.getName());
+		association.setReason(this.getReason());
+		association.setState(this.getState());
+		association.setTags(this.getTags());
+		return association;
+	}
 }

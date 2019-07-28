@@ -1,17 +1,14 @@
 package exort.associationmanager.service;
 
+import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.MyObject;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
-
-@Service
 public interface AssociationService{
     public Association getAssociation(String assoId);
 

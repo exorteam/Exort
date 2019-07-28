@@ -2,6 +2,7 @@ package exort.associationmanager.serviceimpl;
 
 import java.util.*;
 
+import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
@@ -9,7 +10,6 @@ import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
 import exort.associationmanager.entity.MyObject;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
