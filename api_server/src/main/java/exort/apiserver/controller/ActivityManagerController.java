@@ -20,7 +20,6 @@ import exort.apiserver.service.ActivityManagerService.Operation;
 import exort.apiserver.service.ActivityManagerService.Request;
 import exort.apiserver.service.ActivityManagerService.Response;
 import exort.apiserver.service.ActivityManagerService.Select;
-import exort.apiserver.service.AssoManagerService;
 
 @RestController
 @RequestMapping(path="/activities")
@@ -35,8 +34,6 @@ public class ActivityManagerController {
 
     @Autowired
     private ActivityManagerService activitySvc;
-	@Autowired
-	private AssoManagerService assoSvc;
 	@Autowired
 	private PermService permSvc;
 
