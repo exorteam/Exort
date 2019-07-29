@@ -13,12 +13,15 @@ import exort.api.http.common.entity.ApiResponse;
 @RequestMapping(path="/perm")
 public class PermController {
 
+	private final String SYS_SCOPE_NAME = "System";
+	private final String SYS_ADMIN_ROLE_NAME = "admin";
+
 	@Autowired
 	private PermService service;
 
 	@GetMapping("/admin")
 	public ApiResponse checkIfIsAdministrator(@RequestAttribute("id") Long id){
-		return service.hasRole(id,"System","admin");
+		return service.hasRole(id,SYS_SCOPE_NAME,SYS_ADMIN_ROLE_NAME);
 	}
 	
 }
