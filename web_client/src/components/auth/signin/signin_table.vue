@@ -59,7 +59,9 @@ export default {
 	},
 	methods: {
 		validateToken:function(){
+			const that = this;
 			const token = window.localStorage.getItem('token');
+			if(!token)return;
 			this.axios({
 				method:'post',
 				url:'/auth',
@@ -67,12 +69,20 @@ export default {
 			}).then((res)=>{
 				console.log(res.data);
 				if(res.data.id){
-					this.axios({
+					that.axios.defaults.headers.common.Authorization = 'Bearer ' + token;
+					that.$Message.success("Login success, " + res.data.username);
+					that.axios({
 						method:'get',
-						url:'/perm/admin',
+						url:'/permission/admin',
 					}).then((res)=>{
 						console.log(res.data);
+					}).catch((err)=>{
+						console.log(err);
 					})
+				}
+				else{
+					// token invalid, do clean local storage and stay at login path
+					window.localStorage.removeItem('token')
 				}
 			})
 		},
@@ -90,14 +100,15 @@ export default {
 				if(res.data.token){
 					window.localStorage.setItem('token',res.data.token);
 					this.axios.defaults.headers.common.Authorization = 'Bearer ' + res.data.token;
-					that.axios({
-						method: 'post',
-						url: '/auth',
-						data: res.data.token
-					}).then((res)=>{
-						that.$Message.success("Login success, " + res.data.username);
-						this.$router.push('admin');
-					})
+					this.validateToken();
+					/*that.axios({                                                     */
+					/*    method: 'post',                                              */
+					/*    url: '/auth',                                                */
+					/*    data: res.data.token                                         */
+					/*}).then((res)=>{                                                 */
+					/*    that.$Message.success("Login success, " + res.data.username);*/
+					/*    this.$router.push('admin');                                  */
+					/*})                                                               */
 				}
 
 			}).catch(function (error) {
