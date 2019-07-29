@@ -1,4 +1,4 @@
-package com.exort.association_member_management.entity;
+package exort.association_member_manager.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,12 +10,11 @@ import javax.persistence.*;
 @Entity
 @IdClass(DepartmentId.class)
 @ApiModel(value = "Department", description = "部门信息实体对象")
-public class Department {
+public class Department extends exort.api.http.member.entity.DepartmentInfo {
 
     @Id
     int associationId;
     @Id
-    @GeneratedValue
     int departmentId;
     @ApiModelProperty(value = "部门名称", name = "name")
     String name;
@@ -31,6 +30,18 @@ public class Department {
         this.name = name;
         this.description = description;
         this.parentId = parentId;
+    }
+
+    public Department(int associationId, int departmentId, String name, String description, int parentId) {
+        this.associationId = associationId;
+        this.departmentId = departmentId;
+        this.name = name;
+        this.description = description;
+        this.parentId = parentId;
+    }
+
+    public Department(int associationId) {
+        this.associationId = associationId;
     }
 
     public Department() {

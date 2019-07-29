@@ -51,7 +51,7 @@ public class SysAdminInitConfig {
 
 		}
 
-		if(!(permSvc.hasRole(Long.valueOf(SYS_ADMIN_USER_ID),SYS_ADMIN_SCOPE_NAME,SYS_ADMIN_ROLE_NAME).getData() == null)){
+		if(permSvc.hasRole(Long.valueOf(SYS_ADMIN_USER_ID),SYS_ADMIN_SCOPE_NAME,SYS_ADMIN_ROLE_NAME).getData() == null){
 			log.info("User["+String.valueOf(SYS_ADMIN_USER_ID)+"] does not have admin role in sys scope, now granting...");
 
 			if(permSvc.grantRoles(Long.valueOf(SYS_ADMIN_USER_ID),SYS_ADMIN_SCOPE_NAME,Arrays.asList(SYS_ADMIN_ROLE_NAME)).getData() == null){
