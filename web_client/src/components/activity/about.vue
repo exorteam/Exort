@@ -1,7 +1,7 @@
 <template>
     <div>
         <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
-        <!-- <img :src="form.image" style="width: 40%; height: 400px; margin: 10px 10px 20px 40px; float: right"/> -->
+        <img :src="form.image" style="width: 40%; height: 400px; margin: 10px 10px 20px 40px; float: right"/>
         <div style="margin-top: 10px height: 600px">
             <p slot="title">名称： {{form.title}}</p>
             <p>创建时间： {{form.createTime}} </p>
@@ -15,8 +15,8 @@
         <div>
             <activityCreate :form="newform"/>
             <b-button  @click="newform.onshow=true" variant="primary">修改</b-button>
-            <b-button v-if="form.publishState" @click="handlePublish" type="submit" variant="danger">发布</b-button>
-            <b-button v-if="!form.publishState" @click="handleWithdraw" type="submit" variant="danger">发布</b-button>
+            <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger">发布</b-button>
+            <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger">撤回</b-button>
         </div>
         <div style="margin-top: 100px">
             <p style="margin-top: 200px">
@@ -108,9 +108,11 @@ export default {
             onshow: false,
             activityState: 0,
             signUpList: signUpLists,
-
             participants: [],
             realParticipants: [],
+            signUpList: signUpLists,
+            participants: [],
+            realParticipants:[],
             attribute: [
                 {
                     type: 'expand',
@@ -135,39 +137,11 @@ export default {
                     title: '年级',
                     key: 'grade'
                 },
-                signUpList: signUpLists,
-
-                data9: data,
-                columns10: [
-                    {
-                        type: 'expand',
-                        width: 50,
-                        render: (h, params) => {
-                            return h(expandRow, {
-                                props: {
-                                    row: params.row
-                                }
-                            })
-                        }
-                    },
-                    {
-                        title: '学号',
-                        key: 'studentID'
-                    },
-                    {
-                        title: '姓名',
-                        key: 'name'
-                    },
-                    {
-                        title: '年级',
-                        key: 'grade'
-                    },
-                    {
-                        title: '学院',
-                        key: 'department'
-                    }
-                ]
-            }
+                {
+                    title: '学院',
+                    key: 'department'
+                }
+            ]
         }
     },
     methods: {
@@ -175,7 +149,7 @@ export default {
             let data = {type:"publish"}
             let activityId = (this.$store.getters.get_activityid).toString()
 			Axios
-				.post("http://202.120.40.8/activities/"+activityId, data)
+				.post("http://202.120.40.8:30727/activities/"+activityId, data)
 				.then(response => {
 					console.log(response.data)
 				})
@@ -187,7 +161,7 @@ export default {
             let data = {type:"withdraw"}
             let activityId = (this.$store.getters.get_activityid).toString()
 			Axios
-				.post("http://202.120.40.8/activities/"+activityId,  data)
+				.post("http://202.120.40.8:30727/activities/"+activityId,  data)
 				.then(response => {
 					console.log(response.data)
 				})
@@ -252,9 +226,8 @@ export default {
                     console.log(e)
                 })
         }
-	},
-    mounted() {
     }
+}
 </script>
 
 <style>

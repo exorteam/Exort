@@ -65,7 +65,7 @@
                 </Card>
             </div>
             <div>
-                <Page :total="totalSize" :current="pageNum" :page-size="pageSize" simple @on-change="handlePage" style="text-align: center;"></Page>
+                <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum" :page-size.sync="page.pageSize" simple @on-change="handleSelect" style="text-align: center;"></Page>
             </div>
         </div>
     </div>
@@ -164,10 +164,10 @@ let cardLists=[
     }
 ]
 
-    import ActivityCreate from './activity_create.vue'
-    import TagChoose from './tag_choose'
-    import axios from 'axios'
-    import image from '../../assets/activity/cover1.jpeg'
+import ActivityCreate from './activity_create.vue'
+import TagChoose from './tag_choose'
+import axios from 'axios'
+import image from '../../assets/activity/cover1.jpeg'
 
 export default {
     name: 'activity',
@@ -182,6 +182,23 @@ export default {
             startSelected: null,
             startSelectList: startSelectLists,
             cardList: cardLists,
+            page:{
+                totalSize: 9,
+                pageNum: 0,
+                pageSize: 9,
+            },
+            select:{
+                association: [],
+                keyword: "",
+                createTime: "",
+                signupTime: "",
+                startTime: "",
+                publishSelected: null,
+                signupSelected: null,
+                startSelected: null,
+                ifReview: 0,
+                ifOnlyMem: 0
+            },
             form:{
                 onshow: false,
                 title: "",
@@ -209,16 +226,10 @@ export default {
             tag:{
                 tag_show: false,
                 tagList:[],
-            },
-            totalSize: 103,
-            pageNum: 2,
-            pageSize: 9,
+            }
         }
     },
     methods: {
-        handlePage(){
-
-        },
         to_detail(value){
             // console.log(value)
             sessionStorage.setItem('activityid', value)
@@ -232,8 +243,8 @@ export default {
             axios.
                 get('http://202.120.40.8:30727/activities', {
                     params:{
-                        pagenum:0,
-                        pagesize:9,
+                        pagenum: this.page.pageNum,
+                        pagesize: this.page.pageSize,
                         _body: btoa(JSON.stringify({data}))
                     }
                 })
@@ -249,39 +260,27 @@ export default {
         }
     },
     mounted() {
-        let data = {
-            tagList:[],
-            association: [],
-            keyword: "",
-            createTime: "",
-            signupTime: "",
-            startTime: "",
-            publishSelected: null,
-            signupSelected: null,
-            startSelected: null,
-            ifReview: 0,
-            ifOnlyMem: 0,
-        }
-        axios
-            .get('http://202.120.40.8:30727/activities', {
-                params:{
-                    pagenum:0,
-                    pagesize:9,
-                    _body: btoa(JSON.stringify({data}))
-                }
-            })
-            .then(response => {
-                this.cardList = response.data.content
-                this.totalSize = response.data.totalSize
-                this.pageNum = response.data.pageNum
-                this.pageSize = response.data.pageSize
-            })
-            .catch(e => {
-                console.log(e)
-            })
+        this.handleSelect()
+    //     let data = this.select
+    //     data.tagList = this.tag.tagList
+
+    //     axios
+    //         .get('http://202.120.40.8:30727/activities', {
+    //             params:{
+    //                 pagenum:0,
+    //                 pagesize:9,
+    //                 _body: btoa(JSON.stringify({data}))
+    //             }
+    //         })
+    //         .then(response => {
+    //             this.cardList = response.data.content
+    //             this.totalSize = response.data.totalSize
+    //             this.pageNum = response.data.pageNum
+    //             this.pageSize = response.data.pageSize
+    //         })
+    //         .catch(e => {
+    //             console.log(e)
+    //         })
     },
 }
 </script>
-
-<style scoped>
-</style>
