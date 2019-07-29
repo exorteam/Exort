@@ -135,41 +135,11 @@ export default {
                     title: '年级',
                     key: 'grade'
                 },
-                signUpList: signUpLists,
 
-                data9: data,
-                columns10: [
-                    {
-                        type: 'expand',
-                        width: 50,
-                        render: (h, params) => {
-                            return h(expandRow, {
-                                props: {
-                                    row: params.row
-                                }
-                            })
-                        }
-                    },
-                    {
-                        title: '学号',
-                        key: 'studentID'
-                    },
-                    {
-                        title: '姓名',
-                        key: 'name'
-                    },
-                    {
-                        title: '年级',
-                        key: 'grade'
-                    },
-                    {
-                        title: '学院',
-                        key: 'department'
-                    }
                 ]
             }
-        }
-    },
+        },
+
     methods: {
         handlePublish(){
             let data = {type:"publish"}
@@ -221,7 +191,7 @@ export default {
                 .get('http://202.120.40.8:30727/activities/' + data)
                 .then(response => {
                     this.form = response.data.data
-                    console.log(this.form)				
+                    console.log(this.form)
                     this.setData(this.form)
                 })
                 .catch(e => {
@@ -252,9 +222,8 @@ export default {
                     console.log(e)
                 })
         }
-	},
-    mounted() {
-    }
+	}}
+
 </script>
 
 <style>

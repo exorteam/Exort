@@ -4,10 +4,10 @@
         <div>
             <div style="margin-top: 15px; margin-left: 20px">
                 创建时间<!-- 活动创建时间搜索 -->
-                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>                
-                报名时间<!-- 活动报名时间搜索 -->            
+                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
+                报名时间<!-- 活动报名时间搜索 -->
                 <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
-                开始时间<!-- 活动开始时间搜索 -->            
+                开始时间<!-- 活动开始时间搜索 -->
                 <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
                 发布状态<!-- 根据活动发布状态搜索 -->
                 <b-form-select v-model="select.publishSelected" :options="publishSelectList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
@@ -194,7 +194,7 @@ export default {
                     }]
                 },
                 time: {
-                    type: 0, 
+                    type: 0,
                     time:[{
                         start: "",
                         end: ""
@@ -209,38 +209,6 @@ export default {
             tag:{
                 tag_show: false,
                 tagList:[],
-            },
-            handleSelect() {
-                let data = this.select
-                data.tags = this.tag.tagList
-                axios.get('http://localhost:8000/activities', {
-                    params: {
-                        pagenum: 0,
-                        pagesize: 10,
-                        _body: btoa(JSON.stringify({data}))
-                    }
-                })
-                    .then(response => {
-                        this.cardList = response.data
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-            }
-        },
-        mounted() {
-            let data = {
-                tagList: [],
-                association: [],
-                keyword: "",
-                createTime: "",
-                signupTime: "",
-                startTime: "",
-                publishSelected: null,
-                signupSelected: null,
-                startSelected: null,
-                ifReview: false,
-                ifOnlyMem: false,
             },
             totalSize: 103,
             pageNum: 2,
