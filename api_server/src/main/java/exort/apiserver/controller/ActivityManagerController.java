@@ -2,7 +2,6 @@ package exort.apiserver.controller;
 
 import javax.websocket.server.PathParam;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
