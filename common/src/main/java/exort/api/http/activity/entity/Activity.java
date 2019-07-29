@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class Activity {
     private String id;
-    private List<Integer> associationIds;
+    private List<String> associationIds;
     private Date createTime;
     private Date publishTime;
     private Date lastPublishTime;
@@ -29,7 +29,7 @@ public class Activity {
     private List<String> tags;
     private String image;
 
-    public Activity(List<Integer> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
+    public Activity(List<String> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
                     int publishState, int signupState, int state, boolean ifReview, boolean ifOnlyMem, int maxParticipants,
                     List<Integer> materialTemplateIds, List<Integer> participantIds, List<Integer> realParticipantIds,
                     List<String> tags, String image) {

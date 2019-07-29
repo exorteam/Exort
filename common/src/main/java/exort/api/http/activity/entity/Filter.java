@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class Filter {
-
+    private String associationId;
     private String keyword;
     private List<String> tags;
     private TimeRange createTime;
