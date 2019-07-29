@@ -124,19 +124,23 @@
                         ])
                     },
                     onOk: () => {
-                        let upload=this.specdept;
-                        this.axios({
-                            method: "put",
-                            data: upload,
-                            url: url,
-                        }).then((res) => {
-                            if (res.data.data) {
-                                this.$Message.info("修改成功！");
-                                this.gettree();
-                            } else {
-                                this.$Message.error("修改失败！");
-                            }
-                        })
+                        let upload = this.specdept;
+                        if (upload.name === null || upload.name === undefined || upload.name === "") {
+                            this.$Message.error("部门名称不能为空");
+                        } else {
+                            this.axios({
+                                method: "put",
+                                data: upload,
+                                url: url,
+                            }).then((res) => {
+                                if (res.data.data) {
+                                    this.$Message.info("修改成功！");
+                                    this.gettree();
+                                } else {
+                                    this.$Message.error("修改失败！");
+                                }
+                            })
+                        }
                     }
                 });
             },
@@ -160,19 +164,22 @@
                         ])
                     },
                     onOk: () => {
-                        this.axios({
-                            method: 'post',
-                            url: "http://localhost:8080/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members",
-                            data: this.addUserInfo
-                        }).then((res) => {
-                            if (res.data.data === true) {
-                                this.getDepartmentUsers(this.specdept.associationId, this.specdept.departmentId);
-                                this.$Message.info("添加成功！");
-                            } else {
-                                this.$Message.error("添加失败！");
-                            }
-                        })
-
+                        if (this.addUserInfo.userId === null || this.addUserInfo.userId === undefined || this.addUserInfo.userId === "") {
+                            this.$Message.error("输入不能为空!");
+                        } else {
+                            this.axios({
+                                method: 'post',
+                                url: "http://localhost:8080/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members",
+                                data: this.addUserInfo
+                            }).then((res) => {
+                                if (res.data.data === true) {
+                                    this.getDepartmentUsers(this.specdept.associationId, this.specdept.departmentId);
+                                    this.$Message.info("添加成功！");
+                                } else {
+                                    this.$Message.error("添加失败！");
+                                }
+                            })
+                        }
                     }
                 });
             },
@@ -387,24 +394,26 @@
                         ])
                     },
                     onOk: () => {
-                        // console.log(data)
-                        let url = "http://localhost:8080/associations/" + data.department.associationId + "/departments";
-                        let departinfo = {
-                            "name": this.departmentName,
-                            "description": this.description,
-                            "parentId": data.department.departmentId
-                        };
-                        // console.log(departinfo);
-                        this.axios({
-                            method: 'post',
-                            url: url,
-                            data: departinfo
-                        }).then((res) => {
-                            this.departmentName = "";
-                            this.description = "";
-                            this.gettree();
-                            this.$Message.info("添加成功！");
-                        })
+                        if (this.departmentName === null || this.departmentName === undefined || this.departmentName === "") {
+                            this.$Message.error("部门名称不能为空");
+                        } else {
+                            let url = "http://localhost:8080/associations/" + data.department.associationId + "/departments";
+                            let departinfo = {
+                                "name": this.departmentName,
+                                "description": this.description,
+                                "parentId": data.department.departmentId
+                            };
+                            this.axios({
+                                method: 'post',
+                                url: url,
+                                data: departinfo
+                            }).then((res) => {
+                                this.departmentName = "";
+                                this.description = "";
+                                this.gettree();
+                                this.$Message.info("添加成功！");
+                            })
+                        }
                     }
                 });
 
