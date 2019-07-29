@@ -18,13 +18,13 @@
             <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger">发布</b-button>
             <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger">撤回</b-button>
         </div>
-        <div style="margin-top: 100px">
+        <div v-if="form.realParticipants.length" style="margin-top: 100px">
             <p style="margin-top: 200px">
             参加者
                 <Table :columns="attribute" :data="realParticipants"></Table>
             </p>
         </div>
-        <div style="margin-top: 50px">
+        <div v-if="form.realParticipants.length" style="margin-top: 50px">
             <p>
             申请者
                 <Table :columns="attribute" :data="participants"></Table>
@@ -99,12 +99,17 @@ export default {
     components: { expandRow , activityCreate },
     data() {
         return{
-            stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
-            statusList: ["default", "default", "processing", "warning", "error", "success"],
+            stateList: [ '未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束' ],
+            statusList: [ "default", "default", "processing", "warning", "error", "success" ],
 			form: {},
 			newform:{
             	onshow: false
-			},
+            },
+            participantPage:{
+                pageSize: 8,
+                pageNum:0,
+                totalSize: 0,
+            },
             onshow: false,
             activityState: 0,
             signUpList: signUpLists,
@@ -191,22 +196,32 @@ export default {
         getActivity(){
             let data = (this.$store.getters.get_activityid).toString()
             //请求activity信息
-            Axios
-                .get('http://202.120.40.8:30727/activities/' + data)
-                .then(response => {
-                    this.form = response.data.data
-                    console.log(this.form)				
-                    this.setData(this.form)
-                })
-                .catch(e => {
-                    console.log(e)
-                })
+            this.axios({
+                method:"get",
+                url: '/activities/' + data,
+            })
+            .then(response => {
+                console.log(response.data)
+                this.form = response.data.data
+                console.log(this.form)				
+                this.setData(this.form)
+            })
+            .catch(e => {
+                console.log(e)
+            })
         },
         getParticipants(){
-            let data = (this.$store.getters.get_activityid).toString()
             //请求activity的participants
+            let data={type:"accept" }
             Axios
-                .get('http://202.120.40.8:30727/activities/' + data+"/participants")
+                .get('http://202.120.40.8:30727/applications', {
+                    params: {
+                        pageSize: this.participantPage.pageSize,
+                        pageNum: this.participantPage.pageNum,
+                        sortBy: 0,
+                        _body: btoa(JSON.stringify({data}))
+                    }
+                })
                 .then(response => {
                     this.participants = response.data.data
                 })
@@ -218,7 +233,7 @@ export default {
             let data = (this.$store.getters.get_activityid).toString()
             //请求activity的participants
             Axios
-                .get('http://202.120.40.8:30727/activities/' + data+"/realparticipants")
+                .get('/activities/' + data+"/realparticipants")
                 .then(response => {
                     this.realParticipants = response.data.data
                 })
@@ -226,7 +241,11 @@ export default {
                     console.log(e)
                 })
         }
-    }
+    },
+    mounted() {
+        this.getParticipants()
+        this.getRealParticipants()
+    },
 }
 </script>
 

@@ -22,7 +22,7 @@
                 发起社团<!-- 直接输入社团名称 -->
                 <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
                 关键词<!-- keyword -->
-                <Input v-model="select.keyword" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                <Input v-model="select.keyword" placeholder="请输入搜索关键词" style="width: 300px; margin-right: 40px"/>
                 是否需要审核
                 <Checkbox v-model="select.ifReview" style="margin-right: 40px"/>
                 是否允许非本组织成员参加
@@ -188,7 +188,7 @@ export default {
                 pageSize: 9,
             },
             select:{
-                association: [],
+                association: "",
                 keyword: "",
                 createTime: "",
                 signupTime: "",
@@ -240,6 +240,7 @@ export default {
         handleSelect(){
             let data = this.select
             data.tags = this.tag.tagList
+            console.log(data)
             axios.
                 get('http://202.120.40.8:30727/activities', {
                     params:{
@@ -260,27 +261,30 @@ export default {
         }
     },
     mounted() {
-        this.handleSelect()
-    //     let data = this.select
-    //     data.tagList = this.tag.tagList
+        // this.handleSelect()
+        // let data = this.select
+        // data.tagList = this.tag.tagList
 
-    //     axios
-    //         .get('http://202.120.40.8:30727/activities', {
-    //             params:{
-    //                 pagenum:0,
-    //                 pagesize:9,
-    //                 _body: btoa(JSON.stringify({data}))
-    //             }
-    //         })
-    //         .then(response => {
-    //             this.cardList = response.data.content
-    //             this.totalSize = response.data.totalSize
-    //             this.pageNum = response.data.pageNum
-    //             this.pageSize = response.data.pageSize
-    //         })
-    //         .catch(e => {
-    //             console.log(e)
-    //         })
+        // this.axios({
+        //     method:"get",
+        //     url:"activities",
+        //     data: {
+        //         // params:{
+        //             pagenum:0,
+        //             pagesize:9,
+        //             _body: btoa(JSON.stringify({data}))
+        //         // }
+        //     }
+        // }) 
+        // .then(response => {
+        //     this.cardList = response.data.content
+        //     this.totalSize = response.data.totalSize
+        //     this.pageNum = response.data.pageNum
+        //     this.pageSize = response.data.pageSize
+        // })
+        // .catch(e => {
+        //     console.log(e)
+        // })
     },
 }
 </script>
