@@ -1,6 +1,7 @@
 package exort.apiserver.service.impl;
 
 import exort.api.http.common.RestTemplate;
+import exort.api.http.common.entity.Operation;
 import exort.apiserver.service.AssociationManagerService;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -54,10 +55,10 @@ public class AssociationServiceImpl implements AssociationManagerService {
         return response.getBody();
     }
 
-    public Response<Object> patchAssociation(String assoId, PatchAssociationInfo body){
+    public Response<Object> patchAssociation(String assoId, Operation<String> body){
         HttpMethod method = HttpMethod.PUT;
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<PatchAssociationInfo> requestEntity = new HttpEntity<>(body,headers);
+        HttpEntity<Operation<String>> requestEntity = new HttpEntity<>(body,headers);
         ResponseEntity<Response> response = restTemplate.exchange("http://202.120.40.8:30725/associations/"+assoId+"/state",method,requestEntity,Response.class);
         return response.getBody();
 

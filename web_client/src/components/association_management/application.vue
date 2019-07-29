@@ -48,7 +48,7 @@
                   <Divider />
                 </div>
                 <div>
-                  <i-table :columns="handledAppColumns" :data="pendingAppData"></i-table>
+                  <i-table :columns="handledAppColumns" :data="handledAppData"></i-table>
                 </div>
                 <div id="Divide">
                   <Divider />
@@ -71,13 +71,23 @@ import TagChoose from '../activity/tag_choose.vue'
 import axios from 'axios'
 export default {
     props: {
-            pendingAppData: [
-            ],
-            handledAppData: [
-            ],
+            pendingAppData: null,
+            handledAppData: null,
     },
     data(){
         return {
+            pendingAppTypeSelected:['applying','applying_unblocked'],
+            pendingAppTypeList: [
+                { text: '申请创建社团', value: 'applying' },
+                { text: '申请取消锁定', value: 'applying_unblocked' }
+            ],
+            handledAppTypeSelected:['pass','canceled','refused'],
+            handledAppTypeList: [
+                { text: '已通过申请', value: 'pass' },
+                { text: '已取消申请', value: 'canceled' },
+                { text: '已拒绝申请', value: 'refused' },
+            ],
+            inputDefaultValue : "",
             pendingAppColumn: [
                 {
                     title: '申请人Id',
@@ -99,9 +109,30 @@ export default {
                     title: '申请类型',
                     key: 'apply_type'
                 },
+                // {
+                //     title: '处理',
+                //     key: 'operate',
+                // },
                 {
                     title: '处理',
                     key: 'operate',
+                    width: 120,
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'success',
+                                    size: 'small'
+                                }
+                            }, '接受'),
+                            h('Button', {
+                                props: {
+                                    type: 'warning',
+                                    size: 'small'
+                                }
+                            }, '拒绝')
+                        ]);
+                    }
                 }
             ],
             handledAppColumns: [
@@ -134,6 +165,11 @@ export default {
                     key: 'operate_result',
                 }
             ],
+            pageProp:{
+                totalSize : 50,
+                pageSize : 6,
+                pageNum : 1
+            },
         }
     },
     computed: {

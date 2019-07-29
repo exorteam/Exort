@@ -5,7 +5,7 @@
             <div id=SearchAsso>
                 <i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
                 <Button type="info" @click="getAssociationList">搜索</Button>
-                <Button type="info" @click="showCreateForm" style="  position:relative ;left:20px;">创建社团</Button>
+                <Button type="info" @click="showCreateForm" style="  position:relative ;left:20px;">创建社团申请</Button>
                 <CreateAssociation :form ="form"/>
                 <div>
                     <div style="display:inline">
@@ -21,9 +21,8 @@
         <div id="Divide">
            <Divider />
         </div>
-        <b-form-checkbox-group v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>
+        <b-form-checkbox-group @input="get" v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>
         </div>
-
         <div id="Divide">
            <Divider />
         </div>
@@ -34,7 +33,6 @@
                 <Icon type="ios-film-outline"></Icon>
                 {{item.name}}（{{StateList(item.state)}}）
             </p>
-
             <div style="text-align: center;height:100px">
                 <img :src="item.logo" style="width:80px;height:80px;"/>
             </div>
@@ -56,21 +54,23 @@
         <div style="margin-top:15px;text-align: center">
         <Page id = "page" show-elevator show-total
         :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-        :current.sync = "pageProp.pageNum" ></Page>
+        :current.sync = "pageProp.pageNum"  @on-change="getAssociationList"></Page>
         </div>
         </div>
         </Tab-pane>
-        <Application :pendingAppData ="pendingAppData" :handledAppData="handledAppData"/>
+        <Application :pendingAppData  ="pendingAppData" :handledAppData  ="handledAppData"/>
+
+
+
     </Tabs>
 </template>
 
 <script>
 import Solid from '../../assets/AssociationLogo/solid.jpg'
 import CreateAssociation from './create_association.vue'
-import EditAssociation from './edit_association.vue'
 import TagChoose from '../activity/tag_choose.vue'
-import axios from 'axios'
 import Application from './application.vue'
+import axios from 'axios'
 export default {
 
     name:'associationList',
@@ -136,7 +136,7 @@ export default {
             pendingAppData: [
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -144,7 +144,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -152,7 +152,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -160,7 +160,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -168,7 +168,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -208,7 +208,7 @@ export default {
             handledAppData: [
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -217,7 +217,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -226,7 +226,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -235,7 +235,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -244,7 +244,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -312,7 +312,6 @@ export default {
                     logo:Solid
 
                 }
-
             ],
             assoSearch:{
                 keyword:"",
@@ -325,15 +324,11 @@ export default {
         }
     },
     methods: {
-        // showSize(){
-        //     console.log(this.pageProp.pageSize)
-        // },
         showCreateForm(){
             this.form.type = "create"
             this.form.onshow=true
         },
         showEditForm(item){
-            // console.log(item)
             this.form.assoState = item.state
             this.form.showState = true
             this.form.assoId=item.id
@@ -344,20 +339,13 @@ export default {
             this.form.onshow=true
         },
         deleteAssociation(item){
-            // console.log(item)
-            // this.form.assoId=item.id
-
             axios
             .delete('http://localhost:8080/associations/'+item.id
             )
             .then(response => {
                 console.log(this.tags)
-                // this.AssoList = response.data.data.content
-                // this.pageProp.totalSize = response.data.data.totalSize
                 this.$Message.info('删除成功');
-
                 this.getAssociationList();
-                // this.$router.go(0)
             })
             .catch(e => {
                 console.log(e)
@@ -383,7 +371,6 @@ export default {
         },
 
         getState(){
-            // console.log("I'm here")
             if(this.assoStateSelected.length==2) {
                 this.assoSearch.state = 2
             }
@@ -397,15 +384,19 @@ export default {
                 this.assoSearch.state = -1
             }
         },
+        get(){
+            this.getAssociationList()
+        },
 
         getAssociationList() {
-            // console.log(this.assoSearch);
+            console.log(this.assoStateSelected)
+            this.getState();
             this.assoSearch.pageNum = this.pageProp.pageNum - 1;
             this.assoSearch.pageSize = this.pageProp.pageSize;
             this.assoSearch.tags = this.tag.tagList.join();
+            console.log(this.assoSearch.state)
             this.getState();
-            console.log(this.pageProp.pageSize)
-            if(this.assoSearch.pageSize==0)this.assoSearch.pageSize=6;
+
 
             axios
             .get('http://localhost:8080/associations',{
@@ -418,7 +409,6 @@ export default {
                 }
             })
             .then(response => {
-                // console.log(this.tags)
                 this.AssoList = response.data.data.content
                 this.pageProp.totalSize = response.data.data.totalSize
             })

@@ -2,6 +2,7 @@ package exort.apiserver.service;
 
 import java.util.List;
 
+import exort.api.http.common.entity.Operation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public interface AssociationManagerService {
 
     public Response<Association> editAssociation(String assoId, AssociationInfo body);
 
-    public Response<Object> patchAssociation(String assoId, PatchAssociationInfo body);
+    public Response<Object> patchAssociation(String assoId,  Operation<String> body);
 
     public Response<Object> handleAsoociationApplication(ApplicationAssociationInfo body);
 

@@ -3,6 +3,7 @@ package exort.apiserver.controller;
 
 import java.util.Arrays;
 
+import exort.api.http.common.entity.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,7 +74,7 @@ public class AssociationManagerController{
 
 
     @PutMapping("/{assoId}/state")
-    public AssociationManagerService.Response<Object> patchAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationManagerService.PatchAssociationInfo body, @PathVariable(value="assoId") String assoId ){
+    public AssociationManagerService.Response<Object> patchAssociation(@RequestAttribute("id") int operatorId, @RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
 		if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
 			return new AssociationManagerService.Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
 		}

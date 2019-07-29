@@ -36,7 +36,6 @@
 </template>
 
 <script>
-// <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
 import TagChoose from '../activity/tag_choose.vue'
 import axios from 'axios'
 export default {
@@ -49,15 +48,11 @@ export default {
             file: null
         }
     },
-    computed: {
-
-    },
     methods: {
         clearFiles() {
             this.$refs['file-input'].reset();
         },
         info_ok(){
-            // this.form.onshow = false
             const _self = this;
             console.log(_self.form.type);
 
@@ -68,9 +63,7 @@ export default {
                     reader.readAsDataURL(this.file);
                 }
                 reader.onload=function(e) {        //读取完毕后调用接口
-                    // console.log(_self.form.name);
                     imgFile = e.target.result;
-                    // console.log(imgFile);
                     console.log(_self.form.name);
                     console.log(_self.form.description);
                     console.log(_self.form.tag.tagList);
@@ -86,7 +79,6 @@ export default {
                     )
                     .then(response => {
                         console.log(response.data)
-                        // this.AssoList = response.data.data.content
                     })
                     .catch(e => {
                         console.log(e)
@@ -95,7 +87,6 @@ export default {
 
                 _self.form.onshow = false
                 _self.$Message.info('创建成功');
-                // _self.$router.go(0);
 
             }
             else{
@@ -123,17 +114,18 @@ export default {
                 }
                 _self.form.onshow = false
                 _self.$Message.info('修改成功');
-                // _self.$router.go(0);
-                // this.$emit('showCityName',data);
             }
+            // this.activeSon()
         },
         info_cancel(){
+            console.log("I'm here")
             this.form.name=""
             this.form.description=""
             this.form.tagList=""
             this.form.materials=""
             this.form.type=""
             this.form.onshow = false
+            // this.activeSon()
         }
     },
 }

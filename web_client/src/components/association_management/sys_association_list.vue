@@ -6,7 +6,44 @@
                 <i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
                 <Button type="info" @click="getAssociationList">搜索</Button>
                 <Button type="info" @click="showCreateForm" style="  position:relative ;left:20px;">创建社团</Button>
-                <CreateAssociation :form ="form"/>
+                <!-- <CreateAssociation :form ="form"/> -->
+                <!-- <child :activeSon="getAssociationList()"></child> -->
+                <Modal v-model="form.onshow" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
+                    <Form v-model="form" :label-width="112">
+                        <FormItem label="社团名称">
+                            <Input v-model="form.name"/>
+                        </FormItem>
+                        <FormItem label="社团描述">
+                            <Input v-model="form.description"/>
+                        </FormItem>
+                        <FormItem label="社团标签">
+                            <div>
+                                <div style="display:inline">
+                                    <Button @click="form.tag.tag_show=true" style="width: 80px;position:relative ;top:5px">选择标签</Button>
+                                    <TagChoose :tag="form.tag"/>
+                                </div>
+                                <div v-if="form.tag.tagList.length" style="display:inline">
+                                    <Tag v-for="tag in form.tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
+                                </div>
+                            </div>
+                        </FormItem>
+                        <FormItem label="社团Logo">
+                            <div>
+                            <b-form-file v-model="file" ref="file-input" style="width:270px"></b-form-file>
+                            <Button type="primary" @click="clearFiles" style="height:33px ; margin-bottom:8px;margin-left:11px" >重设</Button>
+                            </div>
+
+                        </FormItem>
+                        <FormItem label="报名材料" v-if="form.needMaterial">
+                            <Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
+                        </FormItem>
+                        <FormItem label="社团状态" v-if="form.showState">
+                            <Icon type="ios-checkmark-circle" size="30" color="green" v-if="form.assoState"/>
+                            <Icon type="ios-close-circle" size="30" color="red" v-if="!form.assoState"/>
+                            <Button type="warning" @click="changeState" style="height:33px ; margin-bottom:8px ; margin-left:230px" >变更状态</Button>
+                        </FormItem>
+                    </Form>
+                </Modal>
                 <div>
                     <div style="display:inline">
                         <Button @click="tag.tag_show=true" style="width: 80px;position:relative ;top:5px">选择标签</Button>
@@ -58,70 +95,8 @@
         </div>
         </div>
         </Tab-pane>
-        <Tab-pane label="社团申请管理" key="tabpane_key2">
-            <b-tabs content-class="mt-3">
-            <b-tab title="尚未处理" active>
-            <div id="AssoAppList">
-                <div id=SearchAsso>
-                  <Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
-                  <Button type="info">搜索</Button>
-                </div>
-                <div>
-                  <div id="Divide">
-                    <Divider />
-                  </div>
-                  <b-form-checkbox-group v-model="pendingAppTypeSelected" :options="pendingAppTypeList" switches>
-                  </b-form-checkbox-group>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div>
-                  <i-table :columns="pendingAppColumn" :data="pendingAppData"></i-table>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div style="margin-top:15px;text-align: center">
-                <Page id = "page" show-elevator show-total
-                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-                :current.sync = "pageProp.pageNum" ></Page>
-                </div>
-            </div>
-            </b-tab>
-            <b-tab title="已处理">
+        <Application :pendingAppData  ="pendingAppData" :handledAppData  ="handledAppData"/>
 
-              <div id="AssoAppList">
-                <div id=SearchAsso>
-                  <Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
-                  <Button type="info">搜索</Button>
-                </div>
-                <div>
-                  <div id="Divide">
-                    <Divider />
-                  </div>
-                  <b-form-checkbox-group v-model="handledAppTypeSelected" :options="handledAppTypeList" switches>
-                  </b-form-checkbox-group>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div>
-                  <i-table :columns="handledAppColumns" :data="pendingAppData"></i-table>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div style="margin-top:15px;text-align: center">
-                <Page id = "page" show-elevator show-total
-                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-                :current.sync = "pageProp.pageNum" ></Page>
-                </div>
-              </div>
-
-            </b-tab>
-            </b-tabs>
-        </Tab-pane>
 
 
     </Tabs>
@@ -130,15 +105,15 @@
 <script>
 import Solid from '../../assets/AssociationLogo/solid.jpg'
 import CreateAssociation from './create_association.vue'
-// import EditAssociation from './edit_association.vue'
 import TagChoose from '../activity/tag_choose.vue'
+import Application from './application.vue'
 import axios from 'axios'
 export default {
-
     name:'associationList',
-    components:{CreateAssociation,TagChoose},
+    components:{CreateAssociation,TagChoose,Application},
     data () {
         return {
+            file: null,
             tagrepo : ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座","zxc","asd"],
 
 
@@ -198,7 +173,7 @@ export default {
             pendingAppData: [
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -206,7 +181,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -214,7 +189,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -222,7 +197,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -230,7 +205,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -267,10 +242,10 @@ export default {
                     key: 'operate_result',
                 }
             ],
-            pendingAppData: [
+            handledAppData: [
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -279,7 +254,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -288,7 +263,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -297,7 +272,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -306,7 +281,7 @@ export default {
                 },
                 {
                     applicant_Id: 'wangxiaoming',
-                    aoolicant_name: '王小明',
+                    applicant_name: '王小明',
                     asso_name: '坚强的学习小组',
                     submit_time:'2019/7/5 17:17',
                     apply_type:'请求解除封禁',
@@ -386,15 +361,11 @@ export default {
         }
     },
     methods: {
-        // showSize(){
-        //     console.log(this.pageProp.pageSize)
-        // },
         showCreateForm(){
             this.form.type = "create"
             this.form.onshow=true
         },
         showEditForm(item){
-            // console.log(item)
             this.form.assoState = item.state
             this.form.showState = true
             this.form.assoId=item.id
@@ -405,24 +376,53 @@ export default {
             this.form.onshow=true
         },
         deleteAssociation(item){
-            // console.log(item)
-            // this.form.assoId=item.id
-
-            axios
-            .delete('http://localhost:8080/associations/'+item.id
-            )
+            this.axios({
+				method:'delete',
+				url:'/associations/'+item.id,
+			})
             .then(response => {
                 console.log(this.tags)
-                // this.AssoList = response.data.data.content
-                // this.pageProp.totalSize = response.data.data.totalSize
                 this.$Message.info('删除成功');
-
                 this.getAssociationList();
-                // this.$router.go(0)
             })
             .catch(e => {
                 console.log(e)
             });
+        },
+        changeState(){
+            var state = this.form.assoState
+            var type
+            if(state){
+                type = "block"
+            }
+            else{
+                type = "unblock"
+            }
+
+            this.form.assoState=!this.form.assoState
+
+            console.log(this.form.assoState)
+
+            this.axios({
+				method:'put',
+                url:'/associations/'+this.form.assoId+'/state',
+                data:{
+                    Arg:"",
+                    operation:type,
+                }
+			})
+            .then(response => {
+                // this.AssoList = response.data.data.content
+                // console.log(this.AssoList)
+                // this.pageProp.totalSize = response.data.data.totalSize
+                console.log(response.data.data)
+                this.getAssociationList()
+            })
+            .catch(e => {
+                console.log(e)
+            });
+
+
         },
 
         ok () {
@@ -444,7 +444,6 @@ export default {
         },
 
         getState(){
-            // console.log("I'm here")
             if(this.assoStateSelected.length==2) {
                 this.assoSearch.state = 2
             }
@@ -463,18 +462,14 @@ export default {
         },
 
         getAssociationList() {
-            // console.log(this.assoSearch);
-            console.log(this.assoStateSelected)
-            this.getState();
+            console.log("我请求了列表")
             this.assoSearch.pageNum = this.pageProp.pageNum - 1;
             this.assoSearch.pageSize = this.pageProp.pageSize;
             this.assoSearch.tags = this.tag.tagList.join();
-            console.log(this.assoSearch.state)
             this.getState();
-
-
-            axios
-            .get('http://localhost:8080/associations',{
+            this.axios({
+				method:'get',
+                url:'/associations/',
                 params: {
                     pageNum:this.assoSearch.pageNum,
                     pageSize:this.assoSearch.pageSize,
@@ -482,28 +477,107 @@ export default {
                     tags:this.tag.tagList.join(),
                     state:this.assoSearch.state
                 }
-            })
+			})
             .then(response => {
-                // console.log(this.tags)
                 this.AssoList = response.data.data.content
+                console.log(this.AssoList)
                 this.pageProp.totalSize = response.data.data.totalSize
             })
             .catch(e => {
                 console.log(e)
             });
+        },
+                clearFiles() {
+            this.$refs['file-input'].reset();
+        },
+        info_ok(){
+            const _self = this;
+            console.log(_self.form.type);
+            if(_self.form.type=="create"){
+                var imgFile;
+                let reader = new FileReader();
+                if(this.file!=null){
+                    reader.readAsDataURL(this.file);
+                }
+                reader.onload=function(e) {        //读取完毕后调用接口
+                    imgFile = e.target.result;
+                    axios
+                    .post('http://localhost:8080/associations',
+                        {
+                            name:_self.form.name,
+                            description:_self.form.description,
+                            tags:_self.form.tag.tagList,
+                            logo:imgFile
+                        }
+                    )
+                    .then(response => {
+                        console.log("我想请求列表")
+                        _self.getAssociationList()
+                        console.log(response.data)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                };
+
+                _self.form.onshow = false
+                _self.$Message.info('创建成功');
+                _self.getAssociationList()
+
+
+            }
+            else{
+                var imgFile;
+                let reader = new FileReader();
+                if(this.file!=null){
+                    reader.readAsDataURL(this.file);
+                }
+                reader.onload=function(e) {
+                    imgFile = e.target.result;
+                    axios
+                    .put('http://localhost:8080/associations/'+_self.form.assoId,{
+                        name:_self.form.name,
+                        description:_self.form.description,
+                        tags:_self.form.tag.tagList,
+                        logo:imgFile
+                    })
+                    .then(response => {
+                        console.log(response.data)
+                        console.log("我想请求列表")
+                        _self.getAssociationList()
+
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                }
+                _self.form.onshow = false
+                _self.$Message.info('修改成功');
+            }
+        },
+        info_cancel(){
+            console.log("I'm here")
+            this.form.name=""
+            this.form.description=""
+            this.form.tagList=""
+            this.form.materials=""
+            this.form.type=""
+            this.form.onshow = false
         }
     },
     mounted() {
-            axios
-            .get('http://localhost:8080/associations',{
+
+            this.axios({
+				method:'get',
+                url:'/associations/',
                 params: {
-                    pageNum:0,
-                    pageSize:6,
-                    keyword:"",
-                    tags:"",
-                    state:2
+                    pageNum:this.assoSearch.pageNum,
+                    pageSize:this.assoSearch.pageSize,
+                    keyword:this.assoSearch.keyword,
+                    tags:this.tag.tagList.join(),
+                    state:this.assoSearch.state
                 }
-            })
+			})
             .then(response => {
                 this.AssoList = response.data.data.content
                 this.pageProp.totalSize = response.data.data.totalSize

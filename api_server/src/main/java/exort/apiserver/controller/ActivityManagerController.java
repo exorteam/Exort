@@ -3,15 +3,7 @@ package exort.apiserver.controller;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import exort.apiserver.service.ActivityManagerService;
 import exort.apiserver.service.ActivityManagerService.*;
@@ -23,13 +15,13 @@ public class ActivityManagerController {
     @Autowired
     private ActivityManagerService service;
 
-    @PostMapping
-    public Response createNewActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity){
-		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
-		}
-		return activitySvc.createNewActivity(activity);
-    }
+//    @PostMapping
+//    public Response createNewActivity(@RequestAttribute("id") int operatorId, @RequestBody Activity activity){
+//		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
+//			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
+//		}
+//		return activitySvc.createNewActivity(activity);
+//    }
 
     @PutMapping("/{id}")
     public Response updateActivity(@RequestBody Activity activity, @PathVariable("id") String id){
