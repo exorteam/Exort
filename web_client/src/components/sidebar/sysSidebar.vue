@@ -1,22 +1,16 @@
 <template>
     <div class="sysside">
-        <MenuItem name="1-1">
-            <router-link :to="{name:'AssociaMemManage'}">
-                <Icon type="ios-navigate"></Icon>
-                <span>社团成员管理</span>
-            </router-link>
+        <MenuItem name="1-1" :to="{name:'AssociaMemManage'}">
+            <Icon type="ios-navigate"></Icon>
+            <span>社团成员管理</span>
         </MenuItem>
-        <MenuItem name="1-2">
-            <router-link :to="{name:'AppliManagement'}">
-                <Icon type="ios-navigate"></Icon>
-                <span>成员申请管理</span>
-            </router-link>
+        <MenuItem name="1-2" :to="{name:'AppliManagement'}" @click="">
+            <Icon type="ios-navigate"></Icon>
+            <span>成员申请管理</span>
         </MenuItem>
-        <MenuItem name="1-3">
-            <router-link :to="{name:'activity'}">
-                <Icon type="ios-navigate"></Icon>
-                <span>活动管理</span>
-            </router-link>
+        <MenuItem name="1-3" :to="{name:'activity'}">
+            <Icon type="ios-navigate"></Icon>
+            <span>活动管理</span>
         </MenuItem>
         <MenuItem name="1-4">
             <!--<router-link :to="{name:''}">-->

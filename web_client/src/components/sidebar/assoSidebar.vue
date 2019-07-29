@@ -1,16 +1,12 @@
 <template>
     <div class="assoside">
-        <MenuItem name="1-1">
-            <router-link :to="{name:'UserList'}">
-                <Icon type="ios-navigate"></Icon>
-                <span>用户管理</span>
-            </router-link>
+        <MenuItem name="1-1" :to="{name:'UserList'}">
+            <Icon type="ios-navigate"></Icon>
+            <span>用户管理</span>
         </MenuItem>
-        <MenuItem name="1-2">
-            <router-link :to="{name:'AssoList'}">
-                <Icon type="ios-navigate"></Icon>
-                <span>社团信息管理</span>
-            </router-link>
+        <MenuItem name="1-2" :to="{name:'AssoList'}">
+            <Icon type="ios-navigate"></Icon>
+            <span>社团信息管理</span>
         </MenuItem>
     </div>
 </template>
