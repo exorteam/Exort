@@ -76,7 +76,7 @@ export default {
                     console.log(_self.form.tag.tagList);
                     console.log(imgFile);
                     axios
-                    .post('http://localhost:1111/associations',
+                    .post('http://localhost:8080/associations',
                         {
                             name:_self.form.name,
                             description:_self.form.description,
@@ -107,7 +107,7 @@ export default {
                 reader.onload=function(e) {
                     imgFile = e.target.result;
                     axios
-                    .put('http://localhost:1111/associations/'+_self.form.assoId,{
+                    .put('http://localhost:8080/associations/'+_self.form.assoId,{
                         name:_self.form.name,
                         description:_self.form.description,
                         tags:_self.form.tag.tagList,

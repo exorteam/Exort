@@ -35,11 +35,6 @@
                 {{item.name}}（{{StateList(item.state)}}）
             </p>
 
-            <!-- <a href="#" slot="extra"  v-on:click="showEditForm(item)"  >
-                <Icon type="ios-loop-strong"></Icon>
-                Edit
-            </a> -->
-            <!-- <CreateAssociation :form ="item"/> -->
             <div style="text-align: center;height:100px">
                 <img :src="item.logo" style="width:80px;height:80px;"/>
             </div>
@@ -65,72 +60,7 @@
         </div>
         </div>
         </Tab-pane>
-        <Tab-pane label="社团申请管理" key="tabpane_key2">
-            <b-tabs content-class="mt-3">
-            <b-tab title="尚未处理" active>
-            <div id="AssoAppList">
-                <div id=SearchAsso>
-                  <Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
-                  <Button type="info">搜索</Button>
-                </div>
-                <div>
-                  <div id="Divide">
-                    <Divider />
-                  </div>
-                  <b-form-checkbox-group v-model="pendingAppTypeSelected" :options="pendingAppTypeList" switches>
-                  </b-form-checkbox-group>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div>
-                  <i-table :columns="pendingAppColumn" :data="pendingAppData"></i-table>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div style="margin-top:15px;text-align: center">
-                <Page id = "page" show-elevator show-total
-                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-                :current.sync = "pageProp.pageNum" ></Page>
-                </div>
-            </div>
-            </b-tab>
-            <b-tab title="已处理">
-
-              <div id="AssoAppList">
-                <div id=SearchAsso>
-                  <Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
-                  <Button type="info">搜索</Button>
-                </div>
-                <div>
-                  <div id="Divide">
-                    <Divider />
-                  </div>
-                  <b-form-checkbox-group v-model="handledAppTypeSelected" :options="handledAppTypeList" switches>
-                  </b-form-checkbox-group>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div>
-                  <i-table :columns="handledAppColumns" :data="pendingAppData"></i-table>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div style="margin-top:15px;text-align: center">
-                <Page id = "page" show-elevator show-total
-                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-                :current.sync = "pageProp.pageNum" ></Page>
-                </div>
-              </div>
-
-            </b-tab>
-            </b-tabs>
-        </Tab-pane>
-
-
+        <Application :pendingAppData ="pendingAppData" :handledAppData="handledAppData"/>
     </Tabs>
 </template>
 
@@ -140,10 +70,11 @@ import CreateAssociation from './create_association.vue'
 import EditAssociation from './edit_association.vue'
 import TagChoose from '../activity/tag_choose.vue'
 import axios from 'axios'
+import Application from './application.vue'
 export default {
 
     name:'associationList',
-    components:{CreateAssociation,TagChoose},
+    components:{CreateAssociation,TagChoose,Application},
     data () {
         return {
             tagrepo : ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座","zxc","asd"],
@@ -274,7 +205,7 @@ export default {
                     key: 'operate_result',
                 }
             ],
-            pendingAppData: [
+            handledAppData: [
                 {
                     applicant_Id: 'wangxiaoming',
                     aoolicant_name: '王小明',
@@ -417,7 +348,7 @@ export default {
             // this.form.assoId=item.id
 
             axios
-            .delete('http://localhost:1111/associations/'+item.id
+            .delete('http://localhost:8080/associations/'+item.id
             )
             .then(response => {
                 console.log(this.tags)
@@ -477,7 +408,7 @@ export default {
             if(this.assoSearch.pageSize==0)this.assoSearch.pageSize=6;
 
             axios
-            .get('http://localhost:1111/associations',{
+            .get('http://localhost:8080/associations',{
                 params: {
                     pageNum:this.assoSearch.pageNum,
                     pageSize:this.assoSearch.pageSize,
@@ -498,7 +429,7 @@ export default {
     },
     mounted() {
             axios
-            .get('http://localhost:1111/associations',{
+            .get('http://localhost:8080/associations',{
                 params: {
                     pageNum:0,
                     pageSize:6,

@@ -409,7 +409,7 @@ export default {
             // this.form.assoId=item.id
 
             axios
-            .delete('http://localhost:1111/associations/'+item.id
+            .delete('http://localhost:8080/associations/'+item.id
             )
             .then(response => {
                 console.log(this.tags)
@@ -474,7 +474,7 @@ export default {
 
 
             axios
-            .get('http://localhost:1111/associations',{
+            .get('http://localhost:8080/associations',{
                 params: {
                     pageNum:this.assoSearch.pageNum,
                     pageSize:this.assoSearch.pageSize,
@@ -495,7 +495,7 @@ export default {
     },
     mounted() {
             axios
-            .get('http://localhost:1111/associations',{
+            .get('http://localhost:8080/associations',{
                 params: {
                     pageNum:0,
                     pageSize:6,
