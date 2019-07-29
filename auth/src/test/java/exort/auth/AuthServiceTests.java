@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import exort.auth.entity.AuthResponse;
 import exort.auth.entity.UserAccount;
 import exort.auth.repository.AccountRepository;
+import exort.auth.repository.InfoRepository;
 import exort.auth.service.AuthService;
 import junit.framework.Assert;
 
@@ -21,6 +22,8 @@ public class AuthServiceTests {
 
 	@Autowired
 	private AccountRepository accountRepository;
+	@Autowired
+	private InfoRepository infoRepository;
 	@Autowired
 	private AuthService service;
 
@@ -56,6 +59,7 @@ public class AuthServiceTests {
 		Assert.assertEquals(account.getId(),authRes.getId());
 
 		accountRepository.deleteById(testUserId);
+		infoRepository.deleteById(testUserId);
 
 	}
 

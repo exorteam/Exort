@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import exort.auth.component.AutoIncIdGenerator;
 import exort.auth.component.JwtKeyUtil;
 import exort.auth.entity.AuthResponse;
 import exort.auth.entity.UserAccount;
@@ -24,8 +25,11 @@ public class AuthServiceImpl implements AuthService {
 	private AccountRepository accountRepository;
 	@Autowired
 	private InfoRepository infoRepository;
+
 	@Autowired
 	private JwtKeyUtil jwtKeyUtil;
+	@Autowired
+	private AutoIncIdGenerator autoId;
 
 	public Map login(String usr,String pwd){
 		if(usr == null || pwd == null){
@@ -61,10 +65,7 @@ public class AuthServiceImpl implements AuthService {
 			return -2; // Username exists
 		}
 
-		int id = 2;
-		while(accountRepository.existsById(id)){
-			++id;
-		}
+		int id = autoId.getNextId("userId");
 		UserAccount account = new UserAccount();
 		account.setUsername(usr);
 		account.setPassword(pwd);
@@ -74,6 +75,7 @@ public class AuthServiceImpl implements AuthService {
 		UserInfo info = new UserInfo();
 		info.setId(id);
 		info.setEnabled(true);
+		infoRepository.save(info);
 
 		return id;
 	}
