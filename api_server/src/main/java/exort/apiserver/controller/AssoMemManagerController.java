@@ -2,11 +2,6 @@ package exort.apiserver.controller;
 
 import java.util.List;
 
-import exort.api.http.common.entity.ApiResponse;
-import exort.api.http.member.entity.DepartmentInfo;
-import exort.api.http.member.entity.UserId;
-import exort.api.http.member.service.AssoMemService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +11,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.member.entity.DepartmentInfo;
+import exort.api.http.member.entity.UserId;
+import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Log4j2
@@ -28,17 +27,12 @@ public class AssoMemManagerController {
     // adopt and init should not be called by api server
     // get operations are open
     // update, create, delete operations need specific permission
-    //
     public static final String PERM_CREATE = "create-department";
     public static final String PERM_UPDATE = "update-department";
     public static final String PERM_DELETE = "delete-department";
 
-//    @Autowired
-//	private AssoMemManagerService amSvc;
-
     @Autowired
     private AssoMemService amSvc;
-
     @Autowired
     private PermService permSvc;
 
