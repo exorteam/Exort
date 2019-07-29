@@ -37,7 +37,7 @@ public class ActivityManagerController {
 	@Autowired
 	private PermService permSvc;
 
-    @PostMapping("/")
+    @PostMapping
     public Response createNewActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity){
 		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
 			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
@@ -56,7 +56,7 @@ public class ActivityManagerController {
 		return activitySvc.updateActivity(activity,activityId);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public Response getActivities(@RequestBody Select select, @PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby") int sortby){
 		// open to every one
         return activitySvc.getActivities(select,pagesize,pagenum,sortby);

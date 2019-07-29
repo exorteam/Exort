@@ -21,7 +21,7 @@ import exort.apiserver.service.AssociationManagerService;
 
 
 @RestController
-@RequestMapping
+@RequestMapping(path="/assocations")
 public class AssociationManagerController{
 	// Get operations are open
 	// Update operations need specific permission
@@ -33,7 +33,7 @@ public class AssociationManagerController{
 	@Autowired
 	private PermService permSvc;
 
-    @GetMapping("/associations")
+    @GetMapping
     public AssociationManagerService.Response<AssociationManagerService.AssociationList> listAssociations(@RequestParam int state,@RequestParam String keyword,
                                                                                                           @RequestParam String tags,@RequestParam int pageNum,
                                                                                                           @RequestParam int pageSize){
@@ -42,12 +42,12 @@ public class AssociationManagerController{
     }
 
     //ok
-    @GetMapping("/associations/{assoId}")
+    @GetMapping("/{assoId}")
     public AssociationManagerService.Response<AssociationManagerService.Association> getAssociation(@PathVariable(value="assoId") String assoId){
         return service.getAssociation(assoId);
     }
 
-    @PostMapping("/associations")
+    @PostMapping
     public AssociationManagerService.Response createAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationManagerService.AssociationInfo body){
 		if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
 			return new AssociationManagerService.Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have create permission on association");
@@ -55,7 +55,7 @@ public class AssociationManagerController{
 		return service.createAssociation(body);
     }
 
-    @DeleteMapping("/associations/{assoId}")
+    @DeleteMapping("/{assoId}")
     public AssociationManagerService.Response deleteAssociation(@RequestAttribute("id") int operatorId,@PathVariable(value="assoId") String assoId ){
 		if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
 			return new AssociationManagerService.Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
@@ -63,7 +63,7 @@ public class AssociationManagerController{
         return service.deleteAssociation(assoId);
     }
 
-    @PutMapping("/associations/{assoId}")
+    @PutMapping("/{assoId}")
     public AssociationManagerService.Response editAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationManagerService.AssociationInfo body, @PathVariable(value="assoId") String assoId ){
 		if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
 			return new AssociationManagerService.Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
@@ -72,7 +72,7 @@ public class AssociationManagerController{
     }
 
 
-    @PutMapping("/associations/{assoId}/state")
+    @PutMapping("/{assoId}/state")
     public AssociationManagerService.Response<Object> patchAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationManagerService.PatchAssociationInfo body, @PathVariable(value="assoId") String assoId ){
 		if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
 			return new AssociationManagerService.Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");

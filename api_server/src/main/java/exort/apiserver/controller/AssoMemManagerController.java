@@ -19,7 +19,7 @@ import exort.apiserver.service.AssoMemManagerService;
 import exort.apiserver.service.AssoMemManagerService.*;
 
 @RestController
-@RequestMapping(path="/asso-mem")
+@RequestMapping(path="/associations")
 public class AssoMemManagerController {
 	// adopt and init should not be called by api server
 	// get operations are open
