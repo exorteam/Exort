@@ -23,9 +23,12 @@ public class ActivityManagerController {
     @Autowired
     private ActivityManagerService service;
 
-    @PostMapping("/")
-    public Response createNewActivity(@RequestBody Activity activity){
-        return service.createNewActivity(activity);
+    @PostMapping
+    public Response createNewActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity){
+		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
+			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
+		}
+		return activitySvc.createNewActivity(activity);
     }
 
     @PutMapping("/{id}")
@@ -33,7 +36,7 @@ public class ActivityManagerController {
         return service.updateActivity(activity,id);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public Response getActivities(@RequestBody Select select, @PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby") int sortby){
         return service.getActivities(select,pagesize,pagenum,sortby);
     }

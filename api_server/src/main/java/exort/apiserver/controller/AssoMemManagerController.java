@@ -17,7 +17,7 @@ import exort.apiserver.service.AssoMemManagerService;
 import exort.apiserver.service.AssoMemManagerService.*;
 
 @RestController
-@RequestMapping(path="/asso-mem")
+@RequestMapping(path="/associations")
 public class AssoMemManagerController {
     @Autowired
 	private AssoMemManagerService service;
