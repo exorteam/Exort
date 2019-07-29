@@ -59,8 +59,6 @@ const store = new Vuex.Store({
           treenodes[departments[i].parentId].children.push(treenodes[i]);
         }
       }
-      console.log(departments);
-      console.log(treenodes);
 
       state.association.tree = [treenodes[1], treenodes[2]];
       state.association.departments = departments;

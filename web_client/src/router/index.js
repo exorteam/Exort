@@ -54,11 +54,6 @@ export default new Router({
                     component: Activity
                 },
                 {
-                    path: 'activity/build',
-                    name: 'build',
-                    component: Build
-                },
-                {
                     path: 'activity/about',
                     name: 'about',
                     component: About
