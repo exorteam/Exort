@@ -7,7 +7,7 @@ public class SystemAdminConstants {
 	public final static String USERNAME 	= "admin";
 	public final static String PASSWORD 	= "123";
 	public final static String ROLE_NAME 	= "admin";
-	public final static String SCOPE_NAME 	= "";
+	public final static String SCOPE_NAME 	= "sys";
 	public final static int    ID			= 1;
 
 }
