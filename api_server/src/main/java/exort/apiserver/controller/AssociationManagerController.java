@@ -21,7 +21,7 @@ import exort.apiserver.service.AssociationManagerService;
 
 
 @RestController
-@RequestMapping(path="/assocations")
+@RequestMapping(path="/associations")
 public class AssociationManagerController{
 	// Get operations are open
 	// Update operations need specific permission
