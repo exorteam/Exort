@@ -43,12 +43,14 @@
 </template>
 
 <script>
-    import store from "../../store";
+    import AssoMemPerm from "./asso_mem_perm"
 
     export default {
         name: "MemManage",
+        components: {AssoMemPerm},
         data() {
             return {
+                modal1: false,
                 departmentName: '',
                 description: '',
                 buttonProps: {
@@ -90,7 +92,7 @@
         },
         methods: {
             editDepartment() {
-                let url = "http://localhost:8080/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId;
+                let url = "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId;
 
                 this.$Modal.confirm({
                     render: (h) => {
@@ -137,7 +139,7 @@
                                     this.$Message.info("修改成功！");
                                     this.gettree();
                                 } else {
-                                    this.$Message.error("修改失败！");
+                                    this.$Message.error("修改失败！" + res.data.message);
                                 }
                             })
                         }
@@ -169,14 +171,14 @@
                         } else {
                             this.axios({
                                 method: 'post',
-                                url: "http://localhost:8080/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members",
+                                url: "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members",
                                 data: this.addUserInfo
                             }).then((res) => {
                                 if (res.data.data === true) {
                                     this.getDepartmentUsers(this.specdept.associationId, this.specdept.departmentId);
                                     this.$Message.info("添加成功！");
                                 } else {
-                                    this.$Message.error("添加失败！");
+                                    this.$Message.error("添加失败！" + res.data.message);
                                 }
                             })
                         }
@@ -184,7 +186,7 @@
                 });
             },
             gettree() {
-                let url = "http://localhost:8080/associations/1/departments";
+                let url = "/associations/1/departments";
                 this.axios.get(url).then((res) => {
                     if (res.data.data === null) {
                         this.$Message.error("社团不存在");
@@ -197,7 +199,7 @@
                 })
             },
             getDepartmentUsers(associationId, departmentId) {
-                let url = "http://localhost:8080/associations/" + associationId + "/departments/" + departmentId + "/members";
+                let url = "/associations/" + associationId + "/departments/" + departmentId + "/members";
                 this.axios.get(url).then((res) => {
                     let ret = [];
                     let retdata = [];
@@ -331,7 +333,19 @@
                                     float: 'right',
                                     marginRight: '32px'
                                 }
-                            }, [
+                            }, [h('Button', {
+                                props: Object.assign({}, this.buttonProps, {
+                                    icon: 'ios-hand'
+                                }),
+                                style: {
+                                    marginRight: '8px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.perm(root, data);
+                                    }
+                                }
+                            }),
                                 h('Button', {
                                     props: Object.assign({}, this.buttonProps, {
                                         icon: 'ios-add'
@@ -360,6 +374,19 @@
                         ]);
                 }
 
+            },
+            perm(root, data) {
+                this.$Modal.confirm({
+                    width:"700px",
+                    render:(h)=>{
+                        return h(AssoMemPerm,{
+                            props:{
+                                root:root,
+                                nodedata:data
+                            }
+                        });
+                    }
+                })
             },
             append(root, data) {
                 this.$Modal.confirm({
@@ -397,7 +424,7 @@
                         if (this.departmentName === null || this.departmentName === undefined || this.departmentName === "") {
                             this.$Message.error("部门名称不能为空");
                         } else {
-                            let url = "http://localhost:8080/associations/" + data.department.associationId + "/departments";
+                            let url = "/associations/" + data.department.associationId + "/departments";
                             let departinfo = {
                                 "name": this.departmentName,
                                 "description": this.description,
@@ -408,10 +435,15 @@
                                 url: url,
                                 data: departinfo
                             }).then((res) => {
-                                this.departmentName = "";
-                                this.description = "";
+                                if (res.data.data !== null) {
+                                    this.departmentName = "";
+                                    this.description = "";
+
+                                    this.$Message.info("添加成功！");
+                                } else {
+                                    this.$Message.error("添加失败！" + res.data.message);
+                                }
                                 this.gettree();
-                                this.$Message.info("添加成功！");
                             })
                         }
                     }
@@ -419,7 +451,7 @@
 
             },
             getDepartmentInfo(associationId, departmentId) {
-                let url = "http://localhost:8080/associations/" + associationId + "/departments/" + departmentId;
+                let url = "/associations/" + associationId + "/departments/" + departmentId;
                 // console.log(associationId+"+"+departmentId)
                 this.axios.get(url).then((res) => {
                     let department = res.data.data;
@@ -437,7 +469,7 @@
                         return h("strong", "确认删除部门吗?")
                     },
                     onOk: () => {
-                        let url = "http://localhost:8080/associations/" + data.department.associationId + "/departments/" + data.department.departmentId;
+                        let url = "/associations/" + data.department.associationId + "/departments/" + data.department.departmentId;
 
                         this.axios({
                             method: 'delete',
@@ -462,7 +494,7 @@
                         return h("strong", "确认在部门中移除此用户吗?")
                     },
                     onOk: () => {
-                        let url = "http://localhost:8080/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members/" + this.rows[index].id;
+                        let url = "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members/" + this.rows[index].id;
                         this.axios({
                             method: 'delete',
                             url: url
@@ -473,7 +505,7 @@
                                 this.$Message.info("移除成功！");
                             }
                             else {
-                                this.$Message.error("移除失败!");
+                                this.$Message.error("移除失败!" + res.data.message);
                             }
                         })
                     }
