@@ -150,8 +150,8 @@ public class AssoMemManagerController {
     //}
 
 	private boolean checkPermissionOnAssociationById(int operatorId,int associationId,String perm){
-		final String permScope = "asso-mem" + String.valueOf(associationId);
-		if(permSvc.hasPermission(Long.valueOf(operatorId),permScope,PERM_CREATE) == null){
+		final String permScope = "asso-mem-" + String.valueOf(associationId);
+		if(permSvc.hasPermission(Long.valueOf(operatorId),permScope,perm).getData() == null){
 			return false;
 		}
 		return true;

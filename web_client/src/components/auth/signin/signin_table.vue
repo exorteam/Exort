@@ -76,6 +76,7 @@ export default {
 						url:'/permission/admin',
 					}).then((res)=>{
 						console.log(res.data);
+						/*this.$router.push('admin');*/
 					}).catch((err)=>{
 						console.log(err);
 					})
