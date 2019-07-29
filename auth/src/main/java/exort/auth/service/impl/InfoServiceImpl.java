@@ -1,5 +1,8 @@
 package exort.auth.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +43,11 @@ public class InfoServiceImpl implements InfoService {
 		infoRepository.save(info);
 
 		return true;
+	}
+
+	public List<UserInfo> getUserInfoInBatch(Iterable<Integer> ids){
+		ArrayList<UserInfo> res = new ArrayList<>();
+		infoRepository.findAllById(ids).forEach((UserInfo info) -> res.add(info));
+		return res;
 	}
 }
