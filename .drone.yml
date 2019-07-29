@@ -20,7 +20,7 @@ steps:
 trigger:
   branch:
   - auth
-  
+
 volumes:
   - name: cache
     host:
@@ -38,10 +38,60 @@ volumes:
 ---
 
 kind: pipeline
+name: exort-association-member-manager
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  - name: exort-resources
+    path: /resources
+  commands:
+  - cd ./association_member_manager
+  - rm -rf src/main/resources
+  - cp -rf /resources/asso_mem_manage src/main/resources
+  - mvn clean package docker:removeImage -DimageName=exort/association-member-manager docker:build -DpushImage
+
+trigger:
+  branch:
+  - asso_mem_manage
+  
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+  - name: exort-resources
+    host:
+      path: /home/ubuntu/exort
+
+
+---
+
+kind: pipeline
 name: exort-common
 
 steps:
-- name: mvndeploy
+- name: prtest
+  when:
+    event:
+    - pull_request
   image: thomasf/drone-mvn
   volumes:
   - name: cache
@@ -54,7 +104,25 @@ steps:
     path: /etc/hosts
   commands:
   - cd ./common
-  - mvn clean deploy
+  - mvn test
+
+- name: mvndeploy
+  when:
+    event:
+    - push
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  commands:
+  - cd ./common
+  - mvn clean deploy source:jar
 
 trigger:
   branch:
@@ -73,3 +141,74 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+
+---
+
+kind: pipeline
+name: exort-perm
+
+steps:
+- name: test
+  when:
+    event:
+    - pull_request
+  image: maven
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  - name: exort-resources
+    path: /resources
+  commands:
+  - cd ./permission_manager
+  - rm -rf src/main/resources
+  - cp -rf /resources/perm src/main/resources
+  - mvn clean test
+
+- name: build
+  when:
+    event:
+    - push
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  - name: exort-resources
+    path: /resources
+  commands:
+  - cd ./permission_manager
+  - rm -rf src/main/resources
+  - cp -rf /resources/perm src/main/resources
+  - mvn clean package docker:removeImage -DimageName=exort/permission-manager docker:build -DpushImage
+
+trigger:
+  branch:
+  - perm-mgr
+
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+  - name: exort-resources
+    host:
+      path: /home/ubuntu/exort

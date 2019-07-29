@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import exort.auth.entity.UserInfo;
-import exort.auth.repository.UserRepository;
+import exort.auth.entity.UserAccount;
+import exort.auth.repository.AccountRepository;
 import lombok.extern.log4j.Log4j2;
 
 @Configuration
 @Log4j2
 public class AdminConfig {
 	@Autowired
-	private UserRepository repository;
+	private AccountRepository repository;
 
 	private final int    ADMIN_ID       = 1;
 	private final String ADMIN_USERNAME = "admin";
@@ -24,7 +24,7 @@ public class AdminConfig {
 			repository.delete(repository.findByUsername(ADMIN_USERNAME));
 		}
 
-		UserInfo admin = new UserInfo();
+		UserAccount admin = new UserAccount();
 		admin.setId(ADMIN_ID);
 		admin.setUsername(ADMIN_USERNAME);
 		admin.setPassword(ADMIN_PASSWORD);

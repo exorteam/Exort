@@ -1,6 +1,6 @@
 # 权限管理模块 HTTP RESTful 接口设计
 
-该模块维护了一个 `(用户, 域) 1->* 角色 1->* 权限` 的关系模型。
+该模块维护了一个 `(用户, 域) n->n 角色 n->n 权限` 的关系模型。
 
 执行系统操作需要权限, 这些权限依靠角色组织起来。每个角色相当于是一系列权限的集合，同时角色也是系统向用户提供权限的粒度。
 
@@ -32,14 +32,15 @@
    |Field|Description|
    |--|--|
    |`name` _string_|权限名、权限ID|
-   |`description` _string_|权限描述|
    |`category` _string_|分类, 方便用于展示的组织形式|
+   |`description` _string_|权限描述|
 
 - <a id='Role'></a>**Role**
 
    |Field|Description|
    |--|--|
    |`name` _string_|角色名、角色ID|
+   |`category` _string_|分类, 方便用于查询的组织形式|
    |`description` _string_|角色描述|
 
 ## 用户
@@ -63,7 +64,28 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 _string[]_|用户的域列表|
-   |404 "userNotFound"|用户不存在|
+
+- Examples
+
+### 获取所有域
+
+
+- HTTP Request
+
+   **GET** `/scopes`
+
+- Query Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`pageNum` _int_|页码, 默认为0|
+   |`pageSize` _int_|每页数量, 默认为50, 不能超过200, 否则按200查询|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 [_PagedData\<string\>_](#PagedData)|用户的域列表|
 
 - Examples
 
@@ -85,7 +107,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 [_Role[]_](#Role)|用户在指定域的角色列表, 可以为空|
-   |404 "userNotFound"|用户不存在|
 
 - Examples
 
@@ -107,8 +128,7 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 [_Role_](#Role)|用户在该域有指定角色|
-   |404 "userNotFound"|用户不存在|
+   |200 _{}_|用户在该域有指定角色|
    |404 "roleNotFound"|用户在该域没有指定角色|
 
 - Examples
@@ -131,60 +151,8 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 [_Permission_](#Permission)|用户在该域有指定权限|
-   |404 "userNotFound"|用户不存在|
+   |200 _{}_|用户在该域有指定权限|
    |404 "permissionNotFound"|用户在该域没有指定权限|
-
-- Examples
-
-### 在指定域给用户添加角色
-
-- HTTP Request
-
-   **POST** `/users/{userId}/scopes/{scope}/roles`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`userId` _int_|用户ID|
-   |`scope` _string_|域|
-
-- Body Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`roleName` _string_|要添加的角色名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 [_Role[]_](#Role)|添加角色后, 用户在指定域的角色列表|
-   |404 "userNotFound"|用户不存在|
-
-- Examples
-
-### 在指定域移除用户的角色
-
-- HTTP Request
-
-   **DELETE** `/users/{userId}/scopes/{scope}/roles/{roleName}`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`userId` _int_|用户ID|
-   |`scope` _string_|域|
-   |`roleName` _string_|要移除的角色名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 [_Role[]_](#Role)|移除角色后, 用户在指定域的角色列表|
-   |404 "userNotFound"|用户不存在|
 
 - Examples
 
@@ -205,8 +173,8 @@ _用户在这些域中有至少一个角色_
 
    |Parameter|Description|
    |--|--|
-   |`method` _string_|批量更新方法, 可以是 _POST_, _DELETE_|
-   |`roleNames` _string[]_|角色名列表|
+   |`operation` _string_|添加或移除, 可以是 _add_, _remove_, 默认为 _add_|
+   |`args` _string[]_|角色名列表|
 
 - Response
 
@@ -234,7 +202,7 @@ _用户在这些域中有至少一个角色_
    |Parameter|Description|
    |--|--|
    |`pageNum` _int_|页码, 默认为0|
-   |`pageSize` _int_|每页数量, 默认为20, 不能超过100, 否则按100查询|
+   |`pageSize` _int_|每页数量, 默认为50, 不能超过200, 否则按200查询|
 
 - Response
 
@@ -257,15 +225,62 @@ _用户在这些域中有至少一个角色_
    |`scope` _string_|域|
    |`roleName` _string_|角色名|
 
+- Query Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`pageNum` _int_|页码, 默认为0|
+   |`pageSize` _int_|每页数量, 默认为50, 不能超过200, 否则按200查询|
+
 - Response
 
    |Code|Description|
    |--|--|
    |200 [_PagedData\<int\>_](#PagedData)|用户ID列表|
-   |404 "roleNotFound"|角色不存在|
 
 - Examples
 
+### 从指定域中移除用户所有角色
+
+- HTTP Request
+
+   **DELETE** `/scopes/{scope}/users/{userId}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`scope` _string_|域|
+   |`userId` _int_|用户ID|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 _{}_|移除成功|
+
+- Examples
+
+### 移除用户在所有域的所有角色
+
+- HTTP Request
+
+   **DELETE** `/users/{userId}`
+
+- Path Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`scope` _string_|域|
+   |`userId` _int_|用户ID|
+
+- Response
+
+   |Code|Description|
+   |--|--|
+   |200 _{}_|移除成功|
+
+- Examples
 
 ## 角色
 
@@ -280,6 +295,7 @@ _用户在这些域中有至少一个角色_
    |Parameter|Description|
    |--|--|
    |`name` _string_|角色名、角色ID|
+   |`category` _string_|角色分类|
    |`description` _string_|角色描述|
 
 - Response
@@ -309,7 +325,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 _{}_|删除成功|
-   |404 "roleNotFound"|角色不存在|
 
 - Examples
 
@@ -361,58 +376,27 @@ _用户在这些域中有至少一个角色_
 
 - Examples
 
-### 赋予角色权限
+### 列出指定分类的角色列表
 
 - HTTP Request
 
-   **POST** `/roles/{name}/permissions`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`name` _string_|角色名|
+   **GET** `/roles`
 
 - Body Parameters
 
    |Parameter|Description|
    |--|--|
-   |`permissionName` _string_|权限名|
+   |`category` _string_|角色所属的分类, 默认为空字符串 _""_|
 
 - Response
 
    |Code|Description|
    |--|--|
-   |200 _string[]_|角色的权限列表|
-   |400 "invalidPermission"|不存在该权限|
-   |404 "roleNotFound"|角色不存在|
+   |200 [_Role[]_](#Role)|指定分类下的角色列表|
 
 - Examples
 
-### 移除角色权限
-
-- HTTP Request
-
-   **DELETE** `/roles/{name}/permissions/{permissionName}`
-
-- Path Parameters
-
-   |Parameter|Description|
-   |--|--|
-   |`name` _string_|角色名|
-   |`permissionName` _string_|要移除的权限名|
-
-- Response
-
-   |Code|Description|
-   |--|--|
-   |200 _string[]_|角色的权限列表|
-   |404 "roleNotFound"|角色不存在|
-   |404 "permissionNotFound"|角色没有该权限|
-
-- Examples
-
-### 批量添加、移除角色权限
+### 添加、移除角色权限
 
 - HTTP Request
 
@@ -428,15 +412,15 @@ _用户在这些域中有至少一个角色_
 
    |Parameter|Description|
    |--|--|
-   |`method` _string_|批量更新方法, 可以是 _POST_, _DELETE_|
-   |`permissionNames` _string[]_|权限名列表|
+   |`operation` _string_|添加或者移除, 可以是 _add_, _remove_, 默认为 _add_|
+   |`args` _string[]_|权限名列表|
 
 - Response
 
    |Code|Description|
    |--|--|
    |200 [_Permission[]_](#Permission)|变更后的角色权限列表|
-   |404 "roleNotFound"|角色不存在|
+   |400 "invalidOperation"|无效的操作, 只能是 _add_, _remove_ 之一|
 
 - Examples
 
@@ -457,8 +441,7 @@ _用户在这些域中有至少一个角色_
 
    |Code|Description|
    |--|--|
-   |200 _string[]_|角色的权限列表|
-   |404 "roleNotFound"|角色不存在|
+   |200 [_Permission[]_](#Permission)|角色的权限列表|
 
 - Examples
 
@@ -505,7 +488,6 @@ _用户在这些域中有至少一个角色_
    |Code|Description|
    |--|--|
    |200 _{}_|删除成功|
-   |404 "permissionNotFound"|权限不存在|
 
 - Examples
 
@@ -563,6 +545,12 @@ _用户在这些域中有至少一个角色_
 - HTTP Request
 
    **GET** `/permissions`
+
+- Body Parameters
+
+   |Parameter|Description|
+   |--|--|
+   |`category` _string_|权限所属分类, 不填则获取所有权限, 否则只返回指定分类的权限列表|
 
 - Response
 

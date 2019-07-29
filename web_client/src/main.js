@@ -29,6 +29,9 @@ Vue.use(Vuex);
 Vue.use(VueAxios, axios)
 Vue.prototype.$qs = qs;
 
+axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.withCredentials = true;
+
 // The routing configuration
 const RouterConfig = {
   routes: router
