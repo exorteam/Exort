@@ -64,7 +64,7 @@ export default {
             if(_self.form.type=="create"){
                 var imgFile;
                 let reader = new FileReader();
-                if(file!=null){
+                if(this.file!=null){
                     reader.readAsDataURL(this.file);
                 }
                 reader.onload=function(e) {        //读取完毕后调用接口
@@ -101,7 +101,7 @@ export default {
             else{
                 var imgFile;
                 let reader = new FileReader();
-                if(file!=null){
+                if(this.file!=null){
                     reader.readAsDataURL(this.file);
                 }
                 reader.onload=function(e) {
