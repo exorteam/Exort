@@ -160,7 +160,7 @@
                 ],
                 signUpList: signUpLists,
 
-                ]
+
             }
         },
         methods: {
