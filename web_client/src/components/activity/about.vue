@@ -35,13 +35,41 @@
 
 <script>
 
-let signUpLists = [
-    { 学号: "517030910200", 姓名: "xxx", 年级: "大二", 学院: "电子信息与电气工程学院", 联系方式: "13216254132", 更多信息: "http://github.com/exorteam/exort"},
-    { 学号: "517030910200", 姓名: "xxx", 年级: "大二", 学院: "电子信息与电气工程学院", 联系方式: "13216254132", 更多信息: "http://github.com/exorteam/exort"},
-    { 学号: "517030910200", 姓名: "xxx", 年级: "大二", 学院: "电子信息与电气工程学院", 联系方式: "13216254132", 更多信息: "http://github.com/exorteam/exort"},
-    { 学号: "517030910200", 姓名: "xxx", 年级: "大二", 学院: "电子信息与电气工程学院", 联系方式: "13216254132", 更多信息: "http://github.com/exorteam/exort"},
-    { 学号: "", 姓名: "", 年级: "", 学院: "", 联系方式: "", 更多信息: ""}
-]
+    let signUpLists = [
+        {
+            学号: "517030910200",
+            姓名: "xxx",
+            年级: "大二",
+            学院: "电子信息与电气工程学院",
+            联系方式: "13216254132",
+            更多信息: "http://github.com/exorteam/exort"
+        },
+        {
+            学号: "517030910200",
+            姓名: "xxx",
+            年级: "大二",
+            学院: "电子信息与电气工程学院",
+            联系方式: "13216254132",
+            更多信息: "http://github.com/exorteam/exort"
+        },
+        {
+            学号: "517030910200",
+            姓名: "xxx",
+            年级: "大二",
+            学院: "电子信息与电气工程学院",
+            联系方式: "13216254132",
+            更多信息: "http://github.com/exorteam/exort"
+        },
+        {
+            学号: "517030910200",
+            姓名: "xxx",
+            年级: "大二",
+            学院: "电子信息与电气工程学院",
+            联系方式: "13216254132",
+            更多信息: "http://github.com/exorteam/exort"
+        },
+        {学号: "", 姓名: "", 年级: "", 学院: "", 联系方式: "", 更多信息: ""}
+    ]
 
     let data = [
         {
@@ -182,6 +210,15 @@ export default {
             }else{
                 this.activityState = value.signupState + 3
             }
+            ,
+            setData(value) {
+                if (value.publishState == 0) {
+                    this.activityState = 0
+                } else if (value.signupState != 2) {
+                    this.activityState = value.signupState + 1
+                } else {
+                    this.activityState = value.signupState + 3
+                }
 
             this.newform.title = value.title
 			this.newform.content = value.content

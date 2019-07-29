@@ -40,7 +40,10 @@
                 </div>
                 <Button type="dashed" @click="more_timeStamp">+</Button>
             </FormItem> -->
-            
+            <FormItem label="所属社团:">
+                <!-- <Checkbox v-model="associationList[associationIndex]"/> -->
+                <b-form-select v-model="associationIndex" :options="associationList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
+            </FormItem>            
             <FormItem label="报名是否需要审核:">
                 <Checkbox v-model="form.ifReview"/>
             </FormItem>
@@ -74,6 +77,7 @@
 import Axios from 'axios';
 import TimeRange from './time_range'
 import TagChoose from './tag_choose'
+import Messgae, { Message } from 'iview'
 
 let timeTypeList = [
 {
@@ -101,14 +105,16 @@ export default {
             form: Object
     },
     data(){
-            return {
-                    file: '',
-                    fileList: [],
-                    tag:{
-                        tag_show: false,
-                        tagList:[],
-                    }
+        return {
+            associationIndex: "",
+            associationList:[],
+            file: '',
+            fileList: [],
+            tag:{
+                tag_show: false,
+                tagList:[],
             }
+        }
     },
     methods: {
         // more_timeStamp() {
@@ -130,7 +136,6 @@ export default {
             this.$refs['file-input'].reset();
         },
         info_ok(){
-            this.form.onshow = false
             let data = {
                 title: this.form.title,
                 content: this.form.content,
@@ -154,31 +159,71 @@ export default {
                 materials: this.form.materials,
                 tags: this.tag.tagList,
             }
-            // var imgFIle
+            data.associationIds = []
+            data.associationIds.push(associationIndex)
+
             let reader = new FileReader()
             reader.readAsDataURL(this.file)
             reader.onload=function(e){
-                // imgFIle = e.target.result
                 data.image = e.target.result
-                console.log(data)
             }
 
-            Axios
-                .post('http://202.120.40.8:30727/activities', data)
-                .then(response => {
-                    console.log("Successfully!")
-                    console.log(response.data.data)
-                })
-                .catch(e => {
-                    console.log(e)
-                })
+            this.form.onshow = false
             console.log(data)
+
+            this.axios({
+                method:"post",
+                url:"/activities",
+                data:data
+            })
+            .then(response => {
+                console.log("Successfully!")
+                console.log(response.data.data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
         },
         info_cancel(){
-                this.form.onshow = false
+            this.form.onshow = false
+        },
+        getAssociations(){
+            this.axios({
+                method: "get",
+                url: "/associations/",
+                params: {
+                    pageNum: 0,
+                    pageSize: 9999,
+                    keyword: "",
+                    tags: "",
+                    state: 1,
+                }
+            })
+            .then(response => {
+                let originList = response.da.data.content
+                console.log(originList)
+                this.setAssociationList(originList) 
+            })
+            .catch(e => {
+                console.log(e)
+            })
+        },
+        setAssociationList(originList){
+            if(originList.length==0){
+                return
+            }
+            for(let i=0;i<originList.length;i++){
+                let data = {
+                    value: originList.id,
+                    text: originList.name
+                }
+                this.associationList.push(data)
+            }
+            console.log(this.associationList)
         }
     },
     mounted() {
+        this.getAssociations()
     },
 }
 </script>

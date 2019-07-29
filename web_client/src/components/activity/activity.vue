@@ -4,10 +4,10 @@
         <div>
             <div style="margin-top: 15px; margin-left: 20px">
                 创建时间<!-- 活动创建时间搜索 -->
-                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>                
-                报名时间<!-- 活动报名时间搜索 -->            
+                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
+                报名时间<!-- 活动报名时间搜索 -->
                 <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
-                开始时间<!-- 活动开始时间搜索 -->            
+                开始时间<!-- 活动开始时间搜索 -->
                 <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
                 发布状态<!-- 根据活动发布状态搜索 -->
                 <b-form-select v-model="select.publishSelected" :options="publishSelectList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
@@ -125,44 +125,44 @@
         }
     ]
 
-let cardLists=[
-    {
-        id: "5d302c76a5fabe1702283262",
-        name:"五一长跑节",
-        text:"已结束",
-        image: image,
-        state:"processing",
-        time: "2019-05-01",
-        bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
-    },
-    {
-        id: "5d302c76a5fabe1702283263",
-        name:"MVIG大型数据集标注",
-        text:"未开始",
-        image: image,
-        state: "success",
-        time:"2019-07-18 22:17 - 2019-07-31 23:59",
-        bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
-    },
-    {
-        id: "5d302b3ba5fabe1702283264",
-        name:"联名文化衫Line Up",
-        text:"进行中",
-        image: image,
-        state: "warning",
-        time:"2019-07-23 08:00 - 2019-07-31 08:00",
-        bd:"明天，你就要去很远的地方，带上我们的故事。"
-    },
-    {
-        id: "5d302b3ba5fabe1702283265",
-        name:"校园带队志愿者招募",
-        text:"未发布",
-        image: image,
-        state:"default",
-        time:"2019-07-11 15:00 - 2019-07-11 18:30",
-        bd:"招募校园带队讲解志愿者",
-    }
-]
+    let cardLists=[
+        {
+            id: "5d302c76a5fabe1702283262",
+            name:"五一长跑节",
+            text:"已结束",
+            image: image,
+            state:"processing",
+            time: "2019-05-01",
+            bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
+        },
+        {
+            id: "5d302c76a5fabe1702283263",
+            name:"MVIG大型数据集标注",
+            text:"未开始",
+            image: image,
+            state: "success",
+            time:"2019-07-18 22:17 - 2019-07-31 23:59",
+            bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
+        },
+        {
+            id: "5d302b3ba5fabe1702283264",
+            name:"联名文化衫Line Up",
+            text:"进行中",
+            image: image,
+            state: "warning",
+            time:"2019-07-23 08:00 - 2019-07-31 08:00",
+            bd:"明天，你就要去很远的地方，带上我们的故事。"
+        },
+        {
+            id: "5d302b3ba5fabe1702283265",
+            name:"校园带队志愿者招募",
+            text:"未发布",
+            image: image,
+            state:"default",
+            time:"2019-07-11 15:00 - 2019-07-11 18:30",
+            bd:"招募校园带队讲解志愿者",
+        }
+    ]
 
 import ActivityCreate from './activity_create.vue'
 import TagChoose from './tag_choose'
@@ -210,18 +210,18 @@ export default {
                         end: "",
                     }]
                 },
-                time: {
-                    type: 0, 
-                    time:[{
-                        start: "",
-                        end: ""
-                    }]
+                tag:{
+                    tag_show: false,
+                    tagList:[],
                 },
-                ifReview: false,
-                ifOnlyMem: false,
-                maxParticipants: '',
-                materials: [],
-                tags: []
+                totalSize: 103,
+                pageNum: 2,
+                pageSize: 9,
+                    }
+        },
+        methods: {
+            handlePage(){
+
             },
             tag:{
                 tag_show: false,
