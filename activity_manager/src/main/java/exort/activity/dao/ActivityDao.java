@@ -2,14 +2,13 @@ package exort.activity.dao;
 
 import exort.activity.entity.Activity;
 import exort.activity.entity.PageList;
-import exort.activity.entity.Response;
-import exort.activity.entity.Select;
+import exort.activity.entity.Filter;
 
 import java.util.List;
 
 public interface ActivityDao {
 
-    Response update(Activity activity);
+    Activity update(Activity activity);
 
     Activity getActivity(String id);
 
@@ -17,5 +16,5 @@ public interface ActivityDao {
 
     List<Integer> checkUserId(String activityid, int userId, int type);
 
-    PageList<Activity> selectActivities(Select select, int pagesize, int pagenum, int sortby);
+    PageList<Activity> selectActivities(Filter select, int pagesize, int pagenum, int sortby);
 }

@@ -1,6 +1,5 @@
 package exort.activity.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ActivityTime {
