@@ -5,10 +5,10 @@ import Router from 'vue-router'
 import Activity from '../components/activity/activity.vue'
 import About from '../components/activity/about.vue'
 
-import EditAsso from '../components/association_management/edit_association'
-import SysAssoList from '../components/association_management/sys_association_list'
-import AssoList from '../components/association_management/association_list'
-import CreateAsso from '../components/association_management/create_association'
+import EditAsso from '../components/assoadmin/edit_association'
+import SysAssoList from '../components/sysadmin/sys_association_list'
+import AssoList from '../components/assoadmin/association_list'
+import CreateAsso from '../components/assoadmin/create_association'
 
 import AdminIndex from '../components/admin_index'
 
