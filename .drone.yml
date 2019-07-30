@@ -18,7 +18,7 @@ steps:
   commands:
   - cd ./article_manager
   - rm -rf src/main/resources
-  - cp -rf /root/resources src/main/resources
+  - cp -rf /root/resources/article src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/article-manager docker:build -DpushImage
 
 trigger:
