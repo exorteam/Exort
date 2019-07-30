@@ -13,18 +13,15 @@ import exort.apiserver.service.ActivityManagerService.*;
 public class ActivityManagerController {
 
     @Autowired
-    private ActivityManagerService activitySvc;
-	@Autowired
-	private PermService permSvc;
+    private ActivityManagerService service;
 
-    @PostMapping
-    public Response createNewActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity){
-    	System.out.println(activity.getTitle());
-		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
-		}
-		return activitySvc.createNewActivity(activity);
-    }
+//    @PostMapping
+//    public Response createNewActivity(@RequestAttribute("id") int operatorId, @RequestBody Activity activity){
+//		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
+//			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
+//		}
+//		return activitySvc.createNewActivity(activity);
+//    }
 
     @PutMapping("/{id}")
     public Response updateActivity(@RequestBody Activity activity, @PathVariable("id") String id){
@@ -78,22 +75,4 @@ public class ActivityManagerController {
         return service.getActivity(id);
     }
 
-	private boolean checkPermissionOnActivity(int operatorId,Activity activity,String permission){
-		System.out.println(operatorId);
-		System.out.println(activity.getTitle());
-		System.out.println(permission);
-		for(int i:activity.getAssociationIds()){
-			final String assoScope = "asso-" + String.valueOf(i);
-			if(permSvc.hasPermission(Long.valueOf(operatorId),assoScope,permission) != null){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean checkPermissionByActivityId(int operatorId,String activityId,String permission){
-		Activity activity = (Activity)activitySvc.getActivity(activityId).getData();
-		if(activity == null)return false;
-		return checkPermissionOnActivity(operatorId,activity,permission);
-	}
 }

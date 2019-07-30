@@ -59,9 +59,7 @@ export default {
 	},
 	methods: {
 		validateToken:function(){
-			const that = this;
 			const token = window.localStorage.getItem('token');
-			if(!token)return;
 			this.axios({
 				method:'post',
 				url:'/auth',
@@ -69,21 +67,13 @@ export default {
 			}).then((res)=>{
 				console.log(res.data);
 				if(res.data.id){
-					that.axios.defaults.headers.common.Authorization = 'Bearer ' + token;
-					that.$Message.success("Login success, " + res.data.username);
-					that.axios({
+                    this.axios.defaults.headers.common.Authorization = 'Bearer ' + res.data.token;
+					this.axios({
 						method:'get',
-						url:'/permission/admin',
+						url:'/perm/admin',
 					}).then((res)=>{
 						console.log(res.data);
-						/*this.$router.push('admin');*/
-					}).catch((err)=>{
-						console.log(err);
 					})
-				}
-				else{
-					// token invalid, do clean local storage and stay at login path
-					window.localStorage.removeItem('token')
 				}
 			})
 		},
@@ -101,15 +91,14 @@ export default {
 				if(res.data.token){
 					window.localStorage.setItem('token',res.data.token);
 					this.axios.defaults.headers.common.Authorization = 'Bearer ' + res.data.token;
-					this.validateToken();
-					/*that.axios({                                                     */
-					/*    method: 'post',                                              */
-					/*    url: '/auth',                                                */
-					/*    data: res.data.token                                         */
-					/*}).then((res)=>{                                                 */
-					/*    that.$Message.success("Login success, " + res.data.username);*/
-					/*    this.$router.push('admin');                                  */
-					/*})                                                               */
+					that.axios({
+						method: 'post',
+						url: '/auth',
+						data: res.data.token
+					}).then((res)=>{
+						that.$Message.success("Login success, " + res.data.username);
+						this.$router.push('admin');
+					})
 				}
 
 			}).catch(function (error) {
