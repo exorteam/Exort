@@ -67,7 +67,7 @@
 
 <script>
 // <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
-import TagChoose from '../activity/tag_choose.vue'
+import TagChoose from '../../common/tag_choose.vue'
 import axios from 'axios'
 export default {
     props: {

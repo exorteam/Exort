@@ -165,7 +165,7 @@
     ]
 
 import ActivityCreate from './activity_create.vue'
-import TagChoose from './tag_choose'
+import TagChoose from '../../common/tag_choose.vue'
 import axios from 'axios'
 import image from '../../../assets/activity/cover1.jpeg'
 
@@ -278,7 +278,7 @@ export default {
         //             _body: btoa(JSON.stringify({data}))
         //         // }
         //     }
-        // }) 
+        // })
         // .then(response => {
         //     this.cardList = response.data.content
         //     this.totalSize = response.data.totalSize
