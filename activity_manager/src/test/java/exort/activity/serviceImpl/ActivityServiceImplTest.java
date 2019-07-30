@@ -34,8 +34,8 @@ public class ActivityServiceImplTest {
 
     @Test
     public void upsertActivity() {
-        List<Integer> associationIds = new ArrayList<>();
-        associationIds.add(32);
+        List<String> associationIds = new ArrayList<>();
+        associationIds.add("32");
 
         List<TimeRange> timeList = new ArrayList<>();
         timeList.add(new TimeRange(new Date(), new Date()));

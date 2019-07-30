@@ -210,18 +210,18 @@ export default {
                         end: "",
                     }]
                 },
-                tag:{
-                    tag_show: false,
-                    tagList:[],
+                time: {
+                    type: 0,
+                    time:[{
+                        start: "",
+                        end: ""
+                    }]
                 },
-                totalSize: 103,
-                pageNum: 2,
-                pageSize: 9,
-                    }
-        },
-        methods: {
-            handlePage(){
-
+                ifReview: false,
+                ifOnlyMem: false,
+                maxParticipants: '',
+                materials: [],
+                tags: []
             },
             tag:{
                 tag_show: false,
@@ -230,6 +230,9 @@ export default {
         }
     },
     methods: {
+        handlePage(){
+
+        },
         to_detail(value){
             // console.log(value)
             sessionStorage.setItem('activityid', value)

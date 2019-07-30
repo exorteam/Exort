@@ -41,8 +41,7 @@
                 <Button type="dashed" @click="more_timeStamp">+</Button>
             </FormItem> -->
             <FormItem label="所属社团:">
-                <!-- <Checkbox v-model="associationList[associationIndex]"/> -->
-                <b-form-select v-model="associationIndex" :options="associationList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
+                <b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>
             </FormItem>            
             <FormItem label="报名是否需要审核:">
                 <Checkbox v-model="form.ifReview"/>
@@ -107,7 +106,10 @@ export default {
     data(){
         return {
             associationIndex: "",
-            associationList:[],
+            associationList:[{
+                value:"",
+                text:"请选择所属社团"
+            }],
             file: '',
             fileList: [],
             tag:{
@@ -160,7 +162,7 @@ export default {
                 tags: this.tag.tagList,
             }
             data.associationIds = []
-            data.associationIds.push(associationIndex)
+            data.associationIds.push(this.associationIndex)
 
             let reader = new FileReader()
             reader.readAsDataURL(this.file)
@@ -200,7 +202,7 @@ export default {
                 }
             })
             .then(response => {
-                let originList = response.da.data.content
+                let originList = response.data.data.content
                 console.log(originList)
                 this.setAssociationList(originList) 
             })
@@ -214,8 +216,8 @@ export default {
             }
             for(let i=0;i<originList.length;i++){
                 let data = {
-                    value: originList.id,
-                    text: originList.name
+                    value: originList[i].id,
+                    text: originList[i].name
                 }
                 this.associationList.push(data)
             }

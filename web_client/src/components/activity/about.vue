@@ -199,26 +199,17 @@ export default {
 					console.log(response.data)
 				})
 				.catch(e => {
-					console.log(e)
-				})
+                    console.log(e)
+                })
         },
-        setData(value){
-            if(value.publishState==0){
+        setData(value) {
+            if (value.publishState == 0) {
                 this.activityState = 0
-            }else if (value.signupState!=2){
+            } else if (value.signupState != 2) {
                 this.activityState = value.signupState + 1
-            }else{
+            } else {
                 this.activityState = value.signupState + 3
             }
-            ,
-            setData(value) {
-                if (value.publishState == 0) {
-                    this.activityState = 0
-                } else if (value.signupState != 2) {
-                    this.activityState = value.signupState + 1
-                } else {
-                    this.activityState = value.signupState + 3
-                }
 
             this.newform.title = value.title
 			this.newform.content = value.content
@@ -249,7 +240,7 @@ export default {
         },
         getParticipants(){
             //请求activity的participants
-            let data={type:"accept" }
+            let data={ type:"accept" }
             Axios
                 .get('http://202.120.40.8:30727/applications', {
                     params: {
