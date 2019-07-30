@@ -12,7 +12,6 @@ import exort.api.http.review.entity.CallbackParam;
 
 import exort.associationmanager.entity.MyObject;
 import exort.associationmanager.service.AssociationService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +32,6 @@ public class AssociationManagerController{
 
     @GetMapping("/associations")
     public ApiResponse<PagedData<Association>> listAssociations(@RequestBody AssociationFilterParams body, PageQuery page){
-        System.out.println(body.toString());
-        System.out.println(page.toString());
         if(body.getState() > 2 ||body.getState()<-1){
             throw new ApiError(400,"invalidState","无效的状态");
         }
@@ -54,7 +51,6 @@ public class AssociationManagerController{
 
 
         PagedData<exort.associationmanager.entity.Association> associationList = service.listAssociations(body,page.getPageNum(),page.getPageSize());
-        System.out.println(associationList.toString());
         PagedData<Association> associationPagedData = new PagedData<>();
         associationPagedData.setPageSize(associationList.getPageSize());
         associationPagedData.setTotalSize(associationList.getTotalSize());
@@ -74,7 +70,6 @@ public class AssociationManagerController{
             throw new ApiError(400,"invalidAssoId","无效的社团ID");
         }
         exort.associationmanager.entity.Association association = service.getAssociation(assoId);
-        System.out.println(association.toString());
         Association association1 = association.toCommon();
         if (association == null){
             throw  new  ApiError(404,"notFound","社团不存在");
@@ -127,10 +122,10 @@ public class AssociationManagerController{
 
     @PutMapping("/associations/{assoId}/state")
     public ApiResponse<Object> patchAssociation(@RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
-        System.out.println(body.getOperation().getClass() );
-        System.out.println("block".getClass());
-        System.out.println(Arrays.asList("block","unblock").contains(body.getOperation() ));
 
+        if(body.getArg()==null){
+            body.setArg("");
+        }
 
         if(body.getOperation() == null | !Arrays.asList("block","unblock").contains(body.getOperation() )){
             throw new ApiError(400,"invlaidType","无效的申请类型");
