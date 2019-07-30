@@ -58,4 +58,10 @@ public class UserInfoController {
 		}
 		return infoSvc.disableUser(userId,disabled);
 	}
+
+	//@GetMapping
+	//public List<UserInfo> getUserInfoInBatch(@RequestBody List<Integer> ids){}
+
+
 }
+
