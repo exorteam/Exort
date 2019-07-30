@@ -1,29 +1,31 @@
 package exort.activity.entity;
 
+import java.util.Date;
+
 public class TimeRange{
 
-    private String start;
+    private Date start;
 
-    private String end;
+    private Date end;
 
-    public TimeRange(String start, String end){
+    public TimeRange(Date start, Date end){
         this.start = start;
         this.end = end;
     }
 
-    public String getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public String getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 };

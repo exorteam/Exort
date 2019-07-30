@@ -29,8 +29,6 @@ Vue.use(Vuex);
 Vue.use(VueAxios, axios)
 Vue.prototype.$qs = qs;
 
-axios.defaults.baseURL = 'http://localhost:8080';
-axios.defaults.withCredentials = true;
 
 // The routing configuration
 const RouterConfig = {
@@ -41,8 +39,15 @@ Vue.config.productionTip = false;
 store.dispatch('setStatus');
 
 new Vue({
-  el: '#app',
-  router: router,
-  store,
-  render: h => h(App)
+	el: '#app',
+	router: router,
+	store,
+	render: h => h(App),
+	created:()=>{
+		axios.defaults.baseURL = 'http://localhost:8080';
+		axios.defaults.withCredentials = true;
+		const token = window.localStorage.getItem('token');
+		if(token)axios.defaults.headers.common.Authorization = 'Bearer ' + token;
+	}
+
 });

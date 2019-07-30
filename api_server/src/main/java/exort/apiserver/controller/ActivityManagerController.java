@@ -39,6 +39,7 @@ public class ActivityManagerController {
 
     @PostMapping
     public Response createNewActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity){
+    	System.out.println(activity.getTitle());
 		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
 			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
 		}
@@ -125,6 +126,9 @@ public class ActivityManagerController {
     }
 
 	private boolean checkPermissionOnActivity(int operatorId,Activity activity,String permission){
+		System.out.println(operatorId);
+		System.out.println(activity.getTitle());
+		System.out.println(permission);
 		for(int i:activity.getAssociationIds()){
 			final String assoScope = "asso-" + String.valueOf(i);
 			if(permSvc.hasPermission(Long.valueOf(operatorId),assoScope,permission) != null){
