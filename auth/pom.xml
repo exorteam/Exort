@@ -55,6 +55,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+
 			</plugin>
 			<plugin>
 			 	<groupId>com.spotify</groupId>
@@ -64,9 +65,9 @@
 					<imageName>exort/auth</imageName>
 					<baseImage>java</baseImage>
 					<maintainer>MrHate</maintainer>
-					<exposes>                      
-						<expose>8080</expose>      
-					</exposes>                     
+					<exposes>
+						<expose>8080</expose>
+					</exposes>
 					<imageTags>
 						<imageTag>${project.version}</imageTag>
 						<!--<imageTag>latest</imageTag>-->
