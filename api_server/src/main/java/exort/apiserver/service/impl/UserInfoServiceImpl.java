@@ -20,13 +20,16 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserInfoServiceImpl extends RestTemplate implements UserInfoService {
 
-	private final String urlBase = "http://202.120.40.8:30728/users/info";
+	private String urlBase = "http://202.120.40.8:30728/users/info";
 
 	@Value("${exort.users.protocol:http}")
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
     @Value("${exort.users.endpoint:localhost}")
-    public void setEndpoint(String endpoint) { super.setEndpoint(endpoint); }
+    public void setEndpoint(String endpoint) {
+	   	super.setEndpoint(endpoint);
+		urlBase = "http://" + endpoint + "/users/info";
+	}
 
 
 	public UserInfo getUserInfo(int id){
