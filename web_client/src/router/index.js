@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // import Index from '@/components/index'
-import Activity from '../components/activity/activity.vue'
-import About from '../components/activity/about.vue'
+import Activity from '../components/assoadmin/activity/activity.vue'
+import About from '../components/assoadmin/activity/about.vue'
 
 import EditAsso from '../components/association_management/edit_association'
 import SysAssoList from '../components/association_management/sys_association_list'

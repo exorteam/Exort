@@ -167,7 +167,7 @@
 import ActivityCreate from './activity_create.vue'
 import TagChoose from './tag_choose'
 import axios from 'axios'
-import image from '../../assets/activity/cover1.jpeg'
+import image from '../../../assets/activity/cover1.jpeg'
 
 export default {
     name: 'activity',
