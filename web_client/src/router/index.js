@@ -2,13 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // import Index from '@/components/index'
-import Activity from '../components/activity/activity.vue'
-import About from '../components/activity/about.vue'
+import Activity from '../components/assoadmin/activity/activity.vue'
+import About from '../components/assoadmin/activity/about.vue'
 
-import EditAsso from '../components/association_management/edit_association'
-import SysAssoList from '../components/association_management/sys_association_list'
-import AssoList from '../components/association_management/association_list'
-import CreateAsso from '../components/association_management/create_association'
+// import EditAsso from '../components/assoadmin/association_manager/edit_association'
+import SysAssoList from '../components/sysadmin/association_manager/sys_association_list'
 
 import AdminIndex from '../components/admin_index'
 
@@ -57,35 +55,10 @@ export default new Router({
                     component: About
                 },
                 {
-                    path: 'asso_list',
-                    name: 'AssoList',
-                    component: AssoList
-                },
-                {
                     path: 'sys_asso_list',
                     name: 'SysAssoList',
                     component: SysAssoList
                 },
-                {
-                    path: 'create_asso',
-                    name: 'CreateAsso',
-                    component: CreateAsso
-                },
-                // {
-                //     path: 'sys_mana_asso',
-                //     name: 'SysManaAsso',
-                //     component: SysManaAsso
-                // },
-                // {
-                //     path: 'edit_asso',
-                //     name: 'EditAsso',
-                //     component: EditAsso
-                // },
-                // {
-                //     path: 'sys_create_asso',
-                //     name: 'SysCreateAsso',
-                //     component: SysCreateAsso
-                // },
                 {
                     path: 'application_management',
                     name: 'AppliManagement',

@@ -42,7 +42,7 @@
             </FormItem> -->
             <FormItem label="所属社团:">
                 <b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>
-            </FormItem>            
+            </FormItem>
             <FormItem label="报名是否需要审核:">
                 <Checkbox v-model="form.ifReview"/>
             </FormItem>
@@ -75,7 +75,7 @@
 <script>
 import Axios from 'axios';
 import TimeRange from './time_range'
-import TagChoose from './tag_choose'
+import TagChoose from '../../common/tag_choose'
 import Messgae, { Message } from 'iview'
 
 let timeTypeList = [
@@ -149,7 +149,7 @@ export default {
                     }]
                 },
                 time: {
-                    type: 0, 
+                    type: 0,
                     time:[{
                         start: this.form.time.time[0],
                         end: this.form.time.time[1],
@@ -204,7 +204,7 @@ export default {
             .then(response => {
                 let originList = response.data.data.content
                 console.log(originList)
-                this.setAssociationList(originList) 
+                this.setAssociationList(originList)
             })
             .catch(e => {
                 console.log(e)
