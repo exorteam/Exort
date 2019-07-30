@@ -12,8 +12,8 @@ import CreateAsso from '../components/association_management/create_association'
 
 import AdminIndex from '../components/admin_index'
 
-import AssociaMemManage from '../components/association_member_management/association_member_table'
-import AppliManagement from '../components/association_member_management/application_management_table'
+import AssociaMemManage from '../components/assoadmin/association_member_management/association_member_table'
+import AppliManagement from '../components/assoadmin/association_member_management/application_management_table'
 
 import UserList from '../components/user_management/UserList.vue'
 import PermList from '../components/user_management/PermList.vue'
