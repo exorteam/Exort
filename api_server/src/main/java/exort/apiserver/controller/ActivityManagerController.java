@@ -14,12 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.service.ActivityManagerService;
-import exort.apiserver.service.ActivityManagerService.Activity;
-import exort.apiserver.service.ActivityManagerService.Operation;
-import exort.apiserver.service.ActivityManagerService.Request;
-import exort.apiserver.service.ActivityManagerService.Response;
-import exort.apiserver.service.ActivityManagerService.Select;
+
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.RequestActivity;
+import exort.api.http.activity.entity.Signup;
+import exort.api.http.activity.service.ActivityService;
+import exort.api.http.review.entity.CallbackParam;
+
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 
 @RestController
 @RequestMapping(path="/activities")
@@ -33,104 +38,104 @@ public class ActivityManagerController {
 	public static final String PERM_CREATE = "create-activity";
 
     @Autowired
-    private ActivityManagerService activitySvc;
+    private ActivityService activitySvc;
+
 	@Autowired
 	private PermService permSvc;
 
     @PostMapping
-    public Response createNewActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity){
+    public ApiResponse<Activity> createNewActivity(@RequestAttribute("id") int operatorId, @RequestBody Activity activity){
     	System.out.println(activity.getTitle());
 		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
+			return new ApiResponse<>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
 		}
-		return activitySvc.createNewActivity(activity);
+		ApiResponse<Activity> response = activitySvc.createNewActivity(activity);
+		System.out.println(response.getData());
+		return response;
     }
 
     @PutMapping("/{id}")
-    public Response updateActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity, @PathVariable("id") String activityId){
+    public ApiResponse<Activity> updateActivity(@RequestAttribute("id") int operatorId,@RequestBody Activity activity, @PathVariable("id") String activityId){
 		if(!activity.getId().equals(activityId)){
-			return new Response<Object>(null,"OptErr","Entity id differs from path param when updating");
+			return new ApiResponse<>("OptErr","Entity id differs from path param when updating");
 		}
 		if(!checkPermissionOnActivity(operatorId,activity,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to update activity["+activityId+"]");
+			return new ApiResponse<>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to update activity["+activityId+"]");
 		}
 		return activitySvc.updateActivity(activity,activityId);
     }
 
     @GetMapping
-    public Response getActivities(@RequestBody Select select, @PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby") int sortby){
+    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, @PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby") String sortby){
 		// open to every one
-        return activitySvc.getActivities(select,pagesize,pagenum,sortby);
+        return activitySvc.getActivities(filter, new PageQuery(pagenum, pagesize, sortby));
     }
 
     @PutMapping("/{id}/state")
-    public Response publishActivity(@RequestAttribute("id") int operatorId,@PathVariable("id")String activityId, @RequestBody Request request){
+    public ApiResponse<Object> publishActivity(@RequestAttribute("id") int operatorId,@PathVariable("id")String activityId, @RequestBody RequestActivity request){
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<Object>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
         return activitySvc.publishActivity(activityId, request);
     }
 
     @PostMapping("/{id}/participants")
-    public Response addParticipants(@RequestAttribute("id") int operatorId,@PathVariable("id") String activityId, @RequestBody Request request){
+    public ApiResponse<Object> addParticipants(@RequestAttribute("id") int operatorId,@PathVariable("id") String activityId, @RequestBody RequestActivity request){
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<Object>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
         return activitySvc.addParticipants(activityId, request);
     }
 
     @PostMapping("/{id}/realparticipants")
-    public Response addRealParticipants(@RequestAttribute("id") int operatorId,@PathVariable("id")String activityId, @RequestBody Request request){
+    public ApiResponse<Object> addRealParticipants(@RequestAttribute("id") int operatorId,@PathVariable("id")String activityId, @RequestBody RequestActivity request){
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<Object>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
         return activitySvc.addRealParticipants(activityId, request);
     }
 
     @DeleteMapping("/{id}/participants")
-    public Response deleteParticipants(@RequestAttribute("id") int operatorId,@PathVariable("id")String activityId, @RequestBody Request request){
+    public ApiResponse<Object> deleteParticipants(@RequestAttribute("id") int operatorId,@PathVariable("id")String activityId, @RequestBody RequestActivity request){
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<Object>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
         return activitySvc.deleteParticipants(activityId, request);
     }
 
     @GetMapping("/{id}/participants")
-    public Response getActivityParticipants(@RequestAttribute("id") int operatorId,@PathParam(value = "pagesize")int pagesize,@PathParam(value = "pagenum")int pagenum,@PathVariable("id")String activityId,@RequestBody Request request){
+    public ApiResponse<PagedData<Integer>> getActivityParticipants(@RequestAttribute("id") int operatorId,@PathParam(value = "pagesize")int pagesize,@PathParam(value = "pagenum")int pagenum,@PathVariable("id")String activityId,@RequestBody RequestActivity request){
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
-        return activitySvc.getActivityParticipants(pagesize,pagenum,activityId, request);
+        return activitySvc.getActivityParticipants(new PageQuery(pagesize,pagenum), activityId, request);
     }
 
     @GetMapping("/{id}/realparticipants")
-    public Response getActivityRealParticipants(@RequestAttribute("id") int operatorId,@PathParam(value = "pagesize")int pagesize,@PathParam(value = "pagenum")int pagenum,@PathVariable("id")String activityId,@RequestBody Request request){
+    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(@RequestAttribute("id") int operatorId,@PathParam(value = "pagesize")int pagesize,@PathParam(value = "pagenum")int pagenum,@PathVariable("id")String activityId,@RequestBody RequestActivity request){
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
-        return activitySvc.getActivityRealParticipants(pagesize,pagenum,activityId, request);
+        return activitySvc.getActivityRealParticipants(new PageQuery(pagesize,pagenum), activityId, request);
     }
 
     @PostMapping(value = "/callback/acceptsignup")
-    public Response acceptSignup(@RequestAttribute("id") int operatorId,@RequestBody Operation operation){
-		String activityId = operation.getApplication().getSignup().getActivityId();
+    public ApiResponse<Object> acceptSignup(@RequestAttribute("id") int operatorId,@RequestBody CallbackParam<Signup> operation){
+		String activityId = operation.getApplication().getObject().getActivityId();
 		if(!checkPermissionByActivityId(operatorId,activityId,PERM_UPDATE)){
-			return new Response<Object>(null,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
+			return new ApiResponse<>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission to publish activity["+activityId+"]");
 		}
         return activitySvc.acceptSignup(operation);
     }
 
     @GetMapping(value = "/{id}")
-    public Response getActivity(@PathVariable("id")String id){
+    public ApiResponse<Activity> getActivity(@PathVariable("id")String id){
         return activitySvc.getActivity(id);
     }
 
 	private boolean checkPermissionOnActivity(int operatorId,Activity activity,String permission){
-		System.out.println(operatorId);
-		System.out.println(activity.getTitle());
-		System.out.println(permission);
-		for(int i:activity.getAssociationIds()){
-			final String assoScope = "asso-" + String.valueOf(i);
+		for(String i:activity.getAssociationIds()){
+			final String assoScope = "asso-" + i;
 			if(permSvc.hasPermission(Long.valueOf(operatorId),assoScope,permission) != null){
 				return true;
 			}
