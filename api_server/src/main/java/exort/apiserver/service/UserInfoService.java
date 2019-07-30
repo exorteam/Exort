@@ -38,6 +38,6 @@ public interface UserInfoService {
 	UserInfo updateUserInfo(int id,UserInfo info);
 	boolean  disableUser(int id,boolean disabled);
 	List	 getUserInfoInBatch(List<Integer> ids);
-	List 	getUserInfoByPage(int pageNum,int pageSize,String sortBy);
+	List 	 getUserInfoByPage(int pageNum,int pageSize,String sortBy);
 }
 
