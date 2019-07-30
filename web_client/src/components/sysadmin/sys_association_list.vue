@@ -104,7 +104,7 @@
 
 <script>
 import Solid from '../../assets/AssociationLogo/solid.jpg'
-import CreateAssociation from './create_association.vue'
+import CreateAssociation from '../assoadmin/create_association.vue'
 import TagChoose from '../activity/tag_choose.vue'
 import Application from './application.vue'
 import axios from 'axios'

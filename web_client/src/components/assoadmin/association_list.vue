@@ -69,7 +69,7 @@
 import Solid from '../../assets/AssociationLogo/solid.jpg'
 import CreateAssociation from './create_association.vue'
 import TagChoose from '../activity/tag_choose.vue'
-import Application from './application.vue'
+import Application from '../sysadmin/application.vue'
 import axios from 'axios'
 export default {
 
