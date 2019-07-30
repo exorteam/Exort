@@ -15,8 +15,8 @@
         data() {
             return {
                 // modal1: false
-                data3: this.getMockData(),
-                targetKeys3: this.getTargetKeys(),
+                data3: [],
+                targetKeys3: [],
                 listStyle: {
                     width: '250px',
                     height: '300px'
@@ -25,52 +25,71 @@
         },
         methods: {
             getParentPermList() {
-                let ret = [];
-                this.axios.get('/associations/' + this.nodedata.department.associationId + "/departments/" + this.nodedata.department.parentId + "/permissions").then((res) => {
-                    ret = res.data.data;
+                let url = '/associations/' + this.nodedata.department.associationId + "/departments/" + this.nodedata.department.parentId + '/permissions';
+                this.axios.get(url).then((res) => {
+                    this.getMockData(res.data.data);
                 });
-                return ret;
             },
             getChildPermList() {
-                let ret = [];
                 this.axios.get('/associations/' + this.nodedata.department.associationId + "/departments/" + this.nodedata.department.departmentId + "/permissions").then((res) => {
-                    ret = res.data.data;
+                    this.getTargetKeys(res.data.data);
                 });
-                return ret;
             },
-            getMockData() {
+            getMockData(data) {
                 let mockData = [];
-                let parent = this.getParentPermList();
-                for (let i = 0; i < parent.length + 20; i++) {
+                let parent = data;
+                for (let i = 0; i < parent.length; i++) {
                     mockData.push({
-                        key: i.toString(),
-                        label: i.toString(),
-                        description: i.toString(),
+                        key: parent[i].name,
+                        label: parent[i].name,
+                        description: parent[i].description,
                     });
                 }
-                return mockData;
+                this.data3 = mockData;
             },
-            getTargetKeys() {
-                let target = this.getChildPermList();
-
-                return ["0", "2"];
+            getTargetKeys(data) {
+                let target = data;
+                // console.log(target);
+                let ret = [];
+                for (let i = 0; i < target.length; i++) {
+                    ret.push(target[i].name);
+                }
+                this.targetKeys3 = ret;
             },
-            handleChange3(newTargetKeys) {
-                console.log(newTargetKeys);
-                this.targetKeys3 = newTargetKeys;
-                this.axios({
-                    method: "post",
-                    data: newTargetKeys,
-                    url: "/associations/" + this.nodedata.department.associationId + "/departments/" + this.nodedata.department.departmentId + "/permissions"
-                }).then((res) => {
-
-                });
+            handleChange3(newTargetKeys, direction, moveKeys) {
+                if(direction==="left"){
+                    this.axios({
+                        method: "delete",
+                        data: moveKeys,
+                        url: "/associations/" + this.nodedata.department.associationId + "/departments/" + this.nodedata.department.departmentId + "/permissions"
+                    }).then((res) => {
+                        if (res.data.data !== null) {
+                            this.targetKeys3 = newTargetKeys;
+                        }else{
+                            this.$Message.error(res.data.message);
+                        }
+                    });
+                }else{
+                    this.axios({
+                        method: "post",
+                        data: moveKeys,
+                        url: "/associations/" + this.nodedata.department.associationId + "/departments/" + this.nodedata.department.departmentId + "/permissions"
+                    }).then((res) => {
+                        if (res.data.data !== null) {
+                            this.targetKeys3 = newTargetKeys;
+                        }else{
+                            this.$Message.error(res.data.message);
+                        }
+                    });
+                }
             },
             render3(item) {
-                return item.label + ' - ' + item.description;
+                return item.label;
             }
         },
         mounted() {
+            this.getParentPermList();
+            this.getChildPermList();
         }
     }
 </script>
