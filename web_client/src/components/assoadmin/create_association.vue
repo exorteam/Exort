@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import TagChoose from '../activity/tag_choose.vue'
+import TagChoose from './tag_choose.vue'
 import axios from 'axios'
 export default {
     components:{TagChoose},
