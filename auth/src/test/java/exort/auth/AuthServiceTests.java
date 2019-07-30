@@ -1,12 +1,13 @@
 package exort.auth;
 
-import java.util.UUID;
 import java.util.Map;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import exort.auth.entity.AuthResponse;
@@ -18,6 +19,7 @@ import junit.framework.Assert;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class AuthServiceTests {
 
 	@Autowired
