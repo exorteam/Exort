@@ -11,7 +11,4 @@ public class Signup {
 
     private String activityId;
 
-    public Signup(String activityId){
-        this.activityId = activityId;
-    }
 }
