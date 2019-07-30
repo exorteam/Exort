@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import exort.auth.entity.UserInfo;
@@ -49,5 +52,9 @@ public class InfoServiceImpl implements InfoService {
 		ArrayList<UserInfo> res = new ArrayList<>();
 		infoRepository.findAllById(ids).forEach((UserInfo info) -> res.add(info));
 		return res;
+	}
+
+	public Page<UserInfo> getUserInfoByPage(int pageNum,int pageSize,String sortBy){
+		return infoRepository.findAll(PageRequest.of(pageNum,pageSize,Sort.by(sortBy)));
 	}
 }
