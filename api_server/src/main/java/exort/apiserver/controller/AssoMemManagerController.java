@@ -10,15 +10,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import exort.apiserver.service.AssoMemManagerService;
-import exort.apiserver.service.AssoMemManagerService.*;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.member.entity.DepartmentInfo;
+import exort.api.http.member.entity.UserId;
+import exort.api.http.member.service.AssoMemService;
+import exort.api.http.perm.service.PermService;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping(path="/associations")
 public class AssoMemManagerController {
+    // adopt and init should not be called by api server
+    // get operations are open
+    // update, create, delete operations need specific permission
+    public static final String PERM_CREATE = "create-department";
+    public static final String PERM_UPDATE = "update-department";
+    public static final String PERM_DELETE = "delete-department";
+
+    @Autowired
+    private AssoMemService amSvc;
     @Autowired
 	private AssoMemManagerService service;
 
