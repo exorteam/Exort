@@ -38,49 +38,49 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public ApiResponse<List<DepartmentInfo>> getDepartmentTree(int associationId) {
+    public ApiResponse<List<DepartmentInfo>> getDepartmentTree(String associationId) {
         return request(new TypeToken<List<DepartmentInfo>>() {
         }, HttpMethod.GET, "/associations/{associationId}/departments", associationId);
     }
 
     @Override
-    public ApiResponse<DepartmentInfo> getSpecDepartmentInfo(int associationId, int departmentId) {
+    public ApiResponse<DepartmentInfo> getSpecDepartmentInfo(String associationId, int departmentId) {
         return request(new TypeToken<DepartmentInfo>() {
         }, HttpMethod.GET, "/associations/{associationId}/departments/{departmentId}", associationId, departmentId);
     }
 
     @Override
-    public ApiResponse<DepartmentInfo> createDepartment(int associationId, DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> createDepartment(String associationId, DepartmentInfo departmentInfo) {
         return request(new TypeToken<DepartmentInfo>() {
         }, departmentInfo, HttpMethod.POST, "/associations/{associationId}/departments", associationId);
     }
 
     @Override
-    public ApiResponse<DepartmentInfo> deleteDepartment(int associationId, int departmentId) {
+    public ApiResponse<DepartmentInfo> deleteDepartment(String associationId, int departmentId) {
         return request(new TypeToken<DepartmentInfo>() {
         }, HttpMethod.DELETE, "/associations/{associationId}/departments/{departmentId}", associationId, departmentId);
     }
 
     @Override
-    public ApiResponse<DepartmentInfo> editDepartment(int associationId, int departmentId, DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> editDepartment(String associationId, int departmentId, DepartmentInfo departmentInfo) {
         return request(new TypeToken<DepartmentInfo>() {
         }, departmentInfo, HttpMethod.PUT, "/associations/{associationId}/departments/{departmentId}", associationId, departmentId);
     }
 
     @Override
-    public ApiResponse<List<Integer>> getSpecMemberList(int associationId, int departmentId) {
+    public ApiResponse<List<Integer>> getSpecMemberList(String associationId, int departmentId) {
         return request(new TypeToken<List<Integer>>() {
         }, HttpMethod.GET, "/associations/{associationId}/departments/{departmentId}/members", associationId, departmentId);
     }
 
     @Override
-    public ApiResponse<Boolean> removeOneFromDepartment(int associationId, int departmentId, int userId) {
+    public ApiResponse<Boolean> removeOneFromDepartment(String associationId, int departmentId, int userId) {
         return request(new TypeToken<Boolean>() {
         }, HttpMethod.DELETE, "/associations/{associationId}/departments/{departmentId}/members/{userId}", associationId, departmentId, userId);
     }
 
     @Override
-    public ApiResponse<Boolean> addOneToDepartment(int associationId, int departmentId, UserId userId) {
+    public ApiResponse<Boolean> addOneToDepartment(String associationId, int departmentId, UserId userId) {
         return request(new TypeToken<Boolean>() {
         }, userId, HttpMethod.POST, "/associations/{associationId}/departments/{departmentId}/members", associationId, departmentId);
     }
@@ -92,25 +92,25 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public ApiResponse<List<DepartmentInfo>> getUserDepartment(int associationId, int userId) {
+    public ApiResponse<List<DepartmentInfo>> getUserDepartment(String associationId, int userId) {
         return request(new TypeToken<List<DepartmentInfo>>() {
         }, HttpMethod.GET, "/users/{userId}/associations/{associationId}/departments", userId, associationId);
     }
 
     @Override
-    public ApiResponse<Boolean> deleteOneInAssociation(int associationId, int userId) {
+    public ApiResponse<Boolean> deleteOneInAssociation(String associationId, int userId) {
         return request(new TypeToken<Boolean>() {
         }, HttpMethod.DELETE, "/associations/{associationId}/members/{userId}", associationId, userId);
     }
 
     @Override
-    public ApiResponse<Boolean> addOneToAssociation(int associationId, UserId userId) {
+    public ApiResponse<Boolean> addOneToAssociation(String associationId, UserId userId) {
         return request(new TypeToken<Boolean>() {
         }, userId, HttpMethod.POST, "/associations/{associationId}/members", associationId);
     }
 
     @Override
-    public ApiResponse<List<Integer>> getAssoUserList(int associationId) {
+    public ApiResponse<List<Integer>> getAssoUserList(String associationId) {
         return request(new TypeToken<List<Integer>>() {
         }, HttpMethod.GET, "/associations/{associationId}/members", associationId);
     }
@@ -122,12 +122,12 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public String scope(int associationId) {
+    public String scope(String associationId) {
         return "association_" + associationId;
     }
 
     @Override
-    public String roleName(int associationId, int departmentId) {
+    public String roleName(String associationId, int departmentId) {
         switch (departmentId) {
             case 1:
                 return MANAGER;

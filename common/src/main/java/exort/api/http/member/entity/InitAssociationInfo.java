@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InitAssociationInfo {
     int userId;
-    int associationId;
+    String associationId;
 }
