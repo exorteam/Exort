@@ -110,6 +110,12 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
+    public ApiResponse<Boolean> deleteAllDepartments(String associationId) {
+        return request(new TypeToken<Boolean>() {
+        }, HttpMethod.DELETE, "/associations/{associationId}/departments", associationId);
+    }
+
+    @Override
     public ApiResponse<List<Integer>> getAssoUserList(String associationId) {
         return request(new TypeToken<List<Integer>>() {
         }, HttpMethod.GET, "/associations/{associationId}/members", associationId);
