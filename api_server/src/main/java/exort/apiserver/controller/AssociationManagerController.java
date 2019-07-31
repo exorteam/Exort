@@ -13,6 +13,8 @@ import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.member.entity.InitAssociationInfo;
+import exort.api.http.member.service.AssoMemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,8 @@ public class AssociationManagerController{
     private AssociationManagerService service;
     @Autowired
     private PermService permSvc;
+    @Autowired
+    private AssoMemService assoMemService;
 
     @GetMapping
     public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
@@ -65,7 +69,12 @@ public class AssociationManagerController{
         if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have create permission on association");
         }
-        return service.createAssociation(body);
+
+        Association association = service.createAssociation(body).getData();
+        InitAssociationInfo associationInfo = new InitAssociationInfo(operatorId,association.getId());
+        assoMemService.initDepartment(associationInfo);
+
+        return new ApiResponse(association);
     }
 
     @DeleteMapping("/{assoId}")
@@ -73,6 +82,8 @@ public class AssociationManagerController{
         if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
         }
+
+        
         return service.deleteAssociation(assoId);
     }
 
