@@ -169,4 +169,9 @@ public class AssoMemManagerController {
     public ApiResponse<List<Permission>> deletePerm(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody List<String> permissionList) {
         return permSvc.revokePermissions(amSvc.roleName(associationId, departmentId), permissionList);
     }
+
+    @DeleteMapping("/{associationId}/departments")
+    public ApiResponse<Boolean> deletePerm(@PathVariable(value = "associationId") String associationId) {
+        return amSvc.deleteAllDepartments(associationId);
+    }
 }
