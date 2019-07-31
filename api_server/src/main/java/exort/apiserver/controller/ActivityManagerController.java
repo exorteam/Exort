@@ -25,6 +25,7 @@ import exort.api.http.review.entity.CallbackParam;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
+import exort.api.http.member.service.AssoMemService;
 
 @RestController
 @RequestMapping(path="/activities")
@@ -39,9 +40,10 @@ public class ActivityManagerController {
 
     @Autowired
     private ActivityService activitySvc;
-
 	@Autowired
 	private PermService permSvc;
+    @Autowired
+    private AssoMemService amSvc;
 
     @PostMapping
     public ApiResponse<Activity> createNewActivity(@RequestAttribute("id") int operatorId, @RequestBody Activity activity){
@@ -135,7 +137,7 @@ public class ActivityManagerController {
 
 	private boolean checkPermissionOnActivity(int operatorId,Activity activity,String permission){
 		for(String i:activity.getAssociationIds()){
-			final String assoScope = "asso-" + i;
+			final String assoScope = amSvc.scope(i);
 			if(permSvc.hasPermission(Long.valueOf(operatorId),assoScope,permission) != null){
 				return true;
 			}
