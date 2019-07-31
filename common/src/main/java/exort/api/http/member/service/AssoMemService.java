@@ -49,11 +49,14 @@ public interface AssoMemService {
     //    向社团添加某个用户
     public ApiResponse<Boolean> addOneToAssociation(String associationId, UserId userId);
 
-    //    得到社团的成员列表
-    public ApiResponse<List<Integer>> getAssoUserList(String associationId);
+    //    删除社团所有部门
+    public ApiResponse<Boolean> deleteAllDepartments(String associationId);
 
     //    初始化部门
     public ApiResponse<Boolean> initDepartment(InitAssociationInfo initAssociationInfo);
+
+    //    得到社团的成员列表
+    public ApiResponse<List<Integer>> getAssoUserList(String associationId);
 
     //    [associationId => scope]
     public String scope(String associationId);
