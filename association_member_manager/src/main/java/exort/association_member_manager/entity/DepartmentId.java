@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 public class DepartmentId implements Serializable {
     @NotNull
-    int associationId;
+    String associationId;
     @NotNull
     int departmentId;
 }

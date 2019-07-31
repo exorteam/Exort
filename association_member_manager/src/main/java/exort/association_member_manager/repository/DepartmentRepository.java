@@ -7,13 +7,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface DepartmentRepository extends JpaRepository<Department, Integer>, PagingAndSortingRepository<Department, Integer> {
-    List<Department> findAllByAssociationId(int associationId);
+    List<Department> findAllByAssociationId(String associationId);
 
-    Department findFirstByAssociationIdOrderByDepartmentIdDesc(int associationId);
+    Department findFirstByAssociationIdOrderByDepartmentIdDesc(String associationId);
 
-    Boolean existsByAssociationIdAndDepartmentId(int associationId, int departmentId);
+    Boolean existsByAssociationIdAndDepartmentId(String associationId, int departmentId);
 
-    Boolean existsByAssociationId(int associationId);
+    Boolean existsByAssociationId(String associationId);
 
-    Department findByAssociationIdAndDepartmentId(int associationId, int departmentId);
+    Department findByAssociationIdAndDepartmentId(String associationId, int departmentId);
 }
