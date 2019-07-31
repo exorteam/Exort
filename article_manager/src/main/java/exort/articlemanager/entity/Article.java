@@ -15,7 +15,7 @@ public class Article {
 
 	private String title;
 	private String content;
-	private List<Integer> authors;
+	private String associationId;
 
 	private Date createTime;
 	private Date publishTime;

@@ -8,7 +8,7 @@ import lombok.Data;
 public class ArticleFilterParams {
 
 	private String keyword;
-	private Integer authorId;
+	private String authorId;
 	private Date startTime;
 	private Date endTime;
 	private Integer state;

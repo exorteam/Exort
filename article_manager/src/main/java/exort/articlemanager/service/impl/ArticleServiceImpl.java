@@ -22,7 +22,7 @@ public class ArticleServiceImpl implements ArticleService {
 	private final String AUTO_ID_NAME = "article_auto_id";
 
 	public Article createArticle(Article article){
-		if(article.getTitle() == null || article.getContent() == null || article.getAuthors() == null){
+		if(article.getTitle() == null || article.getContent() == null || article.getAssociationId() == null){
 			return null;
 		}
 
@@ -30,7 +30,7 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setId(autoId.getNextId(AUTO_ID_NAME));
 		article.setCreateTime(currentTime);
 		article.setPublishTime(null);
-		article.setLastPublishTime(currentTime);
+		article.setLastPublishTime(null);
 		article.setLastModifyTime(currentTime);
 		article.setState(ArticleStatus.UNPUBLISHED);
 		article.setCreateMethod(0);
@@ -95,9 +95,9 @@ public class ArticleServiceImpl implements ArticleService {
 			if(articles.isEmpty())return articles;
 		}
 
-		Integer authorId = params.getAuthorId();
+		String authorId = params.getAuthorId();
 		if(authorId != null){
-			articles.removeIf(article -> !article.getAuthors().contains(authorId));
+			articles.removeIf(article -> !article.getAssociationId().equals(authorId));
 			if(articles.isEmpty())return articles;
 		}
 

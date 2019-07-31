@@ -38,6 +38,7 @@ public class ArticlemanagerApplicationTests {
 	private final int 		ARTICLE_NUM 	= 10;
 	private final String 	AUTO_ID_NAME 	= "article_test";
 	private List<Article> 	articles 		= new ArrayList<>();
+	private final String 	ASSO_ID			= "1";
 
 	@Before
 	public void createTestArticles(){
@@ -46,7 +47,7 @@ public class ArticlemanagerApplicationTests {
 			article.setId(autoIncId.getNextId(AUTO_ID_NAME));
 			article.setTitle(UUID.randomUUID().toString());
 			article.setContent(UUID.randomUUID().toString());
-			article.setAuthors(new ArrayList<Integer>());
+			article.setAssociationId(ASSO_ID);
 			article.setState(ArticleStatus.UNPUBLISHED);
 			articles.add(article);
 		}
@@ -127,15 +128,8 @@ public class ArticlemanagerApplicationTests {
 	public void testListWithFilter() {
 		final Date rightNow = new Date();
 		Random rand = new Random(rightNow.getTime());
-		final int authorId = rand.nextInt();
-		ArrayList<Integer> authors = new ArrayList<>();
-		authors.add(authorId);
-		for(int i=0;i<5;i++){
-			authors.add(rand.nextInt());
-		}
 		Article e = articles.get(0);
 		e.setCreateTime(rightNow);
-		e.setAuthors(authors);
 		repository.save(e);
 
 		final ArticleFilterParams filter1 = new ArticleFilterParams();
@@ -152,7 +146,7 @@ public class ArticlemanagerApplicationTests {
 		Assert.assertTrue(service.listArticle(filter3).contains(e));
 
 		final ArticleFilterParams filter4 = new ArticleFilterParams();
-		filter4.setAuthorId(authorId);
+		filter4.setAuthorId(ASSO_ID);
 		Assert.assertTrue(service.listArticle(filter4).contains(e));
 
 	}
