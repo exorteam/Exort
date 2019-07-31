@@ -110,6 +110,10 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = repository.findById(articleId).get();
 		if(article.getState() != 0)return false;
 
+		if(article.getPublishTime() != null){
+			article.setLastPublishTime(article.getPublishTime());
+		}
+		article.setPublishTime(new Date());
 		article.setState(ArticleStatus.PUBLISHED);
 		repository.save(article);
 
