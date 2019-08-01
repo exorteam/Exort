@@ -2,16 +2,9 @@ package exort.apiserver.controller;
 
 import javax.websocket.server.PathParam;
 
+import exort.apiserver.service.ActivityManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import exort.api.http.perm.service.PermService;
 
@@ -37,21 +30,21 @@ public class ActivityManagerController {
 	// Create operations require specific permission
 	public static final String PERM_CREATE = "create-activity";
 
-    @Autowired
-    private ActivityService activitySvc;
+//    @Autowired
+//    private ActivityService activitySvc;
+
+	@Autowired
+	private ActivityManagerService activitySvc;
 
 	@Autowired
 	private PermService permSvc;
 
     @PostMapping
     public ApiResponse<Activity> createNewActivity(@RequestAttribute("id") int operatorId, @RequestBody Activity activity){
-    	System.out.println(activity.getTitle());
 		if(!checkPermissionOnActivity(operatorId,activity,PERM_CREATE)){
 			return new ApiResponse<>("PermErr","Operator["+String.valueOf(operatorId)+"] does not have such permission create activity");
 		}
-		ApiResponse<Activity> response = activitySvc.createNewActivity(activity);
-		System.out.println(response.getData());
-		return response;
+		return activitySvc.createNewActivity(activity);
     }
 
     @PutMapping("/{id}")
@@ -65,10 +58,10 @@ public class ActivityManagerController {
 		return activitySvc.updateActivity(activity,activityId);
     }
 
-    @GetMapping
-    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, @PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum")int pagenum, @PathParam(value = "sortby") String sortby){
-		// open to every one
-        return activitySvc.getActivities(filter, new PageQuery(pagenum, pagesize, sortby));
+    @PostMapping("/filter")
+    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, @RequestParam int pagesize, @RequestParam int pagenum, @RequestParam String sortby){
+        ApiResponse<PagedData<Activity>> response = activitySvc.getActivities(filter, new PageQuery(pagenum, pagesize, sortby));
+		return response;
     }
 
     @PutMapping("/{id}/state")
