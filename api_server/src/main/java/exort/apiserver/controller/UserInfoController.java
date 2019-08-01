@@ -1,5 +1,7 @@
 package exort.apiserver.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -58,4 +60,17 @@ public class UserInfoController {
 		}
 		return infoSvc.disableUser(userId,disabled);
 	}
+
+	@PostMapping
+	public List getUserInfoInBatch(@RequestBody List<Integer> ids){
+		return infoSvc.getUserInfoInBatch(ids);
+	}
+
+	@GetMapping("/page")
+	public List getUserInfoByPage(@RequestParam int pageNum,@RequestParam int pageSize,@RequestParam String sortBy){
+		return infoSvc.getUserInfoByPage(pageNum,pageSize,sortBy);
+	}
+
+
 }
+
