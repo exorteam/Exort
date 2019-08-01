@@ -6,22 +6,20 @@
                 <i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
                 <Button type="info" @click="getAssociationList">搜索</Button>
                 <Button type="info" @click="showCreateForm" style="  position:relative ;left:20px;">创建社团</Button>
-                <!-- <CreateAssociation :form ="form"/> -->
-                <!-- <child :activeSon="getAssociationList()"></child> -->
                 <Modal v-model="form.onshow" @on-ok="info_ok()" @on-cancel="info_cancel" loading :closable="false">
                     <Form ref="form" :model="form"  :label-width="112" :rules="ruleValidate" >
                         <FormItem label="社团名称" prop="name">
                             <Input v-model="form.name"/>
                         </FormItem>
                         <FormItem label="社团描述" prop="description">
-                            <Input v-model="form.description"/>
+                            <Input v-model="form.description" type="textarea" :rows="4"/>
                         </FormItem>
                         <FormItem label="社团标签">
                             <div>
                                 <div style="display:inline">
                                     <Button @click="form.tag.tag_show=true" style="width: 80px;position:relative ;top:5px">选择标签</Button>
                                     <TagChoose :tag="form.tag"/>
-                                </div>
+                               </div>
                                 <div v-if="form.tag.tagList.length" style="display:inline">
                                     <Tag v-for="tag in form.tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
                                 </div>
@@ -317,48 +315,48 @@ export default {
             ],
             inputDefaultValue : "",
             AssoList: [
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
+                // {
+                //     name:"Test",
+                //     description:"描述",
+                //     tags:["q","w"],
+                //     logo:Solid
 
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
+                // },
+                // {
+                //     name:"Test",
+                //     description:"描述",
+                //     tags:["q","w"],
+                //     logo:Solid
 
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
+                // },
+                // {
+                //     name:"Test",
+                //     description:"描述",
+                //     tags:["q","w"],
+                //     logo:Solid
 
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
+                // },
+                // {
+                //     name:"Test",
+                //     description:"描述",
+                //     tags:["q","w"],
+                //     logo:Solid
 
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
+                // },
+                // {
+                //     name:"Test",
+                //     description:"描述",
+                //     tags:["q","w"],
+                //     logo:Solid
 
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
+                // },
+                // {
+                //     name:"Test",
+                //     description:"描述",
+                //     tags:["q","w"],
+                //     logo:Solid
 
-                }
+                // }
             ],
             assoSearch:{
                 keyword:"",
@@ -490,7 +488,6 @@ export default {
 			})
             .then(response => {
                 this.AssoList = response.data.data.content
-                // console.log(this.AssoList)
                 this.pageProp.totalSize = response.data.data.totalSize
             })
             .catch(e => {
@@ -543,6 +540,7 @@ export default {
                             }
                         )
                         .then(response => {
+                            _self.
                             _self.form.name=""
                             _self.form.description=""
                             _self.form.tag.taglist=[]
@@ -560,15 +558,8 @@ export default {
                     return
                 }
                 _self.form.onshow = false
-
                 _self.$Message.success('创建成功');
-                // _self.form.name=""
-                // _self.form.description=""
-                // _self.form.tag.taglist=[]
-                // _self.clearFiles()
                 _self.getAssociationList()
-
-
             }
             else{
                 var imgFile;
@@ -660,5 +651,4 @@ export default {
 }
 </script>
 <style>
-
 </style>

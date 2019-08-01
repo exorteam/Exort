@@ -27,7 +27,7 @@
                             <Input v-model="form.name"/>
                         </FormItem>
                         <FormItem label="社团描述"  prop="description">
-                            <Input v-model="form.description" prop="description"/>
+                            <Input v-model="form.description" type="textarea" :rows="4"/>
                         </FormItem>
                         <FormItem label="社团标签">
                             <div>
@@ -72,6 +72,7 @@ export default {
                     { required: true, message: '社团描述不能为空', trigger: 'blur' }
                 ]
             },
+
             file:null,
             form:{
                 id:"5d3ea7649ded9d0001d815ae",
