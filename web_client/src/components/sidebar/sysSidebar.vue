@@ -13,10 +13,10 @@
             <span>活动管理</span>
         </MenuItem>
         <MenuItem name="1-4">
-            <!--<router-link :to="{name:''}">-->
+			<router-link :to="{name:'Articles'}">
             <Icon type="ios-navigate"></Icon>
             <span>文章管理</span>
-            <!--</router-link>-->
+			</router-link>
         </MenuItem>
             <MenuItem name="1-5">
             <router-link :to="{name:'SysAssoList'}">
