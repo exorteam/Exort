@@ -1,11 +1,11 @@
-package exort.apiserver.service.impl;
+package exort.api.http.activity.service;
 
 import com.google.common.reflect.TypeToken;
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
 import exort.api.http.activity.entity.RequestActivity;
 import exort.api.http.activity.entity.Signup;
-//import exort.api.http.activity.service.ActivityService;
+import exort.api.http.activity.service.ActivityService;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
-import exort.apiserver.service.ActivityManagerService;
-
 @Service
-public class ActivityManagerServiceImpl extends RestTemplate implements ActivityManagerService {
+public class ActivityServiceImpl extends RestTemplate implements ActivityService {
 
     @Value("${exort.activity.protocol:http}")
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
@@ -28,10 +26,6 @@ public class ActivityManagerServiceImpl extends RestTemplate implements Activity
 
     @Override
     public ApiResponse<Activity> createNewActivity(Activity activity) {
-//        System.out.println("api service:");
-//        System.out.println(activity.getImage());
-
-//        System.out.println(request(new TypeToken<Activity>(){}, activity, HttpMethod.POST, "/activities"));
         return request(new TypeToken<Activity>(){}, activity, HttpMethod.POST, "/activities");
     }
 

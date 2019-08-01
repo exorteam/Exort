@@ -1,4 +1,4 @@
-package exort.apiserver.service;
+package exort.api.http.activity.service;
 
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
@@ -9,7 +9,7 @@ import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.review.entity.CallbackParam;
 
-public interface ActivityManagerService {
+public interface ActivityService {
 
     public ApiResponse<Activity> createNewActivity(Activity activity);
 
