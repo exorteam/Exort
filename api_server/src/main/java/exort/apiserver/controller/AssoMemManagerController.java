@@ -160,12 +160,17 @@ public class AssoMemManagerController {
     }
 
     @PostMapping("/{associationId}/departments/{departmentId}/permissions")
-    public ApiResponse<List<Permission>> grantPermList(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId,@RequestBody List<String> permissionList){
-        return permSvc.grantPermissions(amSvc.roleName(associationId,departmentId),permissionList);
+    public ApiResponse<List<Permission>> grantPermList(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody List<String> permissionList) {
+        return permSvc.grantPermissions(amSvc.roleName(associationId, departmentId), permissionList);
     }
 
     @DeleteMapping("/{associationId}/departments/{departmentId}/permissions")
-    public ApiResponse<List<Permission>> deletePerm(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId,@RequestBody List<String> permissionList){
-        return permSvc.revokePermissions(amSvc.roleName(associationId,departmentId),permissionList);
+    public ApiResponse<List<Permission>> deletePerm(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody List<String> permissionList) {
+        return permSvc.revokePermissions(amSvc.roleName(associationId, departmentId), permissionList);
+    }
+
+    @DeleteMapping("/{associationId}/departments")
+    public ApiResponse<Boolean> deletePerm(@PathVariable(value = "associationId") String associationId) {
+        return amSvc.deleteAllDepartments(associationId);
     }
 }

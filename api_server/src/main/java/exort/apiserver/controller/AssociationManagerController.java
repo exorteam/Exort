@@ -104,12 +104,10 @@ public class AssociationManagerController{
     }
 
     private boolean checkPermissionOnAssociationById(int operatorId,String assoId,String perm){
-        final String permScope = "asso-" + assoId;
+        final String permScope = amSvc.scope(assoId);
         if(permSvc.hasPermission(Long.valueOf(operatorId),permScope,perm) == null){
             return false;
         }
         return true;
     }
 }
-
-
