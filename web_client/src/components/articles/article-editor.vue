@@ -2,8 +2,12 @@
 <template>
 	<div class="article-editor">
 		<Card>
-			<h1>ID: {{article.id}}</h1>
-			<p>Edited by: {{article.associationId}}, Created: {{article.createTime}}, Last modified: {{article.lastModifyTime}}</p>
+			<div>
+				<h1 v-if="isUpdating">ID: {{article.id}}</h1>
+				<h1 v-else>New Article</h1>
+			</div>
+			<br>
+			<p v-if="isUpdating">Edited by: {{article.associationId}}, Created: {{article.createTime}}, Last modified: {{article.lastModifyTime}}</p>
 			<Form :model="article" :label-width="80">
 				<FormItem label="Title">
 					<Input v-model="article.title" style="width: 30%"></Input>
@@ -26,7 +30,8 @@ export default {
 	props:['id'],
 	data: function(){
 		return {
-			article:{}
+			isUpdating: true,
+			article: {}
 		}
 	},
 	methods: {
@@ -50,21 +55,45 @@ export default {
 			})
 		},
 		commitChanges: function(){
-			this.axios({
-				method: 'put',
-				url: '/articles/' + this.id,
-				data: {
-					id: this.id,
-					title: this.article.title,
-					content: this.article.content
-				}
-			}).then((res)=>{
-				console.log(res);
-			})
+			if(this.isUpdating){
+				this.axios({
+					method: 'put',
+					url: '/articles/' + this.id,
+					data: {
+						id: this.id,
+						title: this.article.title,
+						content: this.article.content
+					}
+				}).then((res)=>{
+					console.log(res);
+				})
+			}
+			else{
+				this.axios({
+					method: 'post',
+					url: '/articles',
+					data: {
+						title: this.article.title,
+						content: this.article.content,
+						associationId: 'test'
+					}
+				}).then((res)=>{
+					console.log(res);
+					if(res.data.data){
+						this.$router.push({name: 'Articles'});
+					}
+				})
+			}
 		}
 	},
 	mounted:function(){
-		this.loadArticle(this.id);
+		if(this.id != 0){
+			this.isUpdating = true;
+			this.loadArticle(this.id);
+		}
+		else{
+			this.isUpdating = false;
+		}
 	}
 }
 </script>

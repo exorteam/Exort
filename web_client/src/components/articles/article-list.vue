@@ -9,6 +9,8 @@
 					<Button @click="onClickDelete(row.id)">Delete</Button>
 				</template>
 			</Table>
+			<br>
+			<Button @click="onClickCreate">Create</Button>
 		</Card>
 	</div>
 </template>
@@ -63,6 +65,19 @@ export default {
 		},
 		onClickDelete(id){
 			//console.log(id);
+			this.axios({
+				method: 'delete',
+				url: '/articles/' + id,
+			}).then((res)=>{
+				console.log(res);
+				this.loadArticles();
+			})
+		},
+		onClickCreate(){
+			this.$router.push({
+				name: 'ArticleEditor',
+				params: { id: 0}
+			});
 		}
 	},
 	mounted:function(){
