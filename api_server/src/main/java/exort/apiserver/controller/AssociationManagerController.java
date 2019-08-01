@@ -4,17 +4,6 @@ package exort.apiserver.controller;
 
 import java.util.Arrays;
 
-import exort.api.http.assomgr.entity.Association;
-import exort.api.http.assomgr.entity.AssociationFilterParams;
-import exort.api.http.assomgr.entity.AssociationInfo;
-import exort.api.http.assomgr.service.AssociationManagerService;
-import exort.api.http.common.entity.ApiResponse;
-import exort.api.http.common.entity.Operation;
-import exort.api.http.common.entity.PageQuery;
-import exort.api.http.common.entity.PagedData;
-import exort.api.http.common.errorhandler.ApiError;
-import exort.api.http.member.service.AssoMemService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.assomgr.entity.Association;
+import exort.api.http.assomgr.entity.AssociationFilterParams;
+import exort.api.http.assomgr.entity.AssociationInfo;
+import exort.api.http.assomgr.service.AssociationManagerService;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.Operation;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.entity.SystemAdminConstants;
+import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
 
 
 @RestController
@@ -45,6 +44,8 @@ public class AssociationManagerController{
     private PermService permSvc;
     @Autowired
     private AssoMemService amSvc;
+	@Autowired
+	private SystemAdministratorInfo sysAdmin;
 
     @GetMapping
     public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
@@ -66,7 +67,7 @@ public class AssociationManagerController{
 
     @PostMapping
     public ApiResponse createAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationInfo body){
-        if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
+        if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have create permission on association");
         }
         return service.createAssociation(body);
@@ -74,7 +75,7 @@ public class AssociationManagerController{
 
     @DeleteMapping("/{assoId}")
     public ApiResponse deleteAssociation(@RequestAttribute("id") int operatorId,@PathVariable(value="assoId") String assoId ){
-        if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
+        if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
         }
         return service.deleteAssociation(assoId);
