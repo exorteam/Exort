@@ -3,20 +3,22 @@
 	<div class="article-editor">
 		<Card>
 			<div>
-				<h1 v-if="isUpdating">ID: {{article.id}}</h1>
-				<h1 v-else>New Article</h1>
+				<h1 v-if="isUpdating">文章ID: {{article.id}}</h1>
+				<h1 v-else>创建新文章</h1>
 			</div>
 			<br>
-			<p v-if="isUpdating">Edited by: {{article.associationId}}, Created: {{article.createTime}}, Last modified: {{article.lastModifyTime}}</p>
 			<Form :model="article" :label-width="80">
-				<FormItem label="Title">
+				<FormItem>
+					<p v-if="isUpdating">作者: {{article.associationId}}, 创建时间: {{article.createTime}}, 上次修改时间: {{article.lastModifyTime}}</p>
+				</FormItem>
+				<FormItem label="标题">
 					<Input v-model="article.title" style="width: 30%"></Input>
 				</FormItem>
-				<FormItem label="Content">
+				<FormItem label="正文内容">
 					<Input v-model="article.content" type="textarea"></Input>
 				</FormItem>
 				<FormItem>
-					<Button @click="commitChanges">Commit</Button>
+					<Button @click="commitChanges">提交</Button>
 				</FormItem>
 			</Form>
 		</Card>

@@ -2,8 +2,9 @@
 	<div class="article-reader">
 		<Card>
 			<h2>{{article.title}}</h2>
-			<p>Edited by: {{article.associationId}}, Created: {{article.createTime}}, Last modified: {{article.lastModifyTime}}</p>
 			<hr>
+			<p>作者: {{article.associationId}}, 创建时间: {{article.createTime}}, 上次修改时间: {{article.lastModifyTime}}</p>
+			<br>
 			<p>{{article.content}}</p>
 		</Card>
 	</div>
@@ -29,8 +30,10 @@ export default {
 				console.log(res);
 				if(res.data.data){
 					this.article = res.data.data;
-					this.article.createTime = this.article.createTime.substring(0,10);
-					this.article.lastModifyTime = this.article.lastModifyTime.substring(0,10);
+					const cTime = new Date(this.article.createTime);
+					this.article.createTime = cTime.toLocaleString();
+					const lmTime = new Date(this.article.lastModifyTime);
+					this.article.lastModifyTime = lmTime.toLocaleString();
 				}
 				else{
 					// error

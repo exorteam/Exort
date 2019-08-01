@@ -1,16 +1,16 @@
 <template>
 	<div class="article-list">
 		<Card>
-			<h1>Article List</h1>
+			<h1>文章列表</h1>
 			<Table :columns="columns" :data="list">
 				<template slot-scope="{ row, index }" slot="action">
-					<Button @click="onClickView(row.id)">View</Button>
-					<Button @click="onClickEdit(row.id)">Edit</Button>
-					<Button @click="onClickDelete(row.id)">Delete</Button>
+					<Button @click="onClickView(row.id)">查看</Button>
+					<Button @click="onClickEdit(row.id)">编辑</Button>
+					<Button @click="onClickDelete(row.id)">删除</Button>
 				</template>
 			</Table>
 			<br>
-			<Button @click="onClickCreate">Create</Button>
+			<Button @click="onClickCreate">创建</Button>
 		</Card>
 	</div>
 </template>
@@ -23,11 +23,11 @@ export default {
 		return {
 			list:[],
 			columns:[
-				{title:'Title',key:'title'},
-				{title:'Author',key:'associationId'},
-				{title:'Published',key:'published'},
-				{title:'Modify',key:'lastModifyTime'},
-				{title:'Action',slot:'action'},
+				{title:'标题',key:'title'},
+				{title:'作者',key:'associationId'},
+				{title:'已发布',key:'published'},
+				{title:'上次修改时间',key:'lastModifyTime'},
+				{title:'操作',slot:'action'},
 			]
 		}
 	},
@@ -44,7 +44,8 @@ export default {
 				if(res.data.data){
 					this.list = res.data.data.map((e)=>{
 						e.published = (e.state!=0);
-						e.lastModifyTime = e.lastModifyTime.substring(0,10);
+						const d = new Date(e.lastModifyTime);
+						e.lastModifyTime = d.toLocaleString();
 						return e;
 					});
 				}
