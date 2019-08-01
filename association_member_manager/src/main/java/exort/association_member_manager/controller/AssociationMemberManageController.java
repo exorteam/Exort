@@ -236,7 +236,17 @@ public class AssociationMemberManageController {
     @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations")
     @ApiOperation(value = "查询用户所属社团")
     public ApiResponse<List<String>> getUserAssociation(@PathVariable(value = "userId") int userId) {
-        List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
+        List<String> scopes = ps.getScopes(Long.valueOf(userId)).getData();
+        List<String> assos = new ArrayList<>();
+        for (String scope : scopes) {
+            if (scope.length() < 12) {
+                continue;
+            }
+
+            if (scope.startsWith("association_")) {
+                assos.add(scope);
+            }
+        }
         if (assos.size() == 0) {
             throw new ApiError(400, "UserNotFound", "用户为加入任何社团");
         }
