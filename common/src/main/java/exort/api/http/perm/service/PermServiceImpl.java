@@ -184,7 +184,32 @@ public class PermServiceImpl extends RestTemplate implements PermService {
 
     @Override
     public ApiResponse<List<Permission>> getPermissions() {
+        return getPermissionsByCategory(null);
+    }
+
+    @Override
+    public ApiResponse<List<Permission>> getPermissionsByCategory(String category) {
         return request(new TypeToken<List<Permission>>() { },
+                new Permission(null, category),
                 HttpMethod.GET, "/permissions");
+    }
+
+    @Override
+    public ApiResponse<List<Role>> getRolesByCategory(String category) {
+        return request(new TypeToken<List<Role>>() { },
+                new Role(null, category),
+                HttpMethod.GET, "/roles");
+    }
+
+    @Override
+    public ApiResponse removeUser(Long userId, String scope) {
+        return request(new TypeToken<Object>() { },
+                HttpMethod.DELETE, "/scopes/{scope}/users/{userId}", scope, userId);
+    }
+
+    @Override
+    public ApiResponse removeUser(Long userId) {
+        return request(new TypeToken<Object>() { },
+                HttpMethod.DELETE, "/users/{userId}", userId);
     }
 }
