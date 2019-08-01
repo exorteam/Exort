@@ -61,7 +61,9 @@ public class RoleController {
     public ApiResponse<Role> updateRole(
             @PathVariable("name") String name,
             @RequestBody Role roleArg) {
-        ExortRole role = rs.update(name, roleArg.getDescription());
+        String category = roleArg.getCategory() == null ? "" : roleArg.getCategory();
+        String description = roleArg.getDescription() == null ? "" : roleArg.getDescription();
+        ExortRole role = rs.update(name, category, description);
         if (role == null) {
             throw new ApiError(404, "roleNotFound", "Role named \"" + name + "\" not exists.");
         }

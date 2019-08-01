@@ -59,9 +59,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
-    public ExortRole update(String name, String description) {
+    public ExortRole update(String name, String category, String description) {
         ExortRole role = rr.findById(name).orElse(null);
         if (role != null) {
+            role.setCategory(category);
             role.setDescription(description);
             rr.save(role);
             return role;

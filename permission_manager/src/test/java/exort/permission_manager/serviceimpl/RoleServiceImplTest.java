@@ -101,11 +101,13 @@ class RoleServiceImplTest {
 
     @Test
     void update() {
-        ExortRole role = rs.update("role1", "desc");
+        ExortRole role = rs.update("role1", "cat2", "desc");
         assertEquals(rr.findById("role1").get(), role);
+        assertEquals(1, rr.findByCategory("cat1").size());
+        assertEquals(2, rr.findByCategory("cat2").size());
 
         // update non-exist role
-        assertNull(rs.update("role5", "desc"));
+        assertNull(rs.update("role5", "cat2", "desc"));
     }
 
     @Test
