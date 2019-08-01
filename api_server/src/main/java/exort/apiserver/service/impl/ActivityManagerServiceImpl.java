@@ -48,7 +48,7 @@ public class ActivityManagerServiceImpl extends RestTemplate implements Activity
 
     @Override
     public ApiResponse<Object> publishActivity(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.PUT, "/activities/{activityid}", activityid);
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.PUT, "/activities/{activityid}/state", activityid);
     }
 
     @Override
