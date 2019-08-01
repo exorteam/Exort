@@ -44,8 +44,8 @@ public class AssociationManagerController{
     private PermService permSvc;
     @Autowired
     private AssoMemService amSvc;
-	@Autowired
-	private SystemAdministratorInfo sysAdmin;
+    @Autowired
+    private SystemAdministratorInfo sysAdmin;
 
     @GetMapping
     public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
@@ -70,7 +70,12 @@ public class AssociationManagerController{
         if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have create permission on association");
         }
-        return service.createAssociation(body);
+
+        Association association = service.createAssociation(body).getData();
+        InitAssociationInfo associationInfo = new InitAssociationInfo(operatorId,association.getId());
+        assoMemService.initDepartment(associationInfo);
+
+        return new ApiResponse(association);
     }
 
     @DeleteMapping("/{assoId}")
@@ -78,6 +83,7 @@ public class AssociationManagerController{
         if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
         }
+        assoMemService.deleteAllDepartments(assoId);
         return service.deleteAssociation(assoId);
     }
 
@@ -106,5 +112,3 @@ public class AssociationManagerController{
         return true;
     }
 }
-
-

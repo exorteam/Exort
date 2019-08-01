@@ -155,7 +155,6 @@ public class AssoMemManagerController {
 
     //@PostMapping("/")
     //public ApiResponse<Boolean> initDepartment(@RequestBody InitAssociationInfo initAssociationInfo) {
-
     //    return amSvc.initDepartment(initAssociationInfo);
     //}
 
