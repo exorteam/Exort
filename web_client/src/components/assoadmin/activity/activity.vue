@@ -52,20 +52,20 @@
                 <Card v-for="card in cardList" :key="card.id" :row="card" style="width: 465px; margin: 30px;"
                       :bordered="false">
                     <div style="height: 30px">
-                        <p style="float: left" slot="title">{{card.name}}</p>
-                        <Badge style="float: right" :text="card.text" :status="card.state"/>
+                        <p style="float: left" slot="title">{{card.title}}</p>
+                        <Badge style="float: right" :text="stateList[card.activityState]" :status="statusList[card.activityState]"/>
                     </div>
                     <Divider/>
                     <Button @click="to_detail(card.id)" type="text" style="height: 280px; width: 100%;">
                         <img :src="card.image" style="height: 280px; width: 100%;"/>
                     </Button>
                     <Divider/>
-                    <p>Time:{{card.time}}</p>
-                    <p>Brief Description:{{card.bd}}</p>
+                    <p>Time:{{card.time.time.start + card.time.time.end}}</p>
+                    <p>Brief Description:{{card.content}}</p>
                 </Card>
             </div>
             <div>
-                <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum" :page-size.sync="page.pageSize" simple @on-change="handleSelect" style="text-align: center;"></Page>
+                <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum+1" :page-size.sync="page.pageSize" simple @on-change="handleSelect" style="text-align: center;"></Page>
             </div>
         </div>
     </div>
@@ -125,45 +125,6 @@
         }
     ]
 
-    let cardLists=[
-        {
-            id: "5d302c76a5fabe1702283262",
-            name:"五一长跑节",
-            text:"已结束",
-            image: image,
-            state:"processing",
-            time: "2019-05-01",
-            bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
-        },
-        {
-            id: "5d302c76a5fabe1702283263",
-            name:"MVIG大型数据集标注",
-            text:"未开始",
-            image: image,
-            state: "success",
-            time:"2019-07-18 22:17 - 2019-07-31 23:59",
-            bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
-        },
-        {
-            id: "5d302b3ba5fabe1702283264",
-            name:"联名文化衫Line Up",
-            text:"进行中",
-            image: image,
-            state: "warning",
-            time:"2019-07-23 08:00 - 2019-07-31 08:00",
-            bd:"明天，你就要去很远的地方，带上我们的故事。"
-        },
-        {
-            id: "5d302b3ba5fabe1702283265",
-            name:"校园带队志愿者招募",
-            text:"未发布",
-            image: image,
-            state:"default",
-            time:"2019-07-11 15:00 - 2019-07-11 18:30",
-            bd:"招募校园带队讲解志愿者",
-        }
-    ]
-
 import ActivityCreate from './activity_create.vue'
 import TagChoose from '../../common/tag_choose.vue'
 import axios from 'axios'
@@ -174,6 +135,8 @@ export default {
     components: { ActivityCreate, TagChoose },
     data () {
         return{
+            stateList: [ '未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束' ],
+            statusList: [ "default", "default", "processing", "warning", "error", "success" ],
             currentAvtivityId: 0,
             publishSelected: null,
             publishSelectList: publishSelectLists,
@@ -181,7 +144,7 @@ export default {
             signupSelectList: signupSelectLists,
             startSelected: null,
             startSelectList: startSelectLists,
-            cardList: cardLists,
+            cardList: [],
             page:{
                 totalSize: 9,
                 pageNum: 0,
@@ -201,32 +164,38 @@ export default {
             },
             form:{
                 onshow: false,
-                title: "",
-                content: "",
-                signupTime: {
-                    type: 0,
-                    time:[{
-                        start: "",
-                        end: "",
-                    }]
+                data:{
+                    title: "",
+                    content: "",
+                    signupTime: {
+                        type: 0,
+                        time:[{
+                            start: "",
+                            end: "",
+                        }]
+                    },
+                    time: {
+                        type: 0,
+                        time:[{
+                            start: "",
+                            end: ""
+                        }]
+                    },
+                    ifReview: false,
+                    ifOnlyMem: false,
+                    maxParticipants: '',
+                    materials: [],
+                    image: "",
+                    tag:{
+                        tag_show: false,
+                        tagList:[],
+                    }
                 },
-                time: {
-                    type: 0,
-                    time:[{
-                        start: "",
-                        end: ""
-                    }]
-                },
-                ifReview: false,
-                ifOnlyMem: false,
-                maxParticipants: '',
-                materials: [],
-                tags: []
             },
             tag:{
                 tag_show: false,
                 tagList:[],
-            }
+            }      
         }
     },
     methods: {
@@ -243,47 +212,111 @@ export default {
         handleSelect(){
             let data = this.select
             data.tags = this.tag.tagList
-            console.log(data)
-            axios.
-                get('http://202.120.40.8:30727/activities', {
-                    params:{
-                        pagenum: this.page.pageNum,
-                        pagesize: this.page.pageSize,
-                        _body: btoa(JSON.stringify({data}))
+
+            if(data.createTime!=null && data.createTime.length==2){
+                if(data.createTime[0]==""){
+                    data.createTime=null
+                }else{
+                    let create  = {
+                        start: data.createTime[0],
+                        end:data.createTime[1]
                     }
-                })
-                .then(response => {
-                    this.cardList = response.data.content
-                    this.totalSize = response.data.totalSize
-                    this.pageNum = response.data.pageNum
-                    this.pageSize = response.data.pageSize
-                })
-                .catch(e => {
-                    console.log(e)
-                })
-        }
+                    data.createTime = create
+                }
+            }
+            if(data.signupTime!=null && data.signupTime.length==2){
+                if(data.signupTime[0]==""){
+                    data.signupTime=null
+                }else{
+                    let signup  = {
+                        start: data.signupTime[0],
+                        end: data.signupTime[1]
+                    }
+                    data.signupTime = signup
+                }
+            }
+            if(data.startTime!=null && data.startTime.length==2){
+                if(data.startTime[0]==""){
+                    data.startTime=null                    
+                }else{
+                        let time = {
+                        start: data.startTime[0],
+                        end: data.startTime[1]
+                    }
+                    data.startTime = time
+                }
+            }
+            if(data.ifReview===true){
+                data.ifReview=2
+            }else if(data.ifReview===false){
+                data.ifReview=1
+            }
+            if(data.ifOnlyMem===true){
+                data.ifOnlyMem=2
+            }else if(data.ifOnlyMem===false){
+                data.ifOnlyMem=1
+            }
+            if(data.keyword==""){
+                data.keyword=null
+            }
+
+            console.log(data)
+            this.axios({
+                method: "post",
+                url: "/activities/filter",
+                params:{
+                    'pagesize': this.page.pageSize,
+                    'pagenum':this.page.pageNum,
+                    'sortby':"0",
+                },
+                data: data
+            })
+            .then((response) => {
+                let responseData = response.data.data
+                console.log(responseData)
+                this.cardList = responseData.content
+                this.page.totalSize = responseData.totalSize
+                this.page.pageNum = responseData.pageNum
+                this.page.pageSize = responseData.pageSize
+                console.log(this.page.totalSize, this.page.pageNum, this.page.pageSize)
+                for(let i=0; i< this.cardList.length; i++){
+                    this.setData(this.cardList[i])
+                }
+            })
+            .catch(e => {
+                console.log(e)
+            })
+        },
+        setData(value) {
+            if (value.publishState == 0) {
+                value.activityState = 0
+            } else if (value.signupState != 2) {
+                value.activityState = value.signupState + 1
+            } else {
+                value.activityState = value.signupState + 3
+            }
+        },
     },
     mounted() {
-        // this.handleSelect()
+        this.handleSelect()
         // let data = this.select
         // data.tagList = this.tag.tagList
 
         // this.axios({
         //     method:"get",
         //     url:"activities",
-        //     data: {
-        //         // params:{
-        //             pagenum:0,
-        //             pagesize:9,
-        //             _body: btoa(JSON.stringify({data}))
-        //         // }
-        //     }
+        //     params:{
+        //         'pagesize': this.page.pageSize,
+        //         'pagenum':this.page.pageNum,
+        //         'sortby':"0",
+        //     },
+        //     data: data
         // })
         // .then(response => {
-        //     this.cardList = response.data.content
-        //     this.totalSize = response.data.totalSize
-        //     this.pageNum = response.data.pageNum
-        //     this.pageSize = response.data.pageSize
+        //     this.cardList = response.data.data.content
+        //     this.totalSize = response.data.data.totalSize
+        //     this.pageNum = response.data.data.pageNum
+        //     this.pageSize = response.data.data.pageSize
         // })
         // .catch(e => {
         //     console.log(e)
