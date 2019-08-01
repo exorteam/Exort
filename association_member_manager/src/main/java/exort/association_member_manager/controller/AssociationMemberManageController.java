@@ -48,7 +48,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
-    public ApiResponse<List<DepartmentInfo>> getDepartmentTree(@PathVariable(value = "associationId") int associationId) {
+    public ApiResponse<List<DepartmentInfo>> getDepartmentTree(@PathVariable(value = "associationId") String associationId) {
 
         List<Department> departments = associationMemberManageService.getDepartmentTree(associationId);
 
@@ -78,7 +78,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "得到某个部门的信息")
-    public ApiResponse<DepartmentInfo> getSpecDepartmentInfo(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> getSpecDepartmentInfo(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId) {
         Department department = associationMemberManageService.getSpecDepartmentInfo(associationId, departmentId);
 
         if (department == null) {
@@ -100,7 +100,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "创建部门")
-    public ApiResponse<DepartmentInfo> createDepartment(@PathVariable int associationId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> createDepartment(@PathVariable String associationId, @RequestBody DepartmentInfo departmentInfo) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(404, "AssociationNotFound", "该社团不存在");
         }
@@ -127,7 +127,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "删除部门")
-    public ApiResponse<DepartmentInfo> deleteDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> deleteDepartment(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId) {
 
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
@@ -150,7 +150,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/associations/{associationId}/departments/{departmentId}")
     @ApiOperation(value = "编辑部门")
-    public ApiResponse<DepartmentInfo> editDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> editDepartment(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
         }
@@ -176,7 +176,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "得到某个部门的成员列表")
-    public ApiResponse<List<Integer>> getSpecMemberList(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<List<Integer>> getSpecMemberList(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId) {
 
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
@@ -188,7 +188,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments/{departmentId}/members/{userId}")
     @ApiOperation(value = "将成员从某个部门中移除")
-    public ApiResponse<Boolean> removeOneFromDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<Boolean> removeOneFromDepartment(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @PathVariable(value = "userId") int userId) {
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(401, "DepartmentNotFound", "不存在该部门");
         }
@@ -203,7 +203,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/departments/{departmentId}/members")
     @ApiOperation(value = "为某个部门添加成员")
-    public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody UserId userId) {
+    public ApiResponse<Boolean> addOneToDepartment(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody UserId userId) {
         if (!associationMemberManageService.checkDepartment(associationId, departmentId)) {
             throw new ApiError(404, "DepartmentNotFound", "不存在该部门");
         }
@@ -214,7 +214,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members/{userId}/permissions/{permission}")
     @ApiOperation(value = "判断该用户在某个社团是否有某个权限")
-    public ApiResponse<Boolean> checkUserPermissionInAssociation(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId, @PathVariable(value = "permission") String permission) {
+    public ApiResponse<Boolean> checkUserPermissionInAssociation(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "userId") int userId, @PathVariable(value = "permission") String permission) {
 
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(401, "AssociationNotFound", "不存在该社团");
@@ -235,7 +235,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations")
     @ApiOperation(value = "查询用户所属社团")
-    public ApiResponse<List<Integer>> getUserAssociation(@PathVariable(value = "userId") int userId) {
+    public ApiResponse<List<String>> getUserAssociation(@PathVariable(value = "userId") int userId) {
         List<String> assos = ps.getScopes(Long.valueOf(userId)).getData();
         if (assos.size() == 0) {
             throw new ApiError(400, "UserNotFound", "用户为加入任何社团");
@@ -247,7 +247,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{userId}/associations/{associationId}/departments")
     @ApiOperation(value = "查询用户在指定社团中所属部门")
-    public ApiResponse<List<DepartmentInfo>> getUserDepartment(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<List<DepartmentInfo>> getUserDepartment(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "userId") int userId) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(401, "AssociationNotFound", "不存在该社团");
         }
@@ -279,7 +279,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/members/{userId}")
     @ApiOperation(value = "在社团中删除某个成员")
-    public ApiResponse<Boolean> deleteOneInAssociation(@PathVariable(value = "associationId") int associationId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<Boolean> deleteOneInAssociation(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "userId") int userId) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(404, "AssociationNotFound", "不存在该社团");
         }
@@ -294,7 +294,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/associations/{associationId}/members")
     @ApiOperation(value = "为社团添加一个成员")
-    public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") int associationId, @RequestBody UserId userId) {
+    public ApiResponse<Boolean> addOneToAssociation(@PathVariable(value = "associationId") String associationId, @RequestBody UserId userId) {
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(404, "AssociationNotFound", "不存在该社团");
         }
@@ -303,7 +303,7 @@ public class AssociationMemberManageController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/members")
     @ApiOperation(value = "得到社团成员列表")
-    public ApiResponse<List<Integer>> getAssUserList(@PathVariable(value = "associationId") int associationId) {
+    public ApiResponse<List<Integer>> getAssUserList(@PathVariable(value = "associationId") String associationId) {
 
         if (!associationMemberManageService.checkAsso(associationId)) {
             throw new ApiError(404, "AssociationNotFound", "不存在该社团");
@@ -317,6 +317,12 @@ public class AssociationMemberManageController {
     public ApiResponse<Boolean> initDepartment(@RequestBody InitAssociationInfo initAssociationInfo) {
 
         return new ApiResponse<>(associationMemberManageService.initDepartment(initAssociationInfo.getAssociationId(), initAssociationInfo.getUserId()));
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/associations/{associationId}/departments")
+    public ApiResponse<Boolean> deleteAllDepartments(@PathVariable(value = "associationId") String associationId) {
+
+        return new ApiResponse<>(associationMemberManageService.deleteAllDepartments(associationId));
     }
 
 }
