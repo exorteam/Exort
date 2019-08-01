@@ -65,6 +65,8 @@ public interface PermService {
     ApiResponse<Role> createRole(Role roleArg);
     // delete [role]
     ApiResponse deleteRole(String name);
+    // delete [role] by category
+    ApiResponse deleteRolesByCategory(String category);
     // update [role]
     ApiResponse<Role> updateRole(Role roleArg);
 

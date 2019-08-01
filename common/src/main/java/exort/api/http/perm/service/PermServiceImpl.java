@@ -120,6 +120,13 @@ public class PermServiceImpl extends RestTemplate implements PermService {
     }
 
     @Override
+    public ApiResponse deleteRolesByCategory(String category) {
+        return request(new TypeToken<Object>() { },
+                new Role(null, category),
+                HttpMethod.DELETE, "/roles");
+    }
+
+    @Override
     public ApiResponse<Role> updateRole(Role roleArg) {
         String name = roleArg.getName();
         roleArg.setName(null);
