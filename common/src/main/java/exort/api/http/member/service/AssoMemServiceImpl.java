@@ -86,8 +86,8 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     }
 
     @Override
-    public ApiResponse<List<Integer>> getUserAssociation(int userId) {
-        return request(new TypeToken<List<Integer>>() {
+    public ApiResponse<List<String>> getUserAssociation(int userId) {
+        return request(new TypeToken<List<String>>() {
         }, HttpMethod.GET, "/users/{userId}/associations", userId);
     }
 
