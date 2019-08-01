@@ -1,10 +1,20 @@
+
 <template>
-	<div class="article-reader">
+	<div class="article-editor">
 		<Card>
-			<h2>{{article.title}}</h2>
+			<h1>ID: {{article.id}}</h1>
 			<p>Edited by: {{article.associationId}}, Created: {{article.createTime}}, Last modified: {{article.lastModifyTime}}</p>
-			<hr>
-			<p>{{article.content}}</p>
+			<Form :model="article" :label-width="80">
+				<FormItem label="Title">
+					<Input v-model="article.title" style="width: 30%"></Input>
+				</FormItem>
+				<FormItem label="Content">
+					<Input v-model="article.content" type="textarea"></Input>
+				</FormItem>
+				<FormItem>
+					<Button @click="commitChanges">Commit</Button>
+				</FormItem>
+			</Form>
 		</Card>
 	</div>
 </template>
@@ -12,7 +22,7 @@
 <script>
 
 export default {
-	name: "ArticleReader",
+	name: "ArticleEditor",
 	props:['id'],
 	data: function(){
 		return {
@@ -38,6 +48,19 @@ export default {
 			}).catch((err)=>{
 				console.log(err);
 			})
+		},
+		commitChanges: function(){
+			this.axios({
+				method: 'put',
+				url: '/articles/' + this.id,
+				data: {
+					id: this.id,
+					title: this.article.title,
+					content: this.article.content
+				}
+			}).then((res)=>{
+				console.log(res);
+			})
 		}
 	},
 	mounted:function(){
@@ -45,4 +68,5 @@ export default {
 	}
 }
 </script>
+
 
