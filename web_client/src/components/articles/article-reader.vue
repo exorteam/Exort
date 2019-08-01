@@ -1,8 +1,10 @@
 <template>
 	<div class="article-reader">
 		<Card>
-			<h3>title: {{article.title}}</h3>
-			<p>content: {{article.content}}</p>
+			<h2>{{article.title}}</h2>
+			<p>Author: {{article.associationId}} Created: {{article.createTime}}, Last modified: {{article.lastModifyTime}}</p>
+			<hr>
+			<p>{{article.content}}</p>
 		</Card>
 	</div>
 </template>
@@ -27,6 +29,8 @@ export default {
 				console.log(res);
 				if(res.data.data){
 					this.article = res.data.data;
+					this.article.createTime = this.article.createTime.substring(0,10);
+					this.article.lastModifyTime = this.article.lastModifyTime.substring(0,10);
 				}
 				else{
 					// error
