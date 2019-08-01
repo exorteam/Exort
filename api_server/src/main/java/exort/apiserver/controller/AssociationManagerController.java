@@ -82,8 +82,7 @@ public class AssociationManagerController{
         if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
         }
-
-        
+        assoMemService.deleteAllDepartments(assoId);
         return service.deleteAssociation(assoId);
     }
 
