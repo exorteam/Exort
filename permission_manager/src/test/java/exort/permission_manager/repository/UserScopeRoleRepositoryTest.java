@@ -210,6 +210,13 @@ class UserScopeRoleRepositoryTest {
     }
 
     @Test
+    void deleteByScope() {
+        // delete by scope
+        usrr.deleteByScope("scope1");
+        assertEquals(3, usrr.findAll().size());
+    }
+
+    @Test
     void deleteByUserIdANDScopeAndRoleId() {
         // use this method to delete user_scope_role instead of deleteById
         usrr.deleteByUserIdANDScopeAndRoleId(1L, "scope1", "role1");
