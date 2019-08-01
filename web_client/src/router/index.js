@@ -5,7 +5,7 @@ import Router from 'vue-router'
 import Activity from '../components/assoadmin/activity/activity.vue'
 import About from '../components/assoadmin/activity/about.vue'
 
-// import EditAsso from '../components/assoadmin/association_manager/edit_association'
+import AssoIndex from '../components/assoadmin/association_manager/edit_association'
 import SysAssoList from '../components/sysadmin/association_manager/sys_association_list'
 
 import AdminIndex from '../components/admin_index'
@@ -57,6 +57,11 @@ export default new Router({
                     path: 'activity/about',
                     name: 'about',
                     component: About
+                },
+                {
+                    path:'asso_index',
+                    name:'AssoIndex',
+                    component:AssoIndex
                 },
                 {
                     path: 'sys_asso_list',

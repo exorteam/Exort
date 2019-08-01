@@ -43,7 +43,7 @@ new Vue({
 	router: router,
 	store,
 	render: h => h(App),
-	created:()=>{
+    created:function(){
 		axios.defaults.baseURL = 'http://localhost:8080';
 		axios.defaults.withCredentials = true;
 		const token = window.localStorage.getItem('token');
