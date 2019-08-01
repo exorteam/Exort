@@ -2,6 +2,7 @@
 	<div class="article-list">
 		<Card>
 			<h1>文章列表</h1>
+			<br>
 			<Table :columns="columns" :data="list">
 				<template slot-scope="{ row, index }" slot="action">
 					<Button @click="onClickView(row.id)">查看</Button>
