@@ -280,11 +280,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         Department allUsers = new Department(associationId, 2, "所有成员", "社团中所有成员", 0);
 
         departmentRepository.save(manageDepartment);
-        ps.createRole(new Role(roleName(associationId, manageDepartment.getDepartmentId()), scope(associationId), manageDepartment.getDescription()));
-
         departmentRepository.save(allUsers);
-        ps.createRole(new Role(roleName(associationId, allUsers.getDepartmentId()), scope(associationId), allUsers.getDescription()));
 
+        ps.grantRoles((long)userId,scope(associationId),Arrays.asList(MEMBER,MANAGER));
 
         return true;
     }
