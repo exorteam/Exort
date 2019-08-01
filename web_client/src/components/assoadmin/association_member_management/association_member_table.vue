@@ -71,6 +71,18 @@
                         key: 'age'
                     },
                     {
+                        title: "StudentID",
+                        key: "studentId"
+                    },
+                    {
+                        title: "Gender",
+                        key: "gender"
+                    },
+                    {
+                        title: "Enabled",
+                        key: "enabled"
+                    },
+                    {
                         title: 'Action',
                         slot: 'action',
                         width: 150,
@@ -205,13 +217,18 @@
                     let retdata = [];
                     retdata = res.data.data;
                     for (let i = 0; i < retdata.length; i++) {
-                        ret.push({
-                            id: retdata[i],
-                            name: retdata[i]
-                        })
+                        ret.push(retdata[i])
                     }
 
-                    this.rows = ret;
+                    // console.log(ret);
+                    this.axios({
+                        method: "post",
+                        url: "/users",
+                        data: ret,
+                    }).then((res) => {
+                        // console.log(res.data);
+                        this.rows=res.data;
+                    })
                     // console.log(this.rows);
                     // this.rows = res.data.data;
                     // console.log(this.rows);
@@ -377,12 +394,12 @@
             },
             perm(root, data) {
                 this.$Modal.confirm({
-                    width:"700px",
-                    render:(h)=>{
-                        return h(AssoMemPerm,{
-                            props:{
-                                root:root,
-                                nodedata:data
+                    width: "700px",
+                    render: (h) => {
+                        return h(AssoMemPerm, {
+                            props: {
+                                root: root,
+                                nodedata: data
                             }
                         });
                     }
@@ -484,7 +501,18 @@
             show(index) {
                 this.$Modal.info({
                     title: 'User Info',
-                    content: `Name：${this.rows[index].name}<br>Age：${this.rows[index].age}`
+                    content: `id：${this.rows[index].id}
+                            <br>nickname：${this.rows[index].nickname}
+                            <br>description：${this.rows[index].description}
+                            <br>gender：${this.rows[index].gender}
+                            <br>birthday：${this.rows[index].birthday}
+                            <br>name：${this.rows[index].name}
+                            <br>studentId：${this.rows[index].studentId}
+                            <br>phone：${this.rows[index].phone}
+                            <br>qqId：${this.rows[index].qqId}
+                            <br>wechatId：${this.rows[index].wechatId}
+                            <br>email：${this.rows[index].email}
+                            <br>enabled：${this.rows[index].enabled}`
                 })
             },
             remove(index) {
