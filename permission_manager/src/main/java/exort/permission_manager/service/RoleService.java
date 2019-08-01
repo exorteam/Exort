@@ -15,6 +15,8 @@ public interface RoleService {
 
     void delete(String name);
 
+    void deleteByCategory(String category);
+
     ExortRole update(String name, String description);
 
     /* List roles of the category */

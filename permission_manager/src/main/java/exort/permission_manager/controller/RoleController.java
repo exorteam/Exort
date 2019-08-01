@@ -48,6 +48,15 @@ public class RoleController {
         return ApiResponse.emptyResponse();
     }
 
+    @DeleteMapping("/roles")
+    public ApiResponse deleteRole(
+            @RequestBody Role roleArg) {
+        if (roleArg.getCategory() != null) {
+            rs.deleteByCategory(roleArg.getCategory());
+        }
+        return ApiResponse.emptyResponse();
+    }
+
     @PutMapping("/roles/{name}")
     public ApiResponse<Role> updateRole(
             @PathVariable("name") String name,

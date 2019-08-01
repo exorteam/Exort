@@ -46,6 +46,19 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional
     @Override
+    public void deleteByCategory(String category) {
+        List<ExortRole> roles = rr.findByCategory(category);
+        for (ExortRole role: roles) {
+            rpr.deleteByRoleId(role.getId());
+            usrr.deleteByRoleId(role.getId());
+            try {
+                rr.deleteById(role.getId());
+            } catch (EmptyResultDataAccessException ignore) { }
+        }
+    }
+
+    @Transactional
+    @Override
     public ExortRole update(String name, String description) {
         ExortRole role = rr.findById(name).orElse(null);
         if (role != null) {
