@@ -25,14 +25,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     final private static String MEMBER = "association_member";
     final private static String MANAGER = "association_root";
 
-    private String getnum(String origin) {
-        String regEx = "[^0-9]";
-        Pattern p = Pattern.compile(regEx);
-        Matcher m = p.matcher(origin);
-        String result = m.replaceAll("").trim();
-        return result;
-    }
-
     @Override
     public Boolean checkAsso(String associationId) {
         return departmentRepository.existsByAssociationId(associationId);
@@ -186,14 +178,14 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
 
 
     @Override
-    public List<Integer> getUserAssociation(List<String> assos) {
+    public List<String> getUserAssociation(List<String> assos) {
 
         //outside
-        List<Integer> associationId = new ArrayList<>();
+        List<String> associationId = new ArrayList<>();
 
         for (String asso : assos) {
-            String result = getnum(asso);
-            associationId.add(Integer.valueOf(result));
+            String result = asso.substring(12);
+            associationId.add(result);
         }
 
         return associationId;
@@ -221,8 +213,8 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
                     break;
                 }
                 default: {
-                    String as = getnum(scope(associationId));
-                    String department = getnum(role.getName());
+                    String as = (scope(associationId)).substring(12);
+                    String department = (role.getName()).substring(scope(associationId).length() + 1);
                     departments.add(departmentRepository.findByAssociationIdAndDepartmentId(associationId, Integer.valueOf(department.substring(as.length()))));
                 }
             }

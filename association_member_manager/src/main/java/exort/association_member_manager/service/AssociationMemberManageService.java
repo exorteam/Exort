@@ -40,7 +40,7 @@ public interface AssociationMemberManageService {
 
     public boolean checkUserPerm(int userId, String associationId, String permission);
 
-    public List<Integer> getUserAssociation(List<String> assos);
+    public List<String> getUserAssociation(List<String> assos);
 
     public List<Department> getUserDepartment(String associationId, int userId);
 
