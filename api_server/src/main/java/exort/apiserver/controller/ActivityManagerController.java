@@ -113,7 +113,7 @@ public class ActivityManagerController {
 		return activitySvc.deleteParticipants(activityId, request);
 	}
 
-	@GetMapping("/{id}/participants")
+	@PostMapping("/{id}/participants/message")
 	public ApiResponse<PagedData<Integer>> getActivityParticipants(@RequestAttribute("id") int operatorId,
 			@PathParam(value = "pagesize") int pagesize, @PathParam(value = "pagenum") int pagenum,
 			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
