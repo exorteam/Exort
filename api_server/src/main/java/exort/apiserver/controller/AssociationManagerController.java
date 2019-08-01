@@ -44,8 +44,8 @@ public class AssociationManagerController{
     private PermService permSvc;
     @Autowired
     private AssoMemService amSvc;
-	  @Autowired
-	  private SystemAdministratorInfo sysAdmin;
+    @Autowired
+    private SystemAdministratorInfo sysAdmin;
 
     @GetMapping
     public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
@@ -105,7 +105,7 @@ public class AssociationManagerController{
     }
 
     private boolean checkPermissionOnAssociationById(int operatorId,String assoId,String perm){
-        final String permScope = assoMemService.scope(assoId);
+        final String permScope = amSvc.scope(assoId);
         if(permSvc.hasPermission(Long.valueOf(operatorId),permScope,perm) == null){
             return false;
         }
