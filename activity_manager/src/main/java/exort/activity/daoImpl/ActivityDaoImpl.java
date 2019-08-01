@@ -37,7 +37,8 @@ public class ActivityDaoImpl implements ActivityDao {
                     .set("maxParticipants", activity.getMaxParticipants())
                     .set("materialTemplateIds", activity.getMaterialTemplateIds())
                     .set("participantIds", activity.getParticipantIds())
-                    .set("realParticipantIds", activity.getRealParticipantIds()).set("tags", activity.getTags());
+                    .set("realParticipantIds", activity.getRealParticipantIds()).set("tags", activity.getTags())
+                    .set("image", activity.getImage());
 
             mongoTemplate.upsert(query, update, Activity.class);
             return mongoTemplate.findById(activity.getId(), Activity.class);
@@ -48,19 +49,44 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
-    public PagedData<Activity> selectActivities(Filter select,  Integer pageSize, Integer pageNum, String sortBy) {
+    public boolean updateActivityPublishState(String activityId, String type) {
+        try{
+            Activity activity = getActivity(activityId);
+            System.out.println(activity);
+
+            Query query = Query.query(Criteria.where("_id").is(activityId));
+            Update update;
+            if(type.equals("publish")){
+                update = new Update().set("publishState", 1);
+            }else{
+                update = new Update().set("publishState", 0);
+            }
+            System.out.println(update);
+            mongoTemplate.upsert(query, update, Activity.class);
+            Activity activity1 = getActivity(activityId);
+            System.out.println(activity1);
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public PagedData<Activity> selectActivities(Filter select, Integer pageSize, Integer pageNum, String sortBy) {
         try {
             Query query = new Query();
+            System.out.println(select.toString());
             if (select.getCreateTime() != null) {
-                query.addCriteria(Criteria.where("createTime").gte(select.getCreateTime().getStart()).and("createTime")
+                query.addCriteria(Criteria.where("createTime").gte(select.getCreateTime().getStart())
                         .lte(select.getCreateTime().getEnd()));
             }
             if (select.getSignupTime() != null) {
-                query.addCriteria(Criteria.where("SignupTime").gte(select.getSignupTime().getStart()).and("signupTime")
+                query.addCriteria(Criteria.where("signupTime").gte(select.getSignupTime().getStart())
                         .lte(select.getSignupTime().getEnd()));
             }
             if (select.getStartTime() != null) {
-                query.addCriteria(Criteria.where("createTime").gte(select.getStartTime().getStart()).and("createTime")
+                query.addCriteria(Criteria.where("startTime").gte(select.getStartTime().getStart())
                         .lte(select.getStartTime().getEnd()));
             }
             if (select.getPublishState() != 0) {
@@ -88,13 +114,13 @@ public class ActivityDaoImpl implements ActivityDao {
             System.out.println(query);
 
             List<Activity> activities = mongoTemplate.find(query, Activity.class, "activity");
-            if(activities==null){
-                return new PagedData<>(pageSize, pageNum, 0L, null);
+            if (activities == null) {
+                return new PagedData<>(pageNum, pageSize, 0L, null);
             }
             int totalsize = activities.size();
             List<Activity> result = activities.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalsize));
 
-            return new PagedData<Activity>(pageSize, pageNum, (long) totalsize, result);
+            return new PagedData<Activity>(pageNum, pageSize, (long) totalsize, result);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -105,7 +131,7 @@ public class ActivityDaoImpl implements ActivityDao {
     public Activity getActivity(String id) {
         try {
             System.out.println(id);
-            Activity activity =  mongoTemplate.findById(id, Activity.class);
+            Activity activity = mongoTemplate.findById(id, Activity.class);
             System.out.println(activity.getId());
             return activity;
         } catch (Exception e) {
@@ -132,7 +158,7 @@ public class ActivityDaoImpl implements ActivityDao {
                 } else {
                     result = userids.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalsize));
                 }
-                return new PagedData<Integer>(pageSize, pageNum, (long)totalsize, result);
+                return new PagedData<Integer>(pageNum, pageSize, (long) totalsize, result);
             }
             return null;
         } catch (Exception e) {

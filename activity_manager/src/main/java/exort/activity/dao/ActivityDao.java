@@ -10,6 +10,8 @@ public interface ActivityDao {
 
     Activity update(Activity activity);
 
+    boolean updateActivityPublishState(String activityId, String type);
+
     Activity getActivity(String id);
 
     PagedData<Integer> getActivityUserIds(String activityid, Integer pagesize, Integer pagenum, int type);

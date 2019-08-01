@@ -7,6 +7,9 @@ import exort.api.http.activity.entity.Filter;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,20 +33,8 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public boolean changeActivityState(String activityid, String type){
         try{
-            Activity activity = ad.getActivity(activityid);
-            if(activity != null){
-                if(type.equals("publish")){
-                    activity.setPublishState(1);
-                    System.out.println(activity.getPublishState());
-                }else{
-                    activity.setPublishState(0);
-                    System.out.println(activity.getAssociationIds());
-                }
-                ad.update(activity);
-                return true;
-            }
-            return false;
-        }catch(Exception e){
+            return ad.updateActivityPublishState(activityid, type);
+       }catch(Exception e){
             e.printStackTrace();
             return false;
         }

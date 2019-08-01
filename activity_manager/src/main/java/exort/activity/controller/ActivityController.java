@@ -29,11 +29,8 @@ public class ActivityController {
     @PostMapping(value = "/activities")
     public ApiResponse<Activity> createNewActivity(@RequestBody Activity activity){
         try{
-            System.out.println("activity backend:");
-            System.out.println(activity.getTitle());
             activity.setId((new ObjectId()).toString());
             Activity newActivity = as.upsertActivity(activity);
-            System.out.println(newActivity);
             if(newActivity==null){
                 return new ApiResponse<>("create new activity failed", "创建活动失败");
             }else{
@@ -69,13 +66,13 @@ public class ActivityController {
             PageQuery page = PageQuery.relocate(pageQuery, 9, 100);
             PagedData<Activity> result = as.getActivities(filter, page);
             if(result==null){
-                return new ApiResponse<>("get activities failed.", "查询多个活动失败");
+                return new ApiResponse<>("get activities failed1.", "查询多个活动失败");
             }else{
                 return new ApiResponse<>(result);
             }
         }catch (Exception e){
             e.printStackTrace();
-            throw new ApiError(401, "get activities failed.", "查询多个活动失败");
+            throw new ApiError(401, "get activities failed2.", "查询多个活动失败");
         }
     }
 //4

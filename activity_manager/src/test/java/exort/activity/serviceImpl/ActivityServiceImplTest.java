@@ -45,19 +45,11 @@ public class ActivityServiceImplTest {
         materialTemplateIds.add(3);
         materialTemplateIds.add(2);
 
-        List<Integer> participantIds = new ArrayList<>();
-        participantIds.add(342);
-        participantIds.add(42);
-
-        List<Integer> realParticipantIds = new ArrayList<>();
-        realParticipantIds.add(342);
-        realParticipantIds.add(412);
-
         List<String> tags = new ArrayList<>();
         tags.add("运动");
 
-        Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully", 1, 2, 1,
-                true, false, 10, materialTemplateIds, participantIds, realParticipantIds, tags, "");
+        Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully",
+                true, false, 10, materialTemplateIds, tags, "");
 
         activity.setId((new ObjectId()).toString());
         globalid = activity.getId();
@@ -115,6 +107,7 @@ public class ActivityServiceImplTest {
     @Test
     public void removeParticipants() {
         upsertActivity();
+        addUserIds();
 
         List<Integer> userIds = new ArrayList<>();
         userIds.add(35);
@@ -125,6 +118,7 @@ public class ActivityServiceImplTest {
     @Test
     public void getActivityUserIds() {
         upsertActivity();
+        addUserIds();
 
         PageQuery page = new PageQuery(0, 9);
         PageQuery page1 = new PageQuery(0, 0);
