@@ -3,6 +3,11 @@
         <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
         <img :src="form.image" style="width: 40%; height: 400px; margin: 10px 10px 20px 40px; float: right"/>
         <div style="margin-top: 10px height: 600px">
+            <p>
+                <!-- <div v-if="form.tags.length" style="display:inline"> -->
+                    <Tag v-for="tag in form.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
+                <!-- </div> -->
+            </p>
             <p slot="title">名称： {{form.title}}</p>
             <p>创建时间： {{form.createTime}} </p>
             <p>发布时间： {{form.publishTime}}</p>
@@ -11,6 +16,7 @@
             <p>开始时间： {{form.time.time[0].start}}</p>
             <p>结束时间： {{form.time.time[0].end}}</p>
             <p>简介： {{form.content}}</p>
+
         </div>
         <div>
             <activityCreate :form="newform"/>
@@ -18,7 +24,7 @@
             <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger">发布</b-button>
             <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger">撤回</b-button>
         </div>
-        <div v-if="form.realParticipants.length" style="margin-top: 100px">
+        <!-- <div v-if="form.realParticipants.length" style="margin-top: 100px">
             <p style="margin-top: 200px">
             参加者
                 <Table :columns="attribute" :data="realParticipants"></Table>
@@ -29,7 +35,7 @@
             申请者
                 <Table :columns="attribute" :data="participants"></Table>
             </p>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -131,21 +137,18 @@ export default {
             statusList: [ "default", "default", "processing", "warning", "error", "success" ],
 			form: {},
 			newform:{
-            	onshow: false
+            	onshow: false,
+                data: {}
             },
             participantPage:{
                 pageSize: 8,
                 pageNum:0,
                 totalSize: 0,
             },
-            onshow: false,
             activityState: 0,
             signUpList: signUpLists,
             participants: [],
             realParticipants: [],
-            signUpList: signUpLists,
-            participants: [],
-            realParticipants:[],
             attribute: [
                 {
                     type: 'expand',
@@ -179,28 +182,34 @@ export default {
     },
     methods: {
         handlePublish(){
-            let data = {type:"publish"}
+            let data = { type:"publish" }
             let activityId = (this.$store.getters.get_activityid).toString()
-			Axios
-				.post("http://202.120.40.8:30727/activities/"+activityId, data)
-				.then(response => {
-					console.log(response.data)
-				})
-				.catch(e => {
-					console.log(e)
-				})
+			this.axios({
+                method:"put",
+                url: "/activities/"+activityId + "/state",
+                data: data
+            })
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
         },
         handleWithdraw(){
             let data = {type:"withdraw"}
             let activityId = (this.$store.getters.get_activityid).toString()
-			Axios
-				.post("http://202.120.40.8:30727/activities/"+activityId,  data)
-				.then(response => {
-					console.log(response.data)
-				})
-				.catch(e => {
-                    console.log(e)
-                })
+			this.axios({
+                method: "put",
+                url: "/activities/"+activityId + "/state",
+                data: data
+            })
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(e => {
+                console.log(e)
+            })
         },
         setData(value) {
             if (value.publishState == 0) {
@@ -211,22 +220,41 @@ export default {
                 this.activityState = value.signupState + 3
             }
 
-            this.newform.title = value.title
-			this.newform.content = value.content
-            this.newform.signupTime = value.signupTime
-            this.newform.time= value.time
-            this.newform.ifReview = value.ifReview
-            this.newform.ifOnlyMem = value.ifOnlyMem
-            this.newform.maxParticipants = value.maxParticipants
-            this.newform.materials = value.materials
-			this.newform.tags = value.tags
+            this.newform.data.title = value.title
+			this.newform.data.content = value.content
+            this.newform.data.ifReview = value.ifReview
+            this.newform.data.ifOnlyMem = value.ifOnlyMem
+            this.newform.data.maxParticipants = value.maxParticipants
+            this.newform.data.materials = value.materials
+            this.newform.data.image = value.image
+
+            let tag = {
+                tag_show : false,
+                tagList : value.tags
+            } 
+			this.newform.data.tag = tag
+
+            console.log(value.signupTime, value.time)
+            let time = {
+                type:0,
+                time:[value.time.time[0].start, value.time.time[0].end]
+            }
+            this.newform.data.time= time
+            let signupTime = {
+                type:0,
+                time:[value.signupTime.time[0].start, value.signupTime.time[0].end]
+            }
+            this.newform.data.signupTime = signupTime
+
+            console.log(this.newform)
         },
         getActivity(){
             let data = (this.$store.getters.get_activityid).toString()
+            console.log(data)
             //请求activity信息
             this.axios({
                 method:"get",
-                url: '/activities/' + data,
+                url: "/activities/" + data,
             })
             .then(response => {
                 console.log(response.data)
@@ -271,8 +299,9 @@ export default {
         }
     },
     mounted() {
-        this.getParticipants()
-        this.getRealParticipants()
+        this.getActivity()
+        // this.getParticipants()
+        // this.getRealParticipants()
     },
 }
 </script>

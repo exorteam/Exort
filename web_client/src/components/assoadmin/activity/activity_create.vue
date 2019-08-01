@@ -1,42 +1,42 @@
 <template>
     <Modal v-model="form.onshow" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
-        <Form v-model="form" :label-width="112">
+        <Form :model="form.data" :label-width="112">
             <FormItem label="活动标题">
-                <Input v-model="form.title"/>
+                <Input v-model="form.data.title"/>
             </FormItem>
             <FormItem label="报名时间">
-                <Date-picker v-model="form.signupTime.time" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
+                <Date-picker v-model="form.data.signupTime.time" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
             </FormItem>
             <!-- 当前只有一种时间实现 -->
             <!-- <FormItem label="选择活动时间类型:">
-                <Select v-model="form.time.type" style="width:200px">
+                <Select v-model="form.data.time.type" style="width:200px">
                     <Option v-for="item in timeTypeList" :value="item.value" :key="item.value">{{ item.text }}</Option>
                 </Select>
             </FormItem> -->
 
-            <FormItem label="活动时间" v-if="form.time.type==0">
-                <Date-picker v-model="form.time.time" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
+            <FormItem label="活动时间" v-if="form.data.time.type==0" >
+                <Date-picker v-model="form.data.time.time" type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
             </FormItem>
 
-            <!-- <FormItem label="活动时间" v-if="form.time.type==1">
+            <!-- <FormItem label="活动时间" v-if="form.data.time.type==1">
                 <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
-                <div v-for="timeStamp in form.time.time" :key="timeStamp.start" :row="timeStamp">
+                <div v-for="timeStamp in form.data.time.time" :key="timeStamp.start" :row="timeStamp">
                     <DatePicker  type="date" placeholder="yyyy-mm-dd"></DatePicker>
-                    <Button type="dashed" @click="delete_timeStamp(form.time.time)">-</Button>
+                    <Button type="dashed" @click="delete_timeStamp(form.data.time.time)">-</Button>
                 </div>
                 <Button type="dashed" @click="more_timeStamp">+</Button>
             </FormItem>
 
-            <FormItem label="活动时间" v-if="form.time.type==2">
+            <FormItem label="活动时间" v-if="form.data.time.type==2">
                 <div>
                     <Date-picker type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
                 </div>
             </FormItem>
 
-            <FormItem label="活动时间" v-if="form.time.type==3">
-                <div v-for="timeStamp in form.time.time" :key="timeStamp.start" :row="timeStamp">
+            <FormItem label="活动时间" v-if="form.data.time.type==3">
+                <div v-for="timeStamp in form.data.time.time" :key="timeStamp.start" :row="timeStamp">
                     <TimeRange :timeStamp="timeStamp"/>
-                    <Button type="dashed" @click="delete_timeStamp(form.time.time)">-</Button>
+                    <Button type="dashed" @click="delete_timeStamp(form.data.time.time)">-</Button>
                 </div>
                 <Button type="dashed" @click="more_timeStamp">+</Button>
             </FormItem> -->
@@ -44,28 +44,28 @@
                 <b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>
             </FormItem>
             <FormItem label="报名是否需要审核:">
-                <Checkbox v-model="form.ifReview"/>
+                <Checkbox v-model="form.data.ifReview"/>
             </FormItem>
             <FormItem label="是否仅社团或组织成员可以参加:">
-                <Checkbox v-model="form.ifOnlyMem"/>
+                <Checkbox v-model="form.data.ifOnlyMem"/>
             </FormItem>
             <FormItem label="最大人数">
-                <Input v-model="form.maxParticipants"/>
+                <Input v-model="form.data.maxParticipants"/>
             </FormItem>
-            <FormItem label="上传活动宣传图">
+            <FormItem label="上传活动宣传图" >
                 <div>
-                    <b-form-file v-model="file" ref="file-input" style="width: 310px; "></b-form-file>
+                    <b-form-file v-model="form.data.image" ref="file-input" style="width: 310px; "></b-form-file>
                     <b-button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</b-button>
                 </div>
             </FormItem>
             <FormItem label="活动简介">
-                <Input v-model="form.content"/>
+                <Input v-model="form.data.content"/>
             </FormItem>
-            <FormItem label="选择标签">
-                <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
-                <TagChoose :tag="tag" />
-                <div v-if="tag.tagList.length" style="display:inline">
-                    <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
+            <FormItem label="选择标签" >
+                <Button @click="form.data.tag.tag_show=true" style="width: 80px">选择标签</Button>
+                <TagChoose :tag="form.data.tag" />
+                <div v-if="form.data.tag.tagList.length" style="display:inline">
+                    <Tag v-for="tag in form.data.tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
                 </div>
             </FormItem>
         </Form>
@@ -105,17 +105,16 @@ export default {
     },
     data(){
         return {
+            fileList: [],
             associationIndex: "",
             associationList:[{
                 value:"",
                 text:"请选择所属社团"
             }],
-            file: '',
-            fileList: [],
-            tag:{
-                tag_show: false,
-                tagList:[],
-            }
+            // tag:{
+            //     tag_show: false,
+            //     tagList:[],
+            // }
         }
     },
     methods: {
@@ -137,54 +136,74 @@ export default {
         clearFile(file, fileList) {
             this.$refs['file-input'].reset();
         },
+        addressPic(value){
+            let img
+            let reader = new FileReader()
+            reader.readAsDataURL(value)
+            reader.onload=function(e){
+                img = e.target.result
+            }
+            return img
+        },
         info_ok(){
             let data = {
-                title: this.form.title,
-                content: this.form.content,
+                title: this.form.data.title,
+                content: this.form.data.content,
                 signupTime: {
                     type: 0,
                     time:[{
-                        start: this.form.signupTime.time[0],
-                        end: this.form.signupTime.time[1],
+                        start: this.form.data.signupTime.time[0],
+                        end: this.form.data.signupTime.time[1],
                     }]
                 },
                 time: {
                     type: 0,
                     time:[{
-                        start: this.form.time.time[0],
-                        end: this.form.time.time[1],
+                        start: this.form.data.time.time[0],
+                        end: this.form.data.time.time[1],
                     }]
                 },
-                ifReview: this.form.ifReview,
-                ifOnlyMem: this.form.ifOnlyMem,
-                maxParticipants: this.form.maxParticipants,
-                materials: this.form.materials,
-                tags: this.tag.tagList,
+                ifReview: this.form.data.ifReview,
+                ifOnlyMem: this.form.data.ifOnlyMem,
+                maxParticipants: this.form.data.maxParticipants,
+                materialTemplateId: this.form.data.materials,
+                tags: this.form.data.tag.tagList,
             }
-            data.associationIds = []
-            data.associationIds.push(this.associationIndex)
 
+            let assos = []
+            assos.push(this.associationIndex)
+            data.associationIds = assos
+            console.log(this.form.data.image)
+            
             let reader = new FileReader()
-            reader.readAsDataURL(this.file)
-            reader.onload=function(e){
+            reader.readAsDataURL(this.form.data.image)
+            reader.onload=(e)=>{
                 data.image = e.target.result
+                console.log(data)
+           // this.axios({
+                    //     method:"post",
+                    //     url:"/activities",
+                    //     data:data
+                    // })
+                    // .then(response => {
+                    //     console.log(response.data.data)
+                    // })
+                    // .catch(e => {
+                    //     console.log(e)
+                this.axios({
+                    method:"post",
+                    url:"/activities",
+                    data:data
+                })
+                .then(response => {
+                    console.log("Successfully!")
+                    console.log(response.data.data)
+                })
+                .catch(e => {
+                    console.log(e)
+                })
             }
-
             this.form.onshow = false
-            console.log(data)
-
-            this.axios({
-                method:"post",
-                url:"/activities",
-                data:data
-            })
-            .then(response => {
-                console.log("Successfully!")
-                console.log(response.data.data)
-            })
-            .catch(e => {
-                console.log(e)
-            })
         },
         info_cancel(){
             this.form.onshow = false
@@ -203,7 +222,7 @@ export default {
             })
             .then(response => {
                 let originList = response.data.data.content
-                console.log(originList)
+                // console.log(originList)
                 this.setAssociationList(originList)
             })
             .catch(e => {
@@ -221,10 +240,11 @@ export default {
                 }
                 this.associationList.push(data)
             }
-            console.log(this.associationList)
+            // console.log(this.associationList)
         }
     },
     mounted() {
+        console.log(this.form)
         this.getAssociations()
     },
 }
