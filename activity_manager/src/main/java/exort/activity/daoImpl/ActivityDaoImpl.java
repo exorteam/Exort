@@ -27,6 +27,9 @@ public class ActivityDaoImpl implements ActivityDao {
     public Activity update(Activity activity) {
         try {
             Query query = Query.query(Criteria.where("_id").is(activity.getId()));
+
+
+
             Update update = new Update().set("associationIds", activity.getAssociationIds())
                     .set("createTime", new Date()).set("publishTime", new Date()).set("lastPublishTime", new Date())
                     .set("lastModifyTime", new Date()).set("signupTime", activity.getSignupTime())
@@ -51,9 +54,6 @@ public class ActivityDaoImpl implements ActivityDao {
     @Override
     public boolean updateActivityPublishState(String activityId, String type) {
         try{
-            Activity activity = getActivity(activityId);
-            System.out.println(activity);
-
             Query query = Query.query(Criteria.where("_id").is(activityId));
             Update update;
             if(type.equals("publish")){
@@ -61,10 +61,8 @@ public class ActivityDaoImpl implements ActivityDao {
             }else{
                 update = new Update().set("publishState", 0);
             }
-            System.out.println(update);
+            System.out.println(type);
             mongoTemplate.upsert(query, update, Activity.class);
-            Activity activity1 = getActivity(activityId);
-            System.out.println(activity1);
             return true;
         }catch(Exception e){
             e.printStackTrace();
@@ -130,10 +128,7 @@ public class ActivityDaoImpl implements ActivityDao {
     @Override
     public Activity getActivity(String id) {
         try {
-            System.out.println(id);
-            Activity activity = mongoTemplate.findById(id, Activity.class);
-            System.out.println(activity.getId());
-            return activity;
+            return mongoTemplate.findById(id, Activity.class);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

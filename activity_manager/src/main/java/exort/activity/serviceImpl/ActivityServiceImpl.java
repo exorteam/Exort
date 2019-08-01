@@ -33,6 +33,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public boolean changeActivityState(String activityid, String type){
         try{
+            System.out.println(type);
             return ad.updateActivityPublishState(activityid, type);
        }catch(Exception e){
             e.printStackTrace();
@@ -105,6 +106,7 @@ public class ActivityServiceImpl implements ActivityService {
                 return ad.getActivityUserIds(activityid, pageQuery.getPageSize(), pageQuery.getPageNum(), type);
             }{
                 List<Integer> result = ad.checkUserId(activityid, userId, type);
+                System.out.println(result);
                 return new PagedData<Integer>(pageQuery.getPageSize(), pageQuery.getPageNum(), 1L, result);
             }
         }catch (Exception e){

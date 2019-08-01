@@ -148,6 +148,7 @@ public class ActivityController {
             if(result==null){
                 return new ApiResponse<>("get activity"+activityId+" participants failed.","查询活动参加者失败");
             }else{
+
                 return new ApiResponse<>(result);
             }
         }catch (Exception e){
