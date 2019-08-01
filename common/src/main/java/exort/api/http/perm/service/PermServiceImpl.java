@@ -212,4 +212,11 @@ public class PermServiceImpl extends RestTemplate implements PermService {
         return request(new TypeToken<Object>() { },
                 HttpMethod.DELETE, "/users/{userId}", userId);
     }
+
+    @Override
+    public ApiResponse clearScope(String scope) {
+        return request(new TypeToken<Object>() { },
+                HttpMethod.DELETE, "/scopes/{scope}", scope);
+    }
+
 }

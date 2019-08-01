@@ -76,18 +76,22 @@ public interface PermService {
     ApiResponse<Permission> updatePermission(Permission permArg);
 
 
-    // add [roles] <- [user, scope]
+    // add [roles <- user, scope]
     ApiResponse<List<Role>> grantRoles(Long userId, String scope, List<String> roleNames);
-    // del [roles] <- [user, scope]
+    // del [roles <- user, scope]
     ApiResponse<List<Role>> revokeRoles(Long userId, String scope, List<String> roleNames);
 
-    // add [permissions] <- [role]
+    // add [permissions <- role]
     ApiResponse<List<Permission>> grantPermissions(String roleName, List<String> permissionNames);
-    // del [permissions] <- [role]
+    // del [permissions <- role]
     ApiResponse<List<Permission>> revokePermissions(String roleName, List<String> permissionNames);
 
-    // del all [roles] <- [user, scope]
+    // del all [roles <- user, scope]
     ApiResponse removeUser(Long userId, String scope);
-    // del all [roles] <- user
+    // del all [roles <- user, all scope]
     ApiResponse removeUser(Long userId);
+
+    // del all [roles <- all user, scope]
+    ApiResponse clearScope(String scope);
+
 }
