@@ -38,7 +38,7 @@ public interface AssoMemService {
     public ApiResponse<Boolean> addOneToDepartment(String associationId, int departmentId, UserId userId);
 
     //    得到用户所有的社团列表
-    public ApiResponse<List<Integer>> getUserAssociation(int userId);
+    public ApiResponse<List<String>> getUserAssociation(int userId);
 
     //    得到用户所有的部门列表
     public ApiResponse<List<DepartmentInfo>> getUserDepartment(String associationId, int userId);
