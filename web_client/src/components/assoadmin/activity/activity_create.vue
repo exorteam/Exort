@@ -56,6 +56,7 @@
                 <div>
                     <b-form-file v-model="form.data.image" ref="file-input" style="width: 310px; "></b-form-file>
                     <b-button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</b-button>
+                    <img  :src="form.data.image"  style="width: 360px; height: 200px"/>
                 </div>
             </FormItem>
             <FormItem label="活动简介">
@@ -136,16 +137,8 @@ export default {
         clearFile(file, fileList) {
             this.$refs['file-input'].reset();
         },
-        addressPic(value){
-            let img
-            let reader = new FileReader()
-            reader.readAsDataURL(value)
-            reader.onload=function(e){
-                img = e.target.result
-            }
-            return img
-        },
         info_ok(){
+            console.log(this.form)
             let data = {
                 title: this.form.data.title,
                 content: this.form.data.content,
@@ -173,35 +166,26 @@ export default {
             let assos = []
             assos.push(this.associationIndex)
             data.associationIds = assos
-            console.log(this.form.data.image)
             
-            let reader = new FileReader()
-            reader.readAsDataURL(this.form.data.image)
-            reader.onload=(e)=>{
-                data.image = e.target.result
-                console.log(data)
-           // this.axios({
-                    //     method:"post",
-                    //     url:"/activities",
-                    //     data:data
-                    // })
-                    // .then(response => {
-                    //     console.log(response.data.data)
-                    // })
-                    // .catch(e => {
-                    //     console.log(e)
-                this.axios({
-                    method:"post",
-                    url:"/activities",
-                    data:data
-                })
-                .then(response => {
-                    console.log("Successfully!")
-                    console.log(response.data.data)
-                })
-                .catch(e => {
-                    console.log(e)
-                })
+            if (this.form.data.image!="") {
+                let reader = new FileReader()
+                reader.readAsDataURL(this.form.data.image)
+                reader.onload=(e)=>{
+                    data.image = e.target.result
+                    console.log(data)
+                    this.axios({
+                        method:"post",
+                        url:"/activities",
+                        data:data
+                    })
+                    .then(response => {
+                        console.log("Successfully!")
+                        console.log(response.data.data)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+                }
             }
             this.form.onshow = false
         },
@@ -209,21 +193,17 @@ export default {
             this.form.onshow = false
         },
         getAssociations(){
+            let userid = "1"
             this.axios({
                 method: "get",
-                url: "/associations/",
-                params: {
-                    pageNum: 0,
-                    pageSize: 9999,
-                    keyword: "",
-                    tags: "",
-                    state: 1,
-                }
+                url: "/associations/users/"+userid+"/associations",
             })
             .then(response => {
-                let originList = response.data.data.content
-                // console.log(originList)
-                this.setAssociationList(originList)
+                console.log(response.data)
+                // if(response.data.data!=null){
+                //     let originList = response.data.data.content
+                //     this.setAssociationList(originList)
+                // }s
             })
             .catch(e => {
                 console.log(e)
@@ -244,7 +224,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.form)
         this.getAssociations()
     },
 }

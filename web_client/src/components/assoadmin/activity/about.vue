@@ -1,129 +1,43 @@
 <template>
     <div>
         <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
-        <img :src="form.image" style="width: 40%; height: 400px; margin: 10px 10px 20px 40px; float: right"/>
+        <img :src="form.image" style="width: 40%; height: 90%; margin: 10px 10px 20px 40px; float: right"/>
         <div style="margin-top: 10px height: 600px">
-            <p>
-                <!-- <div v-if="form.tags.length" style="display:inline"> -->
-                    <Tag v-for="tag in form.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
-                <!-- </div> -->
+            <p style="margin: 10px 10px 20px 40px; ">标签：
+                <Tag v-for="tag in form.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
             </p>
-            <p slot="title">名称： {{form.title}}</p>
-            <p>创建时间： {{form.createTime}} </p>
-            <p>发布时间： {{form.publishTime}}</p>
-            <p>报名起始时间：{{form.signupTime.time[0].start}}</p>
-            <p>报名截止时间：{{form.signupTime.time[0].end}}</p>
-            <p>开始时间： {{form.time.time[0].start}}</p>
-            <p>结束时间： {{form.time.time[0].end}}</p>
-            <p>简介： {{form.content}}</p>
+            <p slot="title" style="margin: 10px 10px 20px 40px; ">名称： {{form.title}}</p>
+            <p style="margin: 10px 10px 20px 40px; ">创建时间： {{showTime.createTime}} </p>
+            <p style="margin: 10px 10px 20px 40px; ">发布时间： {{showTime.publishTime}}</p>
+            <p style="margin: 10px 10px 20px 40px; ">报名起始时间：{{showTime.signupTimeStart}}</p>
+            <p style="margin: 10px 10px 20px 40px; ">报名截止时间：{{showTime.signupTimeEnd}}</p>
+            <p style="margin: 10px 10px 20px 40px; ">开始时间： {{showTime.timeStart}}</p>
+            <p style="margin: 10px 10px 20px 40px; ">结束时间： {{showTime.timeEnd}}</p>
+            <p style="margin: 10px 10px 20px 40px; ">简介： {{form.content}}</p>
 
         </div>
         <div>
             <activityCreate :form="newform"/>
-            <b-button  @click="newform.onshow=true" variant="primary">修改</b-button>
-            <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger">发布</b-button>
-            <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger">撤回</b-button>
+            <b-button  @click="newform.onshow=true" variant="primary" style="margin: 10px 10px 20px 40px; ">修改</b-button>
+            <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger" style="margin: 10px 10px 20px 40px; ">发布</b-button>
+            <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger" style="margin: 10px 10px 20px 40px; ">撤回</b-button>
         </div>
-        <!-- <div v-if="form.realParticipants.length" style="margin-top: 100px">
+        <!-- <div v-if="form.participants.length" style="margin-top: 100px">
             <p style="margin-top: 200px">
             参加者
-                <Table :columns="attribute" :data="realParticipants"></Table>
+                <Table :columns="attribute" :data="participants"></Table>
             </p>
-        </div>
-        <div v-if="form.realParticipants.length" style="margin-top: 50px">
+        </div> -->
+        <!-- <div v-if="form.realParticipants.length" style="margin-top: 50px">
             <p>
             申请者
-                <Table :columns="attribute" :data="participants"></Table>
+                <Table :columns="attribute" :data="realParticipants"></Table>
             </p>
         </div> -->
     </div>
 </template>
 
 <script>
-
-    let signUpLists = [
-        {
-            学号: "517030910200",
-            姓名: "xxx",
-            年级: "大二",
-            学院: "电子信息与电气工程学院",
-            联系方式: "13216254132",
-            更多信息: "http://github.com/exorteam/exort"
-        },
-        {
-            学号: "517030910200",
-            姓名: "xxx",
-            年级: "大二",
-            学院: "电子信息与电气工程学院",
-            联系方式: "13216254132",
-            更多信息: "http://github.com/exorteam/exort"
-        },
-        {
-            学号: "517030910200",
-            姓名: "xxx",
-            年级: "大二",
-            学院: "电子信息与电气工程学院",
-            联系方式: "13216254132",
-            更多信息: "http://github.com/exorteam/exort"
-        },
-        {
-            学号: "517030910200",
-            姓名: "xxx",
-            年级: "大二",
-            学院: "电子信息与电气工程学院",
-            联系方式: "13216254132",
-            更多信息: "http://github.com/exorteam/exort"
-        },
-        {学号: "", 姓名: "", 年级: "", 学院: "", 联系方式: "", 更多信息: ""}
-    ]
-
-    let data = [
-        {
-            name: 'John Brown',
-            grade: 18,
-            department: 'New York No. 1 Lake Park',
-            job: 'Data engineer',
-            interest: 'badminton',
-            studentID: '5170391029194',
-            book: 'Steve Jobs',
-            movie: 'The Prestige',
-            music: 'I Cry'
-        },
-        {
-            name: 'Jim Green',
-            grade: 25,
-            department: 'London No. 1 Lake Park',
-            job: 'Data Scientist',
-            interest: 'volleyball',
-            studentID: '5170391029198',
-            book: 'My Struggle',
-            movie: 'Roman Holiday',
-            music: 'My Heart Will Go On'
-        },
-        {
-            name: 'Joe Black',
-            grade: 30,
-            department: 'Sydney No. 1 Lake Park',
-            job: 'Data Product Manager',
-            interest: 'tennis',
-            studentID: '5170391029191',
-            book: 'Win',
-            movie: 'Jobs',
-            music: 'Don’t Cry'
-        },
-        {
-            name: 'Jon Snow',
-            grade: 26,
-            department: 'Ottawa No. 2 Lake Park',
-            job: 'Data Analyst',
-            interest: 'snooker',
-            studentID: '517039102919',
-            book: 'A Dream in Red Mansions',
-            movie: 'A Chinese Ghost Story',
-            music: 'actor'
-        }
-    ]
-
 import expandRow from './expand_table'
 import activityCreate from './activity_create'
 import Axios from 'axios';
@@ -135,18 +49,26 @@ export default {
         return{
             stateList: [ '未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束' ],
             statusList: [ "default", "default", "processing", "warning", "error", "success" ],
-			form: {},
+			form:{},
 			newform:{
             	onshow: false,
                 data: {}
             },
+            showTime:{
+                createTime: "",
+                publishTime:"",
+                signupTimeStart: "",
+                signupTimeEnd: "",
+                timeStart: "",
+                timeEnd: ""
+            },
             participantPage:{
                 pageSize: 8,
-                pageNum:0,
+                pageNum: 0,
                 totalSize: 0,
             },
             activityState: 0,
-            signUpList: signUpLists,
+            signUpList: [],
             participants: [],
             realParticipants: [],
             attribute: [
@@ -191,6 +113,7 @@ export default {
             })
             .then(response => {
                 console.log(response.data)
+                this.$router.go(0)
             })
             .catch(e => {
                 console.log(e)
@@ -206,10 +129,20 @@ export default {
             })
             .then(response => {
                 console.log(response.data)
+                this.$router.go(0)
             })
             .catch(e => {
                 console.log(e)
             })
+        },
+        setShowTime(value){
+            this.showTime.createTime = (new Date(this.form.createTime)).toLocaleString(),
+            this.showTime.publishTime = (new Date(this.form.publishTime)).toLocaleString(),
+            this.showTime.signupTimeStart = (new Date(this.form.signupTime.time[0].start)).toLocaleString(),
+            this.showTime.signupTimeEnd = (new Date(this.form.signupTime.time[0].end)).toLocaleString(),
+            this.showTime.timeStart = (new Date(this.form.time.time[0].start)).toLocaleString(),
+            this.showTime.timeEnd = (new Date(this.form.time.time[0].end)).toLocaleString()
+            console.log(this.showTime)
         },
         setData(value) {
             if (value.publishState == 0) {
@@ -234,9 +167,8 @@ export default {
             } 
 			this.newform.data.tag = tag
 
-            console.log(value.signupTime, value.time)
             let time = {
-                type:0,
+                type:0, 
                 time:[value.time.time[0].start, value.time.time[0].end]
             }
             this.newform.data.time= time
@@ -245,45 +177,45 @@ export default {
                 time:[value.signupTime.time[0].start, value.signupTime.time[0].end]
             }
             this.newform.data.signupTime = signupTime
-
-            console.log(this.newform)
         },
         getActivity(){
             let data = (this.$store.getters.get_activityid).toString()
-            console.log(data)
             //请求activity信息
             this.axios({
                 method:"get",
                 url: "/activities/" + data,
             })
             .then(response => {
-                console.log(response.data)
                 this.form = response.data.data
-                console.log(this.form)
                 this.setData(this.form)
+                this.setShowTime(this.form)
             })
             .catch(e => {
                 console.log(e)
             })
         },
         getParticipants(){
+            let data = (this.$store.getters.get_activityid).toString()
             //请求activity的participants
-            let data={ type:"accept" }
-            Axios
-                .get('http://202.120.40.8:30727/applications', {
-                    params: {
-                        pageSize: this.participantPage.pageSize,
-                        pageNum: this.participantPage.pageNum,
-                        sortBy: 0,
-                        _body: btoa(JSON.stringify({data}))
-                    }
-                })
-                .then(response => {
-                    this.participants = response.data.data
-                })
-                .catch(e => {
-                    console.log(e)
-                })
+            this.axios({
+                method:"post",
+                url: "/activities/"+data+"/participants/message",
+                params: {
+                    'pagesize': this.participantPage.pageSize,
+                    'pagenum': this.participantPage.pageNum,
+                    'sortby': "0",
+                },
+                data:{
+                    userId: 0
+                }
+            })
+            .then(response => {
+                console.log(response.data)
+                this.participants = response.data.data
+            })
+            .catch(e => {
+                console.log(e)
+            })
         },
         getRealParticipants(){
             let data = (this.$store.getters.get_activityid).toString()
