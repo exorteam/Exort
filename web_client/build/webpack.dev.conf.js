@@ -21,7 +21,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   devtool: config.dev.devtool,
 
   // these devServer options should be customized in /config/index.js
-  devServer: {
+  devServer: merge({
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [
@@ -43,7 +43,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     }
-  },
+  }, require('../config/dev.server')),
   plugins: [
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
