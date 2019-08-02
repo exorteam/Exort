@@ -1,5 +1,6 @@
 package exort.apiserver.service;
 
+import java.util.List;
 import java.util.Date;
 
 import lombok.Data;
@@ -33,8 +34,10 @@ public interface UserInfoService {
 
 	}
 
-	public UserInfo getUserInfo(int id);
-	public UserInfo updateUserInfo(int id,UserInfo info);
-	public boolean  disableUser(int id,boolean disabled);
+	UserInfo getUserInfo(int id);
+	UserInfo updateUserInfo(int id,UserInfo info);
+	boolean  disableUser(int id,boolean disabled);
+	List	 getUserInfoInBatch(List<Integer> ids);
+	List 	 getUserInfoByPage(int pageNum,int pageSize,String sortBy);
 }
 
