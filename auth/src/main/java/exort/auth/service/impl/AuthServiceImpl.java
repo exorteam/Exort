@@ -22,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private AutoIncIdGenerator autoId;
 
-	public ApiResponse register(String usr,String pwd){
+	public ApiResponse<Integer> register(String usr,String pwd){
 		if(usr == null || pwd == null){
 			throw new ApiError(403,"RegisterationErr","Username or password empty");
 		}
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 		return new ApiResponse<Integer>(account.getId());
 	}
 
-	public ApiResponse validateAccount(String usr,String pwd){
+	public ApiResponse<Integer> validateAccount(String usr,String pwd){
 		final UserAccount e = accRepo.findByUsername(usr);
 		if(e == null){
 			throw new ApiError(403,"ValidationErr","Cannot find such username.");

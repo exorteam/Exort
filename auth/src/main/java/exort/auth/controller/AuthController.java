@@ -16,12 +16,12 @@ public class AuthController {
 	private AuthService service;
     
 	@PostMapping("/register")
-	public ApiResponse register(@RequestBody UserAccount acc){
+	public ApiResponse<Integer> register(@RequestBody UserAccount acc){
 		return service.register(acc.getUsername(),acc.getPassword());
 	}
 
     @PostMapping("/validate")
-    public ApiResponse validateAccount(@RequestBody UserAccount acc){
+    public ApiResponse<Integer> validateAccount(@RequestBody UserAccount acc){
         return service.validateAccount(acc.getUsername(),acc.getPassword());
     }
 
