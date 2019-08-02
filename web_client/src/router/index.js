@@ -19,6 +19,10 @@ import PermList from '../components/user_management/PermList.vue'
 import SignIn from '../components/auth/signin/signin'
 import SignUp from '../components/auth/signup/signup'
 
+import ArticleReader from '../components/articles/article-reader.vue'
+import ArticleList from '../components/articles/article-list.vue'
+import ArticleEditor from '../components/articles/article-editor.vue'
+
 Vue.use(Router);
 
 export default new Router({
@@ -83,7 +87,24 @@ export default new Router({
                     path: 'perm_list',
                     name: 'PermList',
                     component: PermList
-                }
+                },
+				{
+					path: 'articles',
+					name: 'Articles',
+					component: ArticleList,
+				},
+				{
+					path: 'articles/:id',
+					name: 'ArticleReader',
+					component: ArticleReader,
+					props: true
+				},				
+				{
+					path: 'articles/edit/:id',
+					name: 'ArticleEditor',
+					component: ArticleEditor,
+					props: true
+				}
 
             ]
         }

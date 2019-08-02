@@ -12,11 +12,9 @@
             <Icon type="ios-navigate"></Icon>
             <span>活动管理</span>
         </MenuItem>
-        <MenuItem name="1-4">
-            <!--<router-link :to="{name:''}">-->
+        <MenuItem name="1-4" :to="{name:'Articles'}">
             <Icon type="ios-navigate"></Icon>
             <span>文章管理</span>
-            <!--</router-link>-->
         </MenuItem>
             <MenuItem name="1-5" :to="{name:'SysAssoList'}">
             <Icon type="ios-navigate"></Icon>

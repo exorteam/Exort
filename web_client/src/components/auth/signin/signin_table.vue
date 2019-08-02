@@ -44,8 +44,8 @@ export default {
 		};
 		return {
 			formCustom: {
-				passwd: '',
-				name: '',
+				passwd: '123',
+				name: 'admin',
 			},
 			ruleCustom: {
 				passwd: [
