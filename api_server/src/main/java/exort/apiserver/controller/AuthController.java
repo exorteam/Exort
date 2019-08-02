@@ -1,14 +1,15 @@
 package exort.apiserver.controller;
 
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import exort.apiserver.entity.AuthRequest;
-import exort.apiserver.entity.AuthResponse;
 import exort.apiserver.service.AuthService;
+import exort.apiserver.service.AuthService.AuthRequest;
+import exort.apiserver.service.AuthService.AuthResponse;
 
 @RestController
 public class AuthController {
