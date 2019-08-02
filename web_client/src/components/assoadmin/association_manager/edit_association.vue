@@ -75,7 +75,7 @@ export default {
 
             file:null,
             form:{
-                id:"5d3ea7649ded9d0001d815ae",
+                id:"5d42930c9ded9d0001d815e8",
                 onshow: false,
                 name: "",
                 description: "",
@@ -89,7 +89,7 @@ export default {
                 showState:false,
             },
             assoInfo:{
-                id:"5d3ea7649ded9d0001d815ae",
+                id:"5d42930c9ded9d0001d815e8",
                 name: "无敌的测试社团",
                 description: "给你们一个信息这波我很强",
                 tags:[
