@@ -60,7 +60,8 @@ public class AssociationMemberManageServiceImplTest {
     @After
     public void afterAll() {
         departmentRepository.deleteAll();
-        ps.revokeRoles((long) 1, scope("a"), Arrays.asList(MEMBER, MANAGER));
+        ps.clearScope(scope("a"));
+        ps.deleteRolesByCategory(scope("a"));
     }
 
     @Test
