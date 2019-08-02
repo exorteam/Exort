@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.entity.SystemAdminConstants;
+import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
 import exort.apiserver.service.UserInfoService;
 import exort.apiserver.service.UserInfoService.UserInfo;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +28,8 @@ public class UserInfoController {
 	private UserInfoService infoSvc;
 	@Autowired
 	private PermService permSvc;
+	@Autowired
+	private SystemAdministratorInfo sysAdmin;
 
 	@GetMapping("/{id}")
 	public UserInfo getUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId){
@@ -54,7 +56,7 @@ public class UserInfoController {
 	@PatchMapping("/{id}")
 	public boolean disableUserById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
 		log.info("Operator("+String.valueOf(operatorId)+") toggle disability for user("+String.valueOf(userId)+").");
-		if(permSvc.hasRole(Long.valueOf(operatorId),SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME).getData() == null){
+		if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME).getData() == null){
 			log.warn("Disabling by non-admin user should be rejected");
 			return false;
 		}

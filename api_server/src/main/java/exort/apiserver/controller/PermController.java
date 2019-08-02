@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.entity.SystemAdminConstants;
+import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
 
 @RestController
 @RequestMapping(path="/permission")
@@ -24,10 +24,12 @@ public class PermController {
 
 	@Autowired
 	private PermService service;
+	@Autowired
+	private SystemAdministratorInfo sysAdmin;
 
 	@GetMapping("/admin")
 	public ApiResponse checkIfIsAdministrator(@RequestAttribute("id") Long id){
-		return service.hasRole(id,SystemAdminConstants.SCOPE_NAME,SystemAdminConstants.ROLE_NAME);
+		return service.hasRole(id,sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME);
 	}
 
 	@PostMapping

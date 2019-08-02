@@ -20,7 +20,7 @@ public interface ArticleService {
 		private int id;
 		private String title;
 		private String content;
-		private List<Integer> authors;
+		private String associationId;
 		private Date createTime;
 		private Date publishTime;
 		private Date lastPublishTime;
@@ -33,7 +33,7 @@ public interface ArticleService {
 	@Data
 	public class ArticleFilterParam {
 		private String keyword;
-		private Integer authorId;
+		private String authorId;
 		private Date startTime;
 		private Date endTime;
 		private Integer state;
