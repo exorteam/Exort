@@ -154,61 +154,8 @@ export default {
                 { text: '已激活', value: 'active' },
                 { text: '已锁定', value: 'blocked' },
             ],
-            pendingAppTypeSelected:['applying','applying_unblocked'],
-            pendingAppTypeList: [
-                { text: '申请创建社团', value: 'applying' },
-                { text: '申请取消锁定', value: 'applying_unblocked' }
-            ],
-            handledAppTypeSelected:['pass','canceled','refused'],
-            handledAppTypeList: [
-                { text: '已通过申请', value: 'pass' },
-                { text: '已取消申请', value: 'canceled' },
-                { text: '已拒绝申请', value: 'refused' },
-            ],
             inputDefaultValue : "",
             AssoList: [
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // }
             ],
             assoSearch:{
                 keyword:"",
@@ -350,15 +297,6 @@ export default {
             this.$refs['file-input'].reset();
         },
         info_ok(){
-            // this.$refs[name].validate((valid) => {
-            //     if (valid) {
-            //         this.$Message.success('Success!');
-            //     } else {
-            //         this.$Message.error('Fail!');
-            //     }
-            // })
-
-
             const _self = this;
             console.log(this.form);
 
@@ -369,9 +307,6 @@ export default {
                 this.$Message.error('创建失败，请完善表单信息');
                 return
             }
-            // console.log("this.form.name:" + this.form.name);
-            // console.log("_self.form.name:" + _self.form.name);
-            // console.log(this.form)
             if(_self.form.type=="create"){
                 var imgFile;
                 let reader = new FileReader();
