@@ -28,10 +28,8 @@ public class InfoServiceImpl implements InfoService {
 		return new ApiResponse<UserInfo>(infoRepo.findById(id).get());
 	}
 
-	public ApiResponse<UserInfo> updateUserInfo(int id,UserInfo info){
-		if(id != info.getId()){
-			throw new ApiError(403,"QueryErr","Id args differ when updating");
-		}
+	public ApiResponse<UserInfo> updateUserInfo(UserInfo info){
+		final int id = info.getId();
 		if(!infoRepo.existsById(id)){
 			throw new ApiError(403,"QueryErr","No such user information when updating with id: "+String.valueOf(id));
 		}

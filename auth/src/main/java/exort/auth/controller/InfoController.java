@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.errorhandler.ApiError;
 import exort.auth.entity.UserInfo;
 import exort.auth.service.InfoService;
 
@@ -30,7 +31,10 @@ public class InfoController {
 
 	@PostMapping("/{id}")
 	public ApiResponse<UserInfo> updateUserInfo(@PathVariable("id") int id,@RequestBody UserInfo info){
-		return service.updateUserInfo(id,info);
+		if(id != info.getId()){
+			throw new ApiError(403,"QueryErr","Id args differ when updating");
+		}
+		return service.updateUserInfo(info);
 	}
 
 	@PatchMapping("/{id}")

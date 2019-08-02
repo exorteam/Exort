@@ -8,7 +8,7 @@ import exort.auth.entity.UserInfo;
 public interface InfoService {
 
 	public ApiResponse<UserInfo> 		getUserInfo(int id);
-	public ApiResponse<UserInfo> 		updateUserInfo(int id,UserInfo info);
+	public ApiResponse<UserInfo> 		updateUserInfo(UserInfo info);
 	public ApiResponse<Boolean> 		disableUser(int id, boolean disabled);
 	public ApiResponse<List<UserInfo>> 	getUserInfoInBatch(Iterable<Integer> ids);
 	public ApiResponse<List<UserInfo>> 	getUserInfoByPage(int pageNum,int pageSize,String sortBy);
