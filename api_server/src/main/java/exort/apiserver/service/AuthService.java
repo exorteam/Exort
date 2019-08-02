@@ -4,6 +4,7 @@ import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 public interface AuthService {
 
@@ -17,6 +18,7 @@ public interface AuthService {
 	}
 
 	@Data
+	@NoArgsConstructor
 	@AllArgsConstructor
 	public class AuthResponse {
 

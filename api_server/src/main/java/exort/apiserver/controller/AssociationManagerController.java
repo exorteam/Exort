@@ -25,6 +25,7 @@ import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
@@ -43,7 +44,7 @@ public class AssociationManagerController{
     @Autowired
     private PermService permSvc;
     @Autowired
-    private AssoMemService amSvc;
+    private AssoMemService assoMemService;
     @Autowired
     private SystemAdministratorInfo sysAdmin;
 
@@ -105,7 +106,7 @@ public class AssociationManagerController{
     }
 
     private boolean checkPermissionOnAssociationById(int operatorId,String assoId,String perm){
-        final String permScope = amSvc.scope(assoId);
+        final String permScope = assoMemService.scope(assoId);
         if(permSvc.hasPermission(Long.valueOf(operatorId),permScope,perm) == null){
             return false;
         }
