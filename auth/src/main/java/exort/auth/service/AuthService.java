@@ -1,12 +1,12 @@
 package exort.auth.service;
 
-import java.util.Map;
-
-import exort.auth.entity.AuthResponse;
+import exort.api.http.common.entity.ApiResponse;
 
 public interface AuthService {
 
-	public Map          login(String usr,String pwd);
-	public int          register(String usr,String pwd);
-	public AuthResponse auth(String token);
+	public ApiResponse register(String usr,String pwd);
+	public ApiResponse validateAccount(String usr,String pwd);
+
+	//public ApiResponse login(String usr,String pwd);
+	//public ApiResponse auth(String token);
 }
