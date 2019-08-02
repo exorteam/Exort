@@ -4,6 +4,7 @@ package exort.apiserver.controller;
 
 import java.util.Arrays;
 
+import exort.api.http.member.entity.InitAssociationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class AssociationManagerController{
     @Autowired
     private PermService permSvc;
     @Autowired
-    private AssoMemService amSvc;
+    private AssoMemService assoMemService;
     @Autowired
     private SystemAdministratorInfo sysAdmin;
 
@@ -105,7 +106,7 @@ public class AssociationManagerController{
     }
 
     private boolean checkPermissionOnAssociationById(int operatorId,String assoId,String perm){
-        final String permScope = amSvc.scope(assoId);
+        final String permScope = assoMemService.scope(assoId);
         if(permSvc.hasPermission(Long.valueOf(operatorId),permScope,perm) == null){
             return false;
         }
