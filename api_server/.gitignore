@@ -34,5 +34,3 @@ build/
 mvnw
 mvnw.cmd
 .mvn/**
-
-application*.properties

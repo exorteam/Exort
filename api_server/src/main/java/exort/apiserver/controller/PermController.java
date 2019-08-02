@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.entity.SystemAdminConstants;
+import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
 
 @RestController
 @RequestMapping(path="/permission")
@@ -17,6 +17,8 @@ public class PermController {
 
 	@Autowired
 	private PermService service;
+	@Autowired
+	private SystemAdministratorInfo sysAdmin;
 
 	@GetMapping("/list_perm")
 	public ApiResponse listPermission(@RequestAttribute("id") Long id) {

@@ -1,7 +1,10 @@
 package exort.apiserver.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import exort.api.http.assomgr.entity.Association;
+import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.UserId;
@@ -41,6 +44,8 @@ public class AssoMemManagerController {
     private AssoMemService amSvc;
     @Autowired
     private PermService permSvc;
+    @Autowired
+    private AssociationManagerService associationManagerService;
 
 
     @GetMapping("/{id}/departments")
@@ -107,8 +112,15 @@ public class AssoMemManagerController {
     }
 
     @GetMapping("/users/{userId}/associations")
-    public ApiResponse<List<Integer>> getUserAssociation(@PathVariable(value = "userId") int userId) {
-        return amSvc.getUserAssociation(userId);
+    public ApiResponse<List<Association>> getUserAssociation(@PathVariable(value = "userId") int userId) {
+        List<String> userIds = amSvc.getUserAssociation(userId).getData();
+        List<Association> associations = new ArrayList<>();
+
+        for (String id : userIds) {
+            associations.add(associationManagerService.getAssociation(id).getData());
+        }
+
+        return new ApiResponse<List<Association>>(associations);
     }
 
 
@@ -143,7 +155,6 @@ public class AssoMemManagerController {
 
     //@PostMapping("/")
     //public ApiResponse<Boolean> initDepartment(@RequestBody InitAssociationInfo initAssociationInfo) {
-
     //    return amSvc.initDepartment(initAssociationInfo);
     //}
 
@@ -161,12 +172,17 @@ public class AssoMemManagerController {
     }
 
     @PostMapping("/{associationId}/departments/{departmentId}/permissions")
-    public ApiResponse<List<Permission>> grantPermList(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId,@RequestBody List<String> permissionList){
-        return permSvc.grantPermissions(amSvc.roleName(associationId,departmentId),permissionList);
+    public ApiResponse<List<Permission>> grantPermList(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody List<String> permissionList) {
+        return permSvc.grantPermissions(amSvc.roleName(associationId, departmentId), permissionList);
     }
 
     @DeleteMapping("/{associationId}/departments/{departmentId}/permissions")
-    public ApiResponse<List<Permission>> deletePerm(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId,@RequestBody List<String> permissionList){
-        return permSvc.revokePermissions(amSvc.roleName(associationId,departmentId),permissionList);
+    public ApiResponse<List<Permission>> deletePerm(@PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody List<String> permissionList) {
+        return permSvc.revokePermissions(amSvc.roleName(associationId, departmentId), permissionList);
+    }
+
+    @DeleteMapping("/{associationId}/departments")
+    public ApiResponse<Boolean> deletePerm(@PathVariable(value = "associationId") String associationId) {
+        return amSvc.deleteAllDepartments(associationId);
     }
 }
