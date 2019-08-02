@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.entity.AuthRequest;
 import exort.apiserver.entity.SystemAdminConstants;
 import exort.apiserver.service.AuthService;
+import exort.apiserver.service.AuthService.AuthRequest;
 import lombok.extern.log4j.Log4j2;
 
 @Configuration
@@ -31,7 +31,7 @@ public class SysAdminInitConfig {
 
 	@Bean
 	public void initSystemAdminAccount() throws ApiError {
-		AuthRequest req = new AuthRequest(SYS_ADMIN_USER_USERNAME,SYS_ADMIN_USER_PASSWORD);
+		AuthService.AuthRequest req = new AuthRequest(SYS_ADMIN_USER_USERNAME,SYS_ADMIN_USER_PASSWORD);
 		if(authSvc.login(req).get("token") != null)return;
 		log.info("Cannot found admin account, now registering...");
 

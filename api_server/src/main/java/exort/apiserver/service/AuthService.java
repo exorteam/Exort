@@ -1,13 +1,37 @@
 package exort.apiserver.service;
 
 import java.util.Map;
-import exort.apiserver.entity.AuthRequest;
-import exort.apiserver.entity.AuthResponse;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 public interface AuthService {
 
-	public Map          login(AuthRequest req);
-	public String       register(AuthRequest req);
-	public AuthResponse auth(String token);
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	class AuthRequest {
+
+		private String username;
+		private String password;
+
+	}
+
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	class AuthResponse {
+
+		private int id;
+		private String username;
+
+	}
+
+
+	Map          login(AuthRequest req);
+	String       register(AuthRequest req);
+	AuthResponse auth(String token);
 
 }
