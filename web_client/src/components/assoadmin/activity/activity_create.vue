@@ -54,7 +54,7 @@
             </FormItem>
             <FormItem label="上传活动宣传图" >
                 <div>
-                    <b-form-file v-model="form.data.image" ref="file-input" style="width: 310px; "></b-form-file>
+                    <b-form-file v-model="file" ref="file-input" style="width: 310px; "></b-form-file>
                     <b-button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</b-button>
                     <img  :src="form.data.image"  style="width: 360px; height: 200px"/>
                 </div>
@@ -106,6 +106,7 @@ export default {
     },
     data(){
         return {
+            file: null,
             fileList: [],
             associationIndex: "",
             associationList:[{
@@ -166,10 +167,12 @@ export default {
             let assos = []
             assos.push(this.associationIndex)
             data.associationIds = assos
+
+            this.form.onshow = false
             
-            if (this.form.data.image!="") {
+            if (this.file!="") {
                 let reader = new FileReader()
-                reader.readAsDataURL(this.form.data.image)
+                reader.readAsDataURL(this.file)
                 reader.onload=(e)=>{
                     data.image = e.target.result
                     console.log(data)
@@ -186,8 +189,22 @@ export default {
                         console.log(e)
                     })
                 }
+            }else{
+                data.image = this.form.data.image
+                console.log(data)
+                this.axios({
+                    method:"post",
+                    url:"/activities",
+                    data:data
+                })
+                .then(response => {
+                    console.log("Successfully!")
+                    console.log(response.data.data)
+                })
+                .catch(e => {
+                    console.log(e)
+                })
             }
-            this.form.onshow = false
         },
         info_cancel(){
             this.form.onshow = false
@@ -199,11 +216,11 @@ export default {
                 url: "/associations/users/"+userid+"/associations",
             })
             .then(response => {
-                console.log(response.data)
-                // if(response.data.data!=null){
-                //     let originList = response.data.data.content
-                //     this.setAssociationList(originList)
-                // }s
+                console.log(response.data.data)
+                if(response.data.data!=null){
+                    let originList = response.data.data
+                    this.setAssociationList(originList)
+                }
             })
             .catch(e => {
                 console.log(e)
@@ -220,7 +237,7 @@ export default {
                 }
                 this.associationList.push(data)
             }
-            // console.log(this.associationList)
+            console.log(this.associationList)
         }
     },
     mounted() {
