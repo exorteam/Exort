@@ -284,14 +284,82 @@
 
 - HTTP Request
 
+  **GET** `/receivers/{receiverId}/notices`
+
+- Response
+
+  | Code                      | Description                                |
+  | ------------------------- | ------------------------------------------ |
+  | 200 [_Notice[]_](#Notice) | 成功，得到该用户接收的所有通知（可以为空） |
+  | 404 "notFound"            | 不存在此用户                               |
+
+- Example
+
+  ```json
+  >>> GET /receivers/1/notices
+  
+  <<< 200
+  {
+    "data": [
+        {
+      	"id" : 11,
+      	"userId": 111,
+    		"type": "systemNotice",
+    		"receiver": null,
+    		"title" : "try",
+    		"content" : "try",
+      	"time" : "2019-07-10T03:19:06.618Z",
+    	},{
+      	"id" : 12,
+      	"userId": 111,
+    		"type": "systemNotice",
+    		"receiver": null,
+    		"title" : "try",
+    		"content" : "try",
+      	"time" : "2019-07-10T03:19:06.618Z",
+    	}
+    ],
+    "error": "",
+    "message": ""
+  }
+  ```
+
+  ```json
+  >>> GET /receivers/12/notices
+  
+  <<< 200
+  {
+    "data": [],
+    "error": "",
+    "message": ""
+  }
+  ```
+
+  ```json
+  >>> GET /receivers/12/notices
+  
+  <<< 404
+  {
+    "data": null,
+    "error": "notFound",
+    "message": "不存在此用户"
+  }
+  ```
+
+
+
+### 获取用户创建的所有通知
+
+- HTTP Request
+
   **GET** `/users/{userId}/notices`
 
 - Response
 
-  | Code                      | Description                            |
-  | ------------------------- | -------------------------------------- |
-  | 200 [_Notice[]_](#Notice) | 成功，得到该用户的所有通知（可以为空） |
-  | 404 "notFound"            | 不存在此用户                           |
+  | Code                      | Description                                |
+  | ------------------------- | ------------------------------------------ |
+  | 200 [_Notice[]_](#Notice) | 成功，得到该用户创建的所有通知（可以为空） |
+  | 404 "notFound"            | 不存在此用户                               |
 
 - Example
 
@@ -303,7 +371,7 @@
     "data": [
         {
       	"id" : 11,
-      	"userId": 111,
+      	"userId": 1,
     		"type": "systemNotice",
     		"receiver": null,
     		"title" : "try",
@@ -345,6 +413,8 @@
     "message": "不存在此用户"
   }
   ```
+
+### 
 
 ### 获取某个通知
 
