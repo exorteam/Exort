@@ -286,6 +286,8 @@
 
   **GET** `/receivers/{receiverId}/notices`
 
+- Path Params
+
 - Response
 
   | Code                      | Description                                |
@@ -354,6 +356,12 @@
 
   **GET** `/users/{userId}/notices`
 
+- Path Params
+
+  | Parameters   | Description |
+  | ------------ | ----------- |
+  | `userId` int | 用户ID      |
+
 - Response
 
   | Code                      | Description                                |
@@ -414,13 +422,17 @@
   }
   ```
 
-### 
-
 ### 获取某个通知
 
 - HTTP Request
 
   **GET** `/notices/{noticeId}`
+
+- Path Params
+
+  | Parameters     | Description |
+  | -------------- | ----------- |
+  | `noticeId` int | 通知ID      |
 
 - Response
 
@@ -460,5 +472,3 @@
     "message": "不存在此通知"
   }
   ```
-
-### 
