@@ -6,22 +6,19 @@ import java.util.UUID;
 import com.google.common.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
-import exort.api.http.common.errorhandler.ApiError;
 import exort.apiserver.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class AuthServiceImpl extends RestTemplate implements AuthService {
 
 	@Value("${exort.auth.protocol:http}")
@@ -37,10 +34,14 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 	private final String jwtSecretKey = UUID.randomUUID().toString().substring(0,5);
 	
 	public ApiResponse<String> login(AuthRequest req){
+		log.info("Login: "+req.getUsername()+"/"+req.getPassword());
+
 		final ApiResponse<Integer> res = request(new TypeToken<Integer>(){},
-				HttpMethod.POST,"/validate",req);
+				req,HttpMethod.POST,"/validate");
+
+		log.info("Successfully exchanged validation");
 		if(res.getData() == null){
-			throw new ApiError(403,"LoginErr","Null user ID when login");
+			return new ApiResponse("LoginFailed","Wrong username or password");
 		}
 
 		return new ApiResponse(generateToken(res.getData(),req.getUsername()));

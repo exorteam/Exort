@@ -5,6 +5,7 @@ package exort.apiserver.controller;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
 
 @RestController
 @RequestMapping(path="/associations")
+@DependsOn({"initSystemAdminAccount"})
 public class AssociationManagerController{
     // Get operations are open
     // Update operations need specific permission
