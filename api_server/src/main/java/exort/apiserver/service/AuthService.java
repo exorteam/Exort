@@ -1,7 +1,6 @@
 package exort.apiserver.service;
 
-import java.util.Map;
-
+import exort.api.http.common.entity.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,8 +27,8 @@ public interface AuthService {
 	}
 
 
-	public Map          login(AuthRequest req);
-	public String       register(AuthRequest req);
-	public AuthResponse auth(String token);
+	public ApiResponse<String>	login(AuthRequest req);
+	public ApiResponse<Integer> register(AuthRequest req);
+	public AuthResponse 		parseToken(String token);
 
 }

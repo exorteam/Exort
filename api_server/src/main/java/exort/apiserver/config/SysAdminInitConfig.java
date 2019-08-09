@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
@@ -39,27 +40,24 @@ public class SysAdminInitConfig {
 
 	@Bean
 	public SystemAdministratorInfo initSystemAdminAccount() throws ApiError {
-		AuthRequest req = new AuthRequest(SYS_ADMIN_USER_USERNAME,SYS_ADMIN_USER_PASSWORD);
-		String token = String.valueOf(authSvc.login(req).get("token"));
+		final AuthRequest req = new AuthRequest(SYS_ADMIN_USER_USERNAME,SYS_ADMIN_USER_PASSWORD);
+		final String token = authSvc.login(req).getData();
+		Integer id = null;
+		
 		if(token == null){
 			log.info("Cannot found admin account, now registering...");
 
-			if(!authSvc.register(req).equals("Register success")){
+			final ApiResponse<Integer> res = authSvc.register(req);
+			if(res.getData() == null){
 				throw new ApiError(400,"adminAccountInitErr","Failed to create admin account{usr:"+SYS_ADMIN_USER_USERNAME+",pwd:"+SYS_ADMIN_USER_PASSWORD+"}");
 			}
+			id = res.getData();
 
-			token = String.valueOf(authSvc.login(req).get("token"));
-			if(token == null){
-				throw new ApiError(400,"adminAccountInitErr","Failed to log in as admin account{usr:"+SYS_ADMIN_USER_USERNAME+",pwd:"+SYS_ADMIN_USER_PASSWORD+"}");
-			}
+		}
+		else{
+			id = authSvc.parseToken(token).getId();
 		}
 
-		AuthResponse authRes = authSvc.auth(token);
-		if(authRes == null || authRes.getUsername() == null){
-			throw new ApiError(400,"adminAccountInitErr","Failed to auth admin account{usr:"+SYS_ADMIN_USER_USERNAME+",pwd:"+SYS_ADMIN_USER_PASSWORD+"}");
-		}
-
-		int id = authRes.getId();
 		if(permSvc.getRole(SYS_ADMIN_ROLE_NAME).getData() == null){
 			log.info("Cannot found admin role, now creating...");
 
