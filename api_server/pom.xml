@@ -49,6 +49,8 @@
             <artifactId>guava</artifactId>
             <version>20.0</version>
         </dependency>
+
+		<!--These 4 dependencies below are needed to fix java.lang.NoClassDefFoundError-->
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -69,6 +71,7 @@
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>

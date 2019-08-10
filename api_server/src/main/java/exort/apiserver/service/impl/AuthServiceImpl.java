@@ -48,7 +48,7 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 
 	public ApiResponse<Integer> register(AuthRequest req){
 		return request(new TypeToken<Integer>(){},
-				HttpMethod.POST,"/register",req);
+				req,HttpMethod.POST,"/register");
 	}
 
 	private String generateToken(int id,String usr){
