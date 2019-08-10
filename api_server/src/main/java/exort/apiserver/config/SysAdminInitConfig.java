@@ -38,7 +38,7 @@ public class SysAdminInitConfig {
 		public final String 	SCOPE_NAME;
 	}
 
-	@Bean("initSystemAdminAccount")
+	@Bean
 	public SystemAdministratorInfo initSystemAdminAccount() throws ApiError {
 		log.info("Init system administrator..");
 
@@ -57,9 +57,7 @@ public class SysAdminInitConfig {
 
 		}
 		else{
-			log.info("parsing token");
 			id = authSvc.parseToken(token).getId();
-			log.info("init id: "+String.valueOf(id));
 		}
 
 		if(permSvc.getRole(SYS_ADMIN_ROLE_NAME).getData() == null){

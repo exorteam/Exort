@@ -39,7 +39,6 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 		final ApiResponse<Integer> res = request(new TypeToken<Integer>(){},
 				req,HttpMethod.POST,"/validate");
 
-		log.info("Successfully exchanged validation");
 		if(res.getData() == null){
 			return new ApiResponse("LoginFailed","Wrong username or password");
 		}
