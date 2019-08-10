@@ -1,21 +1,24 @@
 package exort.apiserver.service.impl;
 
-import java.util.Map;
+import java.util.Date;
+import java.util.UUID;
+
+import com.google.common.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
-import exort.apiserver.entity.AuthRequest;
-import exort.apiserver.entity.AuthResponse;
+import exort.api.http.common.entity.ApiResponse;
 import exort.apiserver.service.AuthService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class AuthServiceImpl extends RestTemplate implements AuthService {
 
 	@Value("${exort.auth.protocol:http}")
@@ -28,31 +31,41 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 	}
 
 	private String urlBase = "http://202.120.40.8:30728";
+	private final String jwtSecretKey = UUID.randomUUID().toString().substring(0,5);
 	
-	public Map login(AuthRequest req){
-		HttpHeaders headers = new HttpHeaders();
-        HttpMethod method = HttpMethod.POST;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<AuthRequest> requestEntity = new HttpEntity<>(req,headers);
-		ResponseEntity<Map> response = exchange(urlBase+"/login",method,requestEntity,Map.class);
-		return response.getBody();
+	public ApiResponse<String> login(AuthRequest req){
+		log.info("Login: "+req.getUsername()+"/"+req.getPassword());
+
+		final ApiResponse<Integer> res = request(new TypeToken<Integer>(){},
+				req,HttpMethod.POST,"/validate");
+
+		if(res.getData() == null){
+			return new ApiResponse("LoginFailed","Wrong username or password");
+		}
+
+		return new ApiResponse(generateToken(res.getData(),req.getUsername()));
 	}
 
-	public String register(AuthRequest req){
-		HttpHeaders headers = new HttpHeaders();
-        HttpMethod method = HttpMethod.POST;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<AuthRequest> requestEntity = new HttpEntity<>(req,headers);
-		ResponseEntity<String> response = exchange(urlBase+"/register",method,requestEntity,String.class);
-		return response.getBody();
+	public ApiResponse<Integer> register(AuthRequest req){
+		return request(new TypeToken<Integer>(){},
+				req,HttpMethod.POST,"/register");
 	}
 
-	public AuthResponse auth(String token){
-		HttpHeaders headers = new HttpHeaders();
-        HttpMethod method = HttpMethod.POST;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> requestEntity = new HttpEntity<>(token,headers);
-		ResponseEntity<AuthResponse> response = exchange(urlBase+"/auth",method,requestEntity,AuthResponse.class);
-		return response.getBody();
+	private String generateToken(int id,String usr){
+		return Jwts.builder()
+			.setSubject(usr)
+			.claim("id", id)
+			.setIssuedAt(new Date())
+			.signWith(SignatureAlgorithm.HS256, jwtSecretKey)
+			.compact();
 	}
+
+	public AuthResponse parseToken(String token){
+		final Claims claims = Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token).getBody();
+		AuthResponse response = new AuthResponse();
+		response.setUsername(claims.getSubject());
+		response.setId(claims.get("id",Integer.class));
+		return response;
+	}
+
 }

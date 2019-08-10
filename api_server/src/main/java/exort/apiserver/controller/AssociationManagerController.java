@@ -26,6 +26,7 @@ import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
