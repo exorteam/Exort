@@ -9,15 +9,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.GenericFilterBean;
 
-import exort.apiserver.service.AuthService;
+import exort.apiserver.component.JwtResolver;
+import exort.apiserver.service.AuthService.AuthResponse;
 
 public class JwtFilter extends GenericFilterBean {
-
-	@Autowired
-	private AuthService authService;
 
 	@Override
 	public void doFilter(final ServletRequest req, final ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -43,7 +40,16 @@ public class JwtFilter extends GenericFilterBean {
 
             // Then get the JWT token from authorization
             final String token = authHeader.substring(7);
-			final int id = authService.parseToken(token).getId();
+			final AuthResponse authRes = JwtResolver.parseToken(token);
+			
+			if(authRes == null){
+				throw new ServletException("Auth service parse returns null");
+			}
+
+			Integer id = authRes.getId();
+			if(id == null){
+				throw new ServletException("Cannot find ID in parsed token");
+			}
 
 			request.setAttribute("id", id);
 
