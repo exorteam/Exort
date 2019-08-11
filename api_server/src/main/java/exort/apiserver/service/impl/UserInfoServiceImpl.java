@@ -3,16 +3,15 @@ package exort.apiserver.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.common.reflect.TypeToken;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
+import exort.api.http.common.entity.ApiResponse;
 import exort.apiserver.service.UserInfoService;
 import lombok.extern.log4j.Log4j2;
 
@@ -32,47 +31,34 @@ public class UserInfoServiceImpl extends RestTemplate implements UserInfoService
 	}
 
 
-	public UserInfo getUserInfo(int id){
-		HttpHeaders headers = new HttpHeaders();
-		HttpMethod method = HttpMethod.GET;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Object> requestEntity = new HttpEntity<>(null,headers);
-		ResponseEntity<RestResponse<UserInfo>> response = exchange(urlBase+"/"+String.valueOf(id),method,requestEntity,new ParameterizedTypeReference<RestResponse<UserInfo>>(){});
-		return (UserInfo)response.getBody().getData();
+	public ApiResponse<UserInfo> getUserInfo(int id){
+		return request(new TypeToken<UserInfo>(){},
+				HttpMethod.GET,"/users/info",Integer.valueOf(id));
 	}
 
-	public UserInfo updateUserInfo(int id,UserInfo info){
-		HttpHeaders headers = new HttpHeaders();
-		HttpMethod method = HttpMethod.POST;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserInfo> requestEntity = new HttpEntity<>(info,headers);
-		ResponseEntity<RestResponse<UserInfo>> response = exchange(urlBase+"/"+String.valueOf(id),method,requestEntity,new ParameterizedTypeReference<RestResponse<UserInfo>>(){});
-		return response.getBody().getData();
+	public ApiResponse<UserInfo> updateUserInfo(int id,UserInfo info){
+		return request(new TypeToken<UserInfo>(){},
+				info,HttpMethod.POST,"/users/info",Integer.valueOf(id));
 	}
 
-	public boolean disableUser(int id,boolean disabled){
+	public ApiResponse<Boolean> disableUser(int id,boolean disabled){
 		HashMap<String,Boolean> param = new HashMap<>();
 		param.put("disabled",disabled);
-		RestResponse<Object> response = patchForObject(urlBase+"/"+String.valueOf(id),param,RestResponse.class);
-		return response.getData() != null;
+		return patchForObject(urlBase+"/"+String.valueOf(id),param,new ParameterizedTypeReference<ApiResponse<Boolean>>(){});
+		this.pathfo
 	}
 
-	public List getUserInfoInBatch(List<Integer> ids){
-		HttpHeaders headers = new HttpHeaders();
-		HttpMethod method = HttpMethod.GET;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<List<Integer>> requestEntity = new HttpEntity<>(ids,headers);
-		log.info(ids.size());
-		ResponseEntity<RestResponse<List<UserInfo>>> response = exchange(urlBase,method,requestEntity,new ParameterizedTypeReference<RestResponse<List<UserInfo>>>(){});
-		return response.getBody().getData();
+	public ApiResponse<List<UserInfo>> getUserInfoInBatch(List<Integer> ids){
+		return request(new TypeToken<UserInfo>(){},
+				ids,HttpMethod.GET,"/users/info");
 	}
 
-	public List getUserInfoByPage(int pageNum,int pageSize,String sortBy){
+	public ApiResponse<List<UserInfo>> getUserInfoByPage(int pageNum,int pageSize,String sortBy){
 		HashMap<String,Object> params = new HashMap<>();
 		params.put("pageNum",Integer.valueOf(pageNum));
 		params.put("pageSize",Integer.valueOf(pageSize));
 		params.put("sortBy",sortBy);
-		return (List)getForEntity(urlBase+"/page",RestResponse.class,params).getBody().getData();
+		return getForEntity(urlBase+"/page",new ParameterizedTypeReference<ApiResponse<List<UserInfo>>>(){},params);
 	}
 
 }

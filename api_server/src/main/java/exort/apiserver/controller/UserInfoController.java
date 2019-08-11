@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
 import exort.apiserver.service.UserInfoService;
@@ -32,44 +34,42 @@ public class UserInfoController {
 	private SystemAdministratorInfo sysAdmin;
 
 	@GetMapping("/{id}")
-	public UserInfo getUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId){
+	public ApiResponse<UserInfo> getUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId){
 		log.info("Operator("+String.valueOf(operatorId)+") get user info of user("+String.valueOf(userId)+").");
 		return infoSvc.getUserInfo(userId);
 	}
 
 	@GetMapping("/self")
-	public UserInfo getCurrentUserInfo(@RequestAttribute("id") int operatorId){
+	public ApiResponse<UserInfo> getCurrentUserInfo(@RequestAttribute("id") int operatorId){
 		log.info("Operator("+String.valueOf(operatorId)+") get current user info.");
 		return infoSvc.getUserInfo(operatorId);
 	}
 
 	@PostMapping("/{id}")
-	public UserInfo updateUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestBody UserInfo info){
+	public ApiResponse<UserInfo> updateUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestBody UserInfo info){
 		log.info("Operator("+String.valueOf(operatorId)+") update user info of user("+String.valueOf(userId)+").");
 		if(operatorId != userId){
-			log.warn("Updating operation from another user should be rejected");
-			return null;
+			throw new ApiError(403,"PermErr","Updating operation from another user should be rejected");
 		}
 		return infoSvc.updateUserInfo(userId,info);
 	}
 
 	@PatchMapping("/{id}")
-	public boolean disableUserById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
+	public ApiResponse<Boolean> disableUserById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
 		log.info("Operator("+String.valueOf(operatorId)+") toggle disability for user("+String.valueOf(userId)+").");
 		if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME).getData() == null){
-			log.warn("Disabling by non-admin user should be rejected");
-			return false;
+			throw new ApiError(403,"PermErr","Disabling by non-admin user should be rejected");
 		}
 		return infoSvc.disableUser(userId,disabled);
 	}
 
 	@PostMapping
-	public List getUserInfoInBatch(@RequestBody List<Integer> ids){
+	public ApiResponse<List<UserInfo>> getUserInfoInBatch(@RequestBody List<Integer> ids){
 		return infoSvc.getUserInfoInBatch(ids);
 	}
 
 	@GetMapping("/page")
-	public List getUserInfoByPage(@RequestParam int pageNum,@RequestParam int pageSize,@RequestParam String sortBy){
+	public ApiResponse<List<UserInfo>> getUserInfoByPage(@RequestParam int pageNum,@RequestParam int pageSize,@RequestParam String sortBy){
 		return infoSvc.getUserInfoByPage(pageNum,pageSize,sortBy);
 	}
 
