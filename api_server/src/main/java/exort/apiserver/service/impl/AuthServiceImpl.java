@@ -20,13 +20,8 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
     @Value("${exort.auth.endpoint:localhost}")
-    public void setEndpoint(String endpoint) {
-	   	super.setEndpoint(endpoint);
-		urlBase = "http://"+endpoint;
-	}
+    public void setEndpoint(String endpoint) { super.setEndpoint(endpoint); }
 
-	private String urlBase = "http://202.120.40.8:30728";
-	
 	public ApiResponse<String> login(AuthRequest req){
 		log.info("Login: "+req.getUsername()+"/"+req.getPassword());
 
