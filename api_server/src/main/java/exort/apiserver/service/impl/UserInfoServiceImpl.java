@@ -46,7 +46,9 @@ public class UserInfoServiceImpl extends RestTemplate implements UserInfoService
 	}
 
 	public ApiResponse<List<UserInfo>> getUserInfoByPage(int pageNum,int pageSize,String sortBy){
-		return null;
+		return request(new TypeToken<List<UserInfo>>(){},
+				HttpMethod.GET,"/users/info/page?pageNum={pageNum}&pageSize={pageSize}&sortBy={sortBy}",
+				Integer.valueOf(pageNum),Integer.valueOf(pageSize),sortBy);
 	}
 
 }

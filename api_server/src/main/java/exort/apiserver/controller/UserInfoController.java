@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
@@ -68,9 +69,9 @@ public class UserInfoController {
 		return infoSvc.getUserInfoInBatch(ids);
 	}
 
-	@GetMapping("/page")
-	public ApiResponse<List<UserInfo>> getUserInfoByPage(@RequestParam int pageNum,@RequestParam int pageSize,@RequestParam String sortBy){
-		return infoSvc.getUserInfoByPage(pageNum,pageSize,sortBy);
+	@PostMapping("/page")
+	public ApiResponse<List<UserInfo>> getUserInfoByPage(@RequestBody PageQuery pageQuery){
+		return infoSvc.getUserInfoByPage(pageQuery.getPageNum(),pageQuery.getPageSize(),pageQuery.getSortBy());
 	}
 
 
