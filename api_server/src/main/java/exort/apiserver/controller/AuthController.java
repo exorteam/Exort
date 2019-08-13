@@ -27,7 +27,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/auth")
-	public AuthResponse auth(@RequestBody String token){
+	public ApiResponse<AuthResponse> auth(@RequestBody String token){
 		return authService.parseToken(token);
 	}
 

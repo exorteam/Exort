@@ -40,8 +40,8 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 				req,HttpMethod.POST,"/register");
 	}
 
-	public AuthResponse parseToken(String token){
-		return JwtResolver.parseToken(token);
+	public ApiResponse<AuthResponse> parseToken(String token){
+		return new ApiResponse(JwtResolver.parseToken(token));
 	}
 
 }

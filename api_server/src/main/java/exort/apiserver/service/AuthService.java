@@ -27,8 +27,8 @@ public interface AuthService {
 	}
 
 
-	public ApiResponse<String>	login(AuthRequest req);
-	public ApiResponse<Integer> register(AuthRequest req);
-	public AuthResponse 		parseToken(String token);
+	public ApiResponse<String>			login(AuthRequest req);
+	public ApiResponse<Integer> 		register(AuthRequest req);
+	public ApiResponse<AuthResponse>	parseToken(String token);
 
 }

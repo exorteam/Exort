@@ -57,7 +57,7 @@ public class SysAdminInitConfig {
 
 		}
 		else{
-			id = authSvc.parseToken(token).getId();
+			id = authSvc.parseToken(token).getData().getId();
 		}
 
 		if(permSvc.getRole(SYS_ADMIN_ROLE_NAME).getData() == null){
