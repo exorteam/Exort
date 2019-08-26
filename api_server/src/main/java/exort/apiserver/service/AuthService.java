@@ -26,8 +26,19 @@ public interface AuthService {
 
 	}
 
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class LoginResponse {
 
-	public ApiResponse<String>			login(AuthRequest req);
+		private int uid;
+		private String token;
+		private String rtoken;
+
+	}
+
+
+	public ApiResponse<LoginResponse>	login(AuthRequest req);
 	public ApiResponse<Integer> 		register(AuthRequest req);
 	public ApiResponse<AuthResponse>	parseToken(String token);
 

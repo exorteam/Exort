@@ -22,7 +22,7 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
     @Value("${exort.auth.endpoint:localhost}")
     public void setEndpoint(String endpoint) { super.setEndpoint(endpoint); }
 
-	public ApiResponse<String> login(AuthRequest req){
+	public ApiResponse<LoginResponse> login(AuthRequest req){
 		log.info("Login: "+req.getUsername()+"/"+req.getPassword());
 
 		final ApiResponse<Integer> res = request(new TypeToken<Integer>(){},
@@ -32,7 +32,10 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 			return new ApiResponse("LoginFailed","Wrong username or password");
 		}
 
-		return new ApiResponse(JwtResolver.generateToken(res.getData(),req.getUsername()));
+		final Integer uid = res.getData();
+		final String token = JwtResolver.generateToken(uid,req.getUsername());
+
+		return new ApiResponse(new LoginResponse(uid,token,token));
 	}
 
 	public ApiResponse<Integer> register(AuthRequest req){

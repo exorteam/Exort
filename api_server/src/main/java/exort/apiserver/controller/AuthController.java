@@ -9,6 +9,7 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.apiserver.service.AuthService;
 import exort.apiserver.service.AuthService.AuthRequest;
 import exort.apiserver.service.AuthService.AuthResponse;
+import exort.apiserver.service.AuthService.LoginResponse;
 
 @RestController
 public class AuthController {
@@ -17,7 +18,7 @@ public class AuthController {
 	private AuthService authService;
 
 	@PostMapping("/login")
-	public ApiResponse<String> login(@RequestBody AuthRequest req){
+	public ApiResponse<LoginResponse> login(@RequestBody AuthRequest req){
 		return authService.login(req);
 	}
 

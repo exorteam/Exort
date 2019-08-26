@@ -43,7 +43,7 @@ public class SysAdminInitConfig {
 		log.info("Init system administrator..");
 
 		final AuthRequest req = new AuthRequest(SYS_ADMIN_USER_USERNAME,SYS_ADMIN_USER_PASSWORD);
-		final String token = authSvc.login(req).getData();
+		final String token = authSvc.login(req).getData().getToken();
 		int id;
 		
 		if(token == null){
