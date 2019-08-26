@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Role;
 import exort.api.http.perm.service.PermService;
-import exort.apiserver.entity.AuthRequest;
-import exort.apiserver.entity.AuthResponse;
 import exort.apiserver.service.AuthService;
+import exort.apiserver.service.AuthService.AuthResponse;
+import exort.apiserver.service.AuthService.AuthRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

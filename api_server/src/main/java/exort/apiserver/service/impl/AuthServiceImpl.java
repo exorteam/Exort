@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
-import exort.apiserver.entity.AuthRequest;
-import exort.apiserver.entity.AuthResponse;
 import exort.apiserver.service.AuthService;
 
 @Service

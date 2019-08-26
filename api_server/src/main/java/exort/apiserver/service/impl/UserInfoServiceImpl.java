@@ -53,10 +53,8 @@ public class UserInfoServiceImpl extends RestTemplate implements UserInfoService
 	public boolean disableUser(int id,boolean disabled){
 		HashMap<String,Boolean> param = new HashMap<>();
 		param.put("disabled",disabled);
-		System.out.println(urlBase+"/"+String.valueOf(id));
-		ResponseEntity<RestResponse> response = exchange(urlBase+"/"+String.valueOf(id)+"/state",HttpMethod.PUT,new HttpEntity<>(Boolean.valueOf(disabled)),RestResponse.class);
-		System.out.println(response);
-		return response.getBody().getData() != null;
+		RestResponse<Object> response = patchForObject(urlBase+"/"+String.valueOf(id),param,RestResponse.class);
+		return response.getData() != null;
 	}
 
 	public List getUserInfoInBatch(List<Integer> ids){
