@@ -37,7 +37,7 @@
 
 <script>
 import TagChoose from '../../common/tag_choose.vue'
-import axios from 'axios'
+import {api} from '@/http'
 export default {
     components:{TagChoose},
     props: {
@@ -68,7 +68,7 @@ export default {
                     console.log(_self.form.description);
                     console.log(_self.form.tag.tagList);
                     console.log(imgFile);
-                    axios
+                    api
                     .post('http://localhost:8080/associations',
                         {
                             name:_self.form.name,
@@ -97,7 +97,7 @@ export default {
                 }
                 reader.onload=function(e) {
                     imgFile = e.target.result;
-                    axios
+                    api
                     .put('http://localhost:8080/associations/'+_self.form.assoId,{
                         name:_self.form.name,
                         description:_self.form.description,

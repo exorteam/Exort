@@ -8,10 +8,15 @@ import router from './router'
 import store from './store'
 import App from './App'
 
+// bootstrap vue
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(Vuex);
 Vue.use(VueCookies)
 Vue.use(iView);
+Vue.use(BootstrapVue);
 
 new Vue({
     el: '#app',

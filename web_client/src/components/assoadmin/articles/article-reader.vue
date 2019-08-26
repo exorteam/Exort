@@ -11,7 +11,7 @@
 </template>
 
 <script>
-
+import {api} from '@/http'
 export default {
 	name: "ArticleReader",
 	props:['id'],
@@ -23,7 +23,7 @@ export default {
 	methods: {
 		loadArticle: function(id){
 			// load article through axios
-			this.axios({
+			api({
 				method: 'get',
 				url:'/articles/'+id,
 			}).then((res)=>{
@@ -48,4 +48,3 @@ export default {
 	}
 }
 </script>
-

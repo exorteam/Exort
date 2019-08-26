@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import {api} from '@/http';
 
     // let tagrepo = ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座"]
 

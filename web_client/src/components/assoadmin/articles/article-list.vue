@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import {api} from '@/http'
 
 export default {
 	name: "ArticleList",
@@ -34,7 +35,7 @@ export default {
 	},
 	methods: {
 		loadArticles: function(keyword){
-			this.axios({
+			api({
 				method: 'post',
 				url:'/articles/list',
 				data: {
@@ -67,7 +68,7 @@ export default {
 		},
 		onClickDelete(id){
 			//console.log(id);
-			this.axios({
+			api({
 				method: 'delete',
 				url: '/articles/' + id,
 			}).then((res)=>{
@@ -87,5 +88,3 @@ export default {
 	}
 }
 </script>
-
-

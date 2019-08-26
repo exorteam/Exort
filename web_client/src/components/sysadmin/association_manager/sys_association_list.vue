@@ -106,11 +106,10 @@
 </template>
 
 <script>
-import Solid from '../../../assets/AssociationLogo/solid.jpg'
 import CreateAssociation from './create_association.vue'
 import TagChoose from '../../common/tag_choose.vue'
 import Application from './application.vue'
-import axios from 'axios'
+import {api} from '@/http'
 export default {
     name:'associationList',
     components:{CreateAssociation,TagChoose,Application},
@@ -314,50 +313,7 @@ export default {
                 { text: '已拒绝申请', value: 'refused' },
             ],
             inputDefaultValue : "",
-            AssoList: [
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // },
-                // {
-                //     name:"Test",
-                //     description:"描述",
-                //     tags:["q","w"],
-                //     logo:Solid
-
-                // }
-            ],
+            AssoList: [],
             assoSearch:{
                 keyword:"",
                 tags:"asd",
@@ -386,7 +342,7 @@ export default {
             this.form.onshow=true
         },
         deleteAssociation(item){
-            this.axios({
+            api({
 				method:'delete',
 				url:'/associations/'+item.id,
 			})
@@ -413,7 +369,7 @@ export default {
 
             console.log(this.form.assoState)
 
-            this.axios({
+            api({
 				method:'put',
                 url:'/associations/'+this.form.assoId+'/state',
                 data:{
@@ -475,7 +431,7 @@ export default {
             this.assoSearch.pageSize = this.pageProp.pageSize;
             this.assoSearch.tags = this.tag.tagList.join();
             this.getState();
-            this.axios({
+            api({
 				method:'get',
                 url:'/associations/',
                 params: {
@@ -530,7 +486,7 @@ export default {
                     reader.onload=function(e) {        //读取完毕后调用接口
                         imgFile = e.target.result;
                         console.log("_self.form.name:" + _self.form.name);
-                        axios
+                        api
                         .post('http://localhost:8080/associations',
                             {
                                 name:_self.form.name,
@@ -569,7 +525,7 @@ export default {
                     reader.onload=function(e) {        //读取完毕后调用接口
                         imgFile = e.target.result;
                         console.log(imgFile)
-                        axios
+                        api
                         .put('http://localhost:8080/associations/'+_self.form.assoId,
                             {
                                 name:_self.form.name,
@@ -592,7 +548,7 @@ export default {
                     };
                 }
                 else{
-                    axios
+                    api
                     .put('http://localhost:8080/associations/'+_self.form.assoId,
                         {
                             name:_self.form.name,
@@ -628,8 +584,7 @@ export default {
         }
     },
     mounted() {
-
-            this.axios({
+            api({
 				method:'get',
                 url:'/associations/',
                 params: {

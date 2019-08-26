@@ -49,10 +49,10 @@ module.exports = {
                     }
                 });
 
-                let sess_id = new_sess(apires.data.rtoken);
+                let sess_id = new_sess(apires.data.data.rtoken);
                 console.log('new session: ' + sess_id);
                 res.cookie('sess_id', sess_id, {httpOnly: true});
-                res.status(200).json({token: apires.data.token, uid: apires.data.uid});
+                res.status(200).json({token: apires.data.data.token, uid: apires.data.data.uid});
             } catch (err) {
                 if (err.response && err.response.data) {
                     res.status(401).json(err.response.data);
@@ -75,9 +75,9 @@ module.exports = {
                             'rtoken': sessions[sess_id]
                         }
                     });
-                    console.log('new rtoken: ' + apires.data.rtoken);
-                    sessions[sess_id] = apires.data.rtoken;
-                    res.status(200).json({token: apires.data.token, uid: apires.data.uid, username: apires.data.username});
+                    console.log('new rtoken: ' + apires.data.data.rtoken);
+                    sessions[sess_id] = apires.data.data.rtoken;
+                    res.status(200).json((({token, uid, username}) => ({token, uid, username}))(apires.data.data));
                 } catch (err) {
                     console.log('token failed');
                     delete sessions[sess_id];

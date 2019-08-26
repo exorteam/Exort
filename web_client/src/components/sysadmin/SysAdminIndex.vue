@@ -14,13 +14,19 @@
                     概览
                 </MenuItem>
                 <MenuGroup title="社团管理">
-                    <MenuItem name="asso-list">
+                    <MenuItem name="associationList" :to="{name: 'associationList'}">
                         <Icon type="md-albums"/>
                         社团列表
                     </MenuItem>
                     <MenuItem name="asso-application">
                         <Icon type="ios-hand"/>
                         社团申请
+                    </MenuItem>
+                </MenuGroup>
+                <MenuGroup title="文章管理">
+                    <MenuItem name="ArticleList" :to="{name:'ArticleList'}">
+                        <Icon type="md-people"/>
+                        文章列表
                     </MenuItem>
                 </MenuGroup>
                 <MenuGroup title="用户管理">

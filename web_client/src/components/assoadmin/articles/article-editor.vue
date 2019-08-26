@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import {api} from '@/http'
 
 export default {
 	name: "ArticleEditor",
@@ -39,7 +40,7 @@ export default {
 	methods: {
 		loadArticle: function(id){
 			// load article through axios
-			this.axios({
+			api({
 				method: 'get',
 				url:'/articles/'+id,
 			}).then((res)=>{
@@ -58,7 +59,7 @@ export default {
 		},
 		commitChanges: function(){
 			if(this.isUpdating){
-				this.axios({
+				api({
 					method: 'put',
 					url: '/articles/' + this.id,
 					data: {
@@ -68,10 +69,11 @@ export default {
 					}
 				}).then((res)=>{
 					console.log(res);
+					this.$router.push({name: 'ArticleList'});
 				})
 			}
 			else{
-				this.axios({
+				api({
 					method: 'post',
 					url: '/articles',
 					data: {
@@ -81,9 +83,7 @@ export default {
 					}
 				}).then((res)=>{
 					console.log(res);
-					if(res.data.data){
-						this.$router.push({name: 'Articles'});
-					}
+					this.$router.push({name: 'ArticleList'});
 				})
 			}
 		}
@@ -99,5 +99,3 @@ export default {
 	}
 }
 </script>
-
-
