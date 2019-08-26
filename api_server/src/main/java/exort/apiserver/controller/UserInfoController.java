@@ -109,9 +109,13 @@ public class UserInfoController {
         for (Long i: res.getContent()) {
             uids.add(i.intValue());
         }
-        List<UserInfo> users = infoSvc.getUserInfoInBatch(uids);
-        System.out.println(users);
-        return new ApiResponse<>(new PagedData<>(res.getPageNum(), res.getPageSize(), res.getTotalSize(), users));
+        ApiResponse<List<UserInfo>> users = infoSvc.getUserInfoInBatch(uids);
+        if (users.getData() != null) {
+            System.out.println(users);
+            return new ApiResponse<>(new PagedData<>(res.getPageNum(), res.getPageSize(), res.getTotalSize(), users.getData()));
+        } else {
+            return (ApiResponse)users;
+        }
     }
 
     @PostMapping("/{id}/grant/{scope}")
