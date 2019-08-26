@@ -2,45 +2,51 @@ package exort.apiserver.controller;
 
 import java.util.Map;
 
-import exort.apiserver.entity.AuthTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.errorhandler.ApiError;
 import exort.apiserver.service.AuthService;
 import exort.apiserver.service.AuthService.AuthRequest;
 import exort.apiserver.service.AuthService.AuthResponse;
+import exort.apiserver.service.AuthService.LoginResponse;
+import exort.apiserver.service.AuthService.RefreshResponse;
 
 @RestController
+@RequestMapping(path="/auth")
 public class AuthController {
 
 	@Autowired
-	private AuthService authService;
+	private AuthService authSvc;
 
-	@PostMapping("/auth/login")
-	public ResponseEntity login(@RequestBody AuthRequest req){
-		String token = (String)authService.login(req).get("token");
-		if (token == null) {
-			return new ResponseEntity<>("{\"error\":\"LoginFailed\",\"message\":\"Wrong username or password.\"}", HttpStatus.UNAUTHORIZED);
-		} else {
-			AuthResponse r = authService.auth(token);
-			return new ResponseEntity<>(new AuthTokenResponse(token, token, r.getId(), r.getUsername()), HttpStatus.OK);
+	@PostMapping("/login")
+	public ApiResponse<LoginResponse> login(@RequestBody AuthRequest req){
+		return authSvc.login(req);
+	}
+
+	@PostMapping("/register")
+	public ApiResponse<Integer> register(@RequestBody AuthRequest req){
+		return authSvc.register(req);
+	}
+
+	@PostMapping("/auth")
+	public ApiResponse<AuthResponse> auth(@RequestBody String token){
+		return authSvc.parseToken(token);
+	}
+
+	@PostMapping("/token")
+	public ApiResponse<RefreshResponse> refreshToken(@RequestBody Map<String,String> req){
+		final String rtoken = req.get("rtoken");
+		if(rtoken == null){
+			throw new ApiError(403,"RequestErr","Cannot find arg \"rtoken\" in request");
 		}
-	}
-
-	@PostMapping("/auth/token")
-	public AuthTokenResponse refreshToken(@RequestBody Map<String, String> body) {
-		String rtoken = body.get("rtoken");
-		AuthResponse r = authService.auth(rtoken);
-		return new AuthTokenResponse(rtoken, rtoken, r.getId(), r.getUsername());
-	}
-
-	@PostMapping("/auth/register")
-	public String register(@RequestBody AuthRequest req){
-		return authService.register(req);
+		return authSvc.refreshToken(rtoken);
 	}
 
 }

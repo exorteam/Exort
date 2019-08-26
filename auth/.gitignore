@@ -34,3 +34,5 @@ build/
 .DS_Store
 mvnw
 mvnw.cmd
+
+application*.properties

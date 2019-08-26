@@ -1,7 +1,6 @@
 package exort.apiserver.service;
 
-import java.util.Map;
-
+import exort.api.http.common.entity.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,29 +8,51 @@ import lombok.NoArgsConstructor;
 public interface AuthService {
 
 	@Data
-	@NoArgsConstructor
 	@AllArgsConstructor
-	class AuthRequest {
+	public class AuthRequest {
 
 		private String username;
 		private String password;
 
 	}
 
-
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
-	class AuthResponse {
+	public class AuthResponse {
 
 		private int id;
 		private String username;
 
 	}
 
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class LoginResponse {
 
-	Map          login(AuthRequest req);
-	String       register(AuthRequest req);
-	AuthResponse auth(String token);
+		private int uid;
+		private String token;
+		private String rtoken;
+
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class RefreshResponse {
+
+		private int uid;
+		private String username;
+		private String token;
+		private String rtoken;
+
+	}
+
+
+	public ApiResponse<LoginResponse>	login(AuthRequest req);
+	public ApiResponse<Integer> 		register(AuthRequest req);
+	public ApiResponse<AuthResponse>	parseToken(String token);
+	public ApiResponse<RefreshResponse> refreshToken(String token);
 
 }
