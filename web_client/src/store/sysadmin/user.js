@@ -43,23 +43,13 @@ const actions = {
                 pageSize: pageSize || null
             }
         }).then(res => {
-            if (res.data) {
-                commit('setUserList', {
-                    list: res.data.content,
-                    pageNum: res.data.pageNum,
-                    pageSize: res.data.pageSize,
-                    totalSize: res.data.totalSize
-                });
-                resolve();
-            } else {
-                commit('setUserList'), {
-                    list: [],
-                    pageNum: 0,
-                    pageSize: 20,
-                    totalSize: 0
-                };
-                reject();
-            }
+            commit('setUserList', {
+                list: res.data.data.content,
+                pageNum: res.data.data.pageNum,
+                pageSize: res.data.data.pageSize,
+                totalSize: res.data.data.totalSize
+            });
+            resolve();
         }).catch(err => {
             commit('setUserList'), {
                 list: [],
@@ -80,7 +70,7 @@ const actions = {
                     disabled
                 }
             }).then(res => {
-                if (res.data) {
+                if (res.data.data) {
                     commit('setUserState', {index, disabled});
                     resolve();
                 } else {
@@ -100,16 +90,12 @@ const actions = {
                 method: 'get',
                 url: '/users/' + user.id + '/roles/' + scope
             }).then(res => {
-                if (res.data) {
-                    commit('setCurUser', {
-                        user,
-                        scope,
-                        roles: res.data
-                    });
-                    resolve();
-                } else {
-                    reject(res);
-                }
+                commit('setCurUser', {
+                    user,
+                    scope,
+                    roles: res.data.data
+                });
+                resolve();
             }).catch(err => {
                 reject(err);
             })
@@ -130,16 +116,12 @@ const actions = {
                 url: '/users/' + user.id + '/grant/' + scope,
                 data: [role.name]
             }).then(res => {
-                if (res.data) {
-                    commit('setCurUser', {
-                        user,
-                        scope,
-                        roles: res.data
-                    });
-                    resolve();
-                } else {
-                    reject(res);
-                }
+                commit('setCurUser', {
+                    user,
+                    scope,
+                    roles: res.data.data
+                });
+                resolve();
             }).catch(err => {
                 reject(err);
             })
@@ -155,16 +137,12 @@ const actions = {
                 url: '/users/' + user.id + '/revoke/' + scope,
                 data: [role.name]
             }).then(res => {
-                if (res.data) {
-                    commit('setCurUser', {
-                        user,
-                        scope,
-                        roles: res.data
-                    });
-                    resolve();
-                } else {
-                    reject(res);
-                }
+                commit('setCurUser', {
+                    user,
+                    scope,
+                    roles: res.data.data
+                });
+                resolve();
             }).catch(err => {
                 reject(err);
             })

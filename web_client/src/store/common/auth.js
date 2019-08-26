@@ -81,7 +81,7 @@ const actions = {
                 method: 'get',
                 url: '/users/' + state.uid + '/admin'
             }).then(res => {
-                commit('setAdmin', res.data);
+                commit('setAdmin', res.data.data);
                 resolve();
             }).catch(err => {
                 reject(err);
