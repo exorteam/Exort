@@ -120,16 +120,16 @@ public class UserInfoController {
 
     @PostMapping("/{id}/grant/{scope}")
     public ApiResponse<List<Role>> grantRolesToUser(@PathVariable("id") Long id, @PathVariable("scope") String scope, @RequestBody List<String> roles) {
-        return new ApiResponse<>(permSvc.grantRoles(id, scope, roles).getData());
+        return permSvc.grantRoles(id, scope, roles);
     }
 
     @PostMapping("/{id}/revoke/{scope}")
     public ApiResponse<List<Role>> revokeRolesToUser(@PathVariable("id") Long id, @PathVariable("scope") String scope, @RequestBody List<String> roles) {
-        return new ApiResponse<>(permSvc.revokeRoles(id, scope, roles).getData());
+        return permSvc.revokeRoles(id, scope, roles);
     }
 
     @GetMapping("/{id}/roles/{scope}")
     public ApiResponse<List<Role>> getUserRoles(@PathVariable("id") Long id, @PathVariable("scope") String scope) {
-        return new ApiResponse<>(permSvc.getRoles(id, scope).getData());
+        return permSvc.getRoles(id, scope);
     }
 }
