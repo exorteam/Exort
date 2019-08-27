@@ -56,6 +56,12 @@ public class AssociationManagerController{
 		final int pageNum = (int)args.get("pageNum");
 		final int pageSize = (int)args.get("pageSize");
 
+		//System.out.println(state);
+		//System.out.println(keyword);
+		//System.out.println(tags);
+		//System.out.println(pageNum);
+		//System.out.println(pageSize);
+
         AssociationFilterParams body = new AssociationFilterParams();
         body.setKeyword(keyword);
         body.setState(state);
