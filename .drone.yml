@@ -240,6 +240,7 @@ steps:
 trigger:
   branch:
   - association_dev
+  - asso-mgr
 
 volumes:
   - name: cache
