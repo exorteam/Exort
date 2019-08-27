@@ -65,41 +65,41 @@ public class ArticleServiceImpl implements ArticleService {
 	public List<Article> listArticle(ArticleFilterParams params){
 		List<Article> articles = repository.findAll();
 
-		Integer state = params.getState();
-		if(state != null){
-			articles.removeIf(article -> !state.equals(article.getState()));
-			if(articles.isEmpty())return articles;
-		}
+		//Integer state = params.getState();
+		//if(state != null){
+		//    articles.removeIf(article -> !state.equals(article.getState()));
+		//    if(articles.isEmpty())return articles;
+		//}
 
-		Integer createMethod = params.getCreateMethod();
-		if(createMethod != null){
-			articles.removeIf(article -> !createMethod.equals(article.getCreateMethod()));
-			if(articles.isEmpty())return articles;
-		}
+		//Integer createMethod = params.getCreateMethod();
+		//if(createMethod != null){
+		//    articles.removeIf(article -> !createMethod.equals(article.getCreateMethod()));
+		//    if(articles.isEmpty())return articles;
+		//}
 
-		Date startTime = params.getStartTime();
-		if(startTime != null){
-			articles.removeIf(article -> startTime.after(article.getCreateTime()));
-			if(articles.isEmpty())return articles;
-		}
+		//Date startTime = params.getStartTime();
+		//if(startTime != null){
+		//    articles.removeIf(article -> startTime.after(article.getCreateTime()));
+		//    if(articles.isEmpty())return articles;
+		//}
 
-		Date endTime = params.getEndTime();
-		if(endTime != null){
-			articles.removeIf(article -> endTime.before(article.getCreateTime()));
-			if(articles.isEmpty())return articles;
-		}
+		//Date endTime = params.getEndTime();
+		//if(endTime != null){
+		//    articles.removeIf(article -> endTime.before(article.getCreateTime()));
+		//    if(articles.isEmpty())return articles;
+		//}
 
-		String keyword = params.getKeyword();
-		if(keyword != null){
-			articles.removeIf(article -> !article.getTitle().contains(keyword)&&!article.getContent().contains(keyword));
-			if(articles.isEmpty())return articles;
-		}
+		//String keyword = params.getKeyword();
+		//if(keyword != null){
+		//    articles.removeIf(article -> !article.getTitle().contains(keyword)&&!article.getContent().contains(keyword));
+		//    if(articles.isEmpty())return articles;
+		//}
 
-		String authorId = params.getAuthorId();
-		if(authorId != null){
-			articles.removeIf(article -> !article.getAssociationId().equals(authorId));
-			if(articles.isEmpty())return articles;
-		}
+		//String authorId = params.getAuthorId();
+		//if(authorId != null){
+		//    articles.removeIf(article -> !article.getAssociationId().equals(authorId));
+		//    if(articles.isEmpty())return articles;
+		//}
 
 		return articles;
 	}
