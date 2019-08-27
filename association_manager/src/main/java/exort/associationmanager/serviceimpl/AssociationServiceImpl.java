@@ -28,6 +28,7 @@ public class AssociationServiceImpl implements AssociationService{
 
     @Autowired
     private AssociationRepository assoRepository;
+
     public Association getAssociation(String assoId){
         Association association = new Association();
         if (assoRepository.existsById(assoId)) {
