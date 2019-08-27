@@ -33,8 +33,21 @@ public class AssoMgrSvcImpl extends RestTemplate implements AssociationManagerSe
 
     @Override
     public ApiResponse<PagedData<Association>> listAssociations(AssociationFilterParams body, PageQuery pageQuery){
-        return request(new TypeToken<PagedData<Association>>() {}, body,
-                HttpMethod.GET, pageQuery, "/associations");
+		final Integer pageNum = pageQuery.getPageNum();
+		final Integer pageSize = pageQuery.getPageSize();
+        final ApiResponse<PagedData<Association>> res = request(
+				new TypeToken<PagedData<Association>>(){}, 
+				body, 
+				HttpMethod.GET, 
+				"/associations?pageNum={pageNum}&pageSize={pageSize}",
+				pageNum,pageSize);
+
+		//System.out.println(body.getState());
+		//System.out.println(body.getTags());
+		//System.out.println(body.getKeyword());
+		//System.out.println(res.getData().getTotalSize());
+
+		return res;
     }
     @Override
     public ApiResponse<Association> getAssociation(String assoId){
