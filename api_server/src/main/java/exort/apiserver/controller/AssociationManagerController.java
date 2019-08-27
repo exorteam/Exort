@@ -1,10 +1,8 @@
-
 package exort.apiserver.controller;
 
-
 import java.util.Arrays;
+import java.util.Map;
 
-import exort.api.http.member.entity.InitAssociationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.assomgr.entity.Association;
@@ -30,7 +27,6 @@ import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
-
 
 @RestController
 @RequestMapping(path="/associations")
@@ -49,10 +45,17 @@ public class AssociationManagerController{
     @Autowired
     private SystemAdministratorInfo sysAdmin;
 
-    @GetMapping
-    public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
-                                                                @RequestParam String tags, @RequestParam int pageNum,
-                                                                @RequestParam int pageSize){
+    @PostMapping("/list")
+    //public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
+    //                                                            @RequestParam String tags, @RequestParam int pageNum,
+    //                                                            @RequestParam int pageSize){
+	public ApiResponse<PagedData<Association>> listAssociations(@RequestBody Map<String,Object> args){
+		final int state = (int)args.get("state");
+		final String keyword = String.valueOf(args.get("keyword"));
+		final String tags = String.valueOf(args.get("tags"));
+		final int pageNum = (int)args.get("pageNum");
+		final int pageSize = (int)args.get("pageSize");
+
         AssociationFilterParams body = new AssociationFilterParams();
         body.setKeyword(keyword);
         body.setState(state);
