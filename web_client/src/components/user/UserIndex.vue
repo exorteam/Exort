@@ -1,10 +1,13 @@
 <template>
-<NavHeader>
-    <template #logo>
-        <!--<img src="@/assets/AssociationLogo/solid.jpg" alt="LOGO" style="height:50px;">-->
-    </template>
-    <NavUser></NavUser>
-</NavHeader>
+	<div>
+		<NavHeader>
+			<template #logo>
+				<!--<img src="@/assets/AssociationLogo/solid.jpg" alt="LOGO" style="height:50px;">-->
+			</template>
+			<NavUser></NavUser>
+		</NavHeader>
+		<p>Home page for Articles brower</p>
+	</div>
 </template>
 
 <script>

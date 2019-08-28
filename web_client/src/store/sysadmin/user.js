@@ -34,7 +34,7 @@ const mutations = {
 const actions = {
     updateUserList: ({commit}, {scope, role, pageNum, pageSize}) => new Promise((resolve, reject) => {
         api({
-            method: '',
+            method: 'get',
             url: '/users',
             params: {
                 scope: scope || 'sys',
@@ -43,6 +43,7 @@ const actions = {
                 pageSize: pageSize || null
             }
         }).then(res => {
+			console.log(res);
             commit('setUserList', {
                 list: res.data.data.content,
                 pageNum: res.data.data.pageNum,

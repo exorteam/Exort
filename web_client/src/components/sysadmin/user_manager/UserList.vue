@@ -109,6 +109,7 @@ export default {
                 minWidth: 80,
                 fixed: 'left'
             },
+            //{ title: '用户名', key: 'username' },
             { title: '昵称', key: 'nickname' },
             { title: '性别', key: 'gender' },
             { title: '生日', key: 'birthday'},
