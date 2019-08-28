@@ -13,7 +13,7 @@
                 <Input style="width: 420px"/>
             </FormItem>
             <FormItem label="社团标志">
-                <ImageUploader v-model="image" inline :max-size="2048"/>
+                <ImageUploader v-model="image" inline :max-size="512"/>
             </FormItem>
             <FormItem label="balabalba">
                 <Input style="width: 420px"/>

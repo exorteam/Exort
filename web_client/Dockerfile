@@ -7,11 +7,11 @@ WORKDIR /app
 COPY ./web_client /app
 
 RUN npm install
-RUN npm build
-RUN mv dist server/public
+RUN npm run build
 RUN mkdir server/public/files
 
 WORKDIR /app/server
+RUN npm install
 
 EXPOSE 3000
 
