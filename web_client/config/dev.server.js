@@ -1,9 +1,17 @@
-let bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const api = require('axios').create({
     baseURL: 'http://localhost:8080'
 });
+
+const proxy = (function(paths) {
+    let a = {};
+    for (let i in paths) {
+        a[paths[i]] = 'http://localhost:3000';
+    }
+    return a;
+})(['/files', '/upload'])
 
 let sessions = [];
 let session_max_id = 0;
@@ -19,6 +27,7 @@ function new_sess(sess) {
 }
 
 module.exports = {
+    proxy: proxy,
     before: function(app, server) {
         // for parsing application/json
         app.use(bodyParser.json());
