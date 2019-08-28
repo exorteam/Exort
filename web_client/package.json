@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "npx vue-cli-service serve",
-    "build": "npx vue-cli-service build",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "start": "npm run serve"
   },
   "dependencies": {
