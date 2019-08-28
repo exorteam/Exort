@@ -123,67 +123,68 @@ public class AssociationServiceImplTest {
         }
     }
 
-    @Test
-    public void testListWithFilter() {
-        Association e = associations.get(0);
-        String newName = UUID.randomUUID().toString();
-        e.setName(newName);
-        String newdesc = UUID.randomUUID().toString();
-        e.setDescription(newdesc);
-        List<String> newTags = Arrays.asList("z","x","c");
-        e.setTags(newTags);
-        e.setState(-3);
-        repository.save(e);
+    //@Test
+    //public void testListWithFilter() {
+    //    Association e = associations.get(0);
+    //    String newName = UUID.randomUUID().toString();
+    //    e.setName(newName);
+    //    String newdesc = UUID.randomUUID().toString();
+    //    e.setDescription(newdesc);
+    //    List<String> newTags = Arrays.asList("z","x","c");
+    //    e.setTags(newTags);
+    //    e.setState(-3);
+    //    repository.save(e);
 
-        final AssociationFilterParams filter1 = new AssociationFilterParams();
-        filter1.setKeyword(e.getName());
-        Assert.assertTrue(service.listAssociations(filter1,0,1).getContent().contains(e));
+    //    final AssociationFilterParams filter1 = new AssociationFilterParams();
+    //    filter1.setKeyword(e.getName());
+    //    Assert.assertTrue(service.listAssociations(filter1,0,1).getContent().contains(e));
 
-        final AssociationFilterParams filter2 = new AssociationFilterParams();
-        filter2.setState(-3);
-        System.out.println(service.listAssociations(filter2,0,700).getContent());
-        Assert.assertTrue(service.listAssociations(filter2,0,700).getContent().contains(e));
+    //    final AssociationFilterParams filter2 = new AssociationFilterParams();
+    //    filter2.setState(-3);
+    //    System.out.println(service.listAssociations(filter2,0,700).getContent());
+    //    Assert.assertTrue(service.listAssociations(filter2,0,700).getContent().contains(e));
 
-        final AssociationFilterParams filter3 = new AssociationFilterParams();
-        filter3.setKeyword(e.getName());
-        Assert.assertTrue(service.listAssociations(filter3,0,1).getContent().contains(e));
+    //    final AssociationFilterParams filter3 = new AssociationFilterParams();
+    //    filter3.setKeyword(e.getName());
+    //    Assert.assertTrue(service.listAssociations(filter3,0,1).getContent().contains(e));
 
-        final AssociationFilterParams filter4 = new AssociationFilterParams();
-        filter4.setTags(Arrays.asList("x"));
-        Assert.assertTrue(service.listAssociations(filter4,0,1).getContent().contains(e));
-    }
-    @Test
-    public void TestHandleApplication(){
-        Association e = associations.get(0);
-        String newName = UUID.randomUUID().toString();
-        e.setName(newName);
-        String newdesc = UUID.randomUUID().toString();
-        e.setDescription(newdesc);
-        List<String> newTags = Arrays.asList("r","t","y");
-        e.setTags(newTags);
-        e.setState(1);
-        MyObject myObject = new MyObject();
-        myObject.setName(e.getName());
-        myObject.setTags(e.getTags());
-        myObject.setLogo(e.getLogo());
-        myObject.setDescription(e.getDescription());
-        Application application = new Application();
-        application.setType("createAssociation");
-        application.setObject(myObject);
+    //    final AssociationFilterParams filter4 = new AssociationFilterParams();
+    //    filter4.setTags(Arrays.asList("x"));
+    //    Assert.assertTrue(service.listAssociations(filter4,0,1).getContent().contains(e));
+    //}
 
-        permService.createRole(new Role("SysManager","the admin of exort system"));
-        permService.grantRoles(Long.valueOf(123456),"System",Arrays.asList("SysManager"));
+    //@Test
+    //public void TestHandleApplication(){
+    //    Association e = associations.get(0);
+    //    String newName = UUID.randomUUID().toString();
+    //    e.setName(newName);
+    //    String newdesc = UUID.randomUUID().toString();
+    //    e.setDescription(newdesc);
+    //    List<String> newTags = Arrays.asList("r","t","y");
+    //    e.setTags(newTags);
+    //    e.setState(1);
+    //    MyObject myObject = new MyObject();
+    //    myObject.setName(e.getName());
+    //    myObject.setTags(e.getTags());
+    //    myObject.setLogo(e.getLogo());
+    //    myObject.setDescription(e.getDescription());
+    //    Application application = new Application();
+    //    application.setType("createAssociation");
+    //    application.setObject(myObject);
 
-        Assert.assertTrue(service.handleAsoociationApplication(Long.valueOf(123456),"accept",application));
-        final AssociationFilterParams filter4 = new AssociationFilterParams();
-        filter4.setTags(Arrays.asList("y"));
-        filter4.setKeyword(e.getName());
-        filter4.setState(1);
-        Association e2 = service.listAssociations(filter4,0,100).getContent().get(0);
-        Assert.assertEquals(e2.getName(),e.getName());
+    //    permService.createRole(new Role("SysManager","the admin of exort system"));
+    //    permService.grantRoles(Long.valueOf(123456),"System",Arrays.asList("SysManager"));
+
+    //    Assert.assertTrue(service.handleAsoociationApplication(Long.valueOf(123456),"accept",application));
+    //    final AssociationFilterParams filter4 = new AssociationFilterParams();
+    //    filter4.setTags(Arrays.asList("y"));
+    //    filter4.setKeyword(e.getName());
+    //    filter4.setState(1);
+    //    Association e2 = service.listAssociations(filter4,0,100).getContent().get(0);
+    //    Assert.assertEquals(e2.getName(),e.getName());
 
 
-    }
+    //}
 
 }
 
