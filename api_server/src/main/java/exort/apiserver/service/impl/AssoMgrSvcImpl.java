@@ -1,23 +1,31 @@
 package exort.apiserver.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.reflect.TypeToken;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.assomgr.entity.Association;
-import exort.api.http.common.entity.Operation;
 import exort.api.http.assomgr.entity.AssociationFilterParams;
-import exort.api.http.common.RestTemplate;
 import exort.api.http.assomgr.entity.AssociationInfo;
 import exort.api.http.assomgr.service.AssociationManagerService;
+import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
+import exort.apiserver.component.StaticFileUtil;
 
 @Service
 public class AssoMgrSvcImpl extends RestTemplate implements AssociationManagerService {
+
+	@Autowired
+	private StaticFileUtil sfu;
 
 	@Value("${exort.assomgr.protocol:http}")
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
@@ -27,6 +35,9 @@ public class AssoMgrSvcImpl extends RestTemplate implements AssociationManagerSe
 
     @Override
     public ApiResponse<Association> createAssociation(AssociationInfo body){
+		final String  imgname = sfu.storeFile(body.getLogo().getBytes());
+		body.setLogo(imgname);
+
         return request(new TypeToken<Association>() {}, body,
                 HttpMethod.POST, "/associations");
     }
@@ -41,13 +52,17 @@ public class AssoMgrSvcImpl extends RestTemplate implements AssociationManagerSe
 				HttpMethod.GET, 
 				"/associations?pageNum={pageNum}&pageSize={pageSize}",
 				pageNum,pageSize);
+		PagedData<Association> p = res.getData();
 
-		//System.out.println(body.getState());
-		//System.out.println(body.getTags());
-		//System.out.println(body.getKeyword());
-		//System.out.println(res.getData().getTotalSize());
-
-		return res;
+		List<Association> assos = p.getContent();
+		List<Association> nassos = new ArrayList<Association>();
+		for(Association asso : assos){
+			asso.setLogo(new String(sfu.getFile(asso.getLogo())));
+			nassos.add(asso);
+		}
+		p.setContent(nassos);
+		
+		return new ApiResponse<PagedData<Association>>(p);
     }
     @Override
     public ApiResponse<Association> getAssociation(String assoId){
@@ -61,6 +76,9 @@ public class AssoMgrSvcImpl extends RestTemplate implements AssociationManagerSe
     }
     @Override
     public ApiResponse<Association> editAssociation(String assoId, AssociationInfo body){
+		final String imgname = sfu.storeFile(body.getLogo().getBytes());
+		body.setLogo(imgname);
+
         return request(new TypeToken<Association>() {}, body,
                 HttpMethod.PUT, "/associations/{assoId}", assoId);
     }
