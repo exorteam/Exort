@@ -1,6 +1,14 @@
 package exort.associationmanager.serviceimpl;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
 import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.common.entity.ApiResponse;
@@ -9,17 +17,10 @@ import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
-
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.MyObject;
-
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
-import org.springframework.stereotype.Service;
-
-import static java.lang.Math.min;
 
 @Service
 public class AssociationServiceImpl implements AssociationService{
@@ -49,56 +50,59 @@ public class AssociationServiceImpl implements AssociationService{
     }
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
 
-        List<Association> associations = assoRepository.findAll();
-        Integer state = params.getState();
-        if(state != null && state != 2){
-            associations.removeIf(association -> !state.equals(association.getState()));
-            if(associations.isEmpty()){
-                return new PagedData<>(0,0,Long.valueOf(0),associations);
-            }
-        }
-        String keyword = params.getKeyword();
-        if(keyword != null && keyword!=""){
-            int size = associations.size();
-            if (keyword != null) {
-                for (int i = size - 1; i >= 0; i--) {
-                    if (!associations.get(i).hasKeyword(keyword)) {
-                        associations.remove(i);
-                    }
-                }
-                if (associations.isEmpty()) {
-                    return new PagedData<>(0,0,Long.valueOf(0),associations);
-                }
-            }
-        }
-        List<String> tags = params.getTags();
-        if (tags != null) {
-            if(!(tags.size()==1&&tags.get(0)=="")) {
-                int size = associations.size();
-                for (int i = size - 1; i >= 0; i--) {
-                    if (!associations.get(i).hasTags(tags)) {
-                        associations.remove(i);
-                    }
-                }
-                if (associations.isEmpty()) {
-                    return new PagedData<>(0,0,Long.valueOf(0),associations);
-                }
-            }
-        }
-        int totalSize = associations.size();
+        Page<Association> p = assoRepository.findAll(PageRequest.of(pageNum,pageSize));
 
-        int max =20;
-        int realPageSize,realPageNum;
+		return new PagedData<Association>(p.getNumber(),p.getSize(),assoRepository.count(),p.getContent());
 
-        realPageSize = min(pageSize,max);
-        realPageNum = pageNum * pageSize / realPageSize;
-        int subFirst = realPageNum * realPageSize;
-        int subLast = min((realPageNum + 1) * realPageSize,totalSize);
-        if(subFirst >= totalSize){
-            subFirst = 0;
-            subLast = 0;
-        }
-        return new PagedData<Association>(realPageNum,realPageSize,Long.valueOf(totalSize),associations.subList(subFirst,subLast));
+        //Integer state = params.getState();
+        //if(state != null && state != 2){
+        //    associations.removeIf(association -> !state.equals(association.getState()));
+        //    if(associations.isEmpty()){
+        //        return new PagedData<>(0,0,Long.valueOf(0),associations);
+        //    }
+        //}
+        //String keyword = params.getKeyword();
+        //if(keyword != null && keyword!=""){
+        //    int size = associations.size();
+        //    if (keyword != null) {
+        //        for (int i = size - 1; i >= 0; i--) {
+        //            if (!associations.get(i).hasKeyword(keyword)) {
+        //                associations.remove(i);
+        //            }
+        //        }
+        //        if (associations.isEmpty()) {
+        //            return new PagedData<>(0,0,Long.valueOf(0),associations);
+        //        }
+        //    }
+        //}
+        //List<String> tags = params.getTags();
+        //if (tags != null) {
+        //    if(!(tags.size()==1&&tags.get(0)=="")) {
+        //        int size = associations.size();
+        //        for (int i = size - 1; i >= 0; i--) {
+        //            if (!associations.get(i).hasTags(tags)) {
+        //                associations.remove(i);
+        //            }
+        //        }
+        //        if (associations.isEmpty()) {
+        //            return new PagedData<>(0,0,Long.valueOf(0),associations);
+        //        }
+        //    }
+        //}
+        //int totalSize = associations.size();
+
+        //int max =20;
+        //int realPageSize,realPageNum;
+
+        //realPageSize = min(pageSize,max);
+        //realPageNum = pageNum * pageSize / realPageSize;
+        //int subFirst = realPageNum * realPageSize;
+        //int subLast = min((realPageNum + 1) * realPageSize,totalSize);
+        //if(subFirst >= totalSize){
+        //    subFirst = 0;
+        //    subLast = 0;
+        //}
+        //return new PagedData<Association>(realPageNum,realPageSize,Long.valueOf(totalSize),associations.subList(subFirst,subLast));
     }
 
     public boolean deleteAssociation(String assoId ){
