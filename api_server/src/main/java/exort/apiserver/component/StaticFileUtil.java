@@ -9,10 +9,14 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import lombok.extern.log4j.Log4j2;
+
 @Component
+@Log4j2
 public class StaticFileUtil {
 
 	private final String FOLDER_NAME = "static_file";
+	private final String DEFAULT_LOGO_NAME = "default_logo";
 
 	public String storeFile(byte[] content){
 
@@ -37,6 +41,11 @@ public class StaticFileUtil {
 	}
 
 	public byte[] getFile(String filename){
+		if(filename == null){
+			filename = DEFAULT_LOGO_NAME;
+		}
+
+		log.info("get file for name: "+filename);
 
 		Path rootp = Paths.get(FOLDER_NAME);
 
@@ -46,6 +55,10 @@ public class StaticFileUtil {
 			}
 
 			Path filep = rootp.resolve(filename);
+			if(Files.notExists(filep)){
+				filep = rootp.resolve(DEFAULT_LOGO_NAME);
+			}
+
 			return Files.readAllBytes(filep);
 		}
 		catch(Exception e){

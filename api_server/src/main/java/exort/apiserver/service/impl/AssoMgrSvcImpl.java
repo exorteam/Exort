@@ -66,8 +66,11 @@ public class AssoMgrSvcImpl extends RestTemplate implements AssociationManagerSe
     }
     @Override
     public ApiResponse<Association> getAssociation(String assoId){
-        return request(new TypeToken<Association>() {},
-                HttpMethod.GET, "/associations/{assoId}", assoId);
+        Association asso = request(new TypeToken<Association>() {},
+                HttpMethod.GET, "/associations/{assoId}", assoId).getData();
+		asso.setLogo(new String(sfu.getFile(asso.getLogo())));
+
+		return new ApiResponse<Association>(asso);
     }
     @Override
     public ApiResponse<Object> deleteAssociation(String assoId ){
