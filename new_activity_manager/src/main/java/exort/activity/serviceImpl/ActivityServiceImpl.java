@@ -62,11 +62,11 @@ public class ActivityServiceImpl implements ActivityService {
                     .lte(filter.getCreateTime().getEnd()));
         }
         if (filter.getSignupTime() != null) {
-            query.addCriteria(Criteria.where("signupTime").gte(filter.getSignupTime().getStart())
+            query.addCriteria(Criteria.where("signupTime.time.start").gte(filter.getSignupTime().getStart())
                     .lte(filter.getSignupTime().getEnd()));
         }
         if (filter.getStartTime() != null) {
-            query.addCriteria(Criteria.where("startTime").gte(filter.getStartTime().getStart())
+            query.addCriteria(Criteria.where("time.time.start").gte(filter.getStartTime().getStart())
                     .lte(filter.getStartTime().getEnd()));
         }
         if (filter.getPublishState() != 0) {

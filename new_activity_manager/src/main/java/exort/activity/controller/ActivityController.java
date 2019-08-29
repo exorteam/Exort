@@ -12,13 +12,10 @@ import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.review.entity.CallbackParam;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class ActivityController {
@@ -100,16 +97,23 @@ public class ActivityController {
 //3
 
     @RequestMapping(value = "/activities", method = RequestMethod.GET)
-    public ApiResponse getActivities(@RequestBody Filter filter, PageQuery pageQuery) {
+    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, @RequestParam(name = "pagesize") int pagesize, @RequestParam(name = "pagenum") int pagenum) {
         try {
+            PageQuery pageQuery = new PageQuery(pagenum, pagesize);
+
             PageQuery page = PageQuery.relocate(pageQuery, 9, 100);
             PagedData<ActivityInfo> ret = as.getActivities(filter, page);
 
-            if (ret == null) {
+            if (ret.getContent() == null) {
                 return new ApiResponse<>("get activities failed1.", "查询多个活动失败");
             } else {
                 PagedData<Activity> result = new PagedData<>();
+                result.setPageNum(ret.getPageNum());
+                result.setPageSize(ret.getPageSize());
+                result.setTotalSize(ret.getTotalSize());
                 List<Activity> resultList = new ArrayList<>();
+
+//                System.out.println(ret);
 
                 for (int i = 0; i < ret.getContent().size(); i++) {
                     ActivityInfo item = ret.getContent().get(i);
@@ -118,7 +122,7 @@ public class ActivityController {
                 }
                 result.setContent(resultList);
 
-                return new ApiResponse<>(result);
+                return new ApiResponse<PagedData<Activity>>(result);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,18 +132,18 @@ public class ActivityController {
 //4
 
     @RequestMapping(value = "/activities/{activityid}/state", method = RequestMethod.PUT)
-    public ApiResponse publishActivity(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity) {
+    public ApiResponse changeActivityState(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity) {
         try {
             ActivityInfo theActivity = as.getActivity(activityId);
 
-            if (requestActivity.getType().equals("published")) {
+            if (requestActivity.getType().equals("publish")) {
                 theActivity.setPublishState(2);
             } else {
                 theActivity.setPublishState(1);
             }
 
             ActivityInfo activityInfo = as.updateActivity(activityId, theActivity);
-            if (activityInfo.getPublishState() == 2) {
+            if (activityInfo.getPublishState() == 2 || activityInfo.getPublishState() == 1) {
                 return new ApiResponse<>(new HashMap());
             } else {
                 return new ApiResponse<>("change activity " + activityId + " failed", "修改活动发布状态失败");
@@ -155,8 +159,12 @@ public class ActivityController {
     public ApiResponse addParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity) {
         try {
             ActivityInfo theActivity = as.getActivity(activityId);
-            List<Integer> pars = theActivity.getParticipantIds();
-            pars.addAll(requestActivity.getParticipantIds());
+            Set<Integer> set = new HashSet<>();
+            if (theActivity.getParticipantIds() != null) {
+                set.addAll(theActivity.getParticipantIds());
+            }
+            set.addAll(requestActivity.getParticipantIds());
+            List<Integer> pars = new ArrayList<>(set);
             theActivity.setParticipantIds(pars);
 
             ActivityInfo activityInfo = as.updateActivity(activityId, theActivity);
@@ -177,8 +185,12 @@ public class ActivityController {
     public ApiResponse addRealParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity) {
         try {
             ActivityInfo theActivity = as.getActivity(activityId);
-            List<Integer> pars = theActivity.getRealParticipantIds();
-            pars.addAll(requestActivity.getParticipantIds());
+            Set<Integer> set = new HashSet<>();
+            if (theActivity.getRealParticipantIds() != null) {
+                set.addAll(theActivity.getRealParticipantIds());
+            }
+            set.addAll(requestActivity.getRealParticipantIds());
+            List<Integer> pars = new ArrayList<>(set);
             theActivity.setRealParticipantIds(pars);
 
             ActivityInfo activityInfo = as.updateActivity(activityId, theActivity);
@@ -199,7 +211,12 @@ public class ActivityController {
     public ApiResponse deleteParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity) {
         try {
             ActivityInfo theActivity = as.getActivity(activityId);
-            List<Integer> pars = theActivity.getParticipantIds();
+            List<Integer> pars;
+            if (theActivity.getParticipantIds() == null) {
+                pars = new ArrayList<>();
+            } else {
+                pars = theActivity.getParticipantIds();
+            }
             boolean result = pars.removeAll(requestActivity.getParticipantIds());
             as.updateActivity(activityId, theActivity);
 
@@ -216,14 +233,26 @@ public class ActivityController {
 //8
 
     @RequestMapping(value = "/activities/{activityid}/participants", method = RequestMethod.GET)
-    public ApiResponse getActivityParticipants(@PathVariable(value = "activityid") String activityId, PageQuery pageQuery, @RequestBody RequestActivity requestActivity) {
+    public ApiResponse getActivityParticipants(
+            @PathVariable(value = "activityid") String activityId,
+            @RequestParam(name = "pagesize") int pagesize,
+            @RequestParam(name = "pagenum") int pagenum
+//            @RequestBody RequestActivity requestActivity
+    ) {
         try {
 //            PagedData<Integer> result = as.getActivityUserIds(activityId, pageQuery, requestActivity.getUserId(), 1);
 
             ActivityInfo activityInfo = as.getActivity(activityId);
-            PagedData<Integer> result = as.fromList2Paged(activityInfo.getParticipantIds(), pageQuery);
+            List<Integer> pars;
+            if (activityInfo.getParticipantIds() == null) {
+                pars = new ArrayList<>();
+            } else {
+                pars = activityInfo.getParticipantIds();
+            }
+            PageQuery pageQuery=new PageQuery(pagenum,pagesize);
+            PagedData<Integer> result = as.fromList2Paged(pars, pageQuery);
 
-            if (result == null) {
+            if (result.getContent() == null) {
                 return new ApiResponse<>("get activity" + activityId + " participants failed.", "查询活动参加者失败");
             } else {
                 return new ApiResponse<>(result);
@@ -236,14 +265,26 @@ public class ActivityController {
 
     //9
     @RequestMapping(value = "/activities/{activityid}/realparticipants", method = RequestMethod.GET)
-    public ApiResponse getActivityRealParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity, PageQuery pageQuery) {
+    public ApiResponse getActivityRealParticipants(
+            @PathVariable(value = "activityid") String activityId,
+//            @RequestBody RequestActivity requestActivity,
+            @RequestParam(name = "pagesize") int pagesize,
+            @RequestParam(name = "pagenum") int pagenum
+    ) {
         try {
 //            PageQuery page = PageQuery.relocate(pageQuery, 9, 100);
 //            PagedData<Integer> result = as.getActivityUserIds(activityId, pageQuery, requestActivity.getUserId(), 2);
             ActivityInfo activityInfo = as.getActivity(activityId);
-            PagedData<Integer> result = as.fromList2Paged(activityInfo.getRealParticipantIds(), pageQuery);
+            List<Integer> pars;
+            if (activityInfo.getRealParticipantIds() == null) {
+                pars = new ArrayList<>();
+            } else {
+                pars = activityInfo.getRealParticipantIds();
+            }
+            PageQuery pageQuery=new PageQuery(pagenum,pagesize);
+            PagedData<Integer> result = as.fromList2Paged(pars, pageQuery);
 
-            if (result == null) {
+            if (result.getContent() == null) {
                 return new ApiResponse<>("get activity" + activityId + " participants failed.", "查询活动参加者失败");
             } else {
                 return new ApiResponse<>(result);
@@ -265,8 +306,12 @@ public class ActivityController {
 //            boolean result = as.addUserIds(activityId, user, 1);
 
             ActivityInfo theActivity = as.getActivity(activityId);
-            List<Integer> pars = theActivity.getParticipantIds();
-            pars.addAll(user);
+
+            Set<Integer> set = new HashSet<>();
+            set.addAll(theActivity.getParticipantIds());
+            set.addAll(user);
+            List<Integer> pars = new ArrayList<Integer>(set);
+
             theActivity.setParticipantIds(pars);
 
             ActivityInfo activityInfo = as.updateActivity(activityId, theActivity);
@@ -290,14 +335,14 @@ public class ActivityController {
             ActivityInfo activityInfo = as.getActivity(activityId);
 
             if (activityInfo == null) {
-                return new ApiResponse<>("get activity " + activityId + " failed", "查询单个活动失败");
+                return new ApiResponse<>("get activity " + activityId + " failed1", "查询单个活动失败");
             } else {
                 Activity activity = changeActivityInfo2Activity(activityInfo);
                 return new ApiResponse<>(activity);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ApiError(401, "get activity " + activityId + " failed", "查询单个活动失败");
+            throw new ApiError(401, "get activity " + activityId + " failed2", "查询单个活动失败");
         }
     }
 }
