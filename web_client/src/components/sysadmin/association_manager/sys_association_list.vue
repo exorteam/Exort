@@ -1,7 +1,7 @@
 <template>
 	<Card>
-		<Tabs active-key="tab_key">
-			<Tab-pane label="社团管理" key="tabpane_key1">
+		<!--<Tabs active-key="tab_key">                           -->
+		<!--    <Tab-pane label="社团管理" key="tabpane_key1">-->
 			<div id="AssoList">
 				<div id=SearchAsso>
 					<i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
@@ -97,23 +97,19 @@
 					:current.sync = "pageProp.pageNum"  @on-change="getAssociationList"></Page>
 				</div>
 			</div>
-			</Tab-pane>
-			<Application :pendingAppData  ="pendingAppData" :handledAppData  ="handledAppData"/>
-
-
-
-		</Tabs>
+			<!--</Tab-pane>-->
+			<!--<Application :pendingAppData  ="pendingAppData" :handledAppData  ="handledAppData"/>-->
+		<!--</Tabs>-->
 	</Card>
 </template>
 
 <script>
 import CreateAssociation from './create_association.vue'
 import TagChoose from '../../common/tag_choose.vue'
-import Application from './application.vue'
 import {api} from '@/http'
 export default {
     name:'associationList',
-    components:{CreateAssociation,TagChoose,Application},
+    components:{CreateAssociation,TagChoose},
     data () {
         return {
             ruleValidate: {
@@ -152,63 +148,6 @@ export default {
                 tagList:[],
                 tagrepo : ["运动", "饮食", "音乐", "舞蹈", "历史", "游戏", "户外", "天文","航模","动漫"]
             },
-            pendingAppColumn: [
-                {
-                    title: '申请人Id',
-                    key: 'applicant_Id'
-                },
-                {
-                    title: '申请人',
-                    key: 'applicant_name'
-                },
-                {
-                    title: '社团名称',
-                    key: 'asso_name'
-                },
-                {
-                    title: '提交时间',
-                    key: 'submit_time'
-                },
-                {
-                    title: '申请类型',
-                    key: 'apply_type'
-                },
-                {
-                    title: '处理',
-                    key: 'operate',
-                }
-            ],
-            pendingAppData: [],
-            handledAppColumns: [
-                {
-                    title: '申请人Id',
-                    key: 'applicant_Id'
-                },
-                {
-                    title: '申请人',
-                    key: 'applicant_name'
-                },
-                {
-                    title: '社团名称',
-                    key: 'asso_name'
-                },
-                {
-                    title: '提交时间',
-                    key: 'submit_time'
-                },
-                {
-                    title: '申请类型',
-                    key: 'apply_type'
-                },
-                {
-                    title: '处理时间',
-                    key: 'operate_time',
-                },
-                {
-                    title: '处理结果',
-                    key: 'operate_result',
-                }
-            ],
             handledAppData: [],
             assoStateSelected: ['active','blocked'], // Must be an array reference!
             assoStateList: [
