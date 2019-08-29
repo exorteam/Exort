@@ -1,4 +1,39 @@
 kind: pipeline
+name: exort-web-client
+
+steps:
+- name: build
+  image: plugins/docker
+  settings:
+    repo: exort/web-client
+    tags: latest
+    dockerfile: ./web_client/Dockerfile
+  volumes:
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+
+trigger:
+  branch:
+  - web_client-refacting
+
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+
+---
+
+kind: pipeline
 name: exort-auth
 
 steps:
@@ -63,7 +98,7 @@ steps:
 trigger:
   branch:
   - asso_mem_manage
-  
+
 volumes:
   - name: cache
     host:

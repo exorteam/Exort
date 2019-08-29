@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from './store'
 
 const api = axios.create({
-    baseURL: process.env.API_PROTOCOL + '://' + process.env.API_ENDPOINT
+    baseURL: process.env.VUE_APP_API_BASE
 });
 api.defaults.withCredentials = true;
 api.defaults.headers.post['Content-Type'] = 'application/json';
