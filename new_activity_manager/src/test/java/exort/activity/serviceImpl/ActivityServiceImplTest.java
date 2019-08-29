@@ -60,7 +60,7 @@ public class ActivityServiceImplTest {
 
     @After
     public void after() {
-//        activityRepository.deleteAll();
+        activityRepository.deleteAll();
     }
 
 
