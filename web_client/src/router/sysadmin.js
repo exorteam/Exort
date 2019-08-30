@@ -3,10 +3,10 @@ import PermList from '../components/sysadmin/permission_manager/PermList'
 import RoleList from '../components/sysadmin/permission_manager/RoleList'
 import UserList from '../components/sysadmin/user_manager/UserList'
 import associationList from '../components/sysadmin/association_manager/sys_association_list'
-import ArticleList from '../components/assoadmin/articles/article-list'
-import ArticleEditor from '../components/assoadmin/articles/article-editor'
-import ArticleReader from '../components/assoadmin/articles/article-reader'
-
+import SysArticleList from '../components/sysadmin/articles/sys_article_list'
+import SysArticleEditor from '../components/sysadmin/articles/sys_article_editor'
+import SysArticleReader from '../components/sysadmin/articles/sys_article_reader'
+import ApplicationList from '../components/sysadmin/association_manager/application.vue'
 
 export default {
     path: '/sysadmin/',
@@ -34,20 +34,25 @@ export default {
             component: associationList
         },
         {
+            path: 'applicationList/',
+            name: 'ApplicationList',
+            component: ApplicationList
+        },
+        {
             path: 'articlelist/',
             name: 'ArticleList',
-            component: ArticleList
+            component: SysArticleList
         },
         {
             path: 'articles/edit/:id',
             name: 'ArticleEditor',
-            component: ArticleEditor,
+            component: SysArticleEditor,
             props: true
         },
         {
             path: 'articles/:id',
             name: 'ArticleReader',
-            component: ArticleReader,
+            component: SysArticleReader,
             props: true
         }
     ]

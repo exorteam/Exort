@@ -20,7 +20,7 @@
 import {api} from '@/http'
 
 export default {
-	name: "ArticleList",
+	name: "SysArticleList",
 	data: function(){
 		return {
 			list:[],
@@ -60,11 +60,11 @@ export default {
 		},
 		onClickView(id){
 			//console.log(id);
-			this.$router.push({ name: 'UsrArticleReader', params: { id: id }});
+			this.$router.push({ name: 'ArticleReader', params: { id: id }});
 		},
 		onClickEdit(id){
 			//console.log(id);
-			this.$router.push({ name: 'UsrArticleEditor', params: { id: id }});
+			this.$router.push({ name: 'ArticleEditor', params: { id: id }});
 		},
 		onClickDelete(id){
 			//console.log(id);
@@ -78,7 +78,7 @@ export default {
 		},
 		onClickCreate(){
 			this.$router.push({
-				name: 'UsrArticleEditor',
+				name: 'ArticleEditor',
 				params: { id: 0}
 			});
 		}

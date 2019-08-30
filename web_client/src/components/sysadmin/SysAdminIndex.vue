@@ -18,7 +18,7 @@
                         <Icon type="md-albums"/>
                         社团列表
                     </MenuItem>
-                    <MenuItem name="asso-application">
+					<MenuItem name="asso-application" :to="{name: 'ApplicationList'}">
                         <Icon type="ios-hand"/>
                         社团申请
                     </MenuItem>
