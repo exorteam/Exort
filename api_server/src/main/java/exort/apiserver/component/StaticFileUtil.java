@@ -45,7 +45,7 @@ public class StaticFileUtil {
 			filename = DEFAULT_LOGO_NAME;
 		}
 
-		log.info("get file for name: "+filename);
+		//log.info("get file for name: "+filename);
 
 		Path rootp = Paths.get(FOLDER_NAME);
 
