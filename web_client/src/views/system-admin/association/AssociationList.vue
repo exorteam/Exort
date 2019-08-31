@@ -31,10 +31,15 @@
 								</div>
 							</FormItem>
 							<FormItem label="社团Logo">
-								<div>
-								<b-form-file v-model="file" ref="file-input" style="width:270px"></b-form-file>
-								<Button type="primary" @click="clearFiles" style="height:33px ; margin-bottom:8px;margin-left:11px" >重设</Button>
-								</div>
+								<Upload 
+									:before-upload="handleUpload"
+									action="//jsonplaceholder.typicode.com/posts/">
+									<Button icon="ios-cloud-upload-outline">Upload files</Button>
+								</Upload>
+								<!--<div>                                                                                                                   -->
+								<!--    <b-form-file v-model="file" ref="file-input" style="width:270px"></b-form-file>                                     -->
+								<!--    <Button type="primary" @click="clearFiles" style="height:33px ; margin-bottom:8px;margin-left:11px" >重设</Button>-->
+								<!--</div>                                                                                                                  -->
 							</FormItem>
 							<FormItem label="报名材料" v-if="form.needMaterial">
 								<Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
@@ -53,15 +58,20 @@
 						</div>
 					</div>
 				</div>
-			<div>
-			<div id="Divide">
-			   <Divider />
+
+				<br>
+				<div>
+				<!--<b-form-checkbox-group @input="get" v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>-->
+					<CheckboxGroup v-model="assoStateSelected">
+						<Checkbox label="active">
+							<span>已激活</span>
+						</Checkbox>
+						<Checkbox label="blocked">
+							<span>已锁定</span>
+						</Checkbox>
+					</CheckboxGroup>
 				</div>
-				<b-form-checkbox-group @input="get" v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>
-				</div>
-				<div id="Divide">
-				   <Divider />
-				</div>
+				<br>
 
 				<div id="CardList"  style="display: flex; flex-wrap: wrap">
 					<Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
@@ -154,17 +164,6 @@ export default {
                 { text: '已激活', value: 'active' },
                 { text: '已锁定', value: 'blocked' },
             ],
-            pendingAppTypeSelected:['applying','applying_unblocked'],
-            pendingAppTypeList: [
-                { text: '申请创建社团', value: 'applying' },
-                { text: '申请取消锁定', value: 'applying_unblocked' }
-            ],
-            handledAppTypeSelected:['pass','canceled','refused'],
-            handledAppTypeList: [
-                { text: '已通过申请', value: 'pass' },
-                { text: '已取消申请', value: 'canceled' },
-                { text: '已拒绝申请', value: 'refused' },
-            ],
             inputDefaultValue : "",
             AssoList: [],
             assoSearch:{
@@ -178,6 +177,10 @@ export default {
         }
     },
     methods: {
+		handleUpload(f){
+			this.file = f;
+			return false;
+		},
         showCreateForm(){
             this.form.type = "create"
             this.form.showState=false
@@ -330,7 +333,7 @@ export default {
                             _self.form.name=""
                             _self.form.description=""
                             _self.form.tag.taglist=[]
-                            _self.clearFiles()
+                            //_self.clearFiles()
                             _self.getAssociationList()
                         }).catch(e => {
                             console.log(e)
@@ -342,9 +345,9 @@ export default {
                     _self.$Message.error('创建失败，请上传图片');
                     return
                 }
-                _self.form.onshow = false
+                _self.form.onshow = false;
                 _self.$Message.success('创建成功');
-                _self.getAssociationList()
+                _self.getAssociationList();
             }
             else{
                 var imgFile;

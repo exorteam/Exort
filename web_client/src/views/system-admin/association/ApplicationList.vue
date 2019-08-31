@@ -7,21 +7,20 @@
 						<Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
 						<Button>搜索</Button>
 					</div>
+					<br>
+					<!--<b-form-checkbox-group v-model="pendingAppTypeSelected" :options="pendingAppTypeList" switches>-->
+					<!--</b-form-checkbox-group>                                                                       -->
+					<CheckboxGroup v-model="pendingAppTypeSelected">
+						<Checkbox label="applying">
+							<span>申请创建社团</span>
+						</Checkbox>
+						<Checkbox label="applying_unblocked">
+							<span>申请解除锁定</span>
+						</Checkbox>
+					</CheckboxGroup>
+					<br>
 					<div>
-						<div id="Divide">
-							<Divider />
-						</div>
-						<b-form-checkbox-group v-model="pendingAppTypeSelected" :options="pendingAppTypeList" switches>
-						</b-form-checkbox-group>
-					</div>
-					<div id="Divide">
-						<Divider />
-					</div>
-					<div>
-						<i-table :columns="pendingAppColumn" :data="pendingAppData"></i-table>
-					</div>
-					<div id="Divide">
-						<Divider />
+						<Table :columns="pendingAppColumn" :data="pendingAppData"></Table>
 					</div>
 					<div style="margin-top:15px;text-align: center">
 						<Page id = "page" show-elevator show-total
@@ -36,21 +35,23 @@
 						<Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
 						<Button>搜索</Button>
 					</div>
+					<br>
+					<CheckboxGroup v-model="handledAppTypeSelected">
+						<Checkbox label="pass">
+							<span>已通过申请</span>
+						</Checkbox>
+						<Checkbox label="canceled">
+							<span>已取消申请</span>
+						</Checkbox>
+						<Checkbox label="refused">
+							<span>已拒绝申请</span>
+						</Checkbox>
+					</CheckboxGroup>
+						<!--<b-form-checkbox-group v-model="handledAppTypeSelected" :options="handledAppTypeList" switches>-->
+						<!--</b-form-checkbox-group>                                                                       -->
+					<br>
 					<div>
-						<div id="Divide">
-							<Divider />
-						</div>
-						<b-form-checkbox-group v-model="handledAppTypeSelected" :options="handledAppTypeList" switches>
-						</b-form-checkbox-group>
-					</div>
-					<div id="Divide">
-						<Divider />
-					</div>
-					<div>
-						<i-table :columns="handledAppColumns" :data="handledAppData"></i-table>
-					</div>
-					<div id="Divide">
-						<Divider />
+						<Table :columns="handledAppColumns" :data="handledAppData"></Table>
 					</div>
 					<div style="margin-top:15px;text-align: center">
 						<Page id = "page" show-elevator show-total
