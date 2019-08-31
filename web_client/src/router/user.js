@@ -1,15 +1,10 @@
-import UserIndex from '../components/user/UserIndex'
-import GlobalNotFound from '../components/GlobalNotFound'
+import UserIndex from '@/views/user/UserIndex'
 
 export default {
     path: '/',
-    name: 'Home',
+    name: 'UserIndex',
     component: UserIndex,
     children: [
-        {
-            path: '*',
-            name: 'GlobalNotFound',
-            component: GlobalNotFound
-        }
+
     ]
 }

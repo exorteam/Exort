@@ -17,7 +17,15 @@ const proxy = (function(paths) {
 })(['/files', '/upload']);
 
 module.exports = {
-    outputDir:'server/public',
+    assetsDir: 'static',
+    pages: {
+        index: {
+            entry: 'src/main.js',
+            template: 'index.html',
+            filename: 'index.html'
+        }
+    },
+    outputDir: 'server/public',
     productionSourceMap: false,
     devServer: {
         proxy: proxy,
@@ -93,7 +101,7 @@ module.exports = {
                     }
                 } else {
                     console.log('not login');
-                    res.status(401).json({error: 'not_login', message: 'Not login.'});
+                    res.status(401).json({error: 'not_login', message: '未登录'});
                 }
             });
         }

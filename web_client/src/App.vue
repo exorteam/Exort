@@ -13,10 +13,10 @@ export default {
         routerOk: true
     }},
     computed: {
-        ...mapState('common/auth', ['uid'])
+        ...mapState('common/currentUser', ['uid'])
     },
     methods: {
-        ...mapActions('common/auth', ['getAdmin']),
+        ...mapActions('common/currentUser', ['getAdmin']),
         reload() {
             this.routerOk = false;
             this.$nextTick(function() {
@@ -26,12 +26,17 @@ export default {
     },
     watch: {
         'uid': function(newUid, oldUid) {
+            let that = this;
             if (newUid) {
-                this.getAdmin().catch(err => {
-                    console.log(err);
-                })
+                this.getAdmin().catch(err => that.$Notice.error({
+                    title: '获取管理权限列表失败',
+                    desc: err.message || err,
+                })).finally(() => {
+                    that.reload()
+                });
+            } else {
+                this.reload();
             }
-            this.reload();
         }
     }
 }

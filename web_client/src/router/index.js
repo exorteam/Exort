@@ -3,16 +3,22 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter);
 
+import systemAdmin from './system-admin'
+import associationAdmin from './association-admin'
 import user from './user'
-import sysadmin from './sysadmin'
-import assoadmin from './assoadmin'
+import GlobalNotFound from '@/views/GlobalNotFound'
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
-        sysadmin,
-        assoadmin,
-        user
+        systemAdmin,
+        associationAdmin,
+        user,
+        {
+            path: '*',
+            name: 'GlobalNotFound',
+            component: GlobalNotFound
+        }
     ]
 });
 
@@ -22,7 +28,7 @@ let first_time = true;
 
 router.beforeEach((to, from, next) => {
     if (first_time) {
-        store.dispatch('common/auth/getToken').finally(() => next());
+        store.dispatch('common/currentUser/getToken').finally(() => next());
         first_time = false;
     } else {
         next();
