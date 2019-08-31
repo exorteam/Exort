@@ -1,75 +1,74 @@
 <template>
-    <Tab-pane label="社团申请管理" key="tabpane_key2">
-            <b-tabs content-class="mt-3">
-            <b-tab title="尚未处理" active>
-            <div id="AssoAppList">
-                <div id=SearchAsso>
-                  <Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
-                  <Button type="info">搜索</Button>
-                </div>
-                <div>
-                  <div id="Divide">
-                    <Divider />
-                  </div>
-                  <b-form-checkbox-group v-model="pendingAppTypeSelected" :options="pendingAppTypeList" switches>
-                  </b-form-checkbox-group>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div>
-                  <i-table :columns="pendingAppColumn" :data="pendingAppData"></i-table>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div style="margin-top:15px;text-align: center">
-                <Page id = "page" show-elevator show-total
-                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-                :current.sync = "pageProp.pageNum" ></Page>
-                </div>
-            </div>
-            </b-tab>
-            <b-tab title="已处理">
-
-              <div id="AssoAppList">
-                <div id=SearchAsso>
-                  <Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
-                  <Button type="info">搜索</Button>
-                </div>
-                <div>
-                  <div id="Divide">
-                    <Divider />
-                  </div>
-                  <b-form-checkbox-group v-model="handledAppTypeSelected" :options="handledAppTypeList" switches>
-                  </b-form-checkbox-group>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div>
-                  <i-table :columns="handledAppColumns" :data="handledAppData"></i-table>
-                </div>
-                <div id="Divide">
-                  <Divider />
-                </div>
-                <div style="margin-top:15px;text-align: center">
-                <Page id = "page" show-elevator show-total
-                :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-                :current.sync = "pageProp.pageNum" ></Page>
-                </div>
-              </div>
-
-            </b-tab>
-            </b-tabs>
-        </Tab-pane>
+	<Card>
+		<Tabs content-class="mt-3">
+			<TabPane label="尚未处理" name="unsolved" active>
+				<div id="AssoAppList">
+					<div id=SearchAsso>
+						<Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
+						<Button>搜索</Button>
+					</div>
+					<br>
+					<!--<b-form-checkbox-group v-model="pendingAppTypeSelected" :options="pendingAppTypeList" switches>-->
+					<!--</b-form-checkbox-group>                                                                       -->
+					<CheckboxGroup v-model="pendingAppTypeSelected">
+						<Checkbox label="applying">
+							<span>申请创建社团</span>
+						</Checkbox>
+						<Checkbox label="applying_unblocked">
+							<span>申请解除锁定</span>
+						</Checkbox>
+					</CheckboxGroup>
+					<br>
+					<div>
+						<Table :columns="pendingAppColumn" :data="pendingAppData"></Table>
+					</div>
+					<div style="margin-top:15px;text-align: center">
+						<Page id = "page" show-elevator show-total
+							  :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+							  :current.sync = "pageProp.pageNum" ></Page>
+					</div>
+				</div>
+			</TabPane>
+			<TabPane label="已处理" name="solved">
+				<div id="AssoAppList">
+					<div id=SearchAsso>
+						<Input v-model="inputDefaultValue" placeholder="请输入社团名称" style="width: 300px" />
+						<Button>搜索</Button>
+					</div>
+					<br>
+					<CheckboxGroup v-model="handledAppTypeSelected">
+						<Checkbox label="pass">
+							<span>已通过申请</span>
+						</Checkbox>
+						<Checkbox label="canceled">
+							<span>已取消申请</span>
+						</Checkbox>
+						<Checkbox label="refused">
+							<span>已拒绝申请</span>
+						</Checkbox>
+					</CheckboxGroup>
+						<!--<b-form-checkbox-group v-model="handledAppTypeSelected" :options="handledAppTypeList" switches>-->
+						<!--</b-form-checkbox-group>                                                                       -->
+					<br>
+					<div>
+						<Table :columns="handledAppColumns" :data="handledAppData"></Table>
+					</div>
+					<div style="margin-top:15px;text-align: center">
+						<Page id = "page" show-elevator show-total
+							  :total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+							  :current.sync = "pageProp.pageNum" ></Page>
+					</div>
+				</div>
+			</TabPane>
+		</Tabs>
+	</Card>
 </template>
 
 <script>
-// <p class="mt-2">Selected file: <b>{{ file ? file.name : '' }}</b></p>
 import TagChoose from '../../common/tag_choose.vue'
 import axios from 'axios'
 export default {
+	name: 'ApplicationList',
     props: {
             pendingAppData: null,
             handledAppData: null,
@@ -166,7 +165,7 @@ export default {
                 }
             ],
             pageProp:{
-                totalSize : 50,
+                totalSize : 0,
                 pageSize : 6,
                 pageNum : 1
             },
