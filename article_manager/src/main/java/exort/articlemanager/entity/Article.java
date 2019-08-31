@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 
 import lombok.Data;
 
@@ -13,8 +14,11 @@ public class Article {
 	@Id
 	private int id;
 
+	@TextIndexed
 	private String title;
+	@TextIndexed
 	private String content;
+	@TextIndexed
 	private String associationId;
 
 	private Date createTime;
