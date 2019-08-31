@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import lombok.Data;
 
+@Document
 @Data
 public class Article {
 
@@ -20,6 +23,9 @@ public class Article {
 	private String content;
 	@TextIndexed
 	private String associationId;
+
+	@TextScore
+	private float score;
 
 	private Date createTime;
 	private Date publishTime;

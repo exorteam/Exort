@@ -1,7 +1,7 @@
 package exort.articlemanager.controller;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.entity.ArticleFilterParams;
@@ -69,12 +71,15 @@ public class ArticleController {
 	}
 
 	@GetMapping
-	public ApiResponse listArticle(@RequestBody ArticleFilterParams params){
-		List<?> res = service.listArticle(params);
+	public ApiResponse listArticle(
+			@RequestBody ArticleFilterParams params,
+			@RequestParam int pageNum,
+			@RequestParam int pageSize){
+		PagedData<Article> res = service.listArticle(params,new PageQuery(pageNum,pageSize));
 		if(res == null){
 			throw new ApiError(404,"GetErr","Error occured when listing article");
 		}
-		return new ApiResponse<List>(res);
+		return new ApiResponse<PagedData>(res);
 	}
 
 	@PatchMapping("/{id}")

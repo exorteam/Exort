@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.beans.factory.annotation.Value;
 
 import exort.articlemanager.component.AutoIncIdGenerator;
 import exort.articlemanager.entity.Article;
@@ -27,6 +28,8 @@ import exort.articlemanager.service.ArticleService.ArticleStatus;
 @ActiveProfiles("test")
 @SpringBootTest
 public class ArticlemanagerApplicationTests {
+	@Value("${test.fortest.str}")
+    public void setProtocol(String str) { System.out.println(str); }
 
 	@Autowired
 	private ArticleRepository repository;

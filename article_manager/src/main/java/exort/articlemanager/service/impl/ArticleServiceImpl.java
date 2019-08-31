@@ -1,13 +1,15 @@
 package exort.articlemanager.service.impl;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.articlemanager.component.AutoIncIdGenerator;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.entity.ArticleFilterParams;
@@ -64,54 +66,27 @@ public class ArticleServiceImpl implements ArticleService {
 		return repository.findById(articleId).get();
 	}
 
-	public List<Article> listArticle(ArticleFilterParams params){
+	public PagedData<Article> listArticle(ArticleFilterParams params,PageQuery pq){
 
-		TextCriteria criteria = TextCriteria
-			.forDefaultLanguage()
-			.matchingAny(params.getKeyword());
+		final String keyword = params.getKeyword();
+		if(keyword == null || keyword.isEmpty()){
+			final Page<Article> res = repository.findAll(PageRequest.of(pq.getPageNum(),pq.getPageSize()));
+			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
+			//return repository.findAll();
+		}
+		else{
+			TextCriteria criteria = TextCriteria
+				.forDefaultLanguage()
+				.matchingPhrase(params.getKeyword());
 
-		List<Article> articles = repository.findAllBy(
-				criteria,
-				PageRequest.of(1,10)
-				).getContent();
+			final Page<Article> res = repository.findAllBy(
+					criteria,
+					PageRequest.of(pq.getPageNum(),pq.getPageSize())
+					);
 
-		//Integer state = params.getState();
-		//if(state != null){
-		//    articles.removeIf(article -> !state.equals(article.getState()));
-		//    if(articles.isEmpty())return articles;
-		//}
+			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
 
-		//Integer createMethod = params.getCreateMethod();
-		//if(createMethod != null){
-		//    articles.removeIf(article -> !createMethod.equals(article.getCreateMethod()));
-		//    if(articles.isEmpty())return articles;
-		//}
-
-		//Date startTime = params.getStartTime();
-		//if(startTime != null){
-		//    articles.removeIf(article -> startTime.after(article.getCreateTime()));
-		//    if(articles.isEmpty())return articles;
-		//}
-
-		//Date endTime = params.getEndTime();
-		//if(endTime != null){
-		//    articles.removeIf(article -> endTime.before(article.getCreateTime()));
-		//    if(articles.isEmpty())return articles;
-		//}
-
-		//String keyword = params.getKeyword();
-		//if(keyword != null){
-		//    articles.removeIf(article -> !article.getTitle().contains(keyword)&&!article.getContent().contains(keyword));
-		//    if(articles.isEmpty())return articles;
-		//}
-
-		//String authorId = params.getAuthorId();
-		//if(authorId != null){
-		//    articles.removeIf(article -> !article.getAssociationId().equals(authorId));
-		//    if(articles.isEmpty())return articles;
-		//}
-
-		return articles;
+		}
 	}
 
 	public boolean publishArticle(int articleId){
