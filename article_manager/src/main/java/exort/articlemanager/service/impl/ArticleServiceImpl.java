@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
 import exort.articlemanager.component.AutoIncIdGenerator;
@@ -63,7 +65,15 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	public List<Article> listArticle(ArticleFilterParams params){
-		List<Article> articles = repository.findAll();
+
+		TextCriteria criteria = TextCriteria
+			.forDefaultLanguage()
+			.matchingAny(params.getKeyword());
+
+		List<Article> articles = repository.findAllBy(
+				criteria,
+				PageRequest.of(1,10)
+				).getContent();
 
 		//Integer state = params.getState();
 		//if(state != null){
