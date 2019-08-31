@@ -1,13 +1,15 @@
 <template>
 	<div class="article-list">
 		<Card>
-			<h1>文章列表</h1>
-			<br>
+			<Input v-model="searchContent" placeholder="Search in articles" style="width:300px"/>
+			<Button @click="onClickSearch">搜索</Button>
+			<br><br>
 			<Table :columns="columns" :data="list">
 				<template slot-scope="{ row, index }" slot="action">
 					<Button @click="onClickView(row.id)">查看</Button>
 					<Button @click="onClickEdit(row.id)">编辑</Button>
 					<Button @click="onClickDelete(row.id)">删除</Button>
+					<Button @click="togglePublished(row.id,row.published)">切换发布状态</Button>
 				</template>
 			</Table>
 			<br>
@@ -30,7 +32,8 @@ export default {
 				{title:'已发布',key:'published'},
 				{title:'上次修改时间',key:'lastModifyTime'},
 				{title:'操作',slot:'action'},
-			]
+			],
+			searchContent:'',
 		}
 	},
 	methods: {
@@ -81,7 +84,22 @@ export default {
 				name: 'ArticleEditor',
 				params: { id: 0}
 			});
+		},
+		onClickSearch(){
+			this.loadArticles(this.searchContent);
+		},
+		togglePublished(id,published){
+			api({
+				method: 'post',
+				url: '/articles/'+id+'/publish?publish='+!published,
+			}).then(res=>{
+				console.log(res);
+				this.loadArticles();
+			}).catch(err=>{
+				console.log(err);
+			})
 		}
+
 	},
 	mounted:function(){
 		this.loadArticles('');

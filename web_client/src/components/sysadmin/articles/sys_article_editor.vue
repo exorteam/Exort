@@ -86,7 +86,7 @@ export default {
 					this.$router.push({name: 'ArticleList'});
 				})
 			}
-		}
+		},
 	},
 	mounted:function(){
 		if(this.id != 0){

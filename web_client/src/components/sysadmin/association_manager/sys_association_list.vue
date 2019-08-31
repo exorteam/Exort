@@ -164,17 +164,6 @@ export default {
                 { text: '已激活', value: 'active' },
                 { text: '已锁定', value: 'blocked' },
             ],
-            pendingAppTypeSelected:['applying','applying_unblocked'],
-            pendingAppTypeList: [
-                { text: '申请创建社团', value: 'applying' },
-                { text: '申请取消锁定', value: 'applying_unblocked' }
-            ],
-            handledAppTypeSelected:['pass','canceled','refused'],
-            handledAppTypeList: [
-                { text: '已通过申请', value: 'pass' },
-                { text: '已取消申请', value: 'canceled' },
-                { text: '已拒绝申请', value: 'refused' },
-            ],
             inputDefaultValue : "",
             AssoList: [],
             assoSearch:{
