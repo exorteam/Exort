@@ -124,31 +124,31 @@ public class ArticlemanagerApplicationTests {
 		}
 	}
 
-	@Test
-	public void testListWithFilter() {
-		final Date rightNow = new Date();
-		Random rand = new Random(rightNow.getTime());
-		Article e = articles.get(0);
-		e.setCreateTime(rightNow);
-		repository.save(e);
+	//@Test
+	//public void testListWithFilter() {
+	//    final Date rightNow = new Date();
+	//    Random rand = new Random(rightNow.getTime());
+	//    Article e = articles.get(0);
+	//    e.setCreateTime(rightNow);
+	//    repository.save(e);
 
-		final ArticleFilterParams filter1 = new ArticleFilterParams();
-		filter1.setKeyword(e.getTitle());
-		Assert.assertTrue(service.listArticle(filter1).contains(e));
+	//    final ArticleFilterParams filter1 = new ArticleFilterParams();
+	//    filter1.setKeyword(e.getTitle());
+	//    Assert.assertTrue(service.listArticle(filter1).contains(e));
 
-		final ArticleFilterParams filter2 = new ArticleFilterParams();
-		filter2.setState(ArticleStatus.UNPUBLISHED);
-		Assert.assertTrue(service.listArticle(filter2).contains(e));
+	//    final ArticleFilterParams filter2 = new ArticleFilterParams();
+	//    filter2.setState(ArticleStatus.UNPUBLISHED);
+	//    Assert.assertTrue(service.listArticle(filter2).contains(e));
 
-		final ArticleFilterParams filter3 = new ArticleFilterParams();
-		filter3.setStartTime(new Date(rightNow.getYear()-1,rightNow.getMonth(),rightNow.getDay()));
-		filter3.setEndTime(new Date(rightNow.getYear()+1,rightNow.getMonth(),rightNow.getDay()));
-		Assert.assertTrue(service.listArticle(filter3).contains(e));
+	//    final ArticleFilterParams filter3 = new ArticleFilterParams();
+	//    filter3.setStartTime(new Date(rightNow.getYear()-1,rightNow.getMonth(),rightNow.getDay()));
+	//    filter3.setEndTime(new Date(rightNow.getYear()+1,rightNow.getMonth(),rightNow.getDay()));
+	//    Assert.assertTrue(service.listArticle(filter3).contains(e));
 
-		final ArticleFilterParams filter4 = new ArticleFilterParams();
-		filter4.setAuthorId(ASSO_ID);
-		Assert.assertTrue(service.listArticle(filter4).contains(e));
+	//    final ArticleFilterParams filter4 = new ArticleFilterParams();
+	//    filter4.setAuthorId(ASSO_ID);
+	//    Assert.assertTrue(service.listArticle(filter4).contains(e));
 
-	}
+	//}
 
 }
