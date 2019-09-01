@@ -4,7 +4,10 @@ const state = {
     nodePerm: {
         data: [],
         targetKeys: [],
-        lifeStyle
+        listStyle: {
+            width: '250px',
+            height: '300px'
+        }
     },
 
     departments: [],

@@ -1,44 +1,46 @@
 <template>
     <div id="MemManage">
-        <Row>
-            <Col span="8">
-                <Tree :data="this.tree" :render="renderContent"></Tree>
-            </Col>
-            <Col span="16">
-                <Row>
-                    <div>
-                        <Card>
-                            <p><strong>部门名称</strong></p>
-                            <hr/>
-                            <p>{{this.specdept.name}}</p>
-                            <br/>
-                            <p><strong>部门描述</strong></p>
-                            <hr/>
-                            <p>{{this.specdept.description}}</p>
-                            <br/>
-                            <Button @click="editDepartment()">编辑部门信息</Button>
-                        </Card>
-                    </div>
-                </Row>
-                <br/>
-                <Row>
-                    <Table border ref="selection" :columns="columns" :data="this.deptUserList">
-                        <template slot-scope="{ row }" slot="name">
-                            <strong>{{ row.name }}</strong>
-                        </template>
-                        <template slot-scope="{ row, index }" slot="action">
-                            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看
-                            </Button>
-                            <Button type="error" size="small" @click="remove(index)">删除</Button>
-                        </template>
-                    </Table>
+        <Card>
+            <Row>
+                <Col span="8">
+                    <Tree :data="this.tree" :render="renderContent"></Tree>
+                </Col>
+                <Col span="16">
+                    <Row>
+                        <div>
+                            <Card>
+                                <p><strong>部门名称</strong></p>
+                                <hr/>
+                                <p>{{this.specdept.name}}</p>
+                                <br/>
+                                <p><strong>部门描述</strong></p>
+                                <hr/>
+                                <p>{{this.specdept.description}}</p>
+                                <br/>
+                                <Button @click="editDepartment()">编辑部门信息</Button>
+                            </Card>
+                        </div>
+                    </Row>
                     <br/>
-                </Row>
-                <Row>
-                    <Button size="large" @click="addUser">添加</Button>
-                </Row>
-            </Col>
-        </Row>
+                    <Row>
+                        <Table border ref="selection" :columns="columns" :data="this.deptUserList">
+                            <template slot-scope="{ row }" slot="name">
+                                <strong>{{ row.name }}</strong>
+                            </template>
+                            <template slot-scope="{ row, index }" slot="action">
+                                <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看
+                                </Button>
+                                <Button type="error" size="small" @click="remove(index)">删除</Button>
+                            </template>
+                        </Table>
+                        <br/>
+                    </Row>
+                    <Row>
+                        <Button size="large" @click="addUser">添加</Button>
+                    </Row>
+                </Col>
+            </Row>
+        </Card>
     </div>
 </template>
 
