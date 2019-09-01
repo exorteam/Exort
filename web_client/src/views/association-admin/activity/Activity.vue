@@ -17,17 +17,20 @@
                     <div style="margin-top: 15px; margin-left: 20px">
                         <Row>
                             <Col span="8">创建时间<!-- 活动创建时间搜索 -->
-                                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date"
+                                <DatePicker v-model="select.createTime" type="daterange" split-panels
+                                            placeholder="Select date"
                                             style="width: 180px; margin-right: 45px"></DatePicker>
                             </Col>
                             <Col span="8">
                                 报名时间<!-- 活动报名时间搜索 -->
-                                <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date"
+                                <DatePicker v-model="select.signupTime" type="daterange" split-panels
+                                            placeholder="Select date"
                                             style="width: 180px; margin-right: 45px"></DatePicker>
                             </Col>
                             <Col span="8">
                                 开始时间<!-- 活动开始时间搜索 -->
-                                <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date"
+                                <DatePicker v-model="select.startTime" type="daterange" split-panels
+                                            placeholder="Select date"
                                             style="width: 180px; margin-right: 45px"></DatePicker>
                             </Col>
                         </Row>
@@ -36,23 +39,29 @@
                             <Col span="8">
                                 报名状态<!-- 根据活动报名状态搜索 -->
                                 <Select v-model="select.signupSelected" style="width:200px">
-                                    <Option v-for="item in signupSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                    <Option v-for="item in signupSelectList" :value="item.value" :key="item.value">{{
+                                        item.text }}
+                                    </Option>
                                 </Select>
                             </Col>
                             <Col span="8">
                                 活动状态<!-- 根据活动状态搜索 -->
                                 <!--<b-form-select v-model="select.startSelected" :options="startSelectList"-->
-                                               <!--style="width: 120px; height: 32px; margin-right: 25px"></b-form-select>-->
+                                <!--style="width: 120px; height: 32px; margin-right: 25px"></b-form-select>-->
                                 <Select v-model="select.startSelected" style="width:200px">
-                                    <Option v-for="item in startSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                    <Option v-for="item in startSelectList" :value="item.value" :key="item.value">{{
+                                        item.text }}
+                                    </Option>
                                 </Select>
                             </Col>
                             <Col span="8">
                                 发布状态<!-- 根据活动发布状态搜索 -->
                                 <!--<b-form-select v-model="select.publishSelected" :options="publishSelectList"-->
-                                               <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
+                                <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
                                 <Select v-model="select.publishSelected" style="width:200px">
-                                    <Option v-for="item in publishSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                    <Option v-for="item in publishSelectList" :value="item.value" :key="item.value">{{
+                                        item.text }}
+                                    </Option>
                                 </Select>
                             </Col>
                         </Row>
@@ -61,11 +70,13 @@
                         <Row>
                             <Col span="12">
                                 发起社团<!-- 直接输入社团名称 -->
-                                <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                                <Input v-model="select.association" placeholder="请输入社团名称"
+                                       style="width: 300px; margin-right: 40px"/>
                             </Col>
                             <Col span="12">
                                 关键词<!-- keyword -->
-                                <Input v-model="select.keyword" placeholder="请输入搜索关键词" style="width: 300px; margin-right: 40px"/>
+                                <Input v-model="select.keyword" placeholder="请输入搜索关键词"
+                                       style="width: 300px; margin-right: 40px"/>
                             </Col>
                         </Row>
                         <br/>
@@ -73,18 +84,22 @@
                             <Col span="8">
                                 是否需要审核
                                 <!--<b-form-select v-model="select.ifReview" :options="ifReviewSelectList"-->
-                                               <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
+                                <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
                                 <Select v-model="select.ifReview" style="width:200px">
-                                    <Option v-for="item in ifReviewSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                    <Option v-for="item in ifReviewSelectList" :value="item.value" :key="item.value">{{
+                                        item.text }}
+                                    </Option>
                                 </Select>
                                 <!--<Checkbox v-model="select.ifReview" style="margin-right: 40px"/>-->
                             </Col>
                             <Col span="8">
                                 是否允许非本组织成员参加
                                 <!--<b-form-select v-model="select.ifOnlyMem" :options="ifOnlyMemSelectList"-->
-                                               <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
+                                <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
                                 <Select v-model="select.ifOnlyMem" style="width:200px">
-                                    <Option v-for="item in ifOnlyMemSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                    <Option v-for="item in ifOnlyMemSelectList" :value="item.value" :key="item.value">{{
+                                        item.text }}
+                                    </Option>
                                 </Select>
                                 <!--<Checkbox v-model="select.ifOnlyMem" style="margin-right: 40px"/>-->
                             </Col>
@@ -100,7 +115,9 @@
                         </Row>
                         <Row>
                             <!-- 按照条件进行搜索 -->
-                            <Button type="info" label="large" @click="handleSelect" style="float:right; margin-right:29px">搜索</Button>
+                            <Button type="info" label="large" @click="handleSelect"
+                                    style="float:right; margin-right:29px">搜索
+                            </Button>
                         </Row>
                     </div>
                 </Card>
@@ -113,7 +130,7 @@
             <!-- 活动排列 -->
             <div>
                 <div span="11" style="display: flex;justify-content: space-around;flex-wrap: wrap">
-                    <Card v-for="card in cardList" :key="card.id" :row="card" style="width: 465px; margin: 30px;"
+                    <Card v-for="card in this.activities.cardList" :key="card.id" :row="card" style="width: 465px; margin: 30px;"
                           :bordered="false">
                         <div style="height: 30px">
                             <p style="float: left" slot="title">{{card.title}}</p>
@@ -193,7 +210,7 @@
         }
     ];
 
-    let ifReviewSelectLists=[
+    let ifReviewSelectLists = [
         {
             value: 0,
             text: '--',
@@ -208,7 +225,7 @@
         }
     ];
 
-    let ifOnlyMemSelectLists=[
+    let ifOnlyMemSelectLists = [
         {
             value: 0,
             text: '--',
@@ -223,207 +240,212 @@
         }
     ];
 
-import ActivityCreate from './ActivityCreate'
-import TagChoose from '../../../components/TagChoose'
-import axios from 'axios'
-import image from '../../../assets/activity/cover1.jpeg'
+    import ActivityCreate from './ActivityCreate'
+    import TagChoose from '../../../components/TagChoose'
+    import {mapState, mapActions} from 'vuex'
 
-export default {
-    name: 'activity',
-    components: { ActivityCreate, TagChoose },
-    data () {
-        return{
-            stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
-            statusList: ["default", "default", "processing", "warning", "error", "success"],
-            currentAvtivityId: "",
-            publishSelected: 0,
-            publishSelectList: publishSelectLists,
-            signupSelected: 0,
-            signupSelectList: signupSelectLists,
-            startSelected: 0,
-            startSelectList: startSelectLists,
-            ifReview:0,
-            ifReviewSelectList:ifReviewSelectLists,
-            ifOnlyMem:0,
-            ifOnlyMemSelectList:ifOnlyMemSelectLists,
-
-            cardList: [],
-            page:{
-                totalSize: 9,
-                pageNum: 0,
-                pageSize: 9,
-            },
-            select:{
-                association: null,
-                keyword: null,
-                createTime: null,
-                signupTime: null,
-                startTime: null,
+    export default {
+        name: 'activity',
+        components: {ActivityCreate, TagChoose},
+        data() {
+            return {
+                stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
+                statusList: ["default", "default", "processing", "warning", "error", "success"],
+                currentAvtivityId: "",
                 publishSelected: 0,
+                publishSelectList: publishSelectLists,
                 signupSelected: 0,
+                signupSelectList: signupSelectLists,
                 startSelected: 0,
+                startSelectList: startSelectLists,
                 ifReview: 0,
-                ifOnlyMem: 0
-            },
-            form:{
-                onshow: false,
-                data:{
-                    title: "",
-                    content: "",
-                    signupTime: {
-                        type: 0,
-                        time:[{
-                            start: "",
-                            end: "",
-                        }]
-                    },
-                    time: {
-                        type: 0,
-                        time:[{
-                            start: "",
-                            end: ""
-                        }]
-                    },
-                    ifReview: false,
-                    ifOnlyMem: false,
-                    maxParticipants: '',
-                    materials: [],
-                    image: "",
-                    tag:{
-                        tag_show: false,
-                        tagList:[],
-                    }
+                ifReviewSelectList: ifReviewSelectLists,
+                ifOnlyMem: 0,
+                ifOnlyMemSelectList: ifOnlyMemSelectLists,
+
+                page:{
+                    totalSize: 0,
+                    pageNum: 0,
+                    pageSize: 9
                 },
+                select: {
+                    association: null,
+                    keyword: null,
+                    createTime: null,
+                    signupTime: null,
+                    startTime: null,
+                    publishSelected: 0,
+                    signupSelected: 0,
+                    startSelected: 0,
+                    ifReview: 0,
+                    ifOnlyMem: 0
+                },
+                form: {
+                    onshow: false,
+                    data: {
+                        title: "",
+                        content: "",
+                        signupTime: {
+                            type: 0,
+                            time: [{
+                                start: "",
+                                end: "",
+                            }]
+                        },
+                        time: {
+                            type: 0,
+                            time: [{
+                                start: "",
+                                end: ""
+                            }]
+                        },
+                        ifReview: false,
+                        ifOnlyMem: false,
+                        maxParticipants: '',
+                        materials: [],
+                        image: "",
+                        tag: {
+                            tag_show: false,
+                            tagList: [],
+                        }
+                    },
+                },
+                tag: {
+                    tag_show: false,
+                    tagList: [],
+                }
+            }
+        },
+        computed: {
+            ...mapState('associationAdmin/activity',[
+                'activities'
+            ])
+        },
+        methods: {
+            to_detail(value) {
+                // console.log(value)
+                sessionStorage.setItem('activityid', value)
+                this.$store.dispatch('setStatus')
+
+                this.$router.replace({path: "/admin/activity/about"})
             },
-            tag:{
-                tag_show: false,
-                tagList:[],
-            }      
-        }
-    },
-    methods: {
-        handlePage(){
+            handleSelect() {
+                let data = this.select
+                data.tags = this.tag.tagList
 
-        },
-        to_detail(value){
-            // console.log(value)
-            sessionStorage.setItem('activityid', value)
-            this.$store.dispatch('setStatus')
-
-            this.$router.replace({path: "/admin/activity/about"})
-        },
-        handleSelect(){
-            let data = this.select
-            data.tags = this.tag.tagList
-
-            if(data.createTime!=null && data.createTime.length==2){
-                if(data.createTime[0]==""){
-                    data.createTime=null
-                }else{
-                    let create  = {
-                        start: data.createTime[0],
-                        end:data.createTime[1]
+                if (data.createTime != null && data.createTime.length == 2) {
+                    if (data.createTime[0] == "") {
+                        data.createTime = null
+                    } else {
+                        let create = {
+                            start: data.createTime[0],
+                            end: data.createTime[1]
+                        }
+                        data.createTime = create
                     }
-                    data.createTime = create
                 }
-            }
-            if(data.signupTime!=null && data.signupTime.length==2){
-                if(data.signupTime[0]==""){
-                    data.signupTime=null
-                }else{
-                    let signup  = {
-                        start: data.signupTime[0],
-                        end: data.signupTime[1]
+                if (data.signupTime != null && data.signupTime.length == 2) {
+                    if (data.signupTime[0] == "") {
+                        data.signupTime = null
+                    } else {
+                        let signup = {
+                            start: data.signupTime[0],
+                            end: data.signupTime[1]
+                        }
+                        data.signupTime = signup
                     }
-                    data.signupTime = signup
                 }
-            }
-            if(data.startTime!=null && data.startTime.length==2){
-                if(data.startTime[0]==""){
-                    data.startTime=null                    
-                }else{
+                if (data.startTime != null && data.startTime.length == 2) {
+                    if (data.startTime[0] == "") {
+                        data.startTime = null
+                    } else {
                         let time = {
-                        start: data.startTime[0],
-                        end: data.startTime[1]
+                            start: data.startTime[0],
+                            end: data.startTime[1]
+                        }
+                        data.startTime = time
                     }
-                    data.startTime = time
                 }
-            }
-            if(data.ifReview===true){
-                data.ifReview=2
-            }else if(data.ifReview===false){
-                data.ifReview=1
-            }
-            if(data.ifOnlyMem===true){
-                data.ifOnlyMem=2
-            }else if(data.ifOnlyMem===false){
-                data.ifOnlyMem=1
-            }
-            if(data.keyword==""){
-                data.keyword=null
-            }
-
-            console.log(data)
-            this.axios({
-                method: "post",
-                url: "/activities/filter",
-                params:{
-                    'pagesize': this.page.pageSize,
-                    'pagenum':this.page.pageNum,
-                    'sortby':"0",
-                },
-                data: data
-            })
-            .then((response) => {
-                let responseData = response.data.data
-                console.log(responseData)
-                this.cardList = responseData.content
-                this.page.totalSize = responseData.totalSize
-                this.page.pageNum = responseData.pageNum
-                this.page.pageSize = responseData.pageSize
-                console.log(this.page.totalSize, this.page.pageNum, this.page.pageSize)
-                for(let i=0; i< this.cardList.length; i++){
-                    this.setData(this.cardList[i])
+                if (data.ifReview === true) {
+                    data.ifReview = 2
+                } else if (data.ifReview === false) {
+                    data.ifReview = 1
                 }
-            })
-            .catch(e => {
-                console.log(e)
-            })
-        },
-        setData(value) {
-            if (value.publishState == 0) {
-                value.activityState = 0
-            } else if (value.signupState != 2) {
-                value.activityState = value.signupState + 1
-            } else {
-                value.activityState = value.signupState + 3
-            }
-        },
-    },
-    mounted() {
-        this.handleSelect()
-        // let data = this.select
-        // data.tagList = this.tag.tagList
+                if (data.ifOnlyMem === true) {
+                    data.ifOnlyMem = 2
+                } else if (data.ifOnlyMem === false) {
+                    data.ifOnlyMem = 1
+                }
+                if (data.keyword == "") {
+                    data.keyword = null
+                }
 
-        // this.axios({
-        //     method:"get",
-        //     url:"activities",
-        //     params:{
-        //         'pagesize': this.page.pageSize,
-        //         'pagenum':this.page.pageNum,
-        //         'sortby':"0",
-        //     },
-        //     data: data
-        // })
-        // .then(response => {
-        //     this.cardList = response.data.data.content
-        //     this.totalSize = response.data.data.totalSize
-        //     this.pageNum = response.data.data.pageNum
-        //     this.pageSize = response.data.data.pageSize
-        // })
-        // .catch(e => {
-        //     console.log(e)
-        // })
-    },
-}
+                // console.log(data)
+                this.updateCardlist({},{select:data,pageSize:page.pageSize,pageNum:page.pageNum});
+
+                // this.axios({
+                //     method: "post",
+                //     url: "/activities/filter",
+                //     params: {
+                //         'pagesize': this.page.pageSize,
+                //         'pagenum': this.page.pageNum,
+                //         'sortby': "0",
+                //     },
+                //     data: data
+                // })
+                //     .then((response) => {
+                //         let responseData = response.data.data
+                //         console.log(responseData)
+                //         this.cardList = responseData.content
+                //         this.page.totalSize = responseData.totalSize
+                //         this.page.pageNum = responseData.pageNum
+                //         this.page.pageSize = responseData.pageSize
+                //         console.log(this.page.totalSize, this.page.pageNum, this.page.pageSize)
+                //         for (let i = 0; i < this.cardList.length; i++) {
+                //             this.setData(this.cardList[i])
+                //         }
+                //     })
+                //     .catch(e => {
+                //         console.log(e)
+                //     })
+            },
+            setData(value) {
+                if (value.publishState == 0) {
+                    value.activityState = 0
+                } else if (value.signupState != 2) {
+                    value.activityState = value.signupState + 1
+                } else {
+                    value.activityState = value.signupState + 3
+                }
+            },
+            ...mapActions('associationAdmin/activity',[
+                'updateCardlist'
+            ])
+        },
+        mounted() {
+            this.handleSelect()
+            // let data = this.select
+            // data.tagList = this.tag.tagList
+
+            // this.axios({
+            //     method:"get",
+            //     url:"activities",
+            //     params:{
+            //         'pagesize': this.page.pageSize,
+            //         'pagenum':this.page.pageNum,
+            //         'sortby':"0",
+            //     },
+            //     data: data
+            // })
+            // .then(response => {
+            //     this.cardList = response.data.data.content
+            //     this.totalSize = response.data.data.totalSize
+            //     this.pageNum = response.data.data.pageNum
+            //     this.pageSize = response.data.data.pageSize
+            // })
+            // .catch(e => {
+            //     console.log(e)
+            // })
+        },
+    }
 </script>
