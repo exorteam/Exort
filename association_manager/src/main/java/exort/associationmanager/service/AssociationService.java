@@ -1,16 +1,18 @@
 package exort.associationmanager.service;
 
+import java.util.List;
+
 import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
 import exort.associationmanager.entity.MyObject;
 
-import java.util.List;
-
 
 public interface AssociationService{
     public Association getAssociation(String assoId);
+
+    public PagedData<Association> getAssociationsInBatch(List<String> ids,Integer pn,Integer ps);
 
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize);
 

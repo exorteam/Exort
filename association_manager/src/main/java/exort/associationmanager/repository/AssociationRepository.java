@@ -8,4 +8,5 @@ import exort.associationmanager.entity.Association;
 
 public interface AssociationRepository extends MongoRepository<Association,String> {
 	Page<Association> findAll(Pageable page);
+	Page<Association> findAllById(Iterable<String> ids,Pageable page);
 }

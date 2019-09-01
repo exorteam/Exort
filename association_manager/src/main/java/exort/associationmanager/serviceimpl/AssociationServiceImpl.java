@@ -48,11 +48,17 @@ public class AssociationServiceImpl implements AssociationService{
         assoRepository.save(association);
         return association;
     }
+
+	public PagedData<Association> getAssociationsInBatch(List<String> ids,Integer pn,Integer ps){
+		final Page<Association> p = assoRepository.findAllById(ids,PageRequest.of(pn,ps));
+		return new PagedData<Association>(p.getNumber(),p.getSize(),p.getTotalElements(),p.getContent());
+	}
+
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
 
         Page<Association> p = assoRepository.findAll(PageRequest.of(pageNum,pageSize));
 
-		return new PagedData<Association>(p.getNumber(),p.getSize(),assoRepository.count(),p.getContent());
+		return new PagedData<Association>(p.getNumber(),p.getSize(),p.getTotalElements(),p.getContent());
 
         //Integer state = params.getState();
         //if(state != null && state != 2){
