@@ -8,15 +8,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
-import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.articlemanager.component.AutoIncIdGenerator;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.entity.ArticleFilterParams;
 import exort.articlemanager.repository.ArticleRepository;
 import exort.articlemanager.service.ArticleService;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	private ArticleRepository repository;
@@ -66,11 +67,12 @@ public class ArticleServiceImpl implements ArticleService {
 		return repository.findById(articleId).get();
 	}
 
-	public PagedData<Article> listArticle(ArticleFilterParams params,PageQuery pq){
+	public PagedData<Article> listArticle(ArticleFilterParams params,Integer pageNum,Integer pageSize){
+		log.info("Page args:["+String.valueOf(pageNum)+","+String.valueOf(pageSize)+"]");
 
 		final String keyword = params.getKeyword();
 		if(keyword == null || keyword.isEmpty()){
-			final Page<Article> res = repository.findAll(PageRequest.of(pq.getPageNum(),pq.getPageSize()));
+			final Page<Article> res = repository.findAll(PageRequest.of(pageNum,pageSize));
 			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
 			//return repository.findAll();
 		}
@@ -81,7 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 			final Page<Article> res = repository.findAllBy(
 					criteria,
-					PageRequest.of(pq.getPageNum(),pq.getPageSize())
+					PageRequest.of(pageNum,pageSize)
 					);
 
 			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
