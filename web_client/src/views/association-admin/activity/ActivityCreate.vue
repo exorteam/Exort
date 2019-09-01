@@ -41,7 +41,10 @@
                 <Button type="dashed" @click="more_timeStamp">+</Button>
             </FormItem> -->
             <FormItem label="所属社团:">
-                <b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>
+                <!--<b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>-->
+                <Select v-model="associationIndex" style="width:200px">
+                    <Option v-for="item in associationList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                </Select>
             </FormItem>
             <FormItem label="报名是否需要审核:">
                 <Checkbox v-model="form.data.ifReview"/>
@@ -54,9 +57,12 @@
             </FormItem>
             <FormItem label="上传活动宣传图" >
                 <div>
-                    <b-form-file v-model="form.data.image" ref="file-input" style="width: 310px; "></b-form-file>
-                    <b-button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</b-button>
-                    <img  :src="form.data.image"  style="width: 360px; height: 200px"/>
+                    <!--<b-form-file v-model="form.data.image" ref="file-input" style="width: 310px; "></b-form-file>-->
+                    <Upload :before-upload="beforeUpload" action="">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">点击上传文件</Button>
+                    </Upload>
+                    <!--<Button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</Button>-->
+                    <img v-if="form.data.image"  :src="form.data.image"  style="width: 360px; height: 200px"/>
                 </div>
             </FormItem>
             <FormItem label="活动简介">
@@ -75,8 +81,8 @@
 
 <script>
 import Axios from 'axios';
-import TimeRange from './time_range'
-import TagChoose from '../../common/tag_choose'
+import TimeRange from './TimeRange'
+import TagChoose from '../../../components/TagChoose'
 import Messgae, { Message } from 'iview'
 
 let timeTypeList = [
@@ -112,6 +118,7 @@ export default {
                 value:"",
                 text:"请选择所属社团"
             }],
+            img:"",
             // tag:{
             //     tag_show: false,
             //     tagList:[],
@@ -134,8 +141,17 @@ export default {
         // },
 
         // 删除回调
-        clearFile(file, fileList) {
-            this.$refs['file-input'].reset();
+        // clearFile(file, fileList) {
+        //     this.$refs['file-input'].reset();
+        // },
+        beforeUpload(file){
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload=(e)=>{
+                let img = e.target.result;
+                console.log(img);
+            };
+            return false;
         },
         info_ok(){
             console.log(this.form)

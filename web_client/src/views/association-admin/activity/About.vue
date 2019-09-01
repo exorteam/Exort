@@ -2,7 +2,7 @@
     <div>
         <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
         <img :src="form.image" style="width: 40%; height: 90%; margin: 10px 10px 20px 40px; float: right"/>
-        <div style="margin-top: 10px height: 600px">
+        <div style="margin-top: 10px;height: 600px">
             <p style="margin: 10px 10px 20px 40px; ">标签：
                 <Tag v-for="tag in form.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
             </p>
@@ -18,9 +18,9 @@
         </div>
         <div>
             <activityCreate :form="newform"/>
-            <b-button  @click="newform.onshow=true" variant="primary" style="margin: 10px 10px 20px 40px; ">修改</b-button>
-            <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger" style="margin: 10px 10px 20px 40px; ">发布</b-button>
-            <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger" style="margin: 10px 10px 20px 40px; ">撤回</b-button>
+            <Button  @click="newform.onshow=true" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
+            <Button v-if="!form.publishState" @click="handlePublish" type="warning" style="margin: 10px 10px 20px 40px; ">发布</Button>
+            <Button v-if="form.publishState" @click="handleWithdraw" type="warning" style="margin: 10px 10px 20px 40px; ">撤回</Button>
         </div>
         <!-- <div v-if="form.participants.length" style="margin-top: 100px">
             <p style="margin-top: 200px">
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import expandRow from './expand_table'
-import activityCreate from './activity_create'
+import expandRow from './ExpandTable'
+import activityCreate from './ActivityCreate'
 import Axios from 'axios';
 
 export default {

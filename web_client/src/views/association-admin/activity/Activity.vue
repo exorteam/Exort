@@ -1,132 +1,230 @@
 <template>
     <div>
-        <!-- 搜索方式 -->
-        <div>
-            <div style="margin-top: 15px; margin-left: 20px">
-                创建时间<!-- 活动创建时间搜索 -->
-                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
-                报名时间<!-- 活动报名时间搜索 -->
-                <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
-                开始时间<!-- 活动开始时间搜索 -->
-                <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
-                发布状态<!-- 根据活动发布状态搜索 -->
-                <b-form-select v-model="select.publishSelected" :options="publishSelectList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
-                报名状态<!-- 根据活动报名状态搜索 -->
-                <b-form-select v-model="select.signupSelected" :options="signupSelectList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
-                活动状态<!-- 根据活动状态搜索 -->
-                <b-form-select v-model="select.startSelected" :options="startSelectList" style="width: 120px; height: 32px; margin-right: 25px"></b-form-select>
-                <!-- 新建活动 -->
-                <Button type="info" @click="form.onshow=true" style="float:right; margin-right:29px">新建</Button>
-            </div>
-            <div style="margin-top:15px; margin-left: 20px">
-                发起社团<!-- 直接输入社团名称 -->
-                <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
-                关键词<!-- keyword -->
-                <Input v-model="select.keyword" placeholder="请输入搜索关键词" style="width: 300px; margin-right: 40px"/>
-                是否需要审核
-                <Checkbox v-model="select.ifReview" style="margin-right: 40px"/>
-                是否允许非本组织成员参加
-                <Checkbox v-model="select.ifOnlyMem" style="margin-right: 40px"/>
-
-                <div style="display:inline">
-                    <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
-                    <TagChoose :tag="tag"/>
-                </div>
-                <div v-if="tag.tagList.length" style="display:inline">
-                    <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
-                </div>
-                <!-- 按照条件进行搜索 -->
-                <Button type="info" @click="handleSelect" style="float:right; margin-right:29px">搜索</Button>
-            </div>
-            <div style="margin-top:15px; margin-left: 20px">
-            </div>
-
-            <ActivityCreate :form="form"/>
-        </div>
-
-        <Divider style="width: 100%;"/>
-
-        <!-- 活动排列 -->
-        <div>
-            <div span="11" style="display: flex;justify-content: space-around;flex-wrap: wrap">
-                <Card v-for="card in cardList" :key="card.id" :row="card" style="width: 465px; margin: 30px;"
-                      :bordered="false">
-                    <div style="height: 30px">
-                        <p style="float: left" slot="title">{{card.title}}</p>
-                        <Badge style="float: right" :text="stateList[card.activityState]" :status="statusList[card.activityState]"/>
-                    </div>
-                    <Divider/>
-                    <Button @click="to_detail(card.id)" type="text" style="height: 280px; width: 100%;">
-                        <img :src="card.image" style="height: 280px; width: 100%;"/>
-                    </Button>
-                    <Divider/>
-                    <p>Time:{{card.time.time.start + card.time.time.end}}</p>
-                    <p>Brief Description:{{card.content}}</p>
-                </Card>
-            </div>
+        <Card>
+            <!-- 搜索方式 -->
             <div>
-                <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum+1" :page-size.sync="page.pageSize" simple @on-change="handleSelect" style="text-align: center;"></Page>
+                <Row>
+                    <div style="margin-top:15px; margin-left: 20px">
+                        <!-- 新建活动 -->
+                        <Button type="info" label="large" @click="form.onshow=true">新建活动</Button>
+                    </div>
+                </Row>
+                <br/>
+                <Card>
+                    <p slot="title">
+                        搜索筛选
+                    </p>
+                    <div style="margin-top: 15px; margin-left: 20px">
+                        <Row>
+                            <Col span="8">创建时间<!-- 活动创建时间搜索 -->
+                                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date"
+                                            style="width: 180px; margin-right: 45px"></DatePicker>
+                            </Col>
+                            <Col span="8">
+                                报名时间<!-- 活动报名时间搜索 -->
+                                <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date"
+                                            style="width: 180px; margin-right: 45px"></DatePicker>
+                            </Col>
+                            <Col span="8">
+                                开始时间<!-- 活动开始时间搜索 -->
+                                <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date"
+                                            style="width: 180px; margin-right: 45px"></DatePicker>
+                            </Col>
+                        </Row>
+                        <br/>
+                        <Row>
+                            <Col span="8">
+                                报名状态<!-- 根据活动报名状态搜索 -->
+                                <Select v-model="select.signupSelected" style="width:200px">
+                                    <Option v-for="item in signupSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                </Select>
+                            </Col>
+                            <Col span="8">
+                                活动状态<!-- 根据活动状态搜索 -->
+                                <!--<b-form-select v-model="select.startSelected" :options="startSelectList"-->
+                                               <!--style="width: 120px; height: 32px; margin-right: 25px"></b-form-select>-->
+                                <Select v-model="select.startSelected" style="width:200px">
+                                    <Option v-for="item in startSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                </Select>
+                            </Col>
+                            <Col span="8">
+                                发布状态<!-- 根据活动发布状态搜索 -->
+                                <!--<b-form-select v-model="select.publishSelected" :options="publishSelectList"-->
+                                               <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
+                                <Select v-model="select.publishSelected" style="width:200px">
+                                    <Option v-for="item in publishSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                </Select>
+                            </Col>
+                        </Row>
+                    </div>
+                    <div style="margin-top:15px; margin-left: 20px">
+                        <Row>
+                            <Col span="12">
+                                发起社团<!-- 直接输入社团名称 -->
+                                <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                            </Col>
+                            <Col span="12">
+                                关键词<!-- keyword -->
+                                <Input v-model="select.keyword" placeholder="请输入搜索关键词" style="width: 300px; margin-right: 40px"/>
+                            </Col>
+                        </Row>
+                        <br/>
+                        <Row>
+                            <Col span="8">
+                                是否需要审核
+                                <!--<b-form-select v-model="select.ifReview" :options="ifReviewSelectList"-->
+                                               <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
+                                <Select v-model="select.ifReview" style="width:200px">
+                                    <Option v-for="item in ifReviewSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                </Select>
+                                <!--<Checkbox v-model="select.ifReview" style="margin-right: 40px"/>-->
+                            </Col>
+                            <Col span="8">
+                                是否允许非本组织成员参加
+                                <!--<b-form-select v-model="select.ifOnlyMem" :options="ifOnlyMemSelectList"-->
+                                               <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
+                                <Select v-model="select.ifOnlyMem" style="width:200px">
+                                    <Option v-for="item in ifOnlyMemSelectList" :value="item.value" :key="item.value">{{ item.text }}</Option>
+                                </Select>
+                                <!--<Checkbox v-model="select.ifOnlyMem" style="margin-right: 40px"/>-->
+                            </Col>
+                            <Col span="8">
+                                <div style="display:inline">
+                                    <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
+                                    <TagChoose :tag="tag"/>
+                                </div>
+                                <div v-if="tag.tagList.length" style="display:inline">
+                                    <Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <!-- 按照条件进行搜索 -->
+                            <Button type="info" label="large" @click="handleSelect" style="float:right; margin-right:29px">搜索</Button>
+                        </Row>
+                    </div>
+                </Card>
+
+                <ActivityCreate :form="form"/>
             </div>
-        </div>
+
+            <Divider style="width: 100%;"/>
+
+            <!-- 活动排列 -->
+            <div>
+                <div span="11" style="display: flex;justify-content: space-around;flex-wrap: wrap">
+                    <Card v-for="card in cardList" :key="card.id" :row="card" style="width: 465px; margin: 30px;"
+                          :bordered="false">
+                        <div style="height: 30px">
+                            <p style="float: left" slot="title">{{card.title}}</p>
+                            <Badge style="float: right" :text="stateList[card.activityState]"
+                                   :status="statusList[card.activityState]"/>
+                        </div>
+                        <Divider/>
+                        <Button @click="to_detail(card.id)" type="text" style="height: 280px; width: 100%;">
+                            <img :src="card.image" style="height: 280px; width: 100%;"/>
+                        </Button>
+                        <Divider/>
+                        <p>Time:{{card.time.time.start + card.time.time.end}}</p>
+                        <p>Brief Description:{{card.content}}</p>
+                    </Card>
+                </div>
+                <div>
+                    <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum+1"
+                          :page-size.sync="page.pageSize" simple @on-change="handleSelect"
+                          style="text-align: center;"></Page>
+                </div>
+            </div>
+        </Card>
     </div>
 </template>
 
 <script>
     let publishSelectLists = [
         {
-            value: null,
-            text: '请选择发布状态',
+            value: 0,
+            text: '--',
         },
         {
-            value: '未发布',
+            value: 1,
             text: '未发布'
         },
         {
-            value: '已发布',
+            value: 2,
             text: '已发布'
         }
-    ]
+    ];
 
     let signupSelectLists = [
         {
-            value: null,
-            text: '请选择报名状态',
+            value: 0,
+            text: '--',
         },
         {
-            value: '报名未开始',
+            value: 1,
             text: '报名未开始'
         },
         {
-            value: '报名中',
+            value: 2,
             text: '报名中'
         },
         {
-            value: '报名已结束',
+            value: 3,
             text: '报名已结束'
         }
-    ]
+    ];
 
     let startSelectLists = [
         {
-            value: null,
-            text: '请选择活动状态',
+            value: 0,
+            text: '--',
         },
         {
-            value: '未开始',
+            value: 1,
             text: '未开始'
         },
         {
-            value: '进行中',
+            value: 2,
             text: '进行中'
         },
         {
-            value: '已结束',
+            value: 3,
             text: '已结束'
         }
-    ]
+    ];
 
-import ActivityCreate from './activity_create.vue'
-import TagChoose from '../../common/tag_choose.vue'
+    let ifReviewSelectLists=[
+        {
+            value: 0,
+            text: '--',
+        },
+        {
+            value: 1,
+            text: '不需要'
+        },
+        {
+            value: 2,
+            text: '需要'
+        }
+    ];
+
+    let ifOnlyMemSelectLists=[
+        {
+            value: 0,
+            text: '--',
+        },
+        {
+            value: 1,
+            text: '不允许'
+        },
+        {
+            value: 2,
+            text: '允许'
+        }
+    ];
+
+import ActivityCreate from './ActivityCreate'
+import TagChoose from '../../../components/TagChoose'
 import axios from 'axios'
 import image from '../../../assets/activity/cover1.jpeg'
 
@@ -135,15 +233,20 @@ export default {
     components: { ActivityCreate, TagChoose },
     data () {
         return{
-            stateList: [ '未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束' ],
-            statusList: [ "default", "default", "processing", "warning", "error", "success" ],
-            currentAvtivityId: 0,
-            publishSelected: null,
+            stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
+            statusList: ["default", "default", "processing", "warning", "error", "success"],
+            currentAvtivityId: "",
+            publishSelected: 0,
             publishSelectList: publishSelectLists,
-            signupSelected: null,
+            signupSelected: 0,
             signupSelectList: signupSelectLists,
-            startSelected: null,
+            startSelected: 0,
             startSelectList: startSelectLists,
+            ifReview:0,
+            ifReviewSelectList:ifReviewSelectLists,
+            ifOnlyMem:0,
+            ifOnlyMemSelectList:ifOnlyMemSelectLists,
+
             cardList: [],
             page:{
                 totalSize: 9,
@@ -151,14 +254,14 @@ export default {
                 pageSize: 9,
             },
             select:{
-                association: "",
-                keyword: "",
-                createTime: "",
-                signupTime: "",
-                startTime: "",
-                publishSelected: null,
-                signupSelected: null,
-                startSelected: null,
+                association: null,
+                keyword: null,
+                createTime: null,
+                signupTime: null,
+                startTime: null,
+                publishSelected: 0,
+                signupSelected: 0,
+                startSelected: 0,
                 ifReview: 0,
                 ifOnlyMem: 0
             },
