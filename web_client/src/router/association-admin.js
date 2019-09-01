@@ -35,12 +35,12 @@ export default {
         },
         {
             path: 'activity',
-            name: 'activity',
+            name: 'AssociationAdminActivityList',
             component: Activity
         },
         {
             path: 'activity/about',
-            name: 'about',
+            name: 'AssociationAdminActivityAbout',
             component: About
         }
     ]

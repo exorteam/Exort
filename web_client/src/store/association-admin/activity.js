@@ -48,7 +48,7 @@ const mutations = {
     }
 }
 
-const action = {
+const actions = {
     updateCardlist: ({commit}, {select, pageSize, pageNum}) => new Promise((resolve, reject) => {
         api({
             method: "posr",
@@ -124,4 +124,11 @@ const action = {
         })
     }),
 
+}
+
+export default {
+    namespaced: true,
+    state,
+    actions,
+    mutations
 }
