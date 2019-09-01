@@ -1,35 +1,28 @@
 <template>
 <Layout>
-    <NavHeader/>
-    <Layout>
-        <Form :label-width="80">
-            <FormItem label="社团名称">
-                <Input style="width: 420px"/>
-            </FormItem>
-            <FormItem label="社团标志">
-                <ImageUploader v-model="image" inline :max-size="512"/>
-            </FormItem>
-            <FormItem label="balabalba">
-                <Input style="width: 420px"/>
-            </FormItem>
-        </Form>
-    </Layout>
+	<Sider :style="{background: '#fff'}">
+		<UsrNavbar/>
+	</Sider>
+	<Content style="min-height:420px;margin:10px;">
+		<Card>
+			<span>Home page</span>
+		</Card>
+	</Content>
 </Layout>
 </template>
 
 <script>
-import NavHeader from '@/components/nav/Header'
-
-import ImageUploader from '@/components/uploader/ImageUploader'
+import UsrNavbar from '@/components/user/UsrNavbar'
 
 export default {
     components: {
-        NavHeader,
-        ImageUploader
+		UsrNavbar
     },
-    data() { return {
-        image: null
-    }}
+    data() { 
+		return {
+        	image: null 
+		}
+	}
 }
 </script>
 

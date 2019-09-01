@@ -19,7 +19,7 @@
             </Dropdown>
             <Menu width="auto" :active-name="active">
 				<MenuGroup title="社团相关">
-					<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationAdminIndex'}">
+					<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationMemList'}">
 						<Icon type="md-home"/>
 						社团概览
 					</MenuItem>
@@ -73,7 +73,7 @@ export default {
             if (visible) {
                 let that = this;
                 // this.listByIds(admin.assoAdmins)
-                this.listByIds([1, 2, 3]).then(() => {
+				this.listByIds(['5d666dd649548c000171a631']).then(() => {
                     that.selecting = true;
                 }).catch(err => {
                     that.$Notice.error({
@@ -88,7 +88,7 @@ export default {
         selectAssociation(association) {
             this.setAssociation(association);
         },
-        ...mapActions('common/associationSelector', ['listByIds']),
+        ...mapActions('common/associationSelector', ['listByIds','listByFilters']),
         ...mapMutations('associationAdmin/currentAssociation', ['setAssociation'])
     },
     created() {
