@@ -31,22 +31,30 @@ public class ArticleController {
     private AssociationManagerService assoSvc;
 
 	@PostMapping
-	public ApiResponse createArticle(@RequestAttribute("id") long operatorId,@RequestBody Article e){
+	public ApiResponse createArticle(
+			@RequestAttribute("id") long operatorId,
+			@RequestBody Article e){
 		return articleSvc.createArticle(e);
 	}
 
 	@GetMapping("/{id}")
-	public ApiResponse getArticle(@PathVariable("id") int articleId){
+	public ApiResponse getArticle(
+			@PathVariable("id") int articleId){
 		return articleSvc.getArticle(articleId);
 	}
 
 	@DeleteMapping("/{id}")
-	public ApiResponse deleteArticle(@RequestAttribute("id") long operatorId,@PathVariable("id") int articleId){
+	public ApiResponse deleteArticle(
+			@RequestAttribute("id") long operatorId,
+			@PathVariable("id") int articleId){
 		return articleSvc.deleteArticle(articleId);
 	}
 
 	@PutMapping("/{id}")
-	public ApiResponse updateArticle(@RequestAttribute("id") long operatorId,@PathVariable("id") int articleId,@RequestBody Article e){
+	public ApiResponse updateArticle(
+			@RequestAttribute("id") long operatorId,
+			@PathVariable("id") int articleId,
+			@RequestBody Article e){
 		return articleSvc.updateArticle(articleId,e);
 	}
 
@@ -59,7 +67,10 @@ public class ArticleController {
 	}
 
 	@PostMapping("/{id}/publish")
-	public ApiResponse publishArticle(@RequestAttribute("id") long operatorId,@PathVariable("id") int articleId,@RequestParam boolean publish){
+	public ApiResponse publishArticle(
+			@RequestAttribute("id") long operatorId,
+			@PathVariable("id") int articleId,
+			@RequestParam boolean publish){
 		return articleSvc.publishArticle(articleId,publish);
 	}
 
