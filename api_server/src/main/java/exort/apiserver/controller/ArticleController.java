@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.service.ArticleService;
@@ -27,8 +26,6 @@ public class ArticleController {
 	private ArticleService articleSvc;
 	@Autowired
 	private PermService permSvc;
-	@Autowired
-    private AssociationManagerService assoSvc;
 
 	@PostMapping
 	public ApiResponse createArticle(

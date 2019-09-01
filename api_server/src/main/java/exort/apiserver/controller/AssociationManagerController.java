@@ -1,7 +1,6 @@
 package exort.apiserver.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import exort.api.http.assomgr.entity.Association;
 import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.assomgr.entity.AssociationInfo;
-import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
@@ -27,6 +25,7 @@ import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
+import exort.apiserver.service.AssoMgrSvc;
 
 @RestController
 @RequestMapping(path="/associations")
@@ -37,7 +36,7 @@ public class AssociationManagerController{
     // Delete, create operations need system admin
 
     @Autowired
-    private AssociationManagerService service;
+    private AssoMgrSvc service;
     @Autowired
     private PermService permSvc;
     @Autowired
@@ -45,29 +44,21 @@ public class AssociationManagerController{
     @Autowired
     private SystemAdministratorInfo sysAdmin;
 
+	@PostMapping("/batch")
+	public ApiResponse<PagedData<Association>> getAssociationsInBatch(
+			@RequestBody List<String> ids,
+			PageQuery pq){
+		return service.getAssociationsInBatch(ids,pq.getPageNum(),pq.getPageSize());
+	}
+
     @PostMapping("/list")
     //public ApiResponse<PagedData<Association>> listAssociations(@RequestParam int state, @RequestParam String keyword,
     //                                                            @RequestParam String tags, @RequestParam int pageNum,
     //                                                            @RequestParam int pageSize){
-	public ApiResponse<PagedData<Association>> listAssociations(@RequestBody Map<String,Object> args){
-		final int state = (int)args.get("state");
-		final String keyword = String.valueOf(args.get("keyword"));
-		final String tags = String.valueOf(args.get("tags"));
-		final int pageNum = (int)args.get("pageNum");
-		final int pageSize = (int)args.get("pageSize");
-
-		//System.out.println(state);
-		//System.out.println(keyword);
-		//System.out.println(tags);
-		//System.out.println(pageNum);
-		//System.out.println(pageSize);
-
-        AssociationFilterParams body = new AssociationFilterParams();
-        body.setKeyword(keyword);
-        body.setState(state);
-        body.setTags(Arrays.asList(tags));
-        PageQuery pageQuery = new PageQuery(pageNum,pageSize);
-        return service.listAssociations(body,pageQuery);
+	public ApiResponse<PagedData<Association>> listAssociations(
+			@RequestBody AssociationFilterParams filter,
+			PageQuery pq){
+        return service.listAssociations(filter,pq);
     }
 
     //ok

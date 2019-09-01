@@ -3,14 +3,6 @@ package exort.apiserver.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import exort.api.http.assomgr.entity.Association;
-import exort.api.http.assomgr.service.AssociationManagerService;
-import exort.api.http.common.entity.ApiResponse;
-import exort.api.http.member.entity.DepartmentInfo;
-import exort.api.http.member.entity.UserId;
-import exort.api.http.member.service.AssoMemService;
-import exort.api.http.perm.entity.Permission;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.assomgr.entity.Association;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.UserId;
 import exort.api.http.member.service.AssoMemService;
+import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.service.PermService;
+import exort.apiserver.service.AssoMgrSvc;
 import lombok.extern.log4j.Log4j2;
 
 @RestController
@@ -45,7 +40,7 @@ public class AssoMemManagerController {
     @Autowired
     private PermService permSvc;
     @Autowired
-    private AssociationManagerService associationManagerService;
+    private AssoMgrSvc associationManagerService;
 
 
     @GetMapping("/{id}/departments")
