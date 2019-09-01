@@ -51,8 +51,11 @@ public class ArticleController {
 	}
 
 	@PostMapping("/list")
-	public ApiResponse listArticle(@RequestBody ArticleFilterParam param){
-		return articleSvc.listArticle(param);
+	public ApiResponse listArticle(
+			@RequestBody ArticleFilterParam param,
+			@RequestParam Integer pageNum,
+			@RequestParam Integer pageSize){
+		return articleSvc.listArticle(param,pageNum,pageSize);
 	}
 
 	@PostMapping("/{id}/publish")

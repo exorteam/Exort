@@ -12,7 +12,7 @@ public interface ArticleService {
 	ApiResponse deleteArticle(int id);
 	ApiResponse updateArticle(int id,Article e);
 	ApiResponse getArticle(int id);
-	ApiResponse listArticle(ArticleFilterParam param);
+	ApiResponse listArticle(ArticleFilterParam param,Integer pn,Integer ps);
 	ApiResponse publishArticle(int id,boolean publish);
 
 	@Data
