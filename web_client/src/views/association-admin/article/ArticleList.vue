@@ -1,8 +1,9 @@
 <template>
 	<div class="article-list">
 		<Card>
-			<h1>文章列表</h1>
-			<br>
+			<Input type="text" v-model="searchContent" placeholder="Search in articles" style="width:300px"/>
+			<Button @click="onClickSearch">搜索</Button>
+			<br><br>
 			<Table :columns="columns" :data="list">
 				<template slot-scope="{ row, index }" slot="action">
 					<Button @click="onClickView(row.id)">查看</Button>
@@ -18,6 +19,7 @@
 
 <script>
 import {api} from '@/http'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
 	name: "ArticleList",
@@ -30,21 +32,28 @@ export default {
 				{title:'已发布',key:'published'},
 				{title:'上次修改时间',key:'lastModifyTime'},
 				{title:'操作',slot:'action'},
-			]
+			],
+			searchContent:''
 		}
+	},
+	computed:{
+		...mapState('associationAdmin/currentAssociation', {
+			assoId:'id',
+			assoName:'name'
+		}),
 	},
 	methods: {
 		loadArticles: function(keyword){
 			api({
 				method: 'post',
-				url:'/articles/list',
+				url:'/articles/list?pageNum=0&pageSize=10',
 				data: {
 					keyword: keyword
 				}
 			}).then((res)=>{
 				//console.log(res);
-				if(res.data.data){
-					this.list = res.data.data.map((e)=>{
+				if(res.data.data.content){
+					this.list = res.data.data.content.map((e)=>{
 						e.published = (e.state!=0);
 						const d = new Date(e.lastModifyTime);
 						e.lastModifyTime = d.toLocaleString();
@@ -81,10 +90,14 @@ export default {
 				name: 'AssociationAdminArticleEditor',
 				params: { id: 0}
 			});
+		},
+		onClickSearch(){
+			this.loadArticles(this.searchContent);
 		}
 	},
 	mounted:function(){
-		this.loadArticles('');
+		//console.log(this.id);
+		this.loadArticles(this.assoId);
 	}
 }
 </script>

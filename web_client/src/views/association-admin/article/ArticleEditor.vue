@@ -27,6 +27,7 @@
 
 <script>
 import {api} from '@/http'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
 	name: "ArticleEditor",
@@ -36,6 +37,9 @@ export default {
 			isUpdating: true,
 			article: {}
 		}
+	},
+	computed:{
+		...mapState('associationAdmin/currentAssociation', {assoId:'id'}),
 	},
 	methods: {
 		loadArticle: function(id){
@@ -79,7 +83,7 @@ export default {
 					data: {
 						title: this.article.title,
 						content: this.article.content,
-						associationId: 'test'
+						associationId: this.assoId
 					}
 				}).then((res)=>{
 					console.log(res);
@@ -89,6 +93,7 @@ export default {
 		}
 	},
 	mounted:function(){
+		//console.log(this.assoId);
 		if(this.id != 0){
 			this.isUpdating = true;
 			this.loadArticle(this.id);

@@ -2,12 +2,18 @@ import AssociationAdminIndex from '@/views/association-admin/AssociationAdminInd
 import ArticleList from '@/views/association-admin/article/ArticleList'
 import ArticleEditor from '@/views/association-admin/article/ArticleEditor'
 import ArticleReader from '@/views/association-admin/article/ArticleReader'
+import MemManager from '@/views/association-admin/member/AssociationMemberTable'
 
 export default {
     path: '/association-admin',
     name: 'AssociationAdminIndex',
     component: AssociationAdminIndex,
     children: [
+		{
+			path: '/',
+			name: 'AssociationMemList',
+			component: MemManager
+		},
         {
             path: 'articles',
             name: 'AssociationAdminArticleList',

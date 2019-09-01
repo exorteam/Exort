@@ -43,7 +43,7 @@
 </template>
 
 <script>
-    import AssoMemPerm from "./asso_mem_perm"
+    import AssoMemPerm from "./AssoMemPerm"
 
     export default {
         name: "MemManage",

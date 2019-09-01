@@ -18,21 +18,27 @@
                 </div>
             </Dropdown>
             <Menu width="auto" :active-name="active">
-                <MenuItem name="AssociationAdminIndex" :to="{name:'AssociationAdminIndex'}">
-                    <Icon type="md-home"/>
-                    社团概览
-                </MenuItem>
-                <MenuItem name="AssociationAdminArticleList" :to="{name:'AssociationAdminArticleList'}">
-                    <Icon type="md-document" />
-                    文章管理
-                </MenuItem>
+				<MenuGroup title="社团相关">
+					<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationAdminIndex'}">
+						<Icon type="md-home"/>
+						社团概览
+					</MenuItem>
+					<MenuItem name="AssociationAdminArticleList" :to="{name:'AssociationAdminArticleList'}">
+						<Icon type="md-document" />
+						文章管理
+					</MenuItem>
+					<MenuItem name="AssociationAdminActivityList" :to="{name:'AssociationAdminActivityList'}">
+						<Icon type="md-briefcase" />
+						活动管理
+					</MenuItem>
+				</MenuGroup>
                 <MenuGroup title="用户相关">
                     <MenuItem :name="''">
-                        <Icon type="logo-twitch"/>
+                        <Icon type="ios-chatboxes"/>
 						消息通知
                     </MenuItem>
                     <MenuItem :name="''">
-                        <Icon type="ios-list-box-outline" />
+                        <Icon type="ios-checkbox" />
                         申请列表
                     </MenuItem>
                 </MenuGroup>
