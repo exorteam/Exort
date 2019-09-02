@@ -1,5 +1,6 @@
 package exort.articlemanager.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.articlemanager.entity.Article;
@@ -63,7 +65,7 @@ public class ArticleController {
 	public ApiResponse getArticle(@PathVariable("id") int articleId){
 		Article res = service.getArticle(articleId);
 		if(res == null){
-			throw new ApiError(404,"GetErr","Error occured when getting article["+String.valueOf(articleId)+"]");
+			throw new ApiError(404,"QueryErr","Error occured when getting article["+String.valueOf(articleId)+"]");
 		}
 		return new ApiResponse<Article>(res);
 	}
@@ -71,14 +73,23 @@ public class ArticleController {
 	@GetMapping
 	public ApiResponse listArticle(
 			@RequestBody ArticleFilterParams params,
-			@RequestParam int pageNum,
-			@RequestParam int pageSize){
-		PagedData<Article> res = service.listArticle(params,pageNum,pageSize);
+			PageQuery pq){
+		PagedData<Article> res = service.listArticle(params,pq);
 		if(res == null){
-			throw new ApiError(404,"GetErr","Error occured when listing article");
+			throw new ApiError(404,"QueryErr","Error occured when listing article");
 		}
 		return new ApiResponse<PagedData>(res);
 	}
+
+	@PostMapping("/asso")
+	public ApiResponse listArticleOfAssociationIds(
+			@RequestBody List<String> ids,
+			PageQuery pq){
+		if(ids.isEmpty()){
+			throw new ApiError(404,"QueryErr","Arg \"ids\" is empty");
+		}
+		return new ApiResponse<PagedData>(service.listArticleOfAssociationIds(ids,pq));
+			}
 
 	@PatchMapping("/{id}")
 	public ApiResponse publishArticle(@PathVariable("id") int articleId,@RequestParam boolean publish){

@@ -1,28 +1,35 @@
 package exort.articlemanager.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
+import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.articlemanager.component.AutoIncIdGenerator;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.entity.ArticleFilterParams;
 import exort.articlemanager.repository.ArticleRepository;
 import exort.articlemanager.service.ArticleService;
-import lombok.extern.log4j.Log4j2;
 
 @Service
-@Log4j2
 public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	private ArticleRepository repository;
 	@Autowired
 	private AutoIncIdGenerator autoId;
+	@Autowired
+	private MongoTemplate mt;
 
 	private final String AUTO_ID_NAME = "article_auto_id";
 
@@ -67,13 +74,12 @@ public class ArticleServiceImpl implements ArticleService {
 		return repository.findById(articleId).get();
 	}
 
-	public PagedData<Article> listArticle(ArticleFilterParams params,Integer pageNum,Integer pageSize){
-		log.info("Page args:["+String.valueOf(pageNum)+","+String.valueOf(pageSize)+"]");
+	public PagedData<Article> listArticle(ArticleFilterParams params,PageQuery pq){
 
 		final String keyword = params.getKeyword();
 		if(keyword == null || keyword.isEmpty()){
-			final Page<Article> res = repository.findAll(PageRequest.of(pageNum,pageSize));
-			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
+			final Page<Article> res = repository.findAll(PageRequest.of(pq.getPageNum(),pq.getPageSize()));
+			return new PagedData<Article>(res.getNumber(),res.getSize(),res.getTotalElements(),res.getContent());
 			//return repository.findAll();
 		}
 		else{
@@ -83,12 +89,27 @@ public class ArticleServiceImpl implements ArticleService {
 
 			final Page<Article> res = repository.findAllBy(
 					criteria,
-					PageRequest.of(pageNum,pageSize)
+					PageRequest.of(pq.getPageNum(),pq.getPageSize())
 					);
 
 			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
 
 		}
+	}
+
+	public PagedData<Article> listArticleOfAssociationIds(List<String> ids,PageQuery pq){
+
+		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
+		final Query q = Query.query(Criteria.where("associationId").in(ids)).with(pageArgs);
+		final List<Article> articles = mt.find(
+				q,
+				Article.class);
+		final Page<Article> p = PageableExecutionUtils.getPage(
+				articles,
+				pageArgs,
+				() -> mt.count(q,Article.class));
+
+		return new PagedData<Article>(p.getNumber(),p.getSize(),p.getTotalElements(),articles);
 	}
 
 	public boolean publishArticle(int articleId){

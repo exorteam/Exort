@@ -1,5 +1,7 @@
 package exort.articlemanager.service;
 
+import java.util.List;
+import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.articlemanager.entity.Article;
 import exort.articlemanager.entity.ArticleFilterParams;
@@ -20,8 +22,10 @@ public interface ArticleService {
 	public boolean 			deleteArticle(int articleId);
 	public boolean 			updateArticle(int articleId,String title,String content);
 	public Article 			getArticle(int articleId);
-	public PagedData<Article> 	listArticle(ArticleFilterParams params,Integer pageNum,Integer pageSize);
 	public boolean 			publishArticle(int articleId);
 	public boolean 			withdrawArticle(int articleId);
+
+	public PagedData<Article>	listArticleOfAssociationIds(List<String> ids,PageQuery pq);
+	public PagedData<Article> 	listArticle(ArticleFilterParams params,PageQuery pq);
 }
 
