@@ -38,7 +38,7 @@
                         <Row>
                             <Col span="8">
                                 报名状态<!-- 根据活动报名状态搜索 -->
-                                <Select v-model="select.signupSelected" style="width:200px">
+                                <Select v-model="select.signupState" style="width:200px">
                                     <Option v-for="item in signupSelectList" :value="item.value" :key="item.value">{{
                                         item.text }}
                                     </Option>
@@ -48,7 +48,7 @@
                                 活动状态<!-- 根据活动状态搜索 -->
                                 <!--<b-form-select v-model="select.startSelected" :options="startSelectList"-->
                                 <!--style="width: 120px; height: 32px; margin-right: 25px"></b-form-select>-->
-                                <Select v-model="select.startSelected" style="width:200px">
+                                <Select v-model="select.state" style="width:200px">
                                     <Option v-for="item in startSelectList" :value="item.value" :key="item.value">{{
                                         item.text }}
                                     </Option>
@@ -58,7 +58,7 @@
                                 发布状态<!-- 根据活动发布状态搜索 -->
                                 <!--<b-form-select v-model="select.publishSelected" :options="publishSelectList"-->
                                 <!--style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>-->
-                                <Select v-model="select.publishSelected" style="width:200px">
+                                <Select v-model="select.publishState" style="width:200px">
                                     <Option v-for="item in publishSelectList" :value="item.value" :key="item.value">{{
                                         item.text }}
                                     </Option>
@@ -70,7 +70,7 @@
                         <Row>
                             <Col span="12">
                                 发起社团<!-- 直接输入社团名称 -->
-                                <Input v-model="select.association" placeholder="请输入社团名称"
+                                <Input v-model="select.associationId" placeholder="请输入社团ID"
                                        style="width: 300px; margin-right: 40px"/>
                             </Col>
                             <Col span="12">
@@ -130,7 +130,8 @@
             <!-- 活动排列 -->
             <div>
                 <div span="11" style="display: flex;justify-content: space-around;flex-wrap: wrap">
-                    <Card v-for="card in this.activities.cardList" :key="card.id" :row="card" style="width: 465px; margin: 30px;"
+                    <Card v-for="card in this.activities.cardList" :key="card.id" :row="card"
+                          style="width: 465px; margin: 30px;"
                           :bordered="false">
                         <div style="height: 30px">
                             <p style="float: left" slot="title">{{card.title}}</p>
@@ -242,7 +243,7 @@
 
     import ActivityCreate from './ActivityCreate'
     import TagChoose from '../../../components/TagChoose'
-    import {mapState, mapActions} from 'vuex'
+    import {mapMutations,mapState, mapActions} from 'vuex'
 
     export default {
         name: 'activity',
@@ -263,20 +264,20 @@
                 ifOnlyMem: 0,
                 ifOnlyMemSelectList: ifOnlyMemSelectLists,
 
-                page:{
+                page: {
                     totalSize: 0,
                     pageNum: 0,
                     pageSize: 9
                 },
                 select: {
-                    association: null,
+                    associationId: null,
                     keyword: null,
                     createTime: null,
                     signupTime: null,
                     startTime: null,
-                    publishSelected: 0,
-                    signupSelected: 0,
-                    startSelected: 0,
+                    publishState: 0,
+                    signupState: 0,
+                    state: 0,
                     ifReview: 0,
                     ifOnlyMem: 0
                 },
@@ -317,17 +318,22 @@
             }
         },
         computed: {
-            ...mapState('associationAdmin/activity',[
+            ...mapState('associationAdmin/activity', [
                 'activities'
             ])
         },
         methods: {
+            ...mapActions('associationAdmin/activity', [
+                'updateCardlist',
+                'getCurActivity'
+            ]),
+            ...mapMutations('associationAdmin/activity', [
+                'setCurActivityId'
+            ]),
             to_detail(value) {
-                // console.log(value)
-                sessionStorage.setItem('activityid', value)
-                this.$store.dispatch('setStatus')
-
-                this.$router.replace({path: "/admin/activity/about"})
+                this.getCurActivity(value);
+                this.setCurActivityId(value);
+                this.$router.replace({path: "/association-admin/activity/about"})
             },
             handleSelect() {
                 let data = this.select
@@ -381,49 +387,19 @@
                 }
 
                 // console.log(data)
-                this.updateCardlist({},{select:data,pageSize:page.pageSize,pageNum:page.pageNum});
-
-                // this.axios({
-                //     method: "post",
-                //     url: "/activities/filter",
-                //     params: {
-                //         'pagesize': this.page.pageSize,
-                //         'pagenum': this.page.pageNum,
-                //         'sortby': "0",
-                //     },
-                //     data: data
-                // })
-                //     .then((response) => {
-                //         let responseData = response.data.data
-                //         console.log(responseData)
-                //         this.cardList = responseData.content
-                //         this.page.totalSize = responseData.totalSize
-                //         this.page.pageNum = responseData.pageNum
-                //         this.page.pageSize = responseData.pageSize
-                //         console.log(this.page.totalSize, this.page.pageNum, this.page.pageSize)
-                //         for (let i = 0; i < this.cardList.length; i++) {
-                //             this.setData(this.cardList[i])
-                //         }
-                //     })
-                //     .catch(e => {
-                //         console.log(e)
-                //     })
-            },
-            setData(value) {
-                if (value.publishState == 0) {
-                    value.activityState = 0
-                } else if (value.signupState != 2) {
-                    value.activityState = value.signupState + 1
-                } else {
-                    value.activityState = value.signupState + 3
-                }
-            },
-            ...mapActions('associationAdmin/activity',[
-                'updateCardlist'
-            ])
+                this.updateCardlist({
+                    select: data,
+                    pageSize: this.page.pageSize,
+                    pageNum: this.page.pageNum
+                }).then().catch(error => {
+                    console.log(error);
+                });
+            }
         },
         mounted() {
             this.handleSelect()
+
+
             // let data = this.select
             // data.tagList = this.tag.tagList
 

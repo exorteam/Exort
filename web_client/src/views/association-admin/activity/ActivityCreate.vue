@@ -127,6 +127,11 @@
                 // }
             }
         },
+        computed:{
+            ...mapState('associationAdmin/activity', [
+                'curActivity'
+            ]),
+        },
         methods: {
             // more_timeStamp() {
             //     this.form.time.time.push({start: "", end: ""})
@@ -247,6 +252,7 @@
             ])
         },
         mounted() {
+            console.log(this.curActivity);
             this.getAssociations()
         },
     }
