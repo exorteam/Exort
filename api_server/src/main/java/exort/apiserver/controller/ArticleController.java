@@ -1,5 +1,7 @@
 package exort.apiserver.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +57,14 @@ public class ArticleController {
 		return articleSvc.updateArticle(articleId,e);
 	}
 
+	@PostMapping("/{id}/publish")
+	public ApiResponse publishArticle(
+			@RequestAttribute("id") long operatorId,
+			@PathVariable("id") int articleId,
+			@RequestParam boolean publish){
+		return articleSvc.publishArticle(articleId,publish);
+	}
+
 	@PostMapping("/list")
 	public ApiResponse listArticle(
 			@RequestBody ArticleFilterParam param,
@@ -63,12 +73,12 @@ public class ArticleController {
 		return articleSvc.listArticle(param,pageNum,pageSize);
 	}
 
-	@PostMapping("/{id}/publish")
-	public ApiResponse publishArticle(
-			@RequestAttribute("id") long operatorId,
-			@PathVariable("id") int articleId,
-			@RequestParam boolean publish){
-		return articleSvc.publishArticle(articleId,publish);
+	@PostMapping("/list/asso")
+	public ApiResponse listArticle(
+			@RequestBody List<String> assoIds,
+			@RequestParam Integer pageNum,
+			@RequestParam Integer pageSize){
+		return articleSvc.listArticleWithAssociation(assoIds,pageNum,pageSize);
 	}
 
 }

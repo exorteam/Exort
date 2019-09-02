@@ -1,5 +1,7 @@
 package exort.apiserver.service.impl;
 
+import java.util.List;
+
 import com.google.common.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +54,13 @@ public class ArticleServiceImpl extends RestTemplate implements ArticleService {
 				id);
 	}
 
+	public ApiResponse publishArticle(int id,boolean publish){
+		return request(new TypeToken<Boolean>(){},
+				HttpMethod.PATCH,
+				urlBase+"/{id}?publish="+String.valueOf(publish),
+				id);
+	}
+
 	public ApiResponse listArticle(ArticleFilterParam param,Integer pn,Integer ps){
 		return request(new TypeToken<PagedData<Article>>(){},
 				param,
@@ -60,11 +69,12 @@ public class ArticleServiceImpl extends RestTemplate implements ArticleService {
 				pn,ps);
 	}
 
-	public ApiResponse publishArticle(int id,boolean publish){
-		return request(new TypeToken<Boolean>(){},
-				HttpMethod.PATCH,
-				urlBase+"/{id}?publish="+String.valueOf(publish),
-				id);
+	public ApiResponse listArticleWithAssociation(List<String> assoIds,Integer pn,Integer ps){
+		return request(new TypeToken<PagedData<Article>>(){},
+				assoIds,
+				HttpMethod.POST,
+				urlBase+"/asso?pageNum={pn}&pageSize={ps}",
+				pn,ps);
 	}
 
 }

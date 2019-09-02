@@ -12,8 +12,9 @@ public interface ArticleService {
 	ApiResponse deleteArticle(int id);
 	ApiResponse updateArticle(int id,Article e);
 	ApiResponse getArticle(int id);
-	ApiResponse listArticle(ArticleFilterParam param,Integer pn,Integer ps);
 	ApiResponse publishArticle(int id,boolean publish);
+	ApiResponse listArticle(ArticleFilterParam param,Integer pn,Integer ps);
+	ApiResponse listArticleWithAssociation(List<String> assoIds,Integer pn,Integer ps);
 
 	@Data
 	public class Article {
