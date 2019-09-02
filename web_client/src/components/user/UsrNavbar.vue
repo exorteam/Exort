@@ -21,16 +21,25 @@
 					<Icon type="md-american-football" />
 					活动列表
 				</MenuItem>
-				<MenuItem name="UsrIndexUserInfo">
-					<Icon type="ios-man" />
-					个人信息
-				</MenuItem>
+				<Submenu name="UsrIndexUserSubmenu">
+					<template slot="title">
+						<Icon type="ios-man" />
+						{{username}}
+					</template>
+					<MenuItem name="UsrIndexUserInfo">
+						个人信息
+					</MenuItem>
+					<MenuItem name="UsrIndexLogout">
+						注销
+					</MenuItem>
+				</Submenu>
 			</Menu>
 		</Content>
 	</Layout>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 
 export default {
 	name: 'UsrNavbar',
@@ -41,6 +50,13 @@ export default {
 			active:''
 		}
 	},
+    computed: {
+        ...mapState('common/currentUser', [
+            'uid',
+            'username',
+            'admin'
+        ])
+    },
 	created(){
 		this.active = this.$route.name;
 	},
