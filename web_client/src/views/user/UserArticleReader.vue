@@ -27,7 +27,6 @@ export default {
 				method: 'get',
 				url:'/articles/'+id,
 			}).then((res)=>{
-				console.log(res);
 				if(res.data.data){
 					this.article = res.data.data;
 					const cTime = new Date(this.article.createTime);
