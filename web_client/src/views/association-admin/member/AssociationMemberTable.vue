@@ -55,12 +55,10 @@
 </template>
 
 <script>
-    import AssoMemPerm from "./AssoMemPerm"
     import {mapActions, mapState, mapMutations} from "vuex"
 
     export default {
         name: "MemManage",
-        components: {AssoMemPerm},
         data() {
             return {
                 modal1: false,
@@ -527,7 +525,7 @@
             }
         },
         mounted() {
-            this.gettree("5d43a8219ded9d0001d815ec").then().catch(error => {
+            this.gettree(this.assoId).then().catch(error => {
                 this.$Message.error(error);
                 // console.log(error);
             });

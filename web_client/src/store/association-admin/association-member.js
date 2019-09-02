@@ -261,8 +261,8 @@ const actions = {
                 method: "post",
                 url: "/users",
                 data: ret,
-            }).then((res) => {
-                commit("setDeptUserList", res.data);
+            }).then((response) => {
+                commit("setDeptUserList", response.data.data);
                 resolve();
             })
         }).catch((error) => {
@@ -279,7 +279,8 @@ const actions = {
             url: "/associations/" + state.specdept.associationId + "/departments/" + state.specdept.departmentId + "/members",
             data: addUserInfo
         }).then((res) => {
-            if (res.data.data === true) {
+            if (res.data.data) {
+                console.log(res.data);
                 dispatch('getDepartmentUsers', {
                     associationId: state.specdept.associationId,
                     departmentId: state.specdept.departmentId
