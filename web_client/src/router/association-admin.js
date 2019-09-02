@@ -3,6 +3,8 @@ import ArticleList from '@/views/association-admin/article/ArticleList'
 import ArticleEditor from '@/views/association-admin/article/ArticleEditor'
 import ArticleReader from '@/views/association-admin/article/ArticleReader'
 import MemManager from '@/views/association-admin/member/AssociationMemberTable'
+import Activity from '@/views/association-admin/activity/Activity'
+import About from '@/views/association-admin/activity/About'
 
 export default {
     path: '/association-admin',
@@ -30,6 +32,16 @@ export default {
             name: 'AssociationAdminArticleReader',
             component: ArticleReader,
             props: true
+        },
+        {
+            path: 'activity',
+            name: 'AssociationAdminActivityList',
+            component: Activity
+        },
+        {
+            path: 'activity/about',
+            name: 'AssociationAdminActivityAbout',
+            component: About
         }
-	]
+    ]
 }

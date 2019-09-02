@@ -1,45 +1,47 @@
 <template>
     <div>
-        <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
-        <img :src="form.image" style="width: 40%; height: 90%; margin: 10px 10px 20px 40px; float: right"/>
-        <div style="margin-top: 10px height: 600px">
-            <p style="margin: 10px 10px 20px 40px; ">标签：
-                <Tag v-for="tag in form.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
-            </p>
-            <p slot="title" style="margin: 10px 10px 20px 40px; ">名称： {{form.title}}</p>
-            <p style="margin: 10px 10px 20px 40px; ">创建时间： {{showTime.createTime}} </p>
-            <p style="margin: 10px 10px 20px 40px; ">发布时间： {{showTime.publishTime}}</p>
-            <p style="margin: 10px 10px 20px 40px; ">报名起始时间：{{showTime.signupTimeStart}}</p>
-            <p style="margin: 10px 10px 20px 40px; ">报名截止时间：{{showTime.signupTimeEnd}}</p>
-            <p style="margin: 10px 10px 20px 40px; ">开始时间： {{showTime.timeStart}}</p>
-            <p style="margin: 10px 10px 20px 40px; ">结束时间： {{showTime.timeEnd}}</p>
-            <p style="margin: 10px 10px 20px 40px; ">简介： {{form.content}}</p>
+        <Card>
+            <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
+            <img :src="form.image" style="width: 40%; height: 90%; margin: 10px 10px 20px 40px; float: right"/>
+            <div style="margin-top: 10px;height: 600px">
+                <p style="margin: 10px 10px 20px 40px; ">标签：
+                    <Tag v-for="tag in form.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
+                </p>
+                <p slot="title" style="margin: 10px 10px 20px 40px; ">名称： {{form.title}}</p>
+                <p style="margin: 10px 10px 20px 40px; ">创建时间： {{showTime.createTime}} </p>
+                <p style="margin: 10px 10px 20px 40px; ">发布时间： {{showTime.publishTime}}</p>
+                <p style="margin: 10px 10px 20px 40px; ">报名起始时间：{{showTime.signupTimeStart}}</p>
+                <p style="margin: 10px 10px 20px 40px; ">报名截止时间：{{showTime.signupTimeEnd}}</p>
+                <p style="margin: 10px 10px 20px 40px; ">开始时间： {{showTime.timeStart}}</p>
+                <p style="margin: 10px 10px 20px 40px; ">结束时间： {{showTime.timeEnd}}</p>
+                <p style="margin: 10px 10px 20px 40px; ">简介： {{form.content}}</p>
 
-        </div>
-        <div>
-            <activityCreate :form="newform"/>
-            <b-button  @click="newform.onshow=true" variant="primary" style="margin: 10px 10px 20px 40px; ">修改</b-button>
-            <b-button v-if="!form.publishState" @click="handlePublish" type="submit" variant="danger" style="margin: 10px 10px 20px 40px; ">发布</b-button>
-            <b-button v-if="form.publishState" @click="handleWithdraw" type="submit" variant="danger" style="margin: 10px 10px 20px 40px; ">撤回</b-button>
-        </div>
-        <!-- <div v-if="form.participants.length" style="margin-top: 100px">
-            <p style="margin-top: 200px">
-            参加者
-                <Table :columns="attribute" :data="participants"></Table>
-            </p>
-        </div> -->
-        <!-- <div v-if="form.realParticipants.length" style="margin-top: 50px">
-            <p>
-            申请者
-                <Table :columns="attribute" :data="realParticipants"></Table>
-            </p>
-        </div> -->
+            </div>
+            <div>
+                <activityCreate :form="newform"/>
+                <Button  @click="newform.onshow=true" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
+                <Button v-if="!form.publishState" @click="handlePublish" type="warning" style="margin: 10px 10px 20px 40px; ">发布</Button>
+                <Button v-if="form.publishState" @click="handleWithdraw" type="warning" style="margin: 10px 10px 20px 40px; ">撤回</Button>
+            </div>
+            <!-- <div v-if="form.participants.length" style="margin-top: 100px">
+                <p style="margin-top: 200px">
+                参加者
+                    <Table :columns="attribute" :data="participants"></Table>
+                </p>
+            </div> -->
+            <!-- <div v-if="form.realParticipants.length" style="margin-top: 50px">
+                <p>
+                申请者
+                    <Table :columns="attribute" :data="realParticipants"></Table>
+                </p>
+            </div> -->
+        </Card>
     </div>
 </template>
 
 <script>
-import expandRow from './expand_table'
-import activityCreate from './activity_create'
+import expandRow from './ExpandTable'
+import activityCreate from './ActivityCreate'
 import Axios from 'axios';
 
 export default {

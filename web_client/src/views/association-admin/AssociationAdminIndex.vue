@@ -19,7 +19,7 @@
             </Dropdown>
             <Menu width="auto" :active-name="active">
 				<MenuGroup title="社团相关">
-					<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationAdminIndex'}">
+					<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationMemList'}">
 						<Icon type="md-home"/>
 						社团概览
 					</MenuItem>

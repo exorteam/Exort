@@ -1,49 +1,52 @@
 <template>
     <div id="MemManage">
-        <Row>
-            <Col span="8">
-                <Tree :data="$store.state.association.tree" :render="renderContent"></Tree>
-            </Col>
-            <Col span="16">
-                <Row>
-                    <div>
-                        <Card>
-                            <p><strong>部门名称</strong></p>
-                            <hr/>
-                            <p>{{this.specdept.name}}</p>
-                            <br/>
-                            <p><strong>部门描述</strong></p>
-                            <hr/>
-                            <p>{{this.specdept.description}}</p>
-                            <br/>
-                            <Button @click="editDepartment()">编辑部门信息</Button>
-                        </Card>
-                    </div>
-                </Row>
-                <br/>
-                <Row>
-                    <Table border ref="selection" :columns="columns" :data="rows">
-                        <template slot-scope="{ row }" slot="name">
-                            <strong>{{ row.name }}</strong>
-                        </template>
-                        <template slot-scope="{ row, index }" slot="action">
-                            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看
-                            </Button>
-                            <Button type="error" size="small" @click="remove(index)">删除</Button>
-                        </template>
-                    </Table>
+        <Card>
+            <Row>
+                <Col span="8">
+                    <Tree :data="this.tree" :render="renderContent"></Tree>
+                </Col>
+                <Col span="16">
+                    <Row>
+                        <div>
+                            <Card>
+                                <p><strong>部门名称</strong></p>
+                                <hr/>
+                                <p>{{this.specdept.name}}</p>
+                                <br/>
+                                <p><strong>部门描述</strong></p>
+                                <hr/>
+                                <p>{{this.specdept.description}}</p>
+                                <br/>
+                                <Button @click="editDepartment()">编辑部门信息</Button>
+                            </Card>
+                        </div>
+                    </Row>
                     <br/>
-                </Row>
-                <Row>
-                    <Button size="large" @click="addUser">添加</Button>
-                </Row>
-            </Col>
-        </Row>
+                    <Row>
+                        <Table border ref="selection" :columns="columns" :data="this.deptUserList">
+                            <template slot-scope="{ row }" slot="name">
+                                <strong>{{ row.name }}</strong>
+                            </template>
+                            <template slot-scope="{ row, index }" slot="action">
+                                <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看
+                                </Button>
+                                <Button type="error" size="small" @click="remove(index)">删除</Button>
+                            </template>
+                        </Table>
+                        <br/>
+                    </Row>
+                    <Row>
+                        <Button size="large" @click="addUser">添加</Button>
+                    </Row>
+                </Col>
+            </Row>
+        </Card>
     </div>
 </template>
 
 <script>
     import AssoMemPerm from "./AssoMemPerm"
+    import {mapActions, mapState, mapMutations} from "vuex"
 
     export default {
         name: "MemManage",
@@ -89,20 +92,33 @@
                         align: 'center'
                     }
                 ],
-                rows: [],
-                specdept: {
-                    associationId: null,
-                    departmentId: null,
-                    name: null,
-                    description: null,
-                    parentId: null
-                },
                 addUserInfo: {
                     userId: null,
                 }
             }
         },
+        computed: {
+            ...mapState("associationAdmin/assoMem", [
+                'deptUserList',
+                'departments',
+                'tree',
+                'specdept'
+            ])
+        },
         methods: {
+            ...mapMutations("associationAdmin/assoMem", [
+                'setSpecDept'
+            ]),
+            ...mapActions("associationAdmin/assoMem", [
+                'getDepartmentInfo',
+                'editDeptInfo',
+                'removeDept',
+                'createDept',
+                'gettree',
+                'getDepartmentUsers',
+                'addDeptUser',
+                'deleteDeptUser'
+            ]),
             editDepartment() {
                 let url = "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId;
 
@@ -118,7 +134,13 @@
                                 },
                                 on: {
                                     input: (val) => {
-                                        this.specdept.name = val;
+                                        this.setSpecDept({
+                                            associationId: null,
+                                            departmentId: null,
+                                            name: val,
+                                            description: null,
+                                            parentId: null
+                                        });
                                     }
                                 }
                             }),
@@ -131,7 +153,13 @@
                                 },
                                 on: {
                                     input: (val) => {
-                                        this.specdept.description = val;
+                                        this.setSpecDept({
+                                            associationId: null,
+                                            departmentId: null,
+                                            name: null,
+                                            description: val,
+                                            parentId: null
+                                        });
                                     }
                                 }
                             }),
@@ -142,18 +170,7 @@
                         if (upload.name === null || upload.name === undefined || upload.name === "") {
                             this.$Message.error("部门名称不能为空");
                         } else {
-                            this.axios({
-                                method: "put",
-                                data: upload,
-                                url: url,
-                            }).then((res) => {
-                                if (res.data.data) {
-                                    this.$Message.info("修改成功！");
-                                    this.gettree();
-                                } else {
-                                    this.$Message.error("修改失败！" + res.data.message);
-                                }
-                            })
+                            this.editDeptInfo({url: url, data: upload});
                         }
                     }
                 });
@@ -181,60 +198,10 @@
                         if (this.addUserInfo.userId === null || this.addUserInfo.userId === undefined || this.addUserInfo.userId === "") {
                             this.$Message.error("输入不能为空!");
                         } else {
-                            this.axios({
-                                method: 'post',
-                                url: "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members",
-                                data: this.addUserInfo
-                            }).then((res) => {
-                                if (res.data.data === true) {
-                                    this.getDepartmentUsers(this.specdept.associationId, this.specdept.departmentId);
-                                    this.$Message.info("添加成功！");
-                                } else {
-                                    this.$Message.error("添加失败！" + res.data.message);
-                                }
-                            })
+                            this.addDeptUser(this.addUserInfo.userId);
                         }
                     }
                 });
-            },
-            gettree() {
-                let url = "/associations/1/departments";
-                this.axios.get(url).then((res) => {
-                    if (res.data.data === null) {
-                        this.$Message.error("社团不存在");
-                    } else {
-                        this.$store.commit("set_departments", res.data.data)
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                    this.$Message.error("社团不存在");
-                })
-            },
-            getDepartmentUsers(associationId, departmentId) {
-                let url = "/associations/" + associationId + "/departments/" + departmentId + "/members";
-                this.axios.get(url).then((res) => {
-                    let ret = [];
-                    let retdata = [];
-                    retdata = res.data.data;
-                    for (let i = 0; i < retdata.length; i++) {
-                        ret.push(retdata[i])
-                    }
-
-                    // console.log(ret);
-                    this.axios({
-                        method: "post",
-                        url: "/users",
-                        data: ret,
-                    }).then((res) => {
-                        // console.log(res.data);
-                        this.rows=res.data;
-                    })
-                    // console.log(this.rows);
-                    // this.rows = res.data.data;
-                    // console.log(this.rows);
-                }).catch((error) => {
-                    console.log(error.response.status);
-                })
             },
             renderContent(h, {root, node, data}) {
                 // console.log(data);
@@ -306,8 +273,14 @@
                                         on: {
                                             click: () => {
                                                 // console.log("off");
-                                                this.getDepartmentInfo(data.department.associationId, data.department.departmentId);
-                                                this.getDepartmentUsers(data.department.associationId, data.department.departmentId);
+                                                this.getDepartmentInfo({
+                                                    associationId: data.department.associationId,
+                                                    departmentId: data.department.departmentId
+                                                });
+                                                this.getDepartmentUsers({
+                                                    associationId: data.department.associationId,
+                                                    departmentId: data.department.departmentId
+                                                });
                                             }
                                         },
                                     },
@@ -336,8 +309,14 @@
                                         on: {
                                             click: () => {
                                                 // console.log("off");
-                                                this.getDepartmentInfo(data.department.associationId, data.department.departmentId);
-                                                this.getDepartmentUsers(data.department.associationId, data.department.departmentId);
+                                                this.getDepartmentInfo({
+                                                    associationId: data.department.associationId,
+                                                    departmentId: data.department.departmentId
+                                                });
+                                                this.getDepartmentUsers({
+                                                    associationId: data.department.associationId,
+                                                    departmentId: data.department.departmentId
+                                                });
                                             }
                                         },
                                     },
@@ -441,44 +420,22 @@
                         if (this.departmentName === null || this.departmentName === undefined || this.departmentName === "") {
                             this.$Message.error("部门名称不能为空");
                         } else {
-                            let url = "/associations/" + data.department.associationId + "/departments";
-                            let departinfo = {
-                                "name": this.departmentName,
-                                "description": this.description,
-                                "parentId": data.department.departmentId
-                            };
-                            this.axios({
-                                method: 'post',
-                                url: url,
-                                data: departinfo
-                            }).then((res) => {
-                                if (res.data.data !== null) {
-                                    this.departmentName = "";
-                                    this.description = "";
+                            let thisAssociationId = data.department.associationId;
 
-                                    this.$Message.info("添加成功！");
-                                } else {
-                                    this.$Message.error("添加失败！" + res.data.message);
-                                }
-                                this.gettree();
-                            })
+                            this.createDept({
+                                associationId: thisAssociationId,
+                                name: this.departmentName,
+                                description: this.description,
+                                parentId: data.department.departmentId
+                            }).then(() => {
+                                this.departmentName = "";
+                                this.description = "";
+                            });
+
                         }
                     }
                 });
 
-            },
-            getDepartmentInfo(associationId, departmentId) {
-                let url = "/associations/" + associationId + "/departments/" + departmentId;
-                // console.log(associationId+"+"+departmentId)
-                this.axios.get(url).then((res) => {
-                    let department = res.data.data;
-                    // console.log(department)
-                    this.specdept.associationId = associationId;
-                    this.specdept.departmentId = departmentId;
-                    this.specdept.name = department.name;
-                    this.specdept.description = department.description;
-                    this.specdept.parentId = department.parentId;
-                })
             },
             removeNode(root, node, data) {
                 this.$Modal.confirm({
@@ -486,62 +443,40 @@
                         return h("strong", "确认删除部门吗?")
                     },
                     onOk: () => {
-                        let url = "/associations/" + data.department.associationId + "/departments/" + data.department.departmentId;
-
-                        this.axios({
-                            method: 'delete',
-                            url: url
-                        }).then((res) => {
-                            this.gettree();
-                            this.$Message.info("删除成功！");
-                        })
+                        this.removeDept(data);
                     }
                 })
             },
             show(index) {
                 this.$Modal.info({
                     title: 'User Info',
-                    content: `id：${this.rows[index].id}
-                            <br>nickname：${this.rows[index].nickname}
-                            <br>description：${this.rows[index].description}
-                            <br>gender：${this.rows[index].gender}
-                            <br>birthday：${this.rows[index].birthday}
-                            <br>name：${this.rows[index].name}
-                            <br>studentId：${this.rows[index].studentId}
-                            <br>phone：${this.rows[index].phone}
-                            <br>qqId：${this.rows[index].qqId}
-                            <br>wechatId：${this.rows[index].wechatId}
-                            <br>email：${this.rows[index].email}
-                            <br>enabled：${this.rows[index].enabled}`
+                    content: `id：${this.deptUserList[index].id}
+                            <br>nickname：${this.deptUserList[index].nickname}
+                            <br>description：${this.deptUserList[index].description}
+                            <br>gender：${this.deptUserList[index].gender}
+                            <br>birthday：${this.deptUserList[index].birthday}
+                            <br>name：${this.deptUserList[index].name}
+                            <br>studentId：${this.deptUserList[index].studentId}
+                            <br>phone：${this.deptUserList[index].phone}
+                            <br>qqId：${this.deptUserList[index].qqId}
+                            <br>wechatId：${this.deptUserList[index].wechatId}
+                            <br>email：${this.deptUserList[index].email}
+                            <br>enabled：${this.deptUserList[index].enabled}`
                 })
             },
             remove(index) {
-                // this.rows.splice(index, 1);
                 this.$Modal.confirm({
                     render: (h) => {
                         return h("strong", "确认在部门中移除此用户吗?")
                     },
                     onOk: () => {
-                        let url = "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId + "/members/" + this.rows[index].id;
-                        this.axios({
-                            method: 'delete',
-                            url: url
-                        }).then((res) => {
-                            console.log(res);
-                            if (res.data.data) {
-                                this.getDepartmentUsers(this.specdept.associationId, this.specdept.departmentId);
-                                this.$Message.info("移除成功！");
-                            }
-                            else {
-                                this.$Message.error("移除失败!" + res.data.message);
-                            }
-                        })
+                        this.deleteDeptUser(index);
                     }
                 })
             }
         },
         mounted() {
-            this.gettree();
+            this.gettree(1);
         }
     }
 </script>

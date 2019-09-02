@@ -30,8 +30,8 @@
         </Row>
         <Row style="width: 100px">
             <Col>
-                <b-button type="submit" variant="primary" @click="handlePass(row.id)">通过</b-button>
-                <b-button type="submit" variant="danger" @click="handleRefuse(row.id)">不通过</b-button>
+                <Button type="primary" @click="handlePass(row.id)">通过</Button>
+                <Button type="warning" @click="handleRefuse(row.id)">不通过</Button>
             </CoL>
         </Row>
     </div>
