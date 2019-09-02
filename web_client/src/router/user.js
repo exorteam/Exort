@@ -5,7 +5,6 @@ import UserArticleReader from '@/views/user/UserArticleReader'
 
 export default {
     path: '/',
-    name: 'UserIndex',
     component: UserIndex,
     children: [
 		{

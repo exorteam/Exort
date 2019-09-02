@@ -8,7 +8,6 @@ import About from '@/views/association-admin/activity/About'
 
 export default {
     path: '/association-admin',
-    name: 'AssociationAdminIndex',
     component: AssociationAdminIndex,
     children: [
 		{
