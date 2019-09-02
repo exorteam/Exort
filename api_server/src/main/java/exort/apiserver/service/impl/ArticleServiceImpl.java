@@ -12,7 +12,6 @@ import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PagedData;
 import exort.apiserver.service.ArticleService;
-import lombok.extern.log4j.Log4j2;
 
 @Service
 public class ArticleServiceImpl extends RestTemplate implements ArticleService {

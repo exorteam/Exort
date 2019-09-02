@@ -21,6 +21,7 @@ public class JwtConfig {
 		registrationBean.addUrlPatterns("/activities/*");
 		registrationBean.addUrlPatterns("/associations/*");
 		registrationBean.addUrlPatterns("/articles/*");
+		registrationBean.addUrlPatterns("/com/*");
 
 		return registrationBean;
 	}
