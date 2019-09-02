@@ -10,45 +10,43 @@
 </template>
 
 <script>
-    import {mapState, mapActions} from 'vuex'
+    import { mapActions} from 'vuex'
 
     export default {
-        props: ['root', 'nodedata'],
+        props: ['root', 'nodedata','nodePerm'],
         data() {
             return {}
-        },
-        computed: {
-            ...mapState('associationAdmin/assoMem', [
-                'nodePerm'
-            ])
         },
         methods: {
             handleChange3(newTargetKeys, direction, moveKeys) {
                 if (direction === "left") {
-                    this.deleteTargetkeys({
+                    this.$parent.deleteTargetkeys({
                         nodedata: this.nodedata,
                         data: moveKeys
+                    }).then().catch(error => {
+                        this.$Message.error(error);
                     });
                 } else {
-                    this.addTargetkeys({
+                    this.$parent.addTargetkeys({
                         nodedata: this.nodedata,
                         data: moveKeys
+                    }).then().catch(error => {
+                        this.$Message.error(error);
                     });
                 }
             },
             render3(item) {
                 return item.label;
             },
-            ...mapActions('associationAdmin/assoMem', [
-                'getParentPermList',
-                'getChildPermList',
-                'deleteTargetkeys',
-                'addTargetkeys',
-            ])
+            // ...mapActions('associationAdmin/assoMem', [
+            //     'getParentPermList',
+            //     'getChildPermList',
+            //     'deleteTargetkeys',
+            //     'addTargetkeys',
+            // ])
         },
         mounted() {
-            this.getParentPermList();
-            this.getChildPermList();
+
         }
     }
 </script>

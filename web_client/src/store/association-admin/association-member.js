@@ -24,9 +24,6 @@ const state = {
 }
 
 const mutations = {
-    setNodePermTargetkeys: (state, targetKey) => {
-        state.nodePerm.targetKeys = targetKey;
-    },
     getMockData: (state, data) => {
         let mockData = [];
         let parent = data;
@@ -95,7 +92,7 @@ const mutations = {
 }
 
 const actions = {
-    getParentPermList: (commit, nodedata) => new Promise((resolve, reject) => {
+    getParentPermList: ({commit}, nodedata) => new Promise((resolve, reject) => {
         api({
             method: 'get',
             url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.parentId + '/permissions'
@@ -111,10 +108,10 @@ const actions = {
             reject(err);
         });
     }),
-    getChildPermList: (commit, nodedata) => new Promise((resolve, reject) => {
+    getChildPermList: ({commit}, nodedata) => new Promise((resolve, reject) => {
         api({
             method: 'get',
-            url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.parentId + '/permissions'
+            url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.departmentId + '/permissions'
         }).then(res => {
             if (res.data.data) {
                 commit('getTargetKeys', res.data.data);
@@ -127,41 +124,39 @@ const actions = {
             reject(err);
         });
     }),
-    deleteTargetkeys: (commit, {nodedata, data}) => new Promise((resolve, reject) => {
+    deleteTargetkeys: ({commit}, {nodedata, data}) => new Promise((resolve, reject) => {
         api({
             method: 'delete',
             data: data,
-            url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.parentId + '/permissions'
+            url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.departmentId + '/permissions'
         }).then(res => {
             if (res.data.data) {
-                commit('setNodePermTargetkeys', res.data.data);
+                commit('getTargetKeys', res.data.data);
                 resolve();
             } else {
                 reject(res.data.message);
-                this.$Message.error(res.data.message);
             }
         }).catch(err => {
             reject(err);
         });
     }),
-    addTargetkeys: (commit, {nodedata, data}) => new Promise((resolve, reject) => {
+    addTargetkeys: ({commit}, {nodedata, data}) => new Promise((resolve, reject) => {
         api({
             method: 'post',
             data: data,
-            url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.parentId + '/permissions'
+            url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.departmentId + '/permissions'
         }).then(res => {
             if (res.data.data) {
-                commit('setNodePermTargetkeys', res.data.data);
+                commit('getTargetKeys', res.data.data);
                 resolve();
             } else {
                 reject(res.data.message);
-                this.$Message.error(res.data.message);
             }
         }).catch(err => {
             reject(err);
         });
     }),
-    getDepartmentInfo: (commit, {associationId, departmentId}) => new Promise((resolve, reject) => {
+    getDepartmentInfo: ({commit}, {associationId, departmentId}) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments/" + departmentId;
         api({
             method: "get",
@@ -197,11 +192,13 @@ const actions = {
             data: departinfo
         }).then((res) => {
             if (res.data.data !== null) {
-                this.$Message.info("添加成功！");
                 dispatch('gettree', associationId);
+                resolve("添加成功！")
             } else {
-                this.$Message.error("添加失败！" + res.data.message);
+                reject("添加失败！" + res.data.message);
             }
+        }).catch(error => {
+            reject(error);
         })
     }),
     editDeptInfo: ({commit, dispatch}, {url, data}) => new Promise((resolve, reject) => {
@@ -211,48 +208,43 @@ const actions = {
             url: url
         }).then((res) => {
             if (res.data.data) {
-                this.$Message.info("修改成功！");
-                dispatch('gettree', data.department.associationId);
-                resolve();
+                dispatch('gettree', data.associationId);
+                resolve("修改成功！");
             } else {
-                this.$Message.error("修改失败！" + res.data.message);
-                reject(res.data.message);
+                reject("修改失败！" + res.data.message);
             }
         }).catch(error => {
             reject(error);
         })
     }),
-    removeDept: (commit, data, dispatch) => new Promise((resolve, reject) => {
+    removeDept: ({commit, dispatch}, data) => new Promise((resolve, reject) => {
         let url = "/associations/" + data.department.associationId + "/departments/" + data.department.departmentId;
         api({
             method: "delete",
             url: url
         }).then(() => {
             dispatch('gettree', data.department.associationId);
-            this.$Message.info("删除成功！");
         }).catch(error => {
             reject(error);
         })
     }),
-    gettree: (commit, associationId) => new Promise((resolve, reject) => {
+    gettree: ({commit}, associationId) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments";
         api({
             method: "get",
             url: url
         }).then((res) => {
-            if (res.data.data === null) {
-                this.$Message.error("社团不存在");
-                reject(res.data.message);
-            } else {
+            if (res.data.data) {
                 commit("setDepartments", res.data.data);
                 resolve();
+            } else {
+                reject(res.data.message);
             }
         }).catch((error) => {
             reject(error);
-            // this.$Message.error("社团不存在");
         })
     }),
-    getDepartmentUsers: (commit, {associationId, departmentId}) => new Promise((resolve, reject) => {
+    getDepartmentUsers: ({commit}, {associationId, departmentId}) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments/" + departmentId + "/members";
         api({
             method: "get",
@@ -270,11 +262,12 @@ const actions = {
                 url: "/users",
                 data: ret,
             }).then((res) => {
-                commit("setDeptUserList", res.data)
+                commit("setDeptUserList", res.data);
+                resolve();
             })
-
         }).catch((error) => {
-            console.log(error.response.status);
+            console.log(error.response);
+            reject(error);
         })
     }),
     addDeptUser: ({commit, state, dispatch}, userId) => new Promise((resolve, reject) => {
@@ -291,10 +284,12 @@ const actions = {
                     associationId: state.specdept.associationId,
                     departmentId: state.specdept.departmentId
                 });
-                this.$Message.info("添加成功！");
+                resolve()
             } else {
-                this.$Message.error("添加失败！" + res.data.message);
+                reject("添加失败！" + res.data.message)
             }
+        }).catch(error => {
+            reject(error);
         })
     }),
     deleteDeptUser: ({commit, state, dispatch}, index) => new Promise((resolve, reject) => {
@@ -309,11 +304,13 @@ const actions = {
                     associationId: this.specdept.associationId,
                     departmentId: this.specdept.departmentId
                 });
-                this.$Message.info("移除成功！");
+                resolve();
             }
             else {
-                this.$Message.error("移除失败!" + res.data.message);
+                reject("移除失败!" + res.data.message);
             }
+        }).catch(error => {
+            reject(error);
         })
     }),
 };
