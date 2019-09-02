@@ -1,17 +1,21 @@
 package exort.auth.service.impl;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import exort.auth.component.AutoIncIdGenerator;
-import exort.auth.entity.UserAccount;
-import exort.auth.entity.UserInfo;
-import exort.auth.repository.AccountRepository;
-import exort.auth.repository.InfoRepository;
-import exort.auth.service.AuthService;
-
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.auth.component.AutoIncIdGenerator;
+import exort.auth.entity.CommunityMessage;
+import exort.auth.entity.UserAccount;
+import exort.auth.entity.UserCommunityEntity;
+import exort.auth.entity.UserInfo;
+import exort.auth.repository.AccountRepository;
+import exort.auth.repository.CommunityRepository;
+import exort.auth.repository.InfoRepository;
+import exort.auth.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -19,6 +23,8 @@ public class AuthServiceImpl implements AuthService {
 	private AccountRepository accRepo;
 	@Autowired
 	private InfoRepository infoRepo;
+	@Autowired
+	private CommunityRepository cmRepo;
 	@Autowired
 	private AutoIncIdGenerator autoId;
 
@@ -41,6 +47,12 @@ public class AuthServiceImpl implements AuthService {
 		info.setId(id);
 		info.setEnabled(true);
 		infoRepo.save(info);
+
+		UserCommunityEntity e = new UserCommunityEntity();
+		e.setId(id);
+		e.setSubscribed(new ArrayList<String>());
+		e.setMessages(new ArrayList<CommunityMessage>());
+		cmRepo.save(e);
 
 		return new ApiResponse<Integer>(account.getId());
 	}
