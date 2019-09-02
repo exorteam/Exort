@@ -2,7 +2,7 @@
 <Layout>
     <NavHeader/>
     <Layout>
-        <Sider>
+		<Sider :style="{background: '#fff'}">
             <Menu width="auto" v-bind:active-name="active" :open-names="['perm-mgr']">
                 <MenuItem name="SystemAdminIndex" :to="{name:'SystemAdminIndex'}">
                     <Icon type="md-home"/>

@@ -2,7 +2,7 @@
 <Layout>
     <NavHeader/>
     <Layout>
-        <Sider>
+		<Sider :style="{background: '#fff'}">
             <Dropdown transfer style="display:block;"
                       trigger="custom" :visible="selecting"
                       @on-visible-change="showAssociations($event)"

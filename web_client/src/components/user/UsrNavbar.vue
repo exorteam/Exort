@@ -21,7 +21,11 @@
 					<Icon type="md-american-football" />
 					活动列表
 				</MenuItem>
-				<Submenu name="UsrIndexUserSubmenu">
+				<!--<MenuItem v-if="!username" name="UsrIndexLogin">-->
+				<!--    <Icon type="ios-man" />                     -->
+				<!--    登陆                                      -->
+				<!--</MenuItem>                                     -->
+				<Submenu v-if="username" name="UsrIndexUserSubmenu">
 					<template slot="title">
 						<Icon type="ios-man" />
 						{{username}}
@@ -33,6 +37,8 @@
 						注销
 					</MenuItem>
 				</Submenu>
+
+				<LoginModal v-model="login_show"/>
 			</Menu>
 		</Content>
 	</Layout>
@@ -40,14 +46,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import LoginModal from '@/components/auth/LoginModal'
 
 export default {
 	name: 'UsrNavbar',
 	components:{
+		LoginModal
 	},
 	data(){
 		return {
-			active:''
+			active:'',
+			login_show:false
 		}
 	},
     computed: {
@@ -59,6 +68,7 @@ export default {
     },
 	created(){
 		this.active = this.$route.name;
+		if(!this.username){this.login_show=true}
 	},
 	watch: {
         '$route': function(newValue, oldValue) {
