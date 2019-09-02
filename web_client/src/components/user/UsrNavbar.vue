@@ -4,7 +4,7 @@
 			<Avatar shape="square" :src="require('@/assets/AssociationLogo/solid.jpg')" size="large" />
 		</Header>
 		<Content>
-			<Menu width="auto" @active-name="active">
+			<Menu width="auto" @active-name="active" @on-select="onSelect">
 				<MenuItem name="UsrIndexHomePage">
 					<Icon type="md-home" />
 					主页
@@ -66,6 +66,15 @@ export default {
             'admin'
         ])
     },
+	methods: {
+		...mapActions('common/currentUser',['logout']),
+		onSelect(name) {
+			switch(name) {
+				case 'UsrIndexLogout':
+					this.logout();
+			}
+		}
+	},
 	created(){
 		this.active = this.$route.name;
 		if(!this.username){this.login_show=true}
