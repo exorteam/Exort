@@ -5,7 +5,7 @@
 		</Header>
 		<Content>
 			<Menu width="auto" @active-name="active" @on-select="onSelect">
-				<MenuItem name="UsrIndexHomePage">
+				<MenuItem name="UsrIndexHomePage" :to="{name:'UserHomePage'}">
 					<Icon type="md-home" />
 					主页
 				</MenuItem>
@@ -13,7 +13,7 @@
 					<Icon type="md-albums" />
 					社团列表
 				</MenuItem>
-				<MenuItem name="UsrIndexArticleList">
+				<MenuItem name="UsrIndexArticleList" :to="{name:'UserArticleList'}">
 					<Icon type="ios-book" />
 					文章列表
 				</MenuItem>
