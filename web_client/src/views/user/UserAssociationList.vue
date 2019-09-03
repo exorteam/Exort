@@ -48,14 +48,12 @@
 </template>
 
 <script>
-import AssociationCreatingModal from '@/views/system-admin/association/AssociationCreatingModal'
 import TagChoose from '@/components/TagChoose'
-import {api} from '@/http'
 import { mapState, mapActions } from 'vuex'
 
 export default {
     name:'UserAssociationList',
-    components:{AssociationCreatingModal, TagChoose},
+    components:{ TagChoose },
     data () {
         return {
             pageProp:{
@@ -76,8 +74,6 @@ export default {
 			'queryPagedAssociationsWithFilter'
 		]),
         getAssociationList(search) {
-            const pageNum = this.pageProp.pageNum;
-            const pageSize = this.pageProp.pageSize;
             const tags = this.tag.tagList.join();
 
 			this.queryPagedAssociationsWithFilter({
@@ -87,8 +83,8 @@ export default {
 					state: 1
 				},
 				pageArgs: {
-					pageNum,
-					pageSize
+					pageNum: this.pageProp.pageNum,
+					pageSize: this.pageProp.pageSize
 				}
 			}).then(response => {
 				console.log(response);
