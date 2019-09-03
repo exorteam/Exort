@@ -41,19 +41,28 @@
                 </Col>
             </Row>
         </Card>
+        <Modal v-model="modal1" style="width:700px">
+            <Transfer
+                    :data="this.nodePerm.data"
+                    :target-keys="this.nodePerm.targetKeys"
+                    :list-style="this.nodePerm.lifeStyle"
+                    :render-format="render3"
+                    filterable
+                    @on-change="handleChange3">
+            </Transfer>
+        </Modal>
     </div>
 </template>
 
 <script>
-    import AssoMemPerm from "./AssoMemPerm"
     import {mapActions, mapState, mapMutations} from "vuex"
 
     export default {
         name: "MemManage",
-        components: {AssoMemPerm},
         data() {
             return {
                 modal1: false,
+                nodedata:null,
                 departmentName: '',
                 description: '',
                 buttonProps: {
@@ -102,8 +111,12 @@
                 'deptUserList',
                 'departments',
                 'tree',
-                'specdept'
-            ])
+                'specdept',
+                'nodePerm'
+            ]),
+            ...mapState("associationAdmin/currentAssociation", {
+                assoId: state => state.id
+            })
         },
         methods: {
             ...mapMutations("associationAdmin/assoMem", [
@@ -117,7 +130,11 @@
                 'gettree',
                 'getDepartmentUsers',
                 'addDeptUser',
-                'deleteDeptUser'
+                'deleteDeptUser',
+                'getParentPermList',
+                'getChildPermList',
+                'deleteTargetkeys',
+                'addTargetkeys'
             ]),
             editDepartment() {
                 let url = "/associations/" + this.specdept.associationId + "/departments/" + this.specdept.departmentId;
@@ -170,7 +187,11 @@
                         if (upload.name === null || upload.name === undefined || upload.name === "") {
                             this.$Message.error("部门名称不能为空");
                         } else {
-                            this.editDeptInfo({url: url, data: upload});
+                            this.editDeptInfo({url: url, data: upload}).then(() => {
+                                this.$Message.info("修改成功!");
+                            }).catch(error => {
+                                this.$Message.error(error);
+                            });
                         }
                     }
                 });
@@ -198,7 +219,11 @@
                         if (this.addUserInfo.userId === null || this.addUserInfo.userId === undefined || this.addUserInfo.userId === "") {
                             this.$Message.error("输入不能为空!");
                         } else {
-                            this.addDeptUser(this.addUserInfo.userId);
+                            this.addDeptUser(this.addUserInfo.userId).then(()=>{
+                                this.$Message.info("添加成功！");
+                            }).catch(error=>{
+                                this.$Message.error(error);
+                            });
                         }
                     }
                 });
@@ -281,6 +306,7 @@
                                                     associationId: data.department.associationId,
                                                     departmentId: data.department.departmentId
                                                 });
+                                                console.log(this.deptUserList);
                                             }
                                         },
                                     },
@@ -317,6 +343,7 @@
                                                     associationId: data.department.associationId,
                                                     departmentId: data.department.departmentId
                                                 });
+                                                console.log(this.deptUserList);
                                             }
                                         },
                                     },
@@ -338,7 +365,10 @@
                                 },
                                 on: {
                                     click: () => {
-                                        this.perm(root, data);
+                                        this.modal1=true;
+                                        this.nodedata=data;
+                                        this.getParentPermList(data);
+                                        this.getChildPermList(data);
                                     }
                                 }
                             }),
@@ -371,18 +401,25 @@
                 }
 
             },
-            perm(root, data) {
-                this.$Modal.confirm({
-                    width: "700px",
-                    render: (h) => {
-                        return h(AssoMemPerm, {
-                            props: {
-                                root: root,
-                                nodedata: data
-                            }
-                        });
-                    }
-                })
+            handleChange3(newTargetKeys, direction, moveKeys) {
+                if (direction === "left") {
+                    this.deleteTargetkeys({
+                        nodedata: this.nodedata,
+                        data: moveKeys
+                    }).then().catch(error => {
+                        this.$Message.error(error);
+                    });
+                } else {
+                    this.addTargetkeys({
+                        nodedata: this.nodedata,
+                        data: moveKeys
+                    }).then().catch(error => {
+                        this.$Message.error(error);
+                    });
+                }
+            },
+            render3(item) {
+                return item.label;
             },
             append(root, data) {
                 this.$Modal.confirm({
@@ -427,9 +464,13 @@
                                 name: this.departmentName,
                                 description: this.description,
                                 parentId: data.department.departmentId
-                            }).then(() => {
+                            }).then((res) => {
+                                // console.log(res);
+                                this.$Message.info(res);
                                 this.departmentName = "";
                                 this.description = "";
+                            }).catch(error => {
+                                this.$Message.error(error);
                             });
 
                         }
@@ -443,7 +484,11 @@
                         return h("strong", "确认删除部门吗?")
                     },
                     onOk: () => {
-                        this.removeDept(data);
+                        this.removeDept(data).then(() => {
+                            this.$Message.info("删除成功！");
+                        }).catch(error => {
+                            this.$Message.error(error);
+                        });
                     }
                 })
             },
@@ -470,13 +515,20 @@
                         return h("strong", "确认在部门中移除此用户吗?")
                     },
                     onOk: () => {
-                        this.deleteDeptUser(index);
+                        this.deleteDeptUser(index).then(()=>{
+                            this.$Message.info("移除成功！");
+                        }).catch(error=>{
+                            this.$Message.error(error);
+                        });
                     }
                 })
             }
         },
         mounted() {
-            this.gettree(1);
+            this.gettree(this.assoId).then().catch(error => {
+                this.$Message.error(error);
+                // console.log(error);
+            });
         }
     }
 </script>
