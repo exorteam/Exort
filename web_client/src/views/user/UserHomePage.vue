@@ -1,22 +1,105 @@
 <template>
 	<Card>
-		<span>Your subscription list: {{subscribed}}</span>
+		<Row type="flex" justify="space-between">
+			<Col span="3"><h1>主页</h1></Col>
+			<Col span="2"><Button @click="postMsgModal=true"><Icon type="ios-mail-outline" size="22"/></Button></Col>
+		</Row>
+
+		<br>
+		<div id="MsgCardList">
+			<h5 v-if="msgs.isEmpty">Nothing new here.</h5>
+			<Card v-for="item in msgs" :key="item.id" :row="item" style="margin-top:10px">
+			<Row type="flex" justify="space-between">
+				<Col span="10"><p>{{item.timestamp}} From #{{item.senderId}}</p></Col>
+				<Col span="1"><Icon @click.native="onClickDropMsg(item.id)" type="ios-trash" /></Col>
+			</Row>
+				<p style="word-break: break-all;white-space: normal;">{{item.content}}</p>
+			</Card>
+		</div>
+
+		<Modal v-model="postMsgModal"
+				title="New Message"
+				:loading="true"
+				@on-ok="onClickSendMsg">
+			<Form :model="newMsgForm" :label-width="20">
+				<FormItem label="To">
+					<Input v-model="newMsgForm.receiverId" type="text" style="width:80px"/>
+				</FormItem>
+				<FormItem>
+					<Input v-model="newMsgForm.content" type="textarea" :rows="5" />
+				</FormItem>
+			</Form>
+		</Modal>
 	</Card>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
 	name: 'UserHomePage',
-	computed: {
-		...mapState('common/currentUserSubscription',['subscribed'])
+	data() {
+		return {
+			msgs: [],
+
+			postMsgModal: false,
+			newMsgForm: {}
+		}
 	},
 	methods: {
-		...mapActions('common/currentUserSubscription',['refreshSubscription'])
+		...mapActions('common/currentUserMsgs',[
+			'queryMessage',
+			'postMessage',
+			'dropMessageById'
+		]),
+
+		onClickSendMsg(){
+			if(!this.newMsgForm.receiverId 
+				|| this.newMsgForm.receiverId.isEmpty 
+				|| !this.newMsgForm.content
+				|| this.newMsgForm.content.isEmpty){
+
+				this.$Message.warning('接受者ID和消息内容不能为空');
+				this.postMsgModal = false;
+
+				return;
+			}
+			this.postMessage({
+				receiverId: this.newMsgForm.receiverId,
+				msg: this.newMsgForm.content
+			}).then(res => {
+				this.postMsgModal = false;
+				this.newMsgForm = {};
+				this.refreshMsgs();
+			})
+		},
+		refreshMsgs(){
+			this.queryMessage().then(res => {
+				this.msgs = res.data.data.map(e => {
+					const ts = new Date(e.timestamp);
+					e.timestamp = ts.toLocaleString();
+					return e;
+				})
+			})
+		},
+
+		onClickDropMsg(msgId){
+			this.$Modal.confirm({
+				title: '提示',
+				content: '<p>确认删除消息？(ID:'+msgId+')</p>',
+				onOk: () => {
+					this.dropMessageById({msgId}).then(() => {
+						this.refreshMsgs();
+					})
+				},
+				onCancel: () => {
+
+				}
+			});
+		}
 	},
 	mounted(){
-		this.refreshSubscription();
+		this.refreshMsgs();
 	}
 }
 </script>

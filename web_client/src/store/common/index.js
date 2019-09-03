@@ -6,6 +6,7 @@ import associationOps from './association-ops'
 import currentUser from './current-user'
 import currentUserInfo from './current-user-info'
 import currentUserSubscription from './current-user-subscription'
+import currentUserMsgs from './current-user-msgs'
 
 export default {
     namespaced: true,
@@ -17,6 +18,7 @@ export default {
 
         currentUser,
         currentUserInfo,
-        currentUserSubscription
+        currentUserSubscription,
+		currentUserMsgs
     }
 }
