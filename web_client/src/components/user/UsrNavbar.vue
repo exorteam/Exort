@@ -9,7 +9,7 @@
 					<Icon type="md-home" />
 					主页
 				</MenuItem>
-				<MenuItem name="UsrIndexAssociationList">
+				<MenuItem name="UsrIndexAssociationList" :to="{name:'UserAssociationList'}">
 					<Icon type="md-albums" />
 					社团列表
 				</MenuItem>

@@ -4,6 +4,7 @@ import UserArticleList from '@/views/user/UserArticleList'
 import UserArticleReader from '@/views/user/UserArticleReader'
 import UserInfoDetail from '@/views/user/UserInfoDetail'
 import UserInfoEditor from '@/views/user/UserInfoEditor'
+import UserAssociationList from '@/views/user/UserAssociationList'
 
 export default {
     path: '/',
@@ -34,7 +35,12 @@ export default {
 			path: 'info/edit',
 			name: 'UserInfoEditor',
 			component: UserInfoEditor
-		}
+		},
+		{
+			path: 'associations',
+			name: 'UserAssociationList',
+			component: UserAssociationList
+		},
 
     ]
 }
