@@ -47,27 +47,27 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
 
     @Override
     public ApiResponse<Object> addParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}", activityid);
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}/participants", activityid);
     }
 
     @Override
     public ApiResponse<Object> addRealParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}", activityid);
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}/realparticipants", activityid);
     }
 
     @Override
     public ApiResponse<Object> deleteParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.DELETE, "/activities/{activityid}", activityid);
+        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.DELETE, "/activities/{activityid}/participants", activityid);
     }
 
     @Override
     public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
+        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.POST, pageQuery, "/activities/{activityid}/participants/message", activityid);
     }
 
     @Override
     public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
+        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.POST, pageQuery, "/activities/{activityid}/realparticipants", activityid);
     }
 
     @Override
