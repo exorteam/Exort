@@ -18,30 +18,22 @@
                 </div>
             </Dropdown>
             <Menu width="auto" :active-name="active">
-				<MenuGroup title="社团相关">
-					<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationMemList'}">
-						<Icon type="md-home"/>
-						社团概览
-					</MenuItem>
-					<MenuItem name="AssociationAdminArticleList" :to="{name:'AssociationAdminArticleList'}">
-						<Icon type="md-document" />
-						文章管理
-					</MenuItem>
-					<MenuItem name="AssociationAdminActivityList" :to="{name:'AssociationAdminActivityList'}">
-						<Icon type="md-briefcase" />
-						活动管理
-					</MenuItem>
-				</MenuGroup>
-                <MenuGroup title="用户相关">
-                    <MenuItem :name="''">
-                        <Icon type="ios-chatboxes"/>
-						消息通知
-                    </MenuItem>
-                    <MenuItem :name="''">
-                        <Icon type="ios-checkbox" />
-                        申请列表
-                    </MenuItem>
-                </MenuGroup>
+				<MenuItem name="AssociationAdminIndex" :to="{name:'AssociationMemList'}">
+					<Icon type="md-home"/>
+					社团概览
+				</MenuItem>
+				<MenuItem name="AssociationAdminArticleList" :to="{name:'AssociationAdminArticleList'}">
+					<Icon type="md-document" />
+					文章管理
+				</MenuItem>
+				<MenuItem name="AssociationAdminActivityList" :to="{name:'AssociationAdminActivityList'}">
+					<Icon type="md-briefcase" />
+					活动管理
+				</MenuItem>
+				<MenuItem :name="''">
+					<Icon type="ios-checkbox" />
+					申请列表
+				</MenuItem>
             </Menu>
         </Sider>
         <Content style="min-height:420px;margin:10px;">

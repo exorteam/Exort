@@ -1,7 +1,7 @@
 <template>
 	<Layout>
 		<Header :style="{background: '#fff'}">
-			<Avatar shape="square" :src="require('@/assets/AssociationLogo/solid.jpg')" size="large" />
+			<Avatar shape="square" :src="logo" size="large" />
 		</Header>
 		<Content>
 			<Menu width="auto" @active-name="active" @on-select="onSelect">
@@ -60,7 +60,10 @@ export default {
             'uid',
             'username',
             'admin'
-        ])
+        ]),
+		...mapState('common/applicationEntries',[
+			'logo'
+		])
     },
 	methods: {
 		...mapActions('common/currentUser',['logout']),

@@ -1,3 +1,5 @@
+import applicationEntries from './application-entries'
+
 import associationSelector from './association-selector'
 import associationOps from './association-ops'
 
@@ -8,6 +10,8 @@ import currentUserSubscription from './current-user-subscription'
 export default {
     namespaced: true,
     modules: {
+		applicationEntries,
+
         associationSelector,
 		associationOps,
 

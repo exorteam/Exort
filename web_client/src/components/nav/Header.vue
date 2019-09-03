@@ -2,7 +2,9 @@
 <Header class="nav-header">
     <Row type="flex" justify="space-between" align="middle" class="nav-header-row">
         <Col class="nav-header-logo">
-            <!--<img src="@/assets/AssociationLogo/solid.jpg" alt="LOGO" style="height:50px;">-->
+			<a href='/'>
+				<Avatar shape="square" :src="logo" size="large" style="margin-bottom:25px"/>
+			</a>
         </Col>
         <Col class="nav-header-menu">
             <UserDropDown/>
@@ -12,12 +14,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import UserDropDown from './UserDropDown'
 
 export default {
     components: {
         UserDropDown
-    }
+    },
+	computed: {
+		...mapState('common/applicationEntries',['logo'])
+	}
 }
 </script>
 
