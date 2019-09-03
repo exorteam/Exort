@@ -4,7 +4,7 @@
             <Badge class="text" :text="stateList[activityState]" :status="statusList[activityState]"/>
             <img :src="this.curActivity.image"
                  style="width: 40%; height: 90%; margin: 10px 10px 20px 40px; float: right"/>
-            <div style="margin-top: 10px;height: 600px">
+            <div style="margin-top: 10px">
                 <p style="margin: 10px 10px 20px 40px; ">标签：
                     <Tag v-for="tag in this.curActivity.tags" :key="tag.id" :row="tag">{{ tag }}</Tag>
                 </p>
@@ -16,9 +16,27 @@
                 <p style="margin: 10px 10px 20px 40px; ">开始时间： {{this.curActivity.time.time[0].start}}</p>
                 <p style="margin: 10px 10px 20px 40px; ">结束时间： {{this.curActivity.time.time[0].end}}</p>
                 <p style="margin: 10px 10px 20px 40px; ">简介： {{this.curActivity.content}}</p>
-                <!--<p style="margin: 10px 10px 20px 40px; ">预计参加者名单： {{this.curActivity.participantIds}}</p>-->
-                <!--<p style="margin: 10px 10px 20px 40px; ">实际参加者名单： {{this.curActivity.realParticipantIds}}</p>-->
+                <!--<p style="margin: 10px 10px 20px 40px; ">预计参加者名单： {{this.participants}}</p>-->
+                <!--<p style="margin: 10px 10px 20px 40px; ">实际参加者名单： {{this.realParticipants}}</p>-->
             </div>
+            <div v-if="this.participants.length">
+                <div style="margin-top: 200px">申请者</div>
+                <Table border ref="selection" height="200" :columns="columns" :data="this.participants">
+                    <template slot-scope="{ row }" slot="name">
+                        <strong>{{ row.name }}</strong>
+                    </template>
+                </Table>
+            </div>
+            <br/>
+            <div v-if="this.realParticipants.length">
+                <div>参加者</div>
+                <Table border ref="selection" height="200" :columns="columns" :data="this.realParticipants">
+                    <template slot-scope="{ row }" slot="name">
+                        <strong>{{ row.name }}</strong>
+                    </template>
+                </Table>
+            </div>
+            <br/>
             <div>
                 <activityCreate :form="newform"/>
                 <Button @click="newform.onshow=true" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
@@ -29,14 +47,6 @@
                         style="margin: 10px 10px 20px 40px; ">撤回
                 </Button>
             </div>
-            <!--<div v-if="form.participants.length" style="margin-top: 100px">-->
-                <!--<div style="margin-top: 200px">参加者</div>-->
-                <!--<Table :columns="attribute" :data="participants"></Table>-->
-            <!--</div>-->
-            <!--<div v-if="form.realParticipants.length" style="margin-top: 50px">-->
-                <!--<div>申请者</div>-->
-                <!--<Table :columns="attribute" :data="realParticipants"></Table>-->
-            <!--</div>-->
         </Card>
     </div>
 </template>
@@ -64,43 +74,36 @@
                     totalSize: 0,
                 },
                 signUpList: [],
-                participants: [],
-                realParticipants: [],
-                attribute: [
+                columns: [
                     {
-                        type: 'expand',
-                        width: 50,
-                        render: (h, params) => {
-                            return h(expandRow, {
-                                props: {
-                                    row: params.row
-                                }
-                            })
-                        }
+                        title: 'UserId',
+                        key: 'id',
                     },
                     {
-                        title: '学号',
-                        key: 'studentID'
-                    },
-                    {
-                        title: '姓名',
+                        title: 'Name',
                         key: 'name'
                     },
                     {
-                        title: '年级',
-                        key: 'grade'
+                        title: 'Age',
+                        key: 'age'
                     },
                     {
-                        title: '学院',
-                        key: 'department'
+                        title: "StudentID",
+                        key: "studentId"
+                    },
+                    {
+                        title: "Gender",
+                        key: "gender"
                     }
-                ]
+                ],
             }
         },
         computed: {
             ...mapState('associationAdmin/activity', [
                 'curActivity',
-                'curActivityId'
+                'curActivityId',
+                'participants',
+                'realParticipants'
             ]),
             activityState: function () {
                 if (this.curActivity.publishState === 1) {
@@ -115,7 +118,9 @@
         methods: {
             ...mapActions('associationAdmin/activity', [
                 'changeActivityState',
-                'getCurActivity'
+                'getCurActivity',
+                'getParticipants',
+                'getRealParticipants'
             ]),
             handlePublish() {
                 let data = {type: "publish"};
@@ -167,47 +172,12 @@
             //     }
             //     this.newform.data.signupTime = signupTime
             // },
-            // getParticipants() {
-            //     let data = (this.$store.getters.get_activityid).toString()
-            //     //请求activity的participants
-            //     this.axios({
-            //         method: "post",
-            //         url: "/activities/" + data + "/participants/message",
-            //         params: {
-            //             'pagesize': this.participantPage.pageSize,
-            //             'pagenum': this.participantPage.pageNum,
-            //             'sortby': "0",
-            //         },
-            //         data: {
-            //             userId: 0
-            //         }
-            //     })
-            //         .then(response => {
-            //             console.log(response.data)
-            //             this.participants = response.data.data
-            //         })
-            //         .catch(e => {
-            //             console.log(e)
-            //         })
-            // },
-            // getRealParticipants() {
-            //     let data = (this.$store.getters.get_activityid).toString()
-            //     //请求activity的participants
-            //     Axios
-            //         .get('/activities/' + data + "/realparticipants")
-            //         .then(response => {
-            //             this.realParticipants = response.data.data
-            //         })
-            //         .catch(e => {
-            //             console.log(e)
-            //         })
-            // }
         },
         mounted() {
             // console.log(this.curActivity);
             this.getCurActivity(this.curActivityId);
-            // this.getParticipants()
-            // this.getRealParticipants()
+            console.log(this.participants);
+            console.log(this.realParticipants);
         },
     }
 </script>

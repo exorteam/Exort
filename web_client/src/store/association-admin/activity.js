@@ -7,7 +7,9 @@ const state = {
         pageNum: 0,
         pageSize: 6
     },
-    curActivityId:null,
+    curActivityId: null,
+    participants: [],
+    realParticipants: [],
     curActivity: {
         id: null,
         associationIds: [],
@@ -34,8 +36,8 @@ const state = {
 }
 
 const mutations = {
-    setCurActivityId(state,id){
-      state.curActivityId=id;
+    setCurActivityId(state, id) {
+        state.curActivityId = id;
     },
     setActivities(state, {activities, totalSize, pageNum, pageSize}) {
         state.activities.cardList = activities;
@@ -44,7 +46,13 @@ const mutations = {
         state.activities.pageSize = pageSize;
     },
     updateCurActivity(state, activityInfo) {
-        state.curActivity=activityInfo;
+        state.curActivity = activityInfo;
+    },
+    setParticipants(state, participants) {
+        state.participants = participants;
+    },
+    setRealParticipants(state, realParticipants) {
+        state.realParticipants = realParticipants;
     }
 }
 
@@ -80,15 +88,17 @@ const actions = {
             reject(error);
         })
     }),
-    getCurActivity: ({commit, state}, id) => new Promise((resolve, reject) => {
+    getCurActivity: ({commit, state,dispatch}, id) => new Promise((resolve, reject) => {
         api({
             method: "get",
-            url: "/activities/"+id,
+            url: "/activities/" + id,
         }).then(res => {
             let resdata = res.data.data;
             if (resdata) {
                 // console.log(resdata);
                 commit('updateCurActivity', resdata);
+                dispatch('getParticipants');
+                dispatch('getRealParticipants');
                 // console.log(state.curActivity);
                 resolve();
             } else {
@@ -130,7 +140,7 @@ const actions = {
             reject(error);
         })
     }),
-    changeActivityState: ({commit,state}, stateChangeInfo) => new Promise((resolve, reject) => {
+    changeActivityState: ({commit, state}, stateChangeInfo) => new Promise((resolve, reject) => {
         api({
             method: 'put',
             url: "/activities/" + state.curActivity.id + "/state",
@@ -142,6 +152,34 @@ const actions = {
             } else {
                 reject(res.data.message);
             }
+        }).catch(error => {
+            reject(error);
+        })
+    }),
+    getParticipants: ({commit, state}) => new Promise((resolve, reject) => {
+        let participantsIds=state.curActivity.participantIds;
+        api({
+            method: "post",
+            url: "/users",
+            data: participantsIds,
+        }).then((response) => {
+            commit("setParticipants",response.data.data);
+            resolve();
+        }).catch(error => {
+            reject(error);
+        })
+    }),
+    getRealParticipants: ({commit, state}) => new Promise((resolve, reject) => {
+        let realParticipantsIds=state.curActivity.realParticipantIds;
+        // console.log(realParticipantsIds);
+        api({
+            method: "post",
+            url: "/users",
+            data: realParticipantsIds
+        }).then((response) => {
+            // console.log(response.data.data);
+            commit("setRealParticipants",response.data.data);
+            resolve();
         }).catch(error => {
             reject(error);
         })
