@@ -58,6 +58,8 @@ public class AssoMgrSvcImpl extends RestTemplate implements AssoMgrSvc {
 				HttpMethod.GET, 
 				"/associations?pageNum={pageNum}&pageSize={pageSize}",
 				pageNum,pageSize);
+
+		//TODO:There may be an error when p getting null
 		PagedData<Association> p = res.getData();
 
 		List<Association> assos = p.getContent();

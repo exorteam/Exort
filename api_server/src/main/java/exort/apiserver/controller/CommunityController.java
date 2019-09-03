@@ -1,6 +1,7 @@
 package exort.apiserver.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.errorhandler.ApiError;
 import exort.apiserver.service.CommunityService;
 import exort.apiserver.service.CommunityService.CoummunityMessage;
 
@@ -23,14 +25,20 @@ public class CommunityController {
 	@Autowired
 	private CommunityService cmSvc;
 
+	private final String POST_MSG_CONTENT_KEY = "content";
+
 	@PostMapping("/msg/{uid}")
 	public ApiResponse postMessage(
 			@RequestAttribute("id") int operatorId,
 			@PathVariable("uid") int uid,
-			@RequestBody String content){
+			@RequestBody Map<String,String> body){
+
+		if(!body.containsKey(POST_MSG_CONTENT_KEY)){
+			throw new ApiError(403,"MsgErr","Message content not found");
+		}
 		CoummunityMessage msg = new CoummunityMessage();
 		msg.setSenderId(operatorId);
-		msg.setContent(content);
+		msg.setContent(String.valueOf(body.get(POST_MSG_CONTENT_KEY)));
 
 		return cmSvc.postMessage(uid,msg);
 	}
