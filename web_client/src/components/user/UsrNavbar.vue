@@ -21,16 +21,12 @@
 					<Icon type="md-american-football" />
 					活动列表
 				</MenuItem>
-				<!--<MenuItem v-if="!username" name="UsrIndexLogin">-->
-				<!--    <Icon type="ios-man" />                     -->
-				<!--    登陆                                      -->
-				<!--</MenuItem>                                     -->
 				<Submenu v-if="username" name="UsrIndexUserSubmenu">
 					<template slot="title">
 						<Icon type="ios-man" />
 						{{username}}
 					</template>
-					<MenuItem name="UsrIndexUserInfo">
+					<MenuItem name="UsrIndexUserInfo" :to="{name:'UserInfoDetail'}">
 						个人信息
 					</MenuItem>
 					<MenuItem name="UsrIndexLogout">

@@ -53,6 +53,7 @@ export default {
 						return false;
 					})
 				}
+				if(!this.list)this.list = [];
 				else{
 					// error
 				}
