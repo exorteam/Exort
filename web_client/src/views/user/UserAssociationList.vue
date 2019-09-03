@@ -75,7 +75,8 @@ export default {
     },
     methods: {
 		...mapActions('common/associationOps',[
-			'queryPagedAssociationsWithFilter'
+			'queryPagedAssociationsWithFilter',
+			'queryAssociationById'
 		]),
         ...mapMutations('associationAdmin/currentAssociation', [
 			'setAssociation'
@@ -102,12 +103,15 @@ export default {
 			});
         },
 		onClickCard(id){
-			// TODO: Below is to set selected association by given id,
-			// 		 add new action to store on association-selector
-			//		 instead of using mutation below.
-
-			// this.setAssociation(id);
-			this.$router.push({name:'AssociationMemList'});
+			this.queryAssociationById({
+				assoId: id
+			}).then(res=>{
+				this.setAssociation({
+					id,
+					name: res.data.data.name
+				})
+				this.$router.push({name:'AssociationMemList'});
+			});
 		}
 	},
     mounted() {
