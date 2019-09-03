@@ -1,8 +1,7 @@
 <template>
 	<div class="article-list">
 		<Card>
-			<Input type="text" v-model="searchContent" placeholder="Search in articles" style="width:300px"/>
-			<Button @click="onClickSearch">搜索</Button>
+			<Input search @on-search="onClickSearch" placeholder="Search in articles" style="width:300px"/>
 			<br><br>
 			<Table :columns="columns" :data="list" @on-row-click="onClickView"></Table>
 		</Card>
@@ -65,14 +64,16 @@ export default {
 			//console.log(row);
 			this.$router.push({ name: 'UserArticleReader', params: { id: row.id }});
 		},
-		onClickSearch(){
-			this.loadArticles(this.searchContent);
+		onClickSearch(search){
+			//this.loadArticles(search)
+			console.log(search);
 		}
 	},
-	mounted:function(){
+	mounted(){
 		//console.log(this.id);
-		this.refreshSubscription();
-		this.loadArticles();
+		this.refreshSubscription().then(()=>{
+			this.loadArticles();
+		})
 	}
 }
 </script>
