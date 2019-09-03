@@ -16,26 +16,30 @@
 
 			<br>
 			<div id="CardList"  style="display: flex; flex-wrap: wrap">
-				<Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
-				<p slot="title">
-					<Icon type="ios-people" ></Icon>
-					{{item.name}}
-					<Icon type="ios-checkmark-circle" style="position:absolute;right:10px;" size="30" color="green" v-if="item.state"/>
-					<Icon type="ios-close-circle" style="position:absolute;right:10px;" size="30" color="red" v-if="!item.state"/>
-				</p>
+				<Card v-for="item in AssoList" 
+						:key="item.id" 
+						:row="item" 
+					  	@click.native="onClickCard(item.id)"
+						style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
+					<p slot="title">
+						<Icon type="ios-people" ></Icon>
+						{{item.name}}
+						<Icon type="ios-checkmark-circle" style="position:absolute;right:10px;" size="30" color="green" v-if="item.state"/>
+						<Icon type="ios-close-circle" style="position:absolute;right:10px;" size="30" color="red" v-if="!item.state"/>
+					</p>
 
 
-				<div style="text-align: center;height:100px">
-					<img :src="item.logo" style="width:80px;height:80px;"/>
-				</div>
-				<div style= "min-height: 100%; ">
-					<p>{{ item.description }}</p>
-				</div>
-				<div style="margin-top:80px">
-					<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">
-						{{ tag }}
-					</Tag>
-				</div>
+					<div style="text-align: center;height:100px">
+						<img :src="item.logo" style="width:80px;height:80px;"/>
+					</div>
+					<div style= "min-height: 100%; ">
+						<p>{{ item.description }}</p>
+					</div>
+					<div style="margin-top:80px">
+						<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">
+							{{ tag }}
+						</Tag>
+					</div>
 				</Card>
 			</div>
 			<div style="margin-top:15px;text-align: center">
@@ -49,7 +53,7 @@
 
 <script>
 import TagChoose from '@/components/TagChoose'
-import { mapState, mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 
 export default {
     name:'UserAssociationList',
@@ -73,6 +77,9 @@ export default {
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter'
 		]),
+        ...mapMutations('associationAdmin/currentAssociation', [
+			'setAssociation'
+		]),
         getAssociationList(search) {
             const tags = this.tag.tagList.join();
 
@@ -87,7 +94,6 @@ export default {
 					pageSize: this.pageProp.pageSize
 				}
 			}).then(response => {
-				console.log(response);
 				this.AssoList = response.data.data.content
 				this.pageProp.totalSize = response.data.data.totalSize
 			})
@@ -95,6 +101,14 @@ export default {
 				console.log(e)
 			});
         },
+		onClickCard(id){
+			// TODO: Below is to set selected association by given id,
+			// 		 add new action to store on association-selector
+			//		 instead of using mutation below.
+
+			// this.setAssociation(id);
+			this.$router.push({name:'AssociationMemList'});
+		}
 	},
     mounted() {
 		this.getAssociationList();

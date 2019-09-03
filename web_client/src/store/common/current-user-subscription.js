@@ -20,7 +20,7 @@ const actions = {
 			commit('setSubscribed',{
 				ids:res.data.data
 			});
-			resolve();
+			resolve(res);
 		}).catch(err => {
             if (err.response && err.response.data) {
                 reject(err.response.data);
@@ -38,7 +38,7 @@ const actions = {
 			commit('setSubscribed',{
 				ids:res.data.data
 			});
-			resolve();
+			resolve(res);
 		}).catch(err => {
             if (err.response && err.response.data) {
                 reject(err.response.data);
@@ -55,7 +55,7 @@ const actions = {
 			commit('setSubscribed',{
 				ids:res.data.data
 			});
-			resolve();
+			resolve(res);
 		}).catch(err => {
             if (err.response && err.response.data) {
                 reject(err.response.data);
