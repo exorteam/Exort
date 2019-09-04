@@ -64,8 +64,14 @@ export default {
 			}
 			this.updateInfo({uinfo:updateBody}).then(()=>{
 				this.$router.push({name:'UserInfoDetail'});
+				this.$Notice.success({
+					desc: '成功修改个人信息'
+				})
 			}).catch(err=>{
-				console.log(err);
+				this.$Notice.error({
+					title: '修改个人信息时出现错误',
+					desc: err
+				})
 			})
 		}
 	},

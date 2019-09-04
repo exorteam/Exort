@@ -81,7 +81,12 @@ export default {
 	watch: {
         '$route': function(newValue, oldValue) {
             this.active = newValue.name;
-        }
+        },
+		'admin':  function() {
+			if(this.admin.isSysAdmin){
+				this.$router.push({name:'SystemAdminIndex'});
+			}
+		}
     }
 
 }
