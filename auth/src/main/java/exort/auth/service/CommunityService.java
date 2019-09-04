@@ -2,6 +2,8 @@ package exort.auth.service;
 
 import java.util.List;
 
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.auth.entity.CommunityMessage;
 import exort.auth.entity.UserCommunityEntity;
 
@@ -16,6 +18,7 @@ public interface CommunityService {
 	Integer dropMessageById(int uid,int msgId);
 	Integer dropAllMessage(int uid);
 	List<CommunityMessage> getMessagesForUser(int uid);
+	PagedData<CommunityMessage> getPagedMessagesForUser(int uid,PageQuery pq);
 
 	List<String> addToSubscribed(int uid,List<String> assoIds);
 	List<String> removeFromSubscribed(int uid,List<String> assoIds);

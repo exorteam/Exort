@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.auth.component.AutoIncIdGenerator;
 import exort.auth.entity.CommunityMessage;
 import exort.auth.entity.UserCommunityEntity;
@@ -163,6 +165,21 @@ public class CommunityServiceImpl implements CommunityService {
 
 		return e.getMessages();
 	}
+
+	public PagedData<CommunityMessage> getPagedMessagesForUser(int uid, PageQuery pq){
+		if(!repo.existsById(uid)){
+			return null;
+		}
+
+		final UserCommunityEntity e = repo.findById(uid).get();
+		final List<CommunityMessage> msgs = e.getMessages();
+		final int pn = pq.getPageNum();
+		final int ps = pq.getPageSize();
+		final List<CommunityMessage> content = msgs.subList(pn*ps,(pn+1)*ps);
+
+		return new PagedData(pn,ps,Long.valueOf(msgs.size()),content);
+	}
+
 
 	// Operations on subscribe list
 	// add and remove entries(update)

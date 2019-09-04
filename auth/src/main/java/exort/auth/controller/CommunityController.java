@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.auth.entity.CommunityMessage;
 import exort.auth.service.CommunityService;
@@ -92,6 +94,18 @@ public class CommunityController {
 	public ApiResponse<List<CommunityMessage>> getMessagesForUser(
 			@PathVariable("uid") Integer uid){
 		final List<CommunityMessage> res = cmSvc.getMessagesForUser(uid);
+		if(res == null){
+			throw new ApiError(403,"QueryErr","Cannot found such user");
+		}
+
+		return new ApiResponse(res);
+	}
+
+	@GetMapping("/msg/page/{uid}")
+	public ApiResponse<PagedData<CommunityMessage>> getPagedMessagesForUser(
+			@PathVariable("uid") Integer uid,
+			PageQuery pq){
+		final PagedData<CommunityMessage> res = cmSvc.getPagedMessagesForUser(uid,pq);
 		if(res == null){
 			throw new ApiError(403,"QueryErr","Cannot found such user");
 		}
