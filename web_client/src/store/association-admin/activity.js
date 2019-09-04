@@ -97,8 +97,12 @@ const actions = {
             if (resdata) {
                 // console.log(resdata);
                 commit('updateCurActivity', resdata);
-                dispatch('getParticipants');
-                dispatch('getRealParticipants');
+                if(state.curActivity.participantIds){
+                    dispatch('getParticipants');
+                }
+                if(state.curActivity.realParticipantIds){
+                    dispatch('getRealParticipants');
+                }
                 // console.log(state.curActivity);
                 resolve();
             } else {
@@ -163,9 +167,15 @@ const actions = {
             url: "/users",
             data: participantsIds,
         }).then((response) => {
-            commit("setParticipants",response.data.data);
-            resolve();
+            if(response.data.data){
+                commit("setParticipants",response.data.data);
+                resolve();
+            }else{
+                commit("setParticipants",[]);
+                reject(response.data.message);
+            }
         }).catch(error => {
+            commit("setParticipants",[]);
             reject(error);
         })
     }),
@@ -178,9 +188,15 @@ const actions = {
             data: realParticipantsIds
         }).then((response) => {
             // console.log(response.data.data);
-            commit("setRealParticipants",response.data.data);
-            resolve();
+            if(response.data.data){
+                commit("setRealParticipants",response.data.data);
+                resolve();
+            }else{
+                commit("setRealParticipants",[]);
+                reject(response.data.message);
+            }
         }).catch(error => {
+            commit("setRealParticipants",[]);
             reject(error);
         })
     }),

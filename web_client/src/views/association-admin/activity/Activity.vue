@@ -122,7 +122,7 @@
                     </div>
                 </Card>
 
-                <ActivityCreate :form="form"/>
+                <ActivityCreate :onshow="form.onshow" :initform="form.data"/>
             </div>
 
             <Divider style="width: 100%;"/>
@@ -143,13 +143,14 @@
                             <img :src="card.image" style="height: 280px; width: 100%;"/>
                         </Button>
                         <Divider/>
-                        <p>Time:{{card.time.time.start + card.time.time.end}}</p>
-                        <p>Brief Description:{{card.content}}</p>
+                        <p>开始时间: {{card.time.time[0].start}}</p>
+                        <p>结束时间: {{card.time.time[0].end}}</p>
+                        <p>简介:{{card.content}}</p>
                     </Card>
                 </div>
                 <div>
                     <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum+1"
-                          :page-size.sync="page.pageSize" simple @on-change="handleSelect"
+                          :page-size.sync="page.pageSize" simple @on-change="changePage"
                           style="text-align: center;"></Page>
                 </div>
             </div>
@@ -243,7 +244,7 @@
 
     import ActivityCreate from './ActivityCreate'
     import TagChoose from '../../../components/TagChoose'
-    import {mapMutations,mapState, mapActions} from 'vuex'
+    import {mapMutations, mapState, mapActions} from 'vuex'
 
     export default {
         name: 'activity',
@@ -267,7 +268,7 @@
                 page: {
                     totalSize: 0,
                     pageNum: 0,
-                    pageSize: 9
+                    pageSize: 6
                 },
                 select: {
                     associationId: null,
@@ -283,33 +284,34 @@
                 },
                 form: {
                     onshow: false,
-                    data: {
-                        title: "",
-                        content: "",
-                        signupTime: {
-                            type: 0,
-                            time: [{
-                                start: "",
-                                end: "",
-                            }]
-                        },
-                        time: {
-                            type: 0,
-                            time: [{
-                                start: "",
-                                end: ""
-                            }]
-                        },
-                        ifReview: false,
-                        ifOnlyMem: false,
-                        maxParticipants: '',
-                        materials: [],
-                        image: "",
-                        tag: {
-                            tag_show: false,
-                            tagList: [],
-                        }
-                    },
+                    data:null
+                    // data: {
+                    //     title: "",
+                    //     content: "",
+                    //     signupTime: {
+                    //         type: 0,
+                    //         time: [{
+                    //             start: "",
+                    //             end: "",
+                    //         }]
+                    //     },
+                    //     time: {
+                    //         type: 0,
+                    //         time: [{
+                    //             start: "",
+                    //             end: ""
+                    //         }]
+                    //     },
+                    //     ifReview: false,
+                    //     ifOnlyMem: false,
+                    //     maxParticipants: '',
+                    //     materials: [],
+                    //     image: "",
+                    //     tag: {
+                    //         tag_show: false,
+                    //         tagList: [],
+                    //     }
+                    // },
                 },
                 tag: {
                     tag_show: false,
@@ -333,11 +335,15 @@
             to_detail(value) {
                 this.getCurActivity(value);
                 this.setCurActivityId(value);
-                this.$router.replace({path: "/association-admin/activity/about"})
+                this.$router.replace({path: "/association-admin/activity/"+value})
+            },
+            changePage(e){
+                this.page.pageNum=e-1;
+                this.handleSelect();
             },
             handleSelect() {
-                let data = this.select
-                data.tags = this.tag.tagList
+                let data = this.select;
+                data.tags = this.tag.tagList;
 
                 if (data.createTime != null && data.createTime.length == 2) {
                     if (data.createTime[0] == "") {
@@ -393,35 +399,15 @@
                     pageNum: this.page.pageNum
                 }).then().catch(error => {
                     console.log(error);
+                }).then(() => {
+                    this.page.pageSize = this.activities.pageSize;
+                    this.page.totalSize = this.activities.totalSize;
+                    this.page.pageNum = this.activities.pageNum;
                 });
             }
         },
         mounted() {
-            this.handleSelect()
-
-
-            // let data = this.select
-            // data.tagList = this.tag.tagList
-
-            // this.axios({
-            //     method:"get",
-            //     url:"activities",
-            //     params:{
-            //         'pagesize': this.page.pageSize,
-            //         'pagenum':this.page.pageNum,
-            //         'sortby':"0",
-            //     },
-            //     data: data
-            // })
-            // .then(response => {
-            //     this.cardList = response.data.data.content
-            //     this.totalSize = response.data.data.totalSize
-            //     this.pageNum = response.data.data.pageNum
-            //     this.pageSize = response.data.data.pageSize
-            // })
-            // .catch(e => {
-            //     console.log(e)
-            // })
+            this.handleSelect();
         },
     }
 </script>

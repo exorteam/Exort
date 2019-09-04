@@ -38,8 +38,8 @@
             </div>
             <br/>
             <div>
-                <activityCreate :form="newform"/>
-                <Button @click="newform.onshow=true" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
+                <activityCreate :onshow="newform.onshow" :initform="newform.data" :changeOnShow="changeOnShow"/>
+                <Button @click="edit" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
                 <Button v-if="this.curActivity.publishState===1" @click="handlePublish" type="warning"
                         style="margin: 10px 10px 20px 40px; ">发布
                 </Button>
@@ -54,7 +54,7 @@
 <script>
     import expandRow from './ExpandTable'
     import activityCreate from './ActivityCreate'
-    import {mapState, mapActions} from 'vuex'
+    import {mapState, mapActions,mapMutations} from 'vuex'
 
     export default {
         name: "about",
@@ -66,7 +66,7 @@
                 form: {},
                 newform: {
                     onshow: false,
-                    data: {}
+                    data: null
                 },
                 participantPage: {
                     pageSize: 8,
@@ -122,6 +122,12 @@
                 'getParticipants',
                 'getRealParticipants'
             ]),
+            edit(){
+                this.changeOnShow();
+            },
+            changeOnShow(){
+              this.newform.onshow=!this.newform.onshow;
+            },
             handlePublish() {
                 let data = {type: "publish"};
                 this.changeActivityState(data).then(() => {
@@ -172,12 +178,13 @@
             //     }
             //     this.newform.data.signupTime = signupTime
             // },
+            ...mapMutations('associationAdmin/activity', [
+                'setCurActivityId'
+            ]),
         },
-        mounted() {
-            // console.log(this.curActivity);
-            this.getCurActivity(this.curActivityId);
-            console.log(this.participants);
-            console.log(this.realParticipants);
+        created() {
+            this.setCurActivityId(this.$route.params.id);
+            this.getCurActivity(this.$route.params.id);
         },
     }
 </script>

@@ -1,12 +1,17 @@
 <template>
-    <Modal v-model="form.onshow" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
-        <Form :model="form.data" :label-width="112">
+    <Modal
+            v-model="onshow"
+            @on-ok="info_ok"
+            @on-cancel="cancel"
+            loading :closable="false"
+    >
+        <Form :model="formData" :label-width="112">
             <FormItem label="活动标题">
-                <Input v-model="form.data.title"/>
+                <Input v-model="formData.title"/>
             </FormItem>
             <FormItem label="报名时间">
-                <Date-picker v-model="form.data.signupTime.time" type="datetimerange" format="yyyy-MM-dd HH:mm"
-                             placeholder="选择日期和时间" style="width: 300px"></Date-picker>
+                <DatePicker v-model="signupTime" type="datetimerange" format="yyyy-MM-dd HH:mm"
+                            placeholder="选择日期和时间" style="width: 300px"></DatePicker>
             </FormItem>
             <!-- 当前只有一种时间实现 -->
             <!-- <FormItem label="选择活动时间类型:">
@@ -15,33 +20,11 @@
                 </Select>
             </FormItem> -->
 
-            <FormItem label="活动时间" v-if="form.data.time.type==0">
-                <Date-picker v-model="form.data.time.time" type="datetimerange" format="yyyy-MM-dd HH:mm"
-                             placeholder="选择日期和时间" style="width: 300px"></Date-picker>
+            <FormItem label="活动时间">
+                <DatePicker v-model="activityTime" type="datetimerange" format="yyyy-MM-dd HH:mm"
+                            placeholder="选择日期和时间" style="width: 300px"></DatePicker>
             </FormItem>
 
-            <!-- <FormItem label="活动时间" v-if="form.data.time.type==1">
-                <TimePicker format="HH:mm" type="timerange" placement="bottom-end" placeholder="Select time" style="width: 172px"></TimePicker>
-                <div v-for="timeStamp in form.data.time.time" :key="timeStamp.start" :row="timeStamp">
-                    <DatePicker  type="date" placeholder="yyyy-mm-dd"></DatePicker>
-                    <Button type="dashed" @click="delete_timeStamp(form.data.time.time)">-</Button>
-                </div>
-                <Button type="dashed" @click="more_timeStamp">+</Button>
-            </FormItem>
-
-            <FormItem label="活动时间" v-if="form.data.time.type==2">
-                <div>
-                    <Date-picker type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="选择日期和时间" style="width: 300px"></Date-picker>
-                </div>
-            </FormItem>
-
-            <FormItem label="活动时间" v-if="form.data.time.type==3">
-                <div v-for="timeStamp in form.data.time.time" :key="timeStamp.start" :row="timeStamp">
-                    <TimeRange :timeStamp="timeStamp"/>
-                    <Button type="dashed" @click="delete_timeStamp(form.data.time.time)">-</Button>
-                </div>
-                <Button type="dashed" @click="more_timeStamp">+</Button>
-            </FormItem> -->
             <FormItem label="所属社团:">
                 <!--<b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>-->
                 <Select v-model="associationIndex" style="width:200px">
@@ -50,34 +33,41 @@
                 </Select>
             </FormItem>
             <FormItem label="报名是否需要审核:">
-                <Checkbox v-model="form.data.ifReview"/>
+                <Select v-model="formData.ifReview" style="width:200px">
+                    <Option v-for="item in ifReviewSelectList" :value="item.value" :key="item.value">{{
+                        item.text }}
+                    </Option>
+                </Select>
             </FormItem>
             <FormItem label="是否仅社团或组织成员可以参加:">
-                <Checkbox v-model="form.data.ifOnlyMem"/>
+                <Select v-model="formData.ifOnlyMem" style="width:200px">
+                    <Option v-for="item in ifOnlyMemSelectList" :value="item.value" :key="item.value">{{
+                        item.text }}
+                    </Option>
+                </Select>
             </FormItem>
             <FormItem label="最大人数">
-                <Input v-model="form.data.maxParticipants"/>
+                <InputNumber :min="0" :step="1" v-model="formData.numberOfParticipants"></InputNumber>
             </FormItem>
             <FormItem label="上传活动宣传图">
                 <div>
                     <!--<b-form-file v-model="form.data.image" ref="file-input" style="width: 310px; "></b-form-file>-->
-                    <Upload :before-upload="beforeUpload" action="">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">点击上传文件</Button>
-                    </Upload>
+                    <input type="file" accept="image/jpeg,image/png,image/gif" @change="chooseImage"/>
                     <!--<Button @click="clearFile" style="height: 33px; margin-bottom: 8px">clear</Button>-->
-                    <img v-if="form.data.image" :src="form.data.image" style="width: 360px; height: 200px"/>
+                    <img v-if="formData.image" :src="formData.image" style="width: 360px; height: 200px"/>
                 </div>
             </FormItem>
             <FormItem label="活动简介">
-                <Input v-model="form.data.content"/>
+                <Input v-model="formData.content" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                       placeholder=""></Input>
             </FormItem>
-            <FormItem label="选择标签">
-                <Button @click="form.data.tag.tag_show=true" style="width: 80px">选择标签</Button>
-                <TagChoose :tag="form.data.tag"/>
-                <div v-if="form.data.tag.tagList.length" style="display:inline">
-                    <Tag v-for="tag in form.data.tag.tagList" :key="tag.id" :row="tag">{{ tag }}</Tag>
-                </div>
-            </FormItem>
+            <!--<FormItem label="选择标签">-->
+            <!--<Button @click="formData.tag.tag_show=true" style="width: 80px">选择标签</Button>-->
+            <!--<TagChoose :tag="formData.tag"/>-->
+            <!--<div v-if="formData.tag.length" style="display:inline">-->
+            <!--<Tag v-for="tag in formData.tag" :key="tag.id" :row="tag">{{ tag }}</Tag>-->
+            <!--</div>-->
+            <!--</FormItem>-->
         </Form>
     </Modal>
 </template>
@@ -85,7 +75,29 @@
 <script>
     import TimeRange from './TimeRange'
     import TagChoose from '../../../components/TagChoose'
-    import {mapActions,mapState} from 'vuex'
+    import {mapActions, mapState} from 'vuex'
+
+    let ifReviewSelectLists = [
+        {
+            value: 0,
+            text: '不需要'
+        },
+        {
+            value: 1,
+            text: '需要'
+        }
+    ];
+
+    let ifOnlyMemSelectLists = [
+        {
+            value: 0,
+            text: '不允许'
+        },
+        {
+            value: 1,
+            text: '允许'
+        }
+    ];
 
     let timeTypeList = [
         {
@@ -109,11 +121,14 @@
     export default {
         name: 'activity_create',
         components: {TimeRange, TagChoose},
-        props: {
-            form: Object
-        },
+        props: ['onshow', 'initform'],
         data() {
             return {
+                ifReviewSelectList: ifReviewSelectLists,
+                ifOnlyMemSelectList: ifOnlyMemSelectLists,
+
+                initdata: {},
+
                 fileList: [],
                 associationIndex: "",
                 associationList: [{
@@ -121,139 +136,181 @@
                     text: "请选择所属社团"
                 }],
                 img: "",
+                imageFile: null,
+                signupTime: null,
+                activityTime: null,
                 // tag:{
                 //     tag_show: false,
                 //     tagList:[],
                 // }
+                formData: {
+                    associationIds: [],
+                    title: null,
+                    content: null,
+                    signupTime: {
+                        type: 0,
+                        time: [
+                            {
+                                start: null,
+                                end: null
+                            }
+                        ]
+                    },
+                    time: {
+                        type: 0,
+                        time: [
+                            {
+                                start: null,
+                                end: null
+                            }
+                        ]
+                    },
+                    ifReview: 0,
+                    ifOnlyMem: 0,
+                    numberOfParticipants: 0,
+                    materialTemplateIds: [],
+                    tags: [],
+                    image: ""
+                }
             }
         },
-        computed:{
+        computed: {
             ...mapState('associationAdmin/activity', [
                 'curActivity'
             ]),
         },
         methods: {
-            // more_timeStamp() {
-            //     this.form.time.time.push({start: "", end: ""})
-            // },
-            // delete_timeStamp(value){
-            //     let times = this.form.time.time
-            //     let length = this.form.time.time.length
-            //     for(let i=0; i<length; i++){
-            //         if(times[i]==value){
-            //             this.form.time.time.splice(i, 1)
-            //             break
-            //         }
-            //     }
-            // },
-
-            // 删除回调
-            // clearFile(file, fileList) {
-            //     this.$refs['file-input'].reset();
-            // },
-            beforeUpload(file) {
-                let reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    let img = e.target.result;
-                    console.log(img);
-                };
-                return false;
+            ...mapActions('associationAdmin/activity', [
+                'getCurActivity',
+                'createActivtity',
+                'updateActivity'
+            ]),
+            cancel(){
+              this.$emit('changeOnShow');
             },
             info_ok() {
-                console.log(this.form)
-                let data = {
-                    title: this.form.data.title,
-                    content: this.form.data.content,
-                    signupTime: {
-                        type: 0,
-                        time: [{
-                            start: this.form.data.signupTime.time[0],
-                            end: this.form.data.signupTime.time[1],
-                        }]
-                    },
-                    time: {
-                        type: 0,
-                        time: [{
-                            start: this.form.data.time.time[0],
-                            end: this.form.data.time.time[1],
-                        }]
-                    },
-                    ifReview: this.form.data.ifReview,
-                    ifOnlyMem: this.form.data.ifOnlyMem,
-                    maxParticipants: this.form.data.maxParticipants,
-                    materialTemplateId: this.form.data.materials,
-                    tags: this.form.data.tag.tagList,
-                }
+                // console.log(this.form)
+                if (this.initdata) {
+                    //修改
+                    this.initdata.signupTime.time[0].start = this.signupTime[0];
+                    this.initdata.signupTime.time[0].end = this.signupTime[1];
+                    this.initdata.time.time[0].start = this.activityTime[0];
+                    this.initdata.time.time[0].end = this.activityTime[1];
 
-                let assos = []
-                assos.push(this.associationIndex)
-                data.associationIds = assos
+                    this.initdata.title = this.formData.title;
+                    this.initdata.content = this.formData.content;
 
-                if (this.form.data.image != "") {
-                    let reader = new FileReader()
-                    reader.readAsDataURL(this.form.data.image)
+                    this.initdata.ifReview = (this.formData.ifReview === 1);
+                    this.initdata.ifOnlyMem = (this.formData.ifOnlyMem === 1);
+
+                    this.initdata.maxParticipants = this.formData.numberOfParticipants;
+                    this.initdata.materialTemplateIds = this.formData.materialTemplateIds;
+                    this.initdata.tags = this.formData.tags;
+
+
+                    if (this.imageFile) {
+                        let reader = new FileReader();
+                        reader.readAsDataURL(this.imageFile);
+                        reader.onload = (e) => {
+                            this.initdata.image = e.target.result;
+
+                            this.updateActivity({
+                                activityInfo: this.initdata,
+                                activityId: this.$route.params.id
+                            }).then(()=>{
+                                this.$router.go(0);
+                            });
+                        }
+                    } else {
+                        this.updateActivity({
+                            activityInfo: this.initdata,
+                            activityId: this.$route.params.id
+                        }).then(()=>{
+                            this.$router.go(0);
+                        });
+                    }
+
+                } else {
+                    //新建
+                    this.formData.signupTime.time[0].start = this.signupTime[0];
+                    this.formData.signupTime.time[0].end = this.signupTime[1];
+                    this.formData.time.time[0].start = this.activityTime[0];
+                    this.formData.time.time[0].end = this.activityTime[1];
+
+                    let reader = new FileReader();
+                    reader.readAsDataURL(this.imageFile);
                     reader.onload = (e) => {
-                        data.image = e.target.result
-                        console.log(data);
+                        this.formData.image = e.target.result;
 
-                        this.createActivtity({},data);
-                        // this.axios({
-                        //     method: "post",
-                        //     url: "/activities",
-                        //     data: data
-                        // })
-                        //     .then(response => {
-                        //         console.log("Successfully!")
-                        //         console.log(response.data.data)
-                        //     })
-                        //     .catch(e => {
-                        //         console.log(e)
-                        //     })
+                        this.createActivtity(this.formData);
                     }
                 }
-                this.form.onshow = false
             },
-            info_cancel() {
-                this.form.onshow = false
+            chooseImage(event) {
+                let files = event.target.files || event.dataTransfer.files;
+                this.imageFile = files[0];
             },
-            getAssociations() {
-                let userid = "1"
-                this.axios({
-                    method: "get",
-                    url: "/associations/users/" + userid + "/associations",
-                })
-                    .then(response => {
-                        console.log(response.data)
-                        // if(response.data.data!=null){
-                        //     let originList = response.data.data.content
-                        //     this.setAssociationList(originList)
-                        // }s
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-            },
-            setAssociationList(originList) {
-                if (originList.length == 0) {
-                    return
-                }
-                for (let i = 0; i < originList.length; i++) {
-                    let data = {
-                        value: originList[i].id,
-                        text: originList[i].name
+            setInitData(initData) {
+                // console.log(initData);
+                if (this.$route.params.id) {
+                    this.formData.title = initData.title;
+                    this.formData.content = initData.content;
+                    this.signupTime = new Array();
+                    this.signupTime.push(initData.signupTime.time[0].start, initData.signupTime.time[0].end);
+                    this.activityTime = new Array();
+                    this.activityTime.push(initData.time.time[0].start, initData.time.time[0].end);
+
+                    this.formData.ifReview = (initData.ifReview) ? 1 : 0;
+                    this.formData.ifOnlyMem = (initData.ifOnlyMem) ? 1 : 0;
+                    this.formData.numberOfParticipants = initData.maxParticipants;
+                    this.formData.materialTemplateIds = initData.materialTemplateIds;
+                    this.formData.tags = initData.tags;
+                    this.formData.image = initData.image;
+                } else {
+                    this.formData = {
+                        associationIds: [],
+                        title: null,
+                        content: null,
+                        signupTime: {
+                            type: 0,
+                            time: [
+                                {
+                                    start: null,
+                                    end: null
+                                }
+                            ]
+                        },
+                        time: {
+                            type: 0,
+                            time: [
+                                {
+                                    start: null,
+                                    end: null
+                                }
+                            ]
+                        },
+                        ifReview: 0,
+                        ifOnlyMem: 0,
+                        numberOfParticipants: 0,
+                        materialTemplateIds: [],
+                        tags: [],
+                        image: ""
                     }
-                    this.associationList.push(data)
                 }
-                // console.log(this.associationList)
             },
-            ...mapActions('associationAdmin/activity',[
-                'createActivtity'
-            ])
         },
         mounted() {
-            console.log(this.curActivity);
-            this.getAssociations()
+            if (this.$route.params.id) {
+                this.getCurActivity(this.$route.params.id).then(() => {
+                    this.initdata = this.curActivity;
+                    this.setInitData(this.initdata);
+                });
+            } else {
+                this.setInitData(this.initdata);
+            }
+            // if(this.form.data){
+            //     this.setInitData(this.form.data);
+            // }
         },
     }
 </script>
