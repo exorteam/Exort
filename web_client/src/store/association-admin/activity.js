@@ -5,53 +5,61 @@ const state = {
         cardList: [],
         totalSize: 0,
         pageNum: 0,
-        pageSize: 9
+        pageSize: 6
     },
+    curActivityId: null,
+    participants: [],
+    realParticipants: [],
     curActivity: {
-        title: "",
-        content: "",
-        signupTime: {
-            type: 0,
-            time: [{
-                start: "",
-                end: "",
-            }]
-        },
-        time: {
-            type: 0,
-            time: [{
-                start: "",
-                end: ""
-            }]
-        },
-        ifReview: 0,
-        ifOnlyMem: 0,
-        maxParticipants: '',
-        materials: [],
-        image: "",
-        tag: {
-            tag_show: false,
-            tagList: [],
-        }
+        id: null,
+        associationIds: [],
+        createTime: null,
+        publishTime: null,
+        lastPublishTime: null,
+        lastModifyTime: null,
+        title: null,
+        content: null,
+        signupTime: null,
+        time: null,
+        publishState: 0,
+        signupState: 0,
+        state: 0,
+        ifReview: true,
+        ifOnlyMem: false,
+        maxParticipants: 10,
+        materialTemplateIds: [],
+        participantIds: [],
+        realParticipantIds: [],
+        tags: [],
+        image: ""
     }
 }
 
 const mutations = {
+    setCurActivityId(state, id) {
+        state.curActivityId = id;
+    },
     setActivities(state, {activities, totalSize, pageNum, pageSize}) {
         state.activities.cardList = activities;
         state.activities.totalSize = totalSize;
         state.activities.pageNum = pageNum;
         state.activities.pageSize = pageSize;
     },
-    setActivity(state, newActivityInfo) {
-        state.newActivity = newActivityInfo;
+    updateCurActivity(state, activityInfo) {
+        state.curActivity = activityInfo;
+    },
+    setParticipants(state, participants) {
+        state.participants = participants;
+    },
+    setRealParticipants(state, realParticipants) {
+        state.realParticipants = realParticipants;
     }
 }
 
 const actions = {
-    updateCardlist: ({commit}, {select, pageSize, pageNum}) => new Promise((resolve, reject) => {
+    updateCardlist: ({commit, state}, {select, pageSize, pageNum}) => new Promise((resolve, reject) => {
         api({
-            method: "posr",
+            method: "post",
             url: "/activities/filter",
             params: {
                 'pagesize': pageSize || 0,
@@ -62,19 +70,47 @@ const actions = {
         }).then(res => {
             let resdata = res.data.data;
             if (resdata) {
+                // console.log(resdata);
                 commit('setActivities', {
-                    activity: resdata.content,
+                    activities: resdata.content,
                     totalSize: resdata.totalSize,
                     pageNum: resdata.pageNum,
                     pageSize: resdata.pageSize
                 });
+
                 resolve();
             } else {
                 commit('setActivities', {activity: [], totalSize: 0, pageNum: 1, pageSize: 0});
-                reject();
+                reject(res.data.message);
             }
         }).catch(error => {
             commit('setActivities', {activity: [], totalSize: 0, pageNum: 1, pageSize: 0});
+            reject(error);
+        })
+    }),
+    getCurActivity: ({commit, state,dispatch}, id) => new Promise((resolve, reject) => {
+        api({
+            method: "get",
+            url: "/activities/" + id,
+        }).then(res => {
+            let resdata = res.data.data;
+            if (resdata) {
+                // console.log(resdata);
+                commit('updateCurActivity', resdata);
+                if(state.curActivity.participantIds){
+                    dispatch('getParticipants');
+                }
+                if(state.curActivity.realParticipantIds){
+                    dispatch('getRealParticipants');
+                }
+                // console.log(state.curActivity);
+                resolve();
+            } else {
+                commit('updateCurActivity', {});
+                reject(res.data.message);
+            }
+        }).catch(error => {
+            commit('updateCurActivity', {});
             reject(error);
         })
     }),
@@ -108,22 +144,62 @@ const actions = {
             reject(error);
         })
     }),
-    changeActivityState:({commit}, {stateChangeInfo, activityId}) => new Promise((resolve, reject) => {
+    changeActivityState: ({commit, state}, stateChangeInfo) => new Promise((resolve, reject) => {
         api({
             method: 'put',
-            url: "/activities/" + activityId+"/state",
+            url: "/activities/" + state.curActivity.id + "/state",
             data: stateChangeInfo
         }).then(res => {
             if (res.data.data !== null) {
+                // console.log(res.data);
                 resolve()
             } else {
-                reject(res.data);
+                reject(res.data.message);
             }
         }).catch(error => {
             reject(error);
         })
     }),
-
+    getParticipants: ({commit, state}) => new Promise((resolve, reject) => {
+        let participantsIds=state.curActivity.participantIds;
+        api({
+            method: "post",
+            url: "/users",
+            data: participantsIds,
+        }).then((response) => {
+            if(response.data.data){
+                commit("setParticipants",response.data.data);
+                resolve();
+            }else{
+                commit("setParticipants",[]);
+                reject(response.data.message);
+            }
+        }).catch(error => {
+            commit("setParticipants",[]);
+            reject(error);
+        })
+    }),
+    getRealParticipants: ({commit, state}) => new Promise((resolve, reject) => {
+        let realParticipantsIds=state.curActivity.realParticipantIds;
+        // console.log(realParticipantsIds);
+        api({
+            method: "post",
+            url: "/users",
+            data: realParticipantsIds
+        }).then((response) => {
+            // console.log(response.data.data);
+            if(response.data.data){
+                commit("setRealParticipants",response.data.data);
+                resolve();
+            }else{
+                commit("setRealParticipants",[]);
+                reject(response.data.message);
+            }
+        }).catch(error => {
+            commit("setRealParticipants",[]);
+            reject(error);
+        })
+    }),
 }
 
 export default {
