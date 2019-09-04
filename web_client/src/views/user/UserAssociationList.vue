@@ -23,17 +23,18 @@
 					<p slot="title">
 						<Icon type="ios-people" ></Icon>
 						{{item.name}}
-						<Icon type="ios-notifications" 
-							style="position:absolute;right:10px;" 
-							size="20" 
-							color="green" 
-							@click.native="onClickUnsubscribe(item.id,item.name)"
-							v-if="subscribed.includes(item.id)"/>
-						<Icon type="ios-notifications-off" 
-							style="position:absolute;right:10px;" 
-							size="20" 
-							@click.native="onClickSubscribe(item.id,item.name)"
-							v-else/>
+						<Tooltip content="已订阅" placement="top"
+								style="position:absolute;right:10px;" 
+								v-if="subscribed.includes(item.id)">
+							<Icon type="ios-notifications" size="20" color="green" 
+								@click.native="onClickUnsubscribe(item.id,item.name)" />
+						</Tooltip>
+						<Tooltip content="订阅" placement="top"
+								style="position:absolute;right:10px;" 
+								v-else>
+							<Icon type="ios-notifications-off" size="20" 
+							    @click.native="onClickSubscribe(item.id,item.name)" />
+						</Tooltip>
 					</p>
 
 

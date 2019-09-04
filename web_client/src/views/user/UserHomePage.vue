@@ -11,7 +11,11 @@
 			<Card v-for="item in msgs" :key="item.id" :row="item" style="margin-top:10px">
 			<Row type="flex" justify="space-between">
 				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 #{{item.senderId}}</p></Col>
-				<Col span="1"><Icon @click.native="onClickDropMsg(item.id)" type="ios-trash" /></Col>
+				<Col span="1">
+					<Tooltip content="删除信息" placement="top">
+						<Icon @click.native="onClickDropMsg(item.id)" type="ios-trash" />
+					</Tooltip>
+				</Col>
 			</Row>
 				<p style="word-break: break-all;white-space: normal;">{{item.content}}</p>
 			</Card>
