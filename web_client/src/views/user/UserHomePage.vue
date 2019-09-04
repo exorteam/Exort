@@ -90,11 +90,7 @@ export default {
 		},
 		refreshMsgs(){
 			this.queryMessage().then(res => {
-				this.msgs = res.data.data.map(e => {
-					const ts = new Date(e.timestamp);
-					e.timestamp = ts.toLocaleString();
-					return e;
-				})
+				this.msgs = res;
 			})
 		},
 

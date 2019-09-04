@@ -93,15 +93,11 @@ export default {
     methods: {
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter',
-			'queryAssociationById'
 		]),
 		...mapActions('common/currentUserSubscription',[
 			'refreshSubscription',
 			'commitSubscription',
 			'removeSubscription'
-		]),
-        ...mapMutations('associationAdmin/currentAssociation', [
-			'setAssociation'
 		]),
         getAssociationList(search) {
             const tags = this.tag.tagList.join();
@@ -125,14 +121,11 @@ export default {
 			});
         },
 		onClickCard(id){
-			this.queryAssociationById({
-				assoId: id
-			}).then(res=>{
-				this.setAssociation({
-					id,
-					name: res.data.data.name
-				})
-				this.$router.push({name:'AssociationMemList'});
+			this.$router.push({
+				name:'UserAssociationDetail',
+				params: {
+					assoId: id
+				}
 			});
 		},
 		onClickSubscribe(id,name) {

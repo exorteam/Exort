@@ -9,8 +9,7 @@
 </template>
 
 <script>
-import {api} from '@/http'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
 	name: "UserArticleList",
@@ -22,40 +21,19 @@ export default {
 				{title:'作者',key:'associationId'},
 				{title:'上次修改时间',key:'lastModifyTime'},
 			],
-			searchContent:''
 		}
 	},
 	computed: {
 		...mapState('common/currentUserSubscription',['subscribed']),
-		...mapState('associationAdmin/currentAssociation', {
-			assoId:'id',
-			assoName:'name'
-		}),
 	},
 	methods: {
 		...mapActions('common/currentUserSubscription',['refreshSubscription']),
+		...mapActions('common/articleOps',['queryPagedArticlesByAssociation']),
 		loadArticles() {
-			api({
-				method: 'post',
-				url:'/articles/list/asso?pageNum=0&pageSize=10',
-				data: this.subscribed
-			}).then((res)=>{
-				//console.log(res);
-				if(res.data.data.content){
-					this.list = res.data.data.content.map((e)=>{
-						e.published = (e.state!=0);
-						const d = new Date(e.lastModifyTime);
-						e.lastModifyTime = d.toLocaleString();
-						return e;
-					}).filter(e => {
-						if(e.published)return true;
-						return false;
-					})
-				}
-				if(!this.list)this.list = [];
-				else{
-					// error
-				}
+			this.queryPagedArticlesByAssociation({
+				assoIds: this.subscribed
+			}).then(res => {
+				this.list = res;
 			}).catch((err)=>{
 				console.log(err);
 			})

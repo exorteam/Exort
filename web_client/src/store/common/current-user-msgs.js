@@ -23,7 +23,12 @@ const actions = {
 			method: 'get',
 			url: '/com/msg'
 		}).then(res => {
-			resolve(res);
+			const ret = res.data.data.map(e => {
+				const ts = new Date(e.timestamp);
+				e.timestamp = ts.toLocaleString();
+				return e;
+			})
+			resolve(ret);
 		}).catch(err => {
             if (err.response && err.response.data) {
                 reject(err.response.data);

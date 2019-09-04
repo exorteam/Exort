@@ -7,7 +7,7 @@
                       trigger="custom" :visible="selecting"
                       @on-visible-change="showAssociations($event)"
                       @on-clickoutside="showAssociations(false)">
-                <Button long type="info" @click="showAssociations(!selecting)">
+                <Button long type="info" @click="showAssociations(!selecting)" style="border-radius: 0">
                     {{ id ? name : '选择社团' }}
                 </Button>
                 <div slot="list">

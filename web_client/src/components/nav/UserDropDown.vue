@@ -2,17 +2,17 @@
 <Menu mode="horizontal" theme="dark" style="display:inline-block;" @on-select="onSelect">
     <Submenu name="user" v-if="uid">
         <template #title>
-            <Avatar size="large">{{username}}</Avatar>
+            <span>{{username}}</span>
         </template>
         <MenuItem name="uid" disabled>
             UID {{uid}}
         </MenuItem>
-        <MenuItem name="info">
+        <MenuItem name="info" :to="{name:'UserInfoDetail'}">
             个人信息
         </MenuItem>
-        <MenuItem name="SystemAdminIndex" v-if="admin.isSysAdmin" :to="{name:'SystemAdminIndex'}">
-            系统管理后台
-        </MenuItem>
+        <!--<MenuItem name="SystemAdminIndex" v-if="admin.isSysAdmin" :to="{name:'SystemAdminIndex'}">-->
+        <!--    系统管理后台                                                                    -->
+        <!--</MenuItem>                                                                               -->
         <MenuItem name="AssociationAdminIndex" v-if="admin.assoAdmins.length" :to="{name:'AssociationAdminIndex'}">
             社团管理后台
         </MenuItem>
@@ -58,11 +58,6 @@ export default {
                 case "login":
                     this.login_show = true;
                     break;
-                case "info":
-                    this.$Notice.warning({
-                        title: '页面施工中',
-                        desc: '个人信息页面开发中'
-                    })
             }
         }
     }

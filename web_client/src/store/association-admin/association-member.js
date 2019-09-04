@@ -229,6 +229,7 @@ const actions = {
         })
     }),
     gettree: ({commit}, associationId) => new Promise((resolve, reject) => {
+		console.log(associationId);
         let url = "/associations/" + associationId + "/departments";
         api({
             method: "get",
@@ -238,9 +239,11 @@ const actions = {
                 commit("setDepartments", res.data.data);
                 resolve();
             } else {
+				console.log(res);
                 reject(res.data.message);
             }
         }).catch((error) => {
+			console.log(error);
             reject(error);
         })
     }),
