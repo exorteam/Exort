@@ -97,11 +97,9 @@ public class ActivityController {
 //3
 
     @RequestMapping(value = "/activities", method = RequestMethod.GET)
-    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, @RequestParam(name = "pagesize") int pagesize, @RequestParam(name = "pagenum") int pagenum) {
+    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, PageQuery pageQuery) {
         try {
-            PageQuery pageQuery = new PageQuery(pagenum, pagesize);
-
-            PageQuery page = PageQuery.relocate(pageQuery, 9, 100);
+            PageQuery page = PageQuery.relocate(pageQuery, 6, 100);
             PagedData<ActivityInfo> ret = as.getActivities(filter, page);
 
             if (ret.getContent() == null) {
@@ -181,7 +179,7 @@ public class ActivityController {
     }
 //6
 
-    @RequestMapping(value = "/activities/{activityid}/realparticipants", method = RequestMethod.POST)
+    @PostMapping(value = "/activities/{activityid}/realparticipants")
     public ApiResponse addRealParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity) {
         try {
             ActivityInfo theActivity = as.getActivity(activityId);
@@ -235,9 +233,8 @@ public class ActivityController {
     @RequestMapping(value = "/activities/{activityid}/participants", method = RequestMethod.GET)
     public ApiResponse getActivityParticipants(
             @PathVariable(value = "activityid") String activityId,
-            @RequestParam(name = "pagesize") int pagesize,
-            @RequestParam(name = "pagenum") int pagenum
-//            @RequestBody RequestActivity requestActivity
+            PageQuery pageQuery,
+            @RequestBody RequestActivity requestActivity
     ) {
         try {
 //            PagedData<Integer> result = as.getActivityUserIds(activityId, pageQuery, requestActivity.getUserId(), 1);
@@ -249,7 +246,7 @@ public class ActivityController {
             } else {
                 pars = activityInfo.getParticipantIds();
             }
-            PageQuery pageQuery=new PageQuery(pagenum,pagesize);
+
             PagedData<Integer> result = as.fromList2Paged(pars, pageQuery);
 
             if (result.getContent() == null) {
@@ -267,9 +264,8 @@ public class ActivityController {
     @RequestMapping(value = "/activities/{activityid}/realparticipants", method = RequestMethod.GET)
     public ApiResponse getActivityRealParticipants(
             @PathVariable(value = "activityid") String activityId,
-//            @RequestBody RequestActivity requestActivity,
-            @RequestParam(name = "pagesize") int pagesize,
-            @RequestParam(name = "pagenum") int pagenum
+            @RequestBody RequestActivity requestActivity,
+            PageQuery pageQuery
     ) {
         try {
 //            PageQuery page = PageQuery.relocate(pageQuery, 9, 100);
@@ -281,7 +277,7 @@ public class ActivityController {
             } else {
                 pars = activityInfo.getRealParticipantIds();
             }
-            PageQuery pageQuery=new PageQuery(pagenum,pagesize);
+
             PagedData<Integer> result = as.fromList2Paged(pars, pageQuery);
 
             if (result.getContent() == null) {
