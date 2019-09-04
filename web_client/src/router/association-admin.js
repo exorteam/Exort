@@ -38,7 +38,7 @@ export default {
             component: Activity
         },
         {
-            path: 'activity/about',
+            path: 'activity/:id',
             name: 'AssociationAdminActivityAbout',
             component: About
         }
