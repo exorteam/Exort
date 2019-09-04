@@ -10,7 +10,7 @@
 			<h5 v-if="msgs.isEmpty">Nothing new here.</h5>
 			<Card v-for="item in msgs" :key="item.id" :row="item" style="margin-top:10px">
 			<Row type="flex" justify="space-between">
-				<Col span="10"><p>{{item.timestamp}} From #{{item.senderId}}</p></Col>
+				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 #{{item.senderId}}</p></Col>
 				<Col span="1"><Icon @click.native="onClickDropMsg(item.id)" type="ios-trash" /></Col>
 			</Row>
 				<p style="word-break: break-all;white-space: normal;">{{item.content}}</p>
@@ -54,10 +54,12 @@ export default {
 		]),
 
 		onClickSendMsg(){
-			if(!this.newMsgForm.receiverId 
-				|| this.newMsgForm.receiverId.isEmpty 
-				|| !this.newMsgForm.content
-				|| this.newMsgForm.content.isEmpty){
+			const id = this.newMsgForm.receiverId; 
+			const content = this.newMsgForm.content;
+			if(!id
+				|| id.isEmpty 
+				|| !content
+				|| content.isEmpty){
 
 				this.$Message.warning('接受者ID和消息内容不能为空');
 				this.postMsgModal = false;
@@ -65,13 +67,22 @@ export default {
 				return;
 			}
 			this.postMessage({
-				receiverId: this.newMsgForm.receiverId,
-				msg: this.newMsgForm.content
+				receiverId: id,
+				msg: content
 			}).then(res => {
 				this.postMsgModal = false;
 				this.newMsgForm = {};
 				this.refreshMsgs();
+				this.$Notice.success({
+					desc: '已发送消息至用户#' + id,
+				})
+			}).catch(err => {
+				this.$Notice.error({
+					title: '发送消息至用户#' + id + '时出现错误',
+					desc: err
+				})
 			})
+
 		},
 		refreshMsgs(){
 			this.queryMessage().then(res => {
@@ -90,7 +101,16 @@ export default {
 				onOk: () => {
 					this.dropMessageById({msgId}).then(() => {
 						this.refreshMsgs();
+						this.$Notice.success({
+							desc: '已删除消息ID: ' + msgId
+						})
+					}).catch(err => {
+						this.$Notice.error({
+							title: '删除消息时出现错误ID: ' + msgId ,
+							desc: err
+						})
 					})
+
 				},
 				onCancel: () => {
 

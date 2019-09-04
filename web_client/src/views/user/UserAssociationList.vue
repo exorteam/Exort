@@ -19,13 +19,21 @@
 				<Card v-for="item in AssoList" 
 						:key="item.id" 
 						:row="item" 
-					  	@click.native="onClickCard(item.id)"
 						style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
 					<p slot="title">
 						<Icon type="ios-people" ></Icon>
 						{{item.name}}
-						<Icon type="ios-checkmark-circle" style="position:absolute;right:10px;" size="30" color="green" v-if="item.state"/>
-						<Icon type="ios-close-circle" style="position:absolute;right:10px;" size="30" color="red" v-if="!item.state"/>
+						<Icon type="ios-notifications" 
+							style="position:absolute;right:10px;" 
+							size="20" 
+							color="green" 
+							@click.native="onClickUnsubscribe(item.id,item.name)"
+							v-if="subscribed.includes(item.id)"/>
+						<Icon type="ios-notifications-off" 
+							style="position:absolute;right:10px;" 
+							size="20" 
+							@click.native="onClickSubscribe(item.id,item.name)"
+							v-else/>
 					</p>
 
 
@@ -40,6 +48,9 @@
 							{{ tag }}
 						</Tag>
 					</div>
+					<div style="text-align:center">
+						<Button @click="onClickCard(item.id)" long>查看社团详情</Button>
+					</div>
 				</Card>
 			</div>
 			<div style="margin-top:15px;text-align: center">
@@ -53,7 +64,7 @@
 
 <script>
 import TagChoose from '@/components/TagChoose'
-import { mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
     name:'UserAssociationList',
@@ -73,10 +84,20 @@ export default {
             AssoList: [],
         }
     },
+	computed: {
+		...mapState('common/currentUserSubscription',[
+			'subscribed'
+		])
+	},
     methods: {
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter',
 			'queryAssociationById'
+		]),
+		...mapActions('common/currentUserSubscription',[
+			'refreshSubscription',
+			'commitSubscription',
+			'removeSubscription'
 		]),
         ...mapMutations('associationAdmin/currentAssociation', [
 			'setAssociation'
@@ -112,10 +133,43 @@ export default {
 				})
 				this.$router.push({name:'AssociationMemList'});
 			});
+		},
+		onClickSubscribe(id,name) {
+			this.commitSubscription({
+				ids: [id]
+			}).then(() => {
+				this.refreshSubscription();
+				this.$Notice.success({
+					desc: '成功订阅社团' + name
+				})
+			}).catch(err => {
+				this.$Notice.error({
+					title: '订阅时发生错误',
+					desc: err
+				})
+			})
+
+		},
+		onClickUnsubscribe(id,name) {
+			this.removeSubscription({
+				ids: [id]
+			}).then(() => {
+				this.refreshSubscription();
+				this.$Notice.success({
+					desc: '已取消订阅社团' + name
+				})
+			}).catch(err => {
+				this.$Notice.error({
+					title: '取消订阅时发生错误',
+					desc: err
+				})
+			})
 		}
 	},
     mounted() {
-		this.getAssociationList();
+		this.refreshSubscription().then(() => {
+			this.getAssociationList();
+		})
     }
 }
 </script>
