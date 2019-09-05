@@ -2,23 +2,27 @@ package exort.apiserver.controller;
 
 import javax.websocket.server.PathParam;
 
-import exort.apiserver.service.ActivityManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import exort.api.http.perm.service.PermService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
 import exort.api.http.activity.entity.RequestActivity;
-import exort.api.http.activity.entity.Signup;
-import exort.api.http.activity.service.ActivityService;
-import exort.api.http.review.entity.CallbackParam;
-
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.member.service.AssoMemService;
+import exort.api.http.perm.service.PermService;
+import exort.apiserver.service.ActivityManagerService;
 
 @RestController
 @RequestMapping(path = "/activities")
@@ -135,16 +139,16 @@ public class ActivityManagerController {
 		return activitySvc.getActivityRealParticipants(new PageQuery(pagesize, pagenum), activityId, request);
 	}
 
-	@PostMapping(value = "/callback/acceptsignup")
-	public ApiResponse<Object> acceptSignup(@RequestAttribute("id") int operatorId,
-			@RequestBody CallbackParam<Signup> operation) {
-		String activityId = operation.getApplication().getObject().getActivityId();
-		if (!checkPermissionByActivityId(operatorId, activityId, PERM_UPDATE)) {
-			return new ApiResponse<>("PermErr", "Operator[" + String.valueOf(operatorId)
-					+ "] does not have such permission to publish activity[" + activityId + "]");
-		}
-		return activitySvc.acceptSignup(operation);
-	}
+	//@PostMapping(value = "/callback/acceptsignup")
+	//public ApiResponse<Object> acceptSignup(@RequestAttribute("id") int operatorId,
+	//        @RequestBody CallbackParam<Signup> operation) {
+	//    String activityId = operation.getApplication().getObject().getActivityId();
+	//    if (!checkPermissionByActivityId(operatorId, activityId, PERM_UPDATE)) {
+	//        return new ApiResponse<>("PermErr", "Operator[" + String.valueOf(operatorId)
+	//                + "] does not have such permission to publish activity[" + activityId + "]");
+	//    }
+	//    return activitySvc.acceptSignup(operation);
+	//}
 
 	@GetMapping(value = "/{id}")
 	public ApiResponse<Activity> getActivity(@PathVariable("id") String id) {

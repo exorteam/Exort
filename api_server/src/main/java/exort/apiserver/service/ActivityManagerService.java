@@ -3,11 +3,9 @@ package exort.apiserver.service;
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
 import exort.api.http.activity.entity.RequestActivity;
-import exort.api.http.activity.entity.Signup;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.review.entity.CallbackParam;
 
 public interface ActivityManagerService {
 
@@ -29,7 +27,7 @@ public interface ActivityManagerService {
 
     public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation);
+    //public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation);
 
     public ApiResponse<Activity> getActivity(String activityid);
 }

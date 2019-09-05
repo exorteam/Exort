@@ -80,7 +80,7 @@ public class CommunityController {
 	public ApiResponse getPagedMessage(
 			@RequestAttribute("id") int operatorId,
 			PageQuery pq){
-		return cmSvc.getMessageForUser(operatorId);
+		return cmSvc.getPagedMessageForUser(operatorId,pq);
 	}
 
 	@PostMapping("/sub")

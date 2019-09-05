@@ -1,20 +1,19 @@
 package exort.apiserver.service.impl;
 
 import com.google.common.reflect.TypeToken;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
 import exort.api.http.activity.entity.RequestActivity;
-import exort.api.http.activity.entity.Signup;
 //import exort.api.http.activity.service.ActivityService;
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.review.entity.CallbackParam;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
-
 import exort.apiserver.service.ActivityManagerService;
 
 @Service
@@ -76,10 +75,10 @@ public class ActivityManagerServiceImpl extends RestTemplate implements Activity
         return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.GET, pageQuery, "/activities/{activityid}", activityid);
     }
 
-    @Override
-    public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation) {
-        return request(new TypeToken<Object>(){}, operation, HttpMethod.POST, "/callback/acceptsignup");
-    }
+    //@Override
+    //public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation) {
+    //    return request(new TypeToken<Object>(){}, operation, HttpMethod.POST, "/callback/acceptsignup");
+    //}
 
     @Override
     public ApiResponse<Activity> getActivity(String activityid) {
