@@ -37,6 +37,26 @@ const actions = {
             }
         });
 	}),
+	queryPagedMessage: ({commit} , pageArgs) => new Promise((resolve,reject) => {
+		api({
+			method: 'get',
+			url: '/com/msg/page',
+			params: pageArgs
+		}).then(res => {
+			res.data.data.content = res.data.data.content.map(e => {
+				const ts = new Date(e.timestamp);
+				e.timestamp = ts.toLocaleString();
+				return e;
+			})
+			resolve(res);
+		}).catch(err => {
+            if (err.response && err.response.data) {
+                reject(err.response.data);
+            } else {
+                reject({ error: 'unknown', message: err });
+            }
+        });
+	}),
 	dropMessageById: ({commit},{msgId}) => new Promise((resolve,reject) => {
 		api({
 			method: 'post',

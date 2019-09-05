@@ -117,6 +117,8 @@
 import AssociationCreatingModal from './AssociationCreatingModal'
 import TagChoose from '@/components/TagChoose'
 import {api} from '@/http'
+import { mapState, mapActions, mapMutations } from 'vuex'
+
 export default {
     name:'associationList',
     components:{AssociationCreatingModal, TagChoose},
@@ -177,6 +179,9 @@ export default {
         }
     },
     methods: {
+		...mapActions('common/associationOps',[
+			'queryPagedAssociationsWithFilter',
+		]),
 		handleUpload(f){
 			this.file = f;
 			return false;
@@ -273,11 +278,34 @@ export default {
         },
 
         getAssociationList() {
+			/*
             this.assoSearch.pageNum = this.pageProp.pageNum - 1;
             this.assoSearch.pageSize = this.pageProp.pageSize;
             this.assoSearch.tags = this.tag.tagList.join();
+			*/
+
+            const tags = this.tag.tagList.join();
             this.getState();
 
+			this.queryPagedAssociationsWithFilter({
+				filter: {
+					keyword: search?search:'',
+					tags: tags?tags:[],
+					state: 1
+				},
+				pageArgs: {
+					pageNum: this.pageProp.pageNum,
+					pageSize: this.pageProp.pageSize
+				}
+			}).then(response => {
+				this.AssoList = response.data.data.content
+				this.pageProp.totalSize = response.data.data.totalSize
+			})
+			.catch(e => {
+				console.log(e)
+			});
+
+			/*
 			api({
 				method:'post',
 				url:'/associations/list',
@@ -297,6 +325,8 @@ export default {
 			.catch(e => {
 				console.log(e)
 			});
+			*/
+			
         },
         clearFiles() {
             this.$refs['file-input'].reset();
