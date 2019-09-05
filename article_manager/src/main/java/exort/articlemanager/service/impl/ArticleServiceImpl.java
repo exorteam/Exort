@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -75,26 +75,41 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	public PagedData<Article> listArticle(ArticleFilterParams params,PageQuery pq){
+		System.out.println(repository.findAll());
 
-		final String keyword = params.getKeyword();
-		if(keyword == null || keyword.isEmpty()){
-			final Page<Article> res = repository.findAll(PageRequest.of(pq.getPageNum(),pq.getPageSize()));
-			return new PagedData<Article>(res.getNumber(),res.getSize(),res.getTotalElements(),res.getContent());
-			//return repository.findAll();
-		}
-		else{
-			TextCriteria criteria = TextCriteria
-				.forDefaultLanguage()
-				.matchingPhrase(params.getKeyword());
+		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
+		final Query q = Query.query(
+				Criteria.where("associationId").is(params.getAuthorId())).addCriteria(
+				TextCriteria.forDefaultLanguage().matching(params.getKeyword())).with(
+				pageArgs);
+		final List<Article> articles = mt.find(q,Article.class);
+		final Page<Article> p = PageableExecutionUtils.getPage(
+				articles,
+				pageArgs,
+				() -> mt.count(q,Article.class));
 
-			final Page<Article> res = repository.findAllBy(
-					criteria,
-					PageRequest.of(pq.getPageNum(),pq.getPageSize())
-					);
+		return new PagedData<Article>(p.getNumber(),p.getSize(),p.getTotalElements(),articles);
 
-			return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
 
-		}
+		//final String keyword = params.getKeyword();
+		//if(keyword == null || keyword.isEmpty()){
+		//    final Page<Article> res = repository.findAll(PageRequest.of(pq.getPageNum(),pq.getPageSize()));
+		//    return new PagedData<Article>(res.getNumber(),res.getSize(),res.getTotalElements(),res.getContent());
+		//    //return repository.findAll();
+		//}
+		//else{
+		//    TextCriteria criteria = TextCriteria
+		//        .forDefaultLanguage()
+		//        .matchingPhrase(params.getKeyword());
+
+		//    final Page<Article> res = repository.findAllBy(
+		//            criteria,
+		//            PageRequest.of(pq.getPageNum(),pq.getPageSize())
+		//            );
+
+		//    return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
+
+		//}
 	}
 
 	public PagedData<Article> listArticleOfAssociationIds(List<String> ids,PageQuery pq){
