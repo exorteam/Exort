@@ -16,17 +16,13 @@ public interface ActivityService {
 
     public ApiResponse<PagedData<Activity>> getActivities(Filter select, PageQuery pageQuery);
 
-    public ApiResponse<Object> publishActivity(String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> publishActivity(String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> addParticipants(String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> addParticipants(String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> addRealParticipants(String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> addRealParticipants(String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> deleteParticipants(String activityid, RequestActivity requestActivity);
-
-    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
-
-    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> deleteParticipants(String activityid, RequestActivity requestActivity);
 
     public ApiResponse<Activity> getActivity(String activityid);
 }

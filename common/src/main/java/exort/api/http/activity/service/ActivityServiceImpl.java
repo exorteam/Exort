@@ -60,16 +60,6 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.POST, pageQuery, "/activities/{activityid}/participants/message", activityid);
-    }
-
-    @Override
-    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.POST, pageQuery, "/activities/{activityid}/realparticipants", activityid);
-    }
-
-    @Override
     public ApiResponse<Activity> getActivity(String activityid) {
         return request(new TypeToken<Activity>(){}, HttpMethod.GET, "/activities/{activityid}", activityid);
     }
