@@ -77,11 +77,18 @@ public class ArticleServiceImpl implements ArticleService {
 	public PagedData<Article> listArticle(ArticleFilterParams params,PageQuery pq){
 		System.out.println(repository.findAll());
 
+		final String keyword = params.getKeyword();
+		final String assoId = params.getAuthorId();
 		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
-		final Query q = Query.query(
-				Criteria.where("associationId").is(params.getAuthorId())).addCriteria(
-				TextCriteria.forDefaultLanguage().matching(params.getKeyword())).with(
+		Query q = new Query();
+		if(assoId != null){
+			q.addCriteria( Criteria.where("associationId").is(assoId));
+		}
+		if(keyword != null && !keyword.isEmpty()){
+		   	q.addCriteria(
+				TextCriteria.forDefaultLanguage().matching(keyword)).with(
 				pageArgs);
+		}
 		final List<Article> articles = mt.find(q,Article.class);
 		final Page<Article> p = PageableExecutionUtils.getPage(
 				articles,
@@ -115,7 +122,9 @@ public class ArticleServiceImpl implements ArticleService {
 	public PagedData<Article> listArticleOfAssociationIds(List<String> ids,PageQuery pq){
 
 		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
-		final Query q = Query.query(Criteria.where("associationId").in(ids)).with(pageArgs);
+		final Query q = Query.query(Criteria.where("associationId").in(ids))
+			.addCriteria(Criteria.where("state").is(1))
+			.with(pageArgs);
 		final List<Article> articles = mt.find(
 				q,
 				Article.class);
