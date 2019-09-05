@@ -78,11 +78,11 @@ public class ArticleServiceImpl implements ArticleService {
 		System.out.println(repository.findAll());
 
 		final String keyword = params.getKeyword();
-		final String assoId = params.getAuthorId();
+		final List<String> assoId = params.getAuthorIds();
 		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
 		Query q = new Query();
-		if(assoId != null){
-			q.addCriteria( Criteria.where("associationId").is(assoId));
+		if(assoId != null && !assoId.isEmpty()){
+			q.addCriteria( Criteria.where("associationId").in(assoId));
 		}
 		if(keyword != null && !keyword.isEmpty()){
 		   	q.addCriteria(
