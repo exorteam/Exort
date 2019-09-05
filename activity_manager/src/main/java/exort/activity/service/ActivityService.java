@@ -1,7 +1,7 @@
 package exort.activity.service;
 
+import exort.activity.entity.ActivityInfo;
 import exort.api.http.activity.entity.Filter;
-import exort.api.http.activity.entity.Activity;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 
@@ -9,17 +9,14 @@ import java.util.List;
 
 public interface ActivityService {
 
-    Activity upsertActivity(Activity activity);
+    ActivityInfo createActivity(ActivityInfo activityInfo);
 
-    PagedData<Activity> getActivities(Filter filter, PageQuery pageQuery);
+    ActivityInfo updateActivity(String id, ActivityInfo activityInfo);
 
-    boolean changeActivityState(String activityid, String type);
+    ActivityInfo getActivity(String id);
 
-    boolean addUserIds(String activityid, List<Integer> userIds, int type);
+    PagedData<ActivityInfo> getActivities(Filter filter, PageQuery pageQuery);
 
-    boolean removeParticipants(String activityid, List<Integer> participantIds);
+    PagedData<Integer> fromList2Paged(List<Integer> list,PageQuery pageQuery);
 
-    PagedData<Integer> getActivityUserIds(String activityid,  PageQuery pageQuery, Integer userId, int type);
-
-    Activity getActivity(String acticityid);
 }

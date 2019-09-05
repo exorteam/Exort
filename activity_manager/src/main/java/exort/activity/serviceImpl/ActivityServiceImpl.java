@@ -1,123 +1,114 @@
 package exort.activity.serviceImpl;
 
-import exort.activity.dao.ActivityDao;
+import exort.activity.entity.ActivityInfo;
+import exort.activity.repository.ActivityRepository;
 import exort.activity.service.ActivityService;
-import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.Filter;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Math.min;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
-    private ActivityDao ad;
+    private ActivityRepository activityRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
-    public Activity upsertActivity(Activity activity){
-        return ad.update(activity);
+    public ActivityInfo createActivity(ActivityInfo activityInfo) {
+
+        ActivityInfo ret = activityRepository.save(activityInfo);
+
+        return ret;
     }
 
     @Override
-    public PagedData<Activity> getActivities(Filter filter, PageQuery pageQuery){
-         return ad.selectActivities(filter, pageQuery.getPageSize(), pageQuery.getPageNum(), pageQuery.getSortBy());
+    public ActivityInfo updateActivity(String id, ActivityInfo activityInfo) {
+
+        activityInfo.setId(id);
+
+        ActivityInfo ret = activityRepository.save(activityInfo);
+
+        return ret;
     }
 
     @Override
-    public boolean changeActivityState(String activityid, String type){
-        try{
-            System.out.println(type);
-            return ad.updateActivityPublishState(activityid, type);
-       }catch(Exception e){
-            e.printStackTrace();
-            return false;
+    public ActivityInfo getActivity(String id) {
+        if (activityRepository.findById(id).isPresent()) {
+            return activityRepository.findById(id).get();
         }
+
+        return null;
     }
 
     @Override
-    public boolean addUserIds(String activityid, List<Integer> userIds, int type){
-        System.out.println(userIds);
-        Activity activity = ad.getActivity(activityid);
-        if (activity != null) {
-            if (type==1) {
-                List<Integer> oldp = activity.getParticipantIds();
-                if (oldp!=null) {
-                    List<Integer> temp = new ArrayList<>(oldp);
-                    temp.retainAll(userIds);
-                    oldp.removeAll(temp);
-                    oldp.addAll(userIds);
-                } else {
-                    oldp = userIds;
-                }
-                activity.setParticipantIds(oldp);
-            } else {
-                List<Integer> oldp = activity.getRealParticipantIds();
-                if (oldp != null) {
-                    oldp.addAll(userIds);
-                } else {
-                    oldp = userIds;
-                }
-                activity.setRealParticipantIds(oldp);
-            }
-            ad.update(activity);
-            return true;
+    public PagedData<ActivityInfo> getActivities(Filter filter, PageQuery pageQuery) {
+        Query query = new Query();
+
+        if (filter.getCreateTime() != null) {
+            query.addCriteria(Criteria.where("createTime").gte(filter.getCreateTime().getStart())
+                    .lte(filter.getCreateTime().getEnd()));
         }
-        return false;
+        if (filter.getSignupTime() != null) {
+            query.addCriteria(Criteria.where("signupTime.time.start").gte(filter.getSignupTime().getStart())
+                    .lte(filter.getSignupTime().getEnd()));
+        }
+        if (filter.getStartTime() != null) {
+            query.addCriteria(Criteria.where("time.time.start").gte(filter.getStartTime().getStart())
+                    .lte(filter.getStartTime().getEnd()));
+        }
+        if (filter.getPublishState() != 0) {
+            query.addCriteria(Criteria.where("publishState").is(filter.getPublishState()));
+        }
+        if (filter.getSignupState() != 0) {
+            query.addCriteria(Criteria.where("signupState").is(filter.getSignupState()));
+        }
+        if (filter.getState() != 0) {
+            query.addCriteria(Criteria.where("state").is(filter.getState()));
+        }
+        if (filter.getIfReview() != 0) {
+            query.addCriteria(Criteria.where("ifReview").is(filter.getIfReview() == 2));
+        }
+        if (filter.getIfOnlyMem() != 0) {
+            query.addCriteria(Criteria.where("ifOnlyMem").is(filter.getIfOnlyMem() == 2));
+        }
+        if (filter.getKeyword() != null) {
+            query.addCriteria(Criteria.where("content").regex(filter.getKeyword()));
+        }
+
+        if (filter.getTags() != null && !filter.getTags().equals(new ArrayList<>())) {
+            query.addCriteria(Criteria.where("tags").in(filter.getTags()));
+        }
+
+        List<ActivityInfo> activities = mongoTemplate.find(query, ActivityInfo.class, "activity");
+        if (activities.size() == 0) {
+            return new PagedData<>(pageQuery.getPageNum(), pageQuery.getPageSize(), 0L, null);
+        }
+        int totalsize = activities.size();
+        List<ActivityInfo> result = activities.subList(pageQuery.getPageNum() * pageQuery.getPageSize(), min((pageQuery.getPageNum() + 1) * pageQuery.getPageSize(), totalsize));
+
+        return new PagedData<ActivityInfo>(pageQuery.getPageNum(), pageQuery.getPageSize(), (long) totalsize, result);
     }
 
     @Override
-    public boolean removeParticipants(String activityid, List<Integer> participantIds){
-        try{
-            Activity activity = ad.getActivity(activityid);
-            if(activity != null){
-                List<Integer> oldp = activity.getParticipantIds();
-                if(oldp!=null){
-                    oldp.removeAll(participantIds);
-                    activity.setParticipantIds(oldp);
-                    ad.update(activity);
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-            return false;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
+    public PagedData<Integer> fromList2Paged(List<Integer> list, PageQuery pageQuery) {
+        int pageNum = pageQuery.getPageNum(), pageSize = pageQuery.getPageSize(), totalSize = list.size();
+
+        List<Integer> result = list.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalSize));
+
+        return new PagedData<Integer>(pageNum, pageSize, (long) totalSize, result);
     }
 
-    @Override
-    public PagedData<Integer> getActivityUserIds(String activityid, PageQuery pageQuery, Integer userId, int type){
-        try{
-            if(userId==0){
-                return ad.getActivityUserIds(activityid, pageQuery.getPageSize(), pageQuery.getPageNum(), type);
-            }{
-                List<Integer> result = ad.checkUserId(activityid, userId, type);
-                System.out.println(result);
-                return new PagedData<Integer>(pageQuery.getPageSize(), pageQuery.getPageNum(), 1L, result);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public Activity getActivity(String acticityid){
-        try{
-            System.out.println(ad);
-            return ad.getActivity(acticityid);
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
