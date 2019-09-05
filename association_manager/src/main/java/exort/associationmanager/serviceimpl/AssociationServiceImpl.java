@@ -8,6 +8,10 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.assomgr.entity.AssociationFilterParams;
@@ -29,6 +33,9 @@ public class AssociationServiceImpl implements AssociationService{
 
     @Autowired
     private AssociationRepository assoRepository;
+
+	@Autowired
+	private MongoTemplate mt;
 
     public Association getAssociation(String assoId){
         Association association = new Association();
@@ -57,6 +64,29 @@ public class AssociationServiceImpl implements AssociationService{
     public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize){
 
         Page<Association> p = assoRepository.findAll(PageRequest.of(pageNum,pageSize));
+
+		final String keyword = params.getKeyword();
+		final Integer state = params.getState();
+		final List<String> tags = params.getTags();
+		final PageRequest pr = PageRequest.of(pageNum,pageSize);
+
+		Query q = new Query();
+		if(keyword != null){
+			q.addCriteria(
+					TextCriteria.forDefaultLanguage().matching(keyword));
+		}
+		if(state != null){
+			q.addCriteria(
+					Criteria.where("state").is(state));
+		}
+		if(tags != null && !tags.isEmpty()){
+			q.addCriteria(
+					Criteria.where("tags").all(tags));
+		}
+		q.with(pr);
+		
+		final List<Association> content = mt.find(q,Association.class);
+
 
 		return new PagedData<Association>(p.getNumber(),p.getSize(),p.getTotalElements(),p.getContent());
 
