@@ -130,7 +130,7 @@ public class ActivityServiceImplTest {
         ActivityInfo activityInfo = activityRepository.findById(globalId).get();
         activityInfo.setContent("asaedawdasd");
 
-        ActivityInfo ret = activityService.updateActivity(globalId, activityInfo);
+        ActivityInfo ret = activityService.updateActivity(activityInfo);
 
         assertEquals("asaedawdasd", ret.getContent());
     }
