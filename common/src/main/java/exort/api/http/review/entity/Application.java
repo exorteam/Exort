@@ -3,6 +3,8 @@ package exort.api.http.review.entity;
 import exort.api.http.review.entity.details.AssociationMemberSignUp;
 import exort.api.http.review.entity.details.ActivitySignUp;
 import exort.api.http.review.entity.details.AssociationInfo;
+import exort.api.http.review.entity.receipt.AssociationMemberReceipt;
+import exort.api.http.review.entity.receipt.NormalReceipt;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -16,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Application<T> {
+public class Application<Details, Receipt> {
 
     private Long id;
     private Date createdTime;
@@ -25,31 +27,34 @@ public class Application<T> {
 
     private Long applicantId;
     private String type;
-    private T details;
+    private Details details;
     private List<String> materialIds;
 
-    public Application(Long applicantId, String type, T details) {
+    private Long operator;
+    private Receipt receipt;
+
+    public Application(Long applicantId, String type, Details details) {
         this.applicantId = applicantId;
         this.type = type;
         this.details = details;
     }
 
-    public Application(Long applicantId, String type, T details, List<String> materialIds) {
+    public Application(Long applicantId, String type, Details details, List<String> materialIds) {
         this.applicantId = applicantId;
         this.type = type;
         this.details = details;
         this.materialIds = materialIds;
     }
 
-    public static Application<AssociationInfo> createAssociation(Long applicantId, AssociationInfo info) {
+    public static Application<AssociationInfo, NormalReceipt> createAssociation(Long applicantId, AssociationInfo info) {
         return new Application<>(applicantId, "AssociationInfo", info);
     }
 
-    public static Application<ActivitySignUp> signUpActivity(Long applicantId, ActivitySignUp signUp) {
+    public static Application<ActivitySignUp, NormalReceipt> signUpActivity(Long applicantId, ActivitySignUp signUp) {
         return new Application<>(applicantId, "ActivitySignUp", signUp);
     }
 
-    public static Application<AssociationMemberSignUp> signUpAssociationMember(Long applicantId, AssociationMemberSignUp signUp) {
+    public static Application<AssociationMemberSignUp, AssociationMemberReceipt> signUpAssociationMember(Long applicantId, AssociationMemberSignUp signUp) {
         return new Application<>(applicantId, "AssociationMemberSignUp", signUp);
     }
 
