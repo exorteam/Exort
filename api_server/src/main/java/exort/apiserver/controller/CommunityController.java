@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.apiserver.service.CommunityService;
 import exort.apiserver.service.CommunityService.CoummunityMessage;
@@ -72,6 +73,13 @@ public class CommunityController {
 	@GetMapping("/msg")
 	public ApiResponse getMessage(
 			@RequestAttribute("id") int operatorId){
+		return cmSvc.getMessageForUser(operatorId);
+	}
+
+	@GetMapping("/msg/page")
+	public ApiResponse getPagedMessage(
+			@RequestAttribute("id") int operatorId,
+			PageQuery pq){
 		return cmSvc.getMessageForUser(operatorId);
 	}
 

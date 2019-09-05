@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
 import lombok.Data;
 
 public interface CommunityService {
@@ -25,6 +26,8 @@ public interface CommunityService {
 	ApiResponse dropMessageById(int uid,int mid);
 	ApiResponse dropAllMessage(int uid);
 	ApiResponse getMessageForUser(int uid);
+	ApiResponse getPagedMessageForUser(int uid,PageQuery pq);
+
 
 	ApiResponse addToSubscribed(int uid,List<String> assoIds);
 	ApiResponse removeFromSubscribed(int uid,List<String> assoIds);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
 import exort.apiserver.service.CommunityService;
 
 @Service
@@ -62,6 +63,15 @@ public class CommunityServiceImpl extends RestTemplate implements CommunityServi
 				HttpMethod.GET,
 				"/com/msg/{uid}",
 				uid);
+	}
+
+	public ApiResponse getPagedMessageForUser(int uid,PageQuery pq){
+		final int pn = pq.getPageNum();
+		final int ps = pq.getPageSize();
+		return request(new TypeToken<List<CoummunityMessage>>(){},
+				HttpMethod.GET,
+				"/com/msg/page/{uid}?pageNum=pn&pageSize=ps",
+				uid,ps,pn);
 	}
 
 	public ApiResponse addToSubscribed(int uid,List<String> assoIds){
