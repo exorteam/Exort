@@ -12,18 +12,28 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Application<T> {
+
     private Long id;
-    private Long applicantId;
-    private String type;
-    private T object;
-    private List<String> materialIds;
     private Date createdTime;
     private Date handledTime;
     private String state;
 
-    public Application(Long applicantId, String type, T object) {
+    private Long applicantId;
+    private String type;
+    private T details;
+    private List<String> materialIds;
+
+    public Application(Long applicantId, String type, T details) {
         this.applicantId = applicantId;
         this.type = type;
-        this.object = object;
+        this.details = details;
     }
+
+    public Application(Long applicantId, String type, T details, List<String> materialIds) {
+        this.applicantId = applicantId;
+        this.type = type;
+        this.details = details;
+        this.materialIds = materialIds;
+    }
+
 }
