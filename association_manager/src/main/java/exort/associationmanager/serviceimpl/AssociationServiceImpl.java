@@ -18,12 +18,9 @@ import org.springframework.stereotype.Service;
 import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.entity.Permission;
 import exort.api.http.perm.service.PermService;
-import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.MyObject;
 import exort.associationmanager.repository.AssociationRepository;
 import exort.associationmanager.service.AssociationService;
 
@@ -80,10 +77,10 @@ public class AssociationServiceImpl implements AssociationService{
 			q.addCriteria(
 					Criteria.where("state").is(state));
 		}
-		if(tags != null && !tags.isEmpty()){
-			q.addCriteria(
-					Criteria.where("tags").all(tags));
-		}
+		//if(tags != null && !tags.isEmpty()){
+		//    q.addCriteria(
+		//            Criteria.where("tags").all(tags));
+		//}
 		q.with(pr);
 		
 		final List<Association> content = mt.find(q,Association.class);
@@ -194,60 +191,60 @@ public class AssociationServiceImpl implements AssociationService{
         }
     };
 
-    public boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app ){
-        switch (type) {
-            case "accept": //create association
-                switch (app.getType()) {
-                    case "createAssociation":
-                        if (!hasAuth(user_id,"system","SysManager")) {    //有权限，待修改
-                            throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-                        }
-                        MyObject assoInfo = app.getObject();
-                        createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
-                        return true;
-                    case "unblockAssociation":
-                        if (!hasAuth(user_id,"system","SysManager")) {
-                            throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-                        }
-                        MyObject blockInfo = app.getObject();
-                        Association asso = assoRepository.findById(blockInfo.getAssociationId()).get();
-                        asso.setState(1);
-                        assoRepository.save(asso);
-                        return true;
-                }
-                throw new ApiError(400,"invalidType","无效的申请类型");
-            case "refuse":
-                switch (app.getType()) {
-                    case "createAssociation":
-                        if (!hasAuth(user_id,"system","SysManager")) {    //有权限，待修改
-                            throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-                        }
-                        return true;
-                    case "unblockAssociation":
-                        if (hasAuth(user_id,"system","SysManager")) {
-                            throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-                        }
-                        return true;
-                }
-                throw new ApiError(400,"invalidType","无效的申请类型");
-            case "cancel":
-                switch (app.getType()) {
-                    case "createAssociation":
-                        if (!hasAuth(user_id,"system","AssoManager")) {    //有权限，待修改
-                            throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-                        }
-                        return true;
-                    case "unblockAssociation":
-                        if (hasAuth(user_id,"system","AsooManager")) {
-                            throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-                        }
-                        return true;
-                }
-                throw new ApiError(400,"invalidType","无效的申请类型");
-            default:
-                throw new ApiError(400,"invalidType","无效的申请类型");
-        }
-    };
+    //public boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app ){
+    //    switch (type) {
+    //        case "accept": //create association
+    //            switch (app.getType()) {
+    //                case "createAssociation":
+    //                    if (!hasAuth(user_id,"system","SysManager")) {    //有权限，待修改
+    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+    //                    }
+    //                    MyObject assoInfo = app.getObject();
+    //                    createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
+    //                    return true;
+    //                case "unblockAssociation":
+    //                    if (!hasAuth(user_id,"system","SysManager")) {
+    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+    //                    }
+    //                    MyObject blockInfo = app.getObject();
+    //                    Association asso = assoRepository.findById(blockInfo.getAssociationId()).get();
+    //                    asso.setState(1);
+    //                    assoRepository.save(asso);
+    //                    return true;
+    //            }
+    //            throw new ApiError(400,"invalidType","无效的申请类型");
+    //        case "refuse":
+    //            switch (app.getType()) {
+    //                case "createAssociation":
+    //                    if (!hasAuth(user_id,"system","SysManager")) {    //有权限，待修改
+    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+    //                    }
+    //                    return true;
+    //                case "unblockAssociation":
+    //                    if (hasAuth(user_id,"system","SysManager")) {
+    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+    //                    }
+    //                    return true;
+    //            }
+    //            throw new ApiError(400,"invalidType","无效的申请类型");
+    //        case "cancel":
+    //            switch (app.getType()) {
+    //                case "createAssociation":
+    //                    if (!hasAuth(user_id,"system","AssoManager")) {    //有权限，待修改
+    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+    //                    }
+    //                    return true;
+    //                case "unblockAssociation":
+    //                    if (hasAuth(user_id,"system","AsooManager")) {
+    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
+    //                    }
+    //                    return true;
+    //            }
+    //            throw new ApiError(400,"invalidType","无效的申请类型");
+    //        default:
+    //            throw new ApiError(400,"invalidType","无效的申请类型");
+    //    }
+    //};
     public  boolean createTestData(){
 
         for (int i = 0; i <10000 ; i++) {

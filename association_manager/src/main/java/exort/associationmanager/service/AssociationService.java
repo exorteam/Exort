@@ -4,9 +4,7 @@ import java.util.List;
 
 import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.review.entity.Application;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.MyObject;
 
 
 public interface AssociationService{
@@ -26,6 +24,6 @@ public interface AssociationService{
 
     public  boolean patchAssociation(String assoId,String type,String descripion);
 
-    public  boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app );
+    //public  boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app );
 
 }

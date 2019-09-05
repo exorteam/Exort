@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.assomgr.entity.Association;
@@ -23,8 +22,6 @@ import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
-import exort.api.http.review.entity.CallbackParam;
-import exort.associationmanager.entity.MyObject;
 import exort.associationmanager.service.AssociationService;
 
 @RestController
@@ -37,37 +34,40 @@ public class AssociationManagerController{
     public ApiResponse<PagedData<Association>> listAssociations(
 			@RequestBody AssociationFilterParams body, 
 			PageQuery page){
-        if(body.getState() > 2 ||body.getState()<-1){
-            throw new ApiError(400,"invalidState","无效的状态");
-        }
-        if(false){
-            throw new ApiError(400,"invalidTags","无效的标签");
-        }
-        if(body.getKeyword() == null){
-            body.setKeyword("");
-        }
-        if(body.getState() == null){
-            body.setState(2);
-        }
-        if(body.getTags() == null){
-            body.setTags(new LinkedList<>());
-        }
-        page = PageQuery.relocate(page, 6, 500);
+
+		return new ApiResponse(service.listAssociations(body,page.getPageNum(),page.getPageSize()));
+        //if(body.getState() > 2 ||body.getState()<-1){
+        //    throw new ApiError(400,"invalidState","无效的状态");
+        //}
+        //if(false){
+        //    throw new ApiError(400,"invalidTags","无效的标签");
+        //}
+        //if(body.getKeyword() == null){
+        //    body.setKeyword("");
+        //}
+        //if(body.getState() == null){
+        //    body.setState(2);
+        //}
+        //if(body.getTags() == null){
+        //    body.setTags(new LinkedList<>());
+        //}
+        //page = PageQuery.relocate(page, 6, 500);
 
 
-        PagedData<exort.associationmanager.entity.Association> associationList = service.listAssociations(body,page.getPageNum(),page.getPageSize());
-        PagedData<Association> associationPagedData = new PagedData<>();
-        associationPagedData.setPageSize(associationList.getPageSize());
-        associationPagedData.setTotalSize(associationList.getTotalSize());
-        associationPagedData.setPageNum(associationList.getPageNum());
-        List<Association> associations = new LinkedList<>();
-        List<exort.associationmanager.entity.Association> oriAssociations = associationList.getContent();
-        for (int i = 0; i <associationList.getContent().size() ; i++) {
-            associations.add(oriAssociations.get(i).toCommon());
-        }
-        associationPagedData.setContent(associations);
+        //PagedData<exort.associationmanager.entity.Association> associationList = service.listAssociations(body,page.getPageNum(),page.getPageSize());
+        //PagedData<Association> associationPagedData = new PagedData<>();
+        //associationPagedData.setPageSize(associationList.getPageSize());
+        //associationPagedData.setTotalSize(associationList.getTotalSize());
+        //associationPagedData.setPageNum(associationList.getPageNum());
+        //List<Association> associations = new LinkedList<>();
+        //List<exort.associationmanager.entity.Association> oriAssociations = associationList.getContent();
+        //for (int i = 0; i <associationList.getContent().size() ; i++) {
+        //    associations.add(oriAssociations.get(i).toCommon());
+        //}
+        //associationPagedData.setContent(associations);
 
-        return new ApiResponse<>(associationPagedData);
+        //return new ApiResponse<>(associationPagedData);
+		//
     }
     @GetMapping("/associations/{assoId}")
     public ApiResponse<Association> getAssociation(
@@ -148,17 +148,17 @@ public class AssociationManagerController{
         return new ApiResponse(new HashMap<>());
     }
 
-    @PostMapping("/callback")
-    public ApiResponse<Object> handleAssociationApplication(
-			@RequestBody CallbackParam<MyObject> body){
-        if( !(Arrays.asList("refuse", "accept", "cancel","create").contains (body.getEvent()))){
-            throw new ApiError(400,"invalidEvent","无效的申请类型");
-        }
-        if(!service.handleAsoociationApplication(body.getUserId(),body.getEvent(),body.getApplication())){
-            throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
-        }
-        return new ApiResponse(new HashMap<>());
-    }
+    //@PostMapping("/callback")
+    //public ApiResponse<Object> handleAssociationApplication(
+	//        @RequestBody CallbackParam<MyObject> body){
+    //    if( !(Arrays.asList("refuse", "accept", "cancel","create").contains (body.getEvent()))){
+    //        throw new ApiError(400,"invalidEvent","无效的申请类型");
+    //    }
+    //    if(!service.handleAsoociationApplication(body.getUserId(),body.getEvent(),body.getApplication())){
+    //        throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
+    //    }
+    //    return new ApiResponse(new HashMap<>());
+    //}
 
 	@PostMapping("/associations/batch")
 	public ApiResponse<PagedData<Association>> getAssociationsInBatch(
