@@ -29,15 +29,13 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityInfo createActivity(ActivityInfo activityInfo) {
 
-        ActivityInfo ret = activityRepository.save(activityInfo);
+        ActivityInfo ret = activityRepository.insert(activityInfo);
 
         return ret;
     }
 
     @Override
-    public ActivityInfo updateActivity(String id, ActivityInfo activityInfo) {
-
-        activityInfo.setId(id);
+    public ActivityInfo updateActivity(ActivityInfo activityInfo) {
 
         ActivityInfo ret = activityRepository.save(activityInfo);
 
@@ -46,11 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ActivityInfo getActivity(String id) {
-        if (activityRepository.findById(id).isPresent()) {
-            return activityRepository.findById(id).get();
-        }
-
-        return null;
+        return activityRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -92,23 +86,13 @@ public class ActivityServiceImpl implements ActivityService {
             query.addCriteria(Criteria.where("tags").in(filter.getTags()));
         }
 
+        query.skip(pageQuery.getPageSize()*pageQuery.getPageNum());
+        query.limit(pageQuery.getPageSize());
+
+        long totalsize = mongoTemplate.count(query, ActivityInfo.class, "activity");
         List<ActivityInfo> activities = mongoTemplate.find(query, ActivityInfo.class, "activity");
-        if (activities.size() == 0) {
-            return new PagedData<>(pageQuery.getPageNum(), pageQuery.getPageSize(), 0L, null);
-        }
-        int totalsize = activities.size();
-        List<ActivityInfo> result = activities.subList(pageQuery.getPageNum() * pageQuery.getPageSize(), min((pageQuery.getPageNum() + 1) * pageQuery.getPageSize(), totalsize));
 
-        return new PagedData<ActivityInfo>(pageQuery.getPageNum(), pageQuery.getPageSize(), (long) totalsize, result);
-    }
-
-    @Override
-    public PagedData<Integer> fromList2Paged(List<Integer> list, PageQuery pageQuery) {
-        int pageNum = pageQuery.getPageNum(), pageSize = pageQuery.getPageSize(), totalSize = list.size();
-
-        List<Integer> result = list.subList(pageNum * pageSize, min((pageNum + 1) * pageSize, totalSize));
-
-        return new PagedData<Integer>(pageNum, pageSize, (long) totalSize, result);
+        return new PagedData<ActivityInfo>(pageQuery.getPageNum(), pageQuery.getPageSize(), totalsize, activities);
     }
 
 }
