@@ -10,6 +10,8 @@ import currentUserInfo from './current-user-info'
 import currentUserSubscription from './current-user-subscription'
 import currentUserMsgs from './current-user-msgs'
 
+import comment from './comment'
+
 export default {
     namespaced: true,
     modules: {
@@ -23,6 +25,8 @@ export default {
         currentUser,
         currentUserInfo,
         currentUserSubscription,
-		currentUserMsgs
+		currentUserMsgs,
+
+        comment
     }
 }
