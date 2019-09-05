@@ -102,26 +102,24 @@ public class ActivityController {
             PageQuery page = PageQuery.relocate(pageQuery, 6, 100);
             PagedData<ActivityInfo> ret = as.getActivities(filter, page);
 
-            if (ret.getContent() == null) {
-                return new ApiResponse<>("get activities failed1.", "查询多个活动失败");
-            } else {
-                PagedData<Activity> result = new PagedData<>();
-                result.setPageNum(ret.getPageNum());
-                result.setPageSize(ret.getPageSize());
-                result.setTotalSize(ret.getTotalSize());
-                List<Activity> resultList = new ArrayList<>();
+            PagedData<Activity> result = new PagedData<>();
+            result.setPageNum(ret.getPageNum());
+            result.setPageSize(ret.getPageSize());
+            result.setTotalSize(ret.getTotalSize());
+            List<Activity> resultList = new ArrayList<>();
 
-//                System.out.println(ret);
+            if (ret.getContent() != null) {
 
                 for (int i = 0; i < ret.getContent().size(); i++) {
                     ActivityInfo item = ret.getContent().get(i);
                     Activity activity = changeActivityInfo2Activity(item);
                     resultList.add(activity);
                 }
-                result.setContent(resultList);
 
-                return new ApiResponse<PagedData<Activity>>(result);
             }
+            result.setContent(resultList);
+
+            return new ApiResponse<PagedData<Activity>>(result);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ApiError(401, "get activities failed2.", "查询多个活动失败");
