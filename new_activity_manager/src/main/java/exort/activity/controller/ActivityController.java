@@ -11,7 +11,6 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
-import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -289,37 +288,37 @@ public class ActivityController {
         }
     }
 
-    //10
-    @RequestMapping(value = "/callback/acceptsignup", method = RequestMethod.POST)
-    public ApiResponse acceptSignup(@RequestBody CallbackParam<Signup> callbackParam) {
-        try {
-            String activityId = callbackParam.getApplication().getObject().getActivityId();
-            Long userId = callbackParam.getApplication().getApplicantId();
-            List<Integer> user = new ArrayList<>();
-            user.add(userId.intValue());
-//            boolean result = as.addUserIds(activityId, user, 1);
-
-            ActivityInfo theActivity = as.getActivity(activityId);
-
-            Set<Integer> set = new HashSet<>();
-            set.addAll(theActivity.getParticipantIds());
-            set.addAll(user);
-            List<Integer> pars = new ArrayList<Integer>(set);
-
-            theActivity.setParticipantIds(pars);
-
-            ActivityInfo activityInfo = as.updateActivity(activityId, theActivity);
-
-            if (activityInfo.getParticipantIds().size() != 0 || user.size() == 0) {
-                return new ApiResponse<>(new HashMap());
-            } else {
-                return new ApiResponse<>("callback accept signup failed.", "接受申请回调失败");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ApiError(401, "callback accept signup failed.", "接受申请回调失败");
-        }
-    }
+//    //10
+//    @RequestMapping(value = "/callback/acceptsignup", method = RequestMethod.POST)
+//    public ApiResponse acceptSignup(@RequestBody CallbackParam<Signup> callbackParam) {
+//        try {
+//            String activityId = callbackParam.getApplication().getObject().getActivityId();
+//            Long userId = callbackParam.getApplication().getApplicantId();
+//            List<Integer> user = new ArrayList<>();
+//            user.add(userId.intValue());
+////            boolean result = as.addUserIds(activityId, user, 1);
+//
+//            ActivityInfo theActivity = as.getActivity(activityId);
+//
+//            Set<Integer> set = new HashSet<>();
+//            set.addAll(theActivity.getParticipantIds());
+//            set.addAll(user);
+//            List<Integer> pars = new ArrayList<Integer>(set);
+//
+//            theActivity.setParticipantIds(pars);
+//
+//            ActivityInfo activityInfo = as.updateActivity(activityId, theActivity);
+//
+//            if (activityInfo.getParticipantIds().size() != 0 || user.size() == 0) {
+//                return new ApiResponse<>(new HashMap());
+//            } else {
+//                return new ApiResponse<>("callback accept signup failed.", "接受申请回调失败");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new ApiError(401, "callback accept signup failed.", "接受申请回调失败");
+//        }
+//    }
 
     // 11
     @RequestMapping(value = "/activities/{activityid}", method = RequestMethod.GET)
