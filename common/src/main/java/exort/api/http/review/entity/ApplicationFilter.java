@@ -8,6 +8,7 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
+@AllArgsConstructor
 public class ApplicationFilter {
 
     private Long applicantId;
@@ -16,6 +17,6 @@ public class ApplicationFilter {
 
     private String state;
 
-    private Map<String, Object> details;
+    private Object details;
 
 }
