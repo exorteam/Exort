@@ -15,6 +15,7 @@ import java.util.List;
 public class Comment implements Serializable {
     private String id;
     private int userId;
+    private String userName;
     private String type;
     private String commentedId;
     private String content;
@@ -22,12 +23,13 @@ public class Comment implements Serializable {
     private List<String> replies;
 
 
-    public Comment(int userId, String type, String commentedId, String content) {
+    public Comment(int userId, String userName, String type, String commentedId, String content) {
         this.userId = userId;
+        this.userName = userName;
         this.type = type;
         this.commentedId = commentedId;
         this.content = content;
         this.time = new Date();
-        this.replies=new ArrayList<>();
+        this.replies = new ArrayList<>();
     }
 }
