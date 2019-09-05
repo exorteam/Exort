@@ -1,4 +1,9 @@
 package exort.api.http.review.entity;
+
+import exort.api.http.review.entity.details.AssociationMemberSignUp;
+import exort.api.http.review.entity.details.ActivitySignUp;
+import exort.api.http.review.entity.details.AssociationInfo;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +39,18 @@ public class Application<T> {
         this.type = type;
         this.details = details;
         this.materialIds = materialIds;
+    }
+
+    public static Application<AssociationInfo> createAssociation(Long applicantId, AssociationInfo info) {
+        return new Application<>(applicantId, "AssociationInfo", info);
+    }
+
+    public static Application<ActivitySignUp> signUpActivity(Long applicantId, ActivitySignUp signUp) {
+        return new Application<>(applicantId, "ActivitySignUp", signUp);
+    }
+
+    public static Application<AssociationMemberSignUp> signUpAssociationMember(Long applicantId, AssociationMemberSignUp signUp) {
+        return new Application<>(applicantId, "AssociationMemberSignUp", signUp);
     }
 
 }
