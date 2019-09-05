@@ -42,7 +42,7 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        Comment comment = commentService.createComment(userId, type, commentedId, content);
+        Comment comment = commentService.createComment(userId,"a userName", type, commentedId, content);
 
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(comment.getTime());
@@ -51,6 +51,7 @@ public class CommentServiceImplementTest {
         cal2.setTime(new Date());
 
         assertEquals(cal2.get(Calendar.DAY_OF_MONTH), cal1.get(Calendar.DAY_OF_MONTH));
+        assertEquals("a userName",comment.getUserName());
     }
 
     @Test
@@ -60,14 +61,14 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        Comment comment = commentService.createComment(userId, type, commentedId, content);
+        Comment comment = commentService.createComment(userId,"a userName", type, commentedId, content);
 
-        commentService.createComment(1, "comment", comment.getId(), "asdf");
-        commentService.createComment(1, "comment", comment.getId(), "asdsdff");
-        Comment comment1 = commentService.createComment(1, "comment", comment.getId(), "asfdf");
-        commentService.createComment(1, "comment", comment1.getId(), "asdsdff");
-        commentService.createComment(1, "comment", comment1.getId(), "asdsdff");
-        commentService.createComment(1, "comment", comment1.getId(), "asdsdff");
+        commentService.createComment(1,"a userName", "comment", comment.getId(), "asdf");
+        commentService.createComment(1,"a userName", "comment", comment.getId(), "asdsdff");
+        Comment comment1 = commentService.createComment(1,"a userName", "comment", comment.getId(), "asfdf");
+        commentService.createComment(1, "a userName","comment", comment1.getId(), "asdsdff");
+        commentService.createComment(1, "a userName","comment", comment1.getId(), "asdsdff");
+        commentService.createComment(1, "a userName","comment", comment1.getId(), "asdsdff");
 
         int before = commentRepository.findAll().size();
 
@@ -87,7 +88,7 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        Comment comment = commentService.createComment(userId, type, commentedId, content);
+        Comment comment = commentService.createComment(userId,"a userName", type, commentedId, content);
 
         String thetype = comment.getType();
         String thecommentedId = comment.getCommentedId();
@@ -104,7 +105,7 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        Comment comment = commentService.createComment(userId, type, commentedId, content);
+        Comment comment = commentService.createComment(userId,"a userName", type, commentedId, content);
 
         String id = comment.getId();
 
@@ -120,9 +121,9 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        commentService.createComment(userId, type, commentedId, content);
+        commentService.createComment(userId,"a userName", type, commentedId, content);
         type = "sd";
-        commentService.createComment(userId, type, commentedId, content);
+        commentService.createComment(userId,"a userName", type, commentedId, content);
 
         assertEquals(2, commentService.getCommentsByUserId(1).size());
     }
@@ -134,7 +135,7 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        Comment comment = commentService.createComment(userId, type, commentedId, content);
+        Comment comment = commentService.createComment(userId,"a userName", type, commentedId, content);
 
         assertEquals(true, commentService.existComment(comment.getId()));
     }
@@ -146,14 +147,14 @@ public class CommentServiceImplementTest {
         String commentedId = "asdf";
         String content = "asddf";
 
-        Comment comment = commentService.createComment(userId, type, commentedId, content);
+        Comment comment = commentService.createComment(userId,"a userName", type, commentedId, content);
 
-        commentService.createComment(1, "comment", comment.getId(), "asdf");
-        commentService.createComment(1, "comment", comment.getId(), "asdsdff");
-        Comment comment1 = commentService.createComment(1, "comment", comment.getId(), "asfdf");
-        commentService.createComment(1, "comment", comment1.getId(), "asdsdff");
-        commentService.createComment(1, "comment", comment1.getId(), "asdsdff");
-        commentService.createComment(1, "comment", comment1.getId(), "asdsdff");
+        commentService.createComment(1, "a userName","comment", comment.getId(), "asdf");
+        commentService.createComment(1,"a userName", "comment", comment.getId(), "asdsdff");
+        Comment comment1 = commentService.createComment(1,"a userName", "comment", comment.getId(), "asfdf");
+        commentService.createComment(1,"a userName", "comment", comment1.getId(), "asdsdff");
+        commentService.createComment(1,"a userName", "comment", comment1.getId(), "asdsdff");
+        commentService.createComment(1, "a userName","comment", comment1.getId(), "asdsdff");
 
         int size = commentService.getAllReplies(comment.getId()).size();
         assertEquals(6,size);

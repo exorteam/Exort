@@ -5,7 +5,7 @@ import exort.comment.entity.Comment;
 import java.util.List;
 
 public interface CommentService {
-    public Comment createComment(int userId, String type, String commentedId, String content);
+    public Comment createComment(int userId,String userName, String type, String commentedId, String content);
 
     public Comment deleteComment(String id);
 

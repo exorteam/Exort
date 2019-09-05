@@ -17,9 +17,9 @@ public class CommentServiceImplement implements CommentService {
     private CommentRepository commentRepository;
 
     @Override
-    public Comment createComment(int userId, String type, String commentedId, String content) {
+    public Comment createComment(int userId,String userName, String type, String commentedId, String content) {
 
-        Comment comment = new Comment(userId, type, commentedId, content);
+        Comment comment = new Comment(userId,userName,type, commentedId, content);
         Comment newComment = commentRepository.save(comment);
 
         if (type.equals("comment")) {

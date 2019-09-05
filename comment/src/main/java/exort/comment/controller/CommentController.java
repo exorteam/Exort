@@ -34,7 +34,7 @@ public class CommentController {
             throw new ApiError(400, "invalidType", "被评论对象类型非法");
         }
 
-        return new ApiResponse<Comment>(commentService.createComment(commentNeededInfo.getUserId(), commentNeededInfo.getType(), commentNeededInfo.getCommentedId(), commentNeededInfo.getContent()));
+        return new ApiResponse<Comment>(commentService.createComment(commentNeededInfo.getUserId(),commentNeededInfo.getUserName(), commentNeededInfo.getType(), commentNeededInfo.getCommentedId(), commentNeededInfo.getContent()));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/comments/{commentedId}/replies")
@@ -43,7 +43,7 @@ public class CommentController {
             throw new ApiError(404, "notFound", "没有找到被评论对象");
         }
 
-        Comment comment = commentService.createComment(commentNeededInfo.getUserId(), "comment", commentedId, commentNeededInfo.getContent());
+        Comment comment = commentService.createComment(commentNeededInfo.getUserId(),commentNeededInfo.getUserName(), "comment", commentedId, commentNeededInfo.getContent());
 
         return new ApiResponse<Comment>(comment);
     }

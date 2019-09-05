@@ -3,4 +3,4 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/comment
 server:
-  port: 8085
+  port: 8899
