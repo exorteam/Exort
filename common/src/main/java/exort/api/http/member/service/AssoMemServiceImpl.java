@@ -127,9 +127,9 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     @Override
     public String roleName(String associationId, int departmentId) {
         switch (departmentId) {
-            case 1:
+            case AssoMemServiceImpl.MANAGER_ID:
                 return MANAGER;
-            case 2:
+            case AssoMemServiceImpl.MEMBER_ID:
                 return MEMBER;
             default:
                 return "association_" + associationId + "_" + departmentId;

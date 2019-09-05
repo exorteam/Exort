@@ -9,6 +9,9 @@ import exort.api.http.review.entity.ApplicationDepartmentInfo;
 import java.util.List;
 
 public interface AssoMemService {
+    int MANAGER_ID = 1;
+    int MEMBER_ID = 2;
+
     //    得到部门树
     public ApiResponse<List<DepartmentInfo>> getDepartmentTree(String associationId);
 
