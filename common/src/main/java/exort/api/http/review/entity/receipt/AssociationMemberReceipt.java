@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AssociationMemberReceipt {
 
-    Long departmentId;
+    Integer departmentId;
     String message;
 
 }
