@@ -40,23 +40,23 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     }
 
     @Override
-    public ApiResponse<Object> publishActivity(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.PUT, "/activities/{activityid}/state", activityid);
+    public ApiResponse<Activity> publishActivity(String activityid, RequestActivity requestActivity) {
+        return request(new TypeToken<Activity>(){}, requestActivity, HttpMethod.PUT, "/activities/{activityid}/state", activityid);
     }
 
     @Override
-    public ApiResponse<Object> addParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}/participants", activityid);
+    public ApiResponse<Activity> addParticipants(String activityid, RequestActivity requestActivity) {
+        return request(new TypeToken<Activity>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}/participants", activityid);
     }
 
     @Override
-    public ApiResponse<Object> addRealParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}/realparticipants", activityid);
+    public ApiResponse<Activity> addRealParticipants(String activityid, RequestActivity requestActivity) {
+        return request(new TypeToken<Activity>(){}, requestActivity, HttpMethod.POST, "/activities/{activityid}/realparticipants", activityid);
     }
 
     @Override
-    public ApiResponse<Object> deleteParticipants(String activityid, RequestActivity requestActivity) {
-        return request(new TypeToken<Object>(){}, requestActivity, HttpMethod.DELETE, "/activities/{activityid}/participants", activityid);
+    public ApiResponse<Activity> deleteParticipants(String activityid, RequestActivity requestActivity) {
+        return request(new TypeToken<Activity>(){}, requestActivity, HttpMethod.DELETE, "/activities/{activityid}/participants", activityid);
     }
 
     @Override
