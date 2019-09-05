@@ -9,7 +9,6 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
-import exort.api.http.review.entity.CallbackParam;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -95,16 +94,11 @@ public class ActivityController {
     @ResponseBody
     @PostMapping(value = "/activities/{activityid}/participants")
     public ApiResponse addParticipants(@PathVariable(value = "activityid") String activityId, @RequestBody RequestActivity requestActivity){
-        try{
-            boolean result = as.addUserIds(activityId, requestActivity.getParticipantIds(), 1);
-            if(result){
-                return new ApiResponse<>(new HashMap());
-            }else{
-                return new ApiResponse<>("add activity participants failed","增加活动参加者失败");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ApiError(401, "add activity participants failed","增加活动参加者失败");
+        boolean result = as.addUserIds(activityId, requestActivity.getParticipantIds(), 1);
+        if (result){
+            return new ApiResponse<>(new HashMap());
+        } else {
+            throw new ApiError(404, "notFound","活动不存在");
         }
     }
 //6
@@ -174,6 +168,7 @@ public class ActivityController {
         }
     }
 //10
+/*
     @ResponseBody
     @PostMapping(value = "/callback/acceptsignup")
     public ApiResponse acceptSignup(@RequestBody CallbackParam<Signup> callbackParam){
@@ -193,6 +188,7 @@ public class ActivityController {
             throw new ApiError(401, "callback accept signup failed.","接受申请回调失败");
         }
     }
+*/
 // 11
     @ResponseBody
     @GetMapping(value = "/activities/{activityid}")

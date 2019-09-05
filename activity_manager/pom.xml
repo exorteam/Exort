@@ -68,7 +68,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-            <scope>true</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -119,9 +119,9 @@
 					<imageName>exort/activity-manager</imageName>
 					<baseImage>java</baseImage>
 					<maintainer>RSP</maintainer>
-					<exposes>                      
-						<expose>8080</expose>      
-					</exposes>                     
+					<exposes>
+						<expose>8080</expose>
+					</exposes>
 					<imageTags>
 						<imageTag>${project.version}</imageTag>
 						<!--<imageTag>latest</imageTag>-->

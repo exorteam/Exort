@@ -43,38 +43,33 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public boolean addUserIds(String activityid, List<Integer> userIds, int type){
-        try{
-            System.out.println(userIds);
-            Activity activity = ad.getActivity(activityid);
-            if(activity!=null){
-                if(type==1){
-                    List<Integer> oldp = activity.getParticipantIds();
-                    if(oldp!=null){
-                        List<Integer> temp = new ArrayList<>(oldp);
-                        temp.retainAll(userIds);
-                        oldp.removeAll(temp);
-                        oldp.addAll(userIds);
-                    }else{
-                        oldp = userIds;
-                    }
-                    activity.setParticipantIds(oldp);
-                } else{
-                    List<Integer> oldp = activity.getRealParticipantIds();
-                    if(oldp!=null){
-                        oldp.addAll(userIds);
-                    }else{
-                        oldp = userIds;
-                    }
-                    activity.setRealParticipantIds(oldp);
+        System.out.println(userIds);
+        Activity activity = ad.getActivity(activityid);
+        if (activity != null) {
+            if (type==1) {
+                List<Integer> oldp = activity.getParticipantIds();
+                if (oldp!=null) {
+                    List<Integer> temp = new ArrayList<>(oldp);
+                    temp.retainAll(userIds);
+                    oldp.removeAll(temp);
+                    oldp.addAll(userIds);
+                } else {
+                    oldp = userIds;
                 }
-                ad.update(activity);
-                return true;
+                activity.setParticipantIds(oldp);
+            } else {
+                List<Integer> oldp = activity.getRealParticipantIds();
+                if (oldp != null) {
+                    oldp.addAll(userIds);
+                } else {
+                    oldp = userIds;
+                }
+                activity.setRealParticipantIds(oldp);
             }
-            return false;
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
+            ad.update(activity);
+            return true;
         }
+        return false;
     }
 
     @Override
