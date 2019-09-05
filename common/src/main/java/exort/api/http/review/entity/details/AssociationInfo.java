@@ -1,4 +1,4 @@
-package exort.review_manager.entity;
+package exort.api.http.review.entity.details;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
