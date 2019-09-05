@@ -3,6 +3,7 @@ package exort.api.http.review.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
