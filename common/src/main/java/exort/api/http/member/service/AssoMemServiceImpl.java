@@ -7,7 +7,6 @@ import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.entity.UserId;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
-import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,6 @@ public class AssoMemServiceImpl extends RestTemplate implements AssoMemService {
     @Value("${exort.mem.endpoint:localhost}")
     public void setEndpoint(String endpoint) {
         super.setEndpoint(endpoint);
-    }
-
-
-    @Override
-    public ApiResponse<Boolean> adoptApplication(CallbackParam<ApplicationDepartmentInfo> callbackParam) {
-        return request(new TypeToken<Boolean>() {
-        }, callbackParam, HttpMethod.POST, "/application/accept");
     }
 
     @Override

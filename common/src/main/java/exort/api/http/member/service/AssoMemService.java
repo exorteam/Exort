@@ -5,14 +5,10 @@ import exort.api.http.member.entity.DepartmentInfo;
 import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.entity.UserId;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
-import exort.api.http.review.entity.CallbackParam;
 
 import java.util.List;
 
 public interface AssoMemService {
-    //    通过申请
-    public ApiResponse<Boolean> adoptApplication(CallbackParam<ApplicationDepartmentInfo> callbackParam);
-
     //    得到部门树
     public ApiResponse<List<DepartmentInfo>> getDepartmentTree(String associationId);
 

@@ -7,7 +7,6 @@ import exort.api.http.activity.entity.Signup;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.review.entity.CallbackParam;
 
 public interface ActivityService {
 
@@ -28,8 +27,6 @@ public interface ActivityService {
     public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
 
     public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
-
-    public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation);
 
     public ApiResponse<Activity> getActivity(String activityid);
 }

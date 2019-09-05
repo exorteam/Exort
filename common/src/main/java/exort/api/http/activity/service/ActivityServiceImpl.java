@@ -10,7 +10,6 @@ import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.review.entity.CallbackParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -68,11 +67,6 @@ public class ActivityServiceImpl extends RestTemplate implements ActivityService
     @Override
     public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity) {
         return request(new TypeToken<PagedData<Integer>>(){}, requestActivity, HttpMethod.POST, pageQuery, "/activities/{activityid}/realparticipants", activityid);
-    }
-
-    @Override
-    public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation) {
-        return request(new TypeToken<Object>(){}, operation, HttpMethod.POST, "/callback/acceptsignup");
     }
 
     @Override
