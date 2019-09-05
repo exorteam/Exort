@@ -175,7 +175,16 @@ public class CommunityServiceImpl implements CommunityService {
 		final List<CommunityMessage> msgs = e.getMessages();
 		final int pn = pq.getPageNum();
 		final int ps = pq.getPageSize();
-		final List<CommunityMessage> content = msgs.subList(pn*ps,(pn+1)*ps);
+		final int maxpos = msgs.size() - 1;
+		
+		int phead = pn*ps;
+		phead = phead > maxpos? maxpos : phead;
+		phead = phead >= 0? phead : 0;
+		int ptail = (pn+1)*ps;
+		ptail = ptail > maxpos? maxpos : ptail;
+		ptail = ptail >= 0? ptail : 0;
+
+		final List<CommunityMessage> content = msgs.subList(phead,ptail);
 
 		return new PagedData(pn,ps,Long.valueOf(msgs.size()),content);
 	}
