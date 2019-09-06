@@ -100,10 +100,11 @@ public class ApplicationController {
     public ApiResponse<PagedData<Application>> listApplications(@RequestBody ApplicationFilter filter, PageQuery pageQuery) {
         String state = availableStates.contains(filter.getState()) ? filter.getState() : null;
         String type = availableTypes.contains(filter.getType()) ? filter.getType() : null;
+        Object details = filter.getDetails();
         pageQuery = PageQuery.relocate(pageQuery, 20, 100);
 
-        if (exort.review_manager.entity.Application.TYPE_ACTIVITY_SIGN_UP.equals(type)) {
-            ActivitySignUp signUp = new ObjectMapper().convertValue(filter.getDetails(), ActivitySignUp.class);
+        if (exort.review_manager.entity.Application.TYPE_ACTIVITY_SIGN_UP.equals(type) && details != null) {
+            ActivitySignUp signUp = new ObjectMapper().convertValue(details, ActivitySignUp.class);
             String activityId = signUp.getActivityId();
             if (activityId != null) {
                 return new ApiResponse<>(toDTO(as.listActivitySignUp(
@@ -111,8 +112,8 @@ public class ApplicationController {
                         pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getSortBy())));
             }
         }
-        if (exort.review_manager.entity.Application.TYPE_ASSOCIATION_MEMBER_SIGN_UP.equals(type)) {
-            AssociationMemberSignUp signUp = new ObjectMapper().convertValue(filter.getDetails(), AssociationMemberSignUp.class);
+        if (exort.review_manager.entity.Application.TYPE_ASSOCIATION_MEMBER_SIGN_UP.equals(type) && details != null) {
+            AssociationMemberSignUp signUp = new ObjectMapper().convertValue(details, AssociationMemberSignUp.class);
             String associationId = signUp.getAssociationId();
             Integer departmentId = signUp.getDepartmentId() == null ? null : signUp.getDepartmentId().get(0);
             if (associationId != null) {
