@@ -34,7 +34,7 @@ public interface ArticleService {
 	@Data
 	public class ArticleFilterParam {
 		private String keyword;
-		private String authorId;
+		private List<String> authorIds;
 		private Date startTime;
 		private Date endTime;
 		private Integer state;
