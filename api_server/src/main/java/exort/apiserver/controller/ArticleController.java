@@ -19,6 +19,7 @@ import exort.api.http.perm.service.PermService;
 import exort.apiserver.service.ArticleService;
 import exort.apiserver.service.ArticleService.Article;
 import exort.apiserver.service.ArticleService.ArticleFilterParam;
+import exort.apiserver.service.CommunityService;
 
 @RestController
 @RequestMapping(path="/articles")
@@ -28,6 +29,8 @@ public class ArticleController {
 	private ArticleService articleSvc;
 	@Autowired
 	private PermService permSvc;
+	@Autowired
+	private CommunityService cmSvc;
 
 	@PostMapping
 	public ApiResponse createArticle(
@@ -62,6 +65,10 @@ public class ArticleController {
 			@RequestAttribute("id") long operatorId,
 			@PathVariable("id") int articleId,
 			@RequestParam boolean publish){
+		if(publish){
+			//TODO: notify subscribed users
+			//
+		}
 		return articleSvc.publishArticle(articleId,publish);
 	}
 
