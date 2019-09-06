@@ -79,6 +79,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 		final String keyword = params.getKeyword();
 		final List<String> assoId = params.getAuthorIds();
+		final Integer state = params.getState();
 		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
 		Query q = new Query();
 		if(assoId != null && !assoId.isEmpty()){
@@ -88,6 +89,10 @@ public class ArticleServiceImpl implements ArticleService {
 		   	q.addCriteria(
 				TextCriteria.forDefaultLanguage().matching(keyword)).with(
 				pageArgs);
+		}
+		if(state != null){
+		   	q.addCriteria(
+				Criteria.where("state").is(state));
 		}
 		final List<Article> articles = mt.find(q,Article.class);
 		final Page<Article> p = PageableExecutionUtils.getPage(
