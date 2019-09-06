@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -64,7 +65,7 @@ public class ArticleServiceImpl implements ArticleService {
 		Article article = repository.findById(articleId).get();
 		article.setTitle(title);
 		article.setContent(content);
-		
+
 		repository.save(article);
 
 		return true;
@@ -79,44 +80,21 @@ public class ArticleServiceImpl implements ArticleService {
 
 		final String keyword = params.getKeyword();
 		final List<String> assoId = params.getAuthorIds();
-		final Pageable pageArgs = PageRequest.of(pq.getPageNum(),pq.getPageSize());
+
 		Query q = new Query();
-		if(assoId != null && !assoId.isEmpty()){
-			q.addCriteria( Criteria.where("associationId").in(assoId));
+		if (assoId != null && !assoId.isEmpty()) {
+			q.addCriteria(Criteria.where("associationId").in(assoId));
 		}
-		if(keyword != null && !keyword.isEmpty()){
-		   	q.addCriteria(
-				TextCriteria.forDefaultLanguage().matching(keyword)).with(
-				pageArgs);
+		if (keyword != null && !keyword.isEmpty()) {
+		   	q.addCriteria(TextCriteria.forDefaultLanguage().matching(keyword));
 		}
+		q.with(PageRequest.of(pq.getPageNum(), pq.getPageSize(),
+			Sort.by(Sort.Direction.DESC, "publishTime".equals(pq.getSortBy()) ? "publishTime" : "createTime")));
+
 		final List<Article> articles = mt.find(q,Article.class);
-		final Page<Article> p = PageableExecutionUtils.getPage(
-				articles,
-				pageArgs,
-				() -> mt.count(q,Article.class));
+		final Long totalSize = mt.count(q,Article.class);
 
-		return new PagedData<Article>(p.getNumber(),p.getSize(),p.getTotalElements(),articles);
-
-
-		//final String keyword = params.getKeyword();
-		//if(keyword == null || keyword.isEmpty()){
-		//    final Page<Article> res = repository.findAll(PageRequest.of(pq.getPageNum(),pq.getPageSize()));
-		//    return new PagedData<Article>(res.getNumber(),res.getSize(),res.getTotalElements(),res.getContent());
-		//    //return repository.findAll();
-		//}
-		//else{
-		//    TextCriteria criteria = TextCriteria
-		//        .forDefaultLanguage()
-		//        .matchingPhrase(params.getKeyword());
-
-		//    final Page<Article> res = repository.findAllBy(
-		//            criteria,
-		//            PageRequest.of(pq.getPageNum(),pq.getPageSize())
-		//            );
-
-		//    return new PagedData<Article>(res.getNumber(),res.getSize(),repository.count(),res.getContent());
-
-		//}
+		return new PagedData<Article>(pq.getPageNum(), pq.getPageSize(), totalSize, articles);
 	}
 
 	public PagedData<Article> listArticleOfAssociationIds(List<String> ids,PageQuery pq){
@@ -164,4 +142,3 @@ public class ArticleServiceImpl implements ArticleService {
 		return true;
 	}
 }
-

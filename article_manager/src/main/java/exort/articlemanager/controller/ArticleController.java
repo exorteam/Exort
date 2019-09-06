@@ -74,6 +74,7 @@ public class ArticleController {
 	public ApiResponse listArticle(
 			@RequestBody ArticleFilterParams params,
 			PageQuery pq){
+		pq = PageQuery.relocate(pq, 10, 100);
 		PagedData<Article> res = service.listArticle(params,pq);
 		if(res == null){
 			throw new ApiError(404,"QueryErr","Error occured when listing article");
@@ -85,6 +86,7 @@ public class ArticleController {
 	public ApiResponse listArticleOfAssociationIds(
 			@RequestBody List<String> ids,
 			PageQuery pq){
+		pq = PageQuery.relocate(pq, 10, 100);
 		if(ids.isEmpty()){
 			throw new ApiError(404,"QueryErr","Arg \"ids\" is empty");
 		}
