@@ -12,6 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "association_balance")
 public class AssociationBalance {
     @Id
-    private String AssociationId;
+    private String associationId;
     private Float balance;
 }

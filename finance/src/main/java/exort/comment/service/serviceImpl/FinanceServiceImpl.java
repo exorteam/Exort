@@ -9,6 +9,7 @@ import exort.comment.repository.AssociationBalanceRepository;
 import exort.comment.repository.FinanceRepository;
 import exort.comment.service.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -35,8 +36,10 @@ public class FinanceServiceImpl implements FinanceService {
 
         Finance finance = new Finance(projectName, associationId, associationName, content, supervisor, transactionAmount, direction, operatorId);
         finance.setBalance(getAssociationBalance(associationId));
+        Finance f=financeRepository.save(finance);
+        Finance ret= acceptFinanceApplication(f.getId());
 
-        return financeRepository.save(finance);
+        return ret;
     }
 
     @Override
@@ -74,6 +77,8 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public PagedData<Finance> getAssociationFiances(Filters filters, PageQuery pageQuery) {
         Query query = new Query();
+
+        query.with(Sort.by(Sort.Direction.DESC, "time"));
 
         if (filters.getAssociationId() != null) {
             query.addCriteria(Criteria.where("associationId").is(filters.getAssociationId()));
@@ -114,7 +119,7 @@ public class FinanceServiceImpl implements FinanceService {
         finance.setState(2);
         Finance ret = financeRepository.save(finance);
 
-        AssociationBalance balance = associationBalanceRepository.findByAssociationId(id);
+        AssociationBalance balance = associationBalanceRepository.findByAssociationId(ret.getAssociationId());
         if (finance.getDirection().equals("汇入")) {
             balance.setBalance(balance.getBalance() + ret.getTransactionAmount());
         } else {
@@ -144,8 +149,10 @@ public class FinanceServiceImpl implements FinanceService {
 
         if (associationBalanceRepository.existsByAssociationId(associationId)) {
             return associationBalanceRepository.findByAssociationId(associationId).getBalance();
+        } else {
+            AssociationBalance associationBalance = new AssociationBalance(associationId, Float.valueOf("0"));
+            AssociationBalance ret= associationBalanceRepository.save(associationBalance);
+            return ret.getBalance();
         }
-
-        return Float.valueOf("0");
     }
 }
