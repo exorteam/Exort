@@ -94,6 +94,7 @@ public class ArticleServiceImpl implements ArticleService {
 		   	q.addCriteria(
 				Criteria.where("state").is(state));
 		}
+		q.with(pageArgs);
 		final List<Article> articles = mt.find(q,Article.class);
 		final Page<Article> p = PageableExecutionUtils.getPage(
 				articles,
