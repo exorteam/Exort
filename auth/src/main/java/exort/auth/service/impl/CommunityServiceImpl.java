@@ -192,7 +192,7 @@ public class CommunityServiceImpl implements CommunityService {
 		final List<CommunityMessage> msgs = e.getMessages();
 		final int pn = pq.getPageNum();
 		final int ps = pq.getPageSize();
-		final int maxpos = msgs.size() - 1;
+		final int maxpos = msgs.size();
 		
 		int phead = pn*ps;
 		phead = phead > maxpos? maxpos : phead;
