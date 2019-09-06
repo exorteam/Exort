@@ -80,6 +80,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 		final String keyword = params.getKeyword();
 		final List<String> assoId = params.getAuthorIds();
+		final Integer state = params.getState();
 
 		Query q = new Query();
 		if (assoId != null && !assoId.isEmpty()) {
@@ -87,6 +88,10 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 		if (keyword != null && !keyword.isEmpty()) {
 		   	q.addCriteria(TextCriteria.forDefaultLanguage().matching(keyword));
+		}
+		if(state != null){
+		   	q.addCriteria(
+				Criteria.where("state").is(state));
 		}
 		q.with(PageRequest.of(pq.getPageNum(), pq.getPageSize(),
 			Sort.by(Sort.Direction.DESC, "publishTime".equals(pq.getSortBy()) ? "publishTime" : "createTime")));
