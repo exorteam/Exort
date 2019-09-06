@@ -11,7 +11,7 @@
 				</div>
 				<div style="margin-top:20px">
 					<Button>申请加入</Button>
-					<Button @click="routeToAssoAdmin" style="margin-left:10px">社团管理</Button>
+					<Button v-if="isAdmin" @click="routeToAssoAdmin" style="margin-left:10px">社团管理</Button>
 				</div>
 			</Col>
 			<Col span="8">
@@ -25,6 +25,8 @@
 					<Input search @on-search="searchArticle" placeholder="Search in articles" style="width:80%"/>
 					<br><br>
 					<Table :columns="articleColumns" :data="articleList" @on-row-click="viewArticle"></Table>
+					<br>
+					<Page :total="articlePageAttr.totalSize" :current="articlePageAttr.currentNum" :page-size="articlePageAttr.pageSize" @on-change="onChangeArticlePage"/>
 				</Card>
 			</Col>
 			<Col span="10">
@@ -47,12 +49,26 @@ export default {
 			asso: {},
 
 			articleList:[],
+			articlePageAttr:{
+				totalSize: 0,
+				currentNum: 1,
+				pageSize: 5,
+				keyword: ''
+			},
 			articleColumns:[
 				{title:'标题',key:'title'},
 				{title:'作者',key:'associationId'},
 				{title:'上次修改时间',key:'lastModifyTime'},
 			],
 
+		}
+	},
+	computed: {
+		...mapState('common/currentUser',['admin']),
+		isAdmin() {
+			//TODO: replace return true after debug
+			return true;
+			return this.admin.assoAdmins.includes(this.assoId);
 		}
 	},
 	methods: {
@@ -62,7 +78,7 @@ export default {
 		...mapActions('common/associationOps',[
 			'queryAssociationById'
 		]),
-		...mapActions('common/articleOps',['queryPagedArticlesByAssociation']),
+		...mapActions('common/articleOps',['queryPagedArticlesWithFilter']),
 		routeToAssoAdmin(){
 			this.queryAssociationById({
 				assoId: this.assoId
@@ -74,7 +90,23 @@ export default {
 				this.$router.push({name:'AssociationMemList'});
 			});
 		},
-		searchArticle(search){},
+		searchArticle(search,newPageNum){
+			if(search){this.articlePageAttr.keyword = search;}
+			this.queryPagedArticlesWithFilter({
+				authorIds: [this.assoId],
+				keyword: search,
+				state: 1,
+				pageNum: newPageNum?newPageNum-1:this.articlePageAttr.currentNum-1,
+				pageSize: this.articlePageAttr.pageSize
+			}).then(res => {
+				this.articleList = res.data.data.content;
+				this.articlePageAttr.totalSize = res.data.data.totalSize;
+			})
+		
+		},
+		onChangeArticlePage(newValue) {
+			this.searchArticle(this.articlePageAttr.keyword,newValue);
+		},
 		viewArticle(row){
 			this.$router.push({ name: 'UserArticleReader', params: { id: row.id }});
 		},
@@ -87,11 +119,7 @@ export default {
 			this.asso = res.data.data
 		})
 
-		this.queryPagedArticlesByAssociation({
-			assoIds: [this.assoId]
-		}).then(res => {
-			this.articleList = res;
-		})
+		this.searchArticle();
 	}
 }
 

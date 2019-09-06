@@ -1,8 +1,14 @@
 <template>
 	<div class="article-list">
 		<Card>
-			<Input type="text" v-model="searchContent" placeholder="Search in articles" style="width:300px"/>
-			<Button @click="onClickSearch">搜索</Button>
+			<Row type="flex" justify="space-between">
+				<Col span="6">
+					<Input search @on-search="onClickSearch" placeholder="Search in articles" style="width:300px"/>
+				</Col>
+				<Col span="2">
+					<Button @click="onClickCreate">创建</Button>
+				</Col>
+			</Row>
 			<br><br>
 			<Table :columns="columns" :data="list">
 				<template slot-scope="{ row, index }" slot="action">
@@ -12,13 +18,12 @@
 				</template>
 			</Table>
 			<br>
-			<Button @click="onClickCreate">创建</Button>
+			<Page :total="this.pageTotalSize" :current="this.pageCurrentNum" :page-size="this.pageSize" @on-change="onChangePage"/>
 		</Card>
 	</div>
 </template>
 
 <script>
-import {api} from '@/http'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -26,6 +31,9 @@ export default {
 	data: function(){
 		return {
 			list:[],
+			pageTotalSize: 0,
+			pageCurrentNum: 1,
+			pageSize: 4,
 			columns:[
 				{title:'标题',key:'title'},
 				{title:'作者',key:'associationId'},
@@ -33,7 +41,7 @@ export default {
 				{title:'上次修改时间',key:'lastModifyTime'},
 				{title:'操作',slot:'action'},
 			],
-			searchContent:''
+			searchKeyword:'',
 		}
 	},
 	computed:{
@@ -43,29 +51,26 @@ export default {
 		}),
 	},
 	methods: {
-		loadArticles: function(keyword){
-			api({
-				method: 'post',
-				url:'/articles/list?pageNum=0&pageSize=10',
-				data: {
-					keyword: keyword
-				}
-			}).then((res)=>{
-				//console.log(res);
-				if(res.data.data.content){
-					this.list = res.data.data.content.map((e)=>{
-						e.published = (e.state!=0);
-						const d = new Date(e.lastModifyTime);
-						e.lastModifyTime = d.toLocaleString();
-						return e;
-					});
-				}
-				else{
-					// error
-				}
+		...mapActions('common/articleOps',['queryPagedArticlesWithFilter']),
+		loadArticles(keyword,pageNum) {
+			if(keyword){
+				this.searchKeyword = keyword;
+			}
+			this.queryPagedArticlesWithFilter({
+				keyword,
+				authorIds: [this.assoId],
+				pageNum: pageNum?pageNum-1:this.pageCurrentNum -1,
+				pageSize: this.pageSize
+			}).then(res => {
+				this.list = res.data.data.content;
+				this.pageTotalSize = res.data.data.totalSize;
 			}).catch((err)=>{
 				console.log(err);
 			})
+		},
+		onChangePage(newValue){
+			console.log(newValue);
+			this.loadArticles(this.searchKeyword,newValue);
 		},
 		onClickView(id){
 			//console.log(id);
@@ -91,13 +96,12 @@ export default {
 				params: { id: 0}
 			});
 		},
-		onClickSearch(){
-			this.loadArticles(this.searchContent);
-		}
+		onClickSearch(search){
+			this.loadArticles(search);
+		},
 	},
-	mounted:function(){
-		//console.log(this.id);
-		this.loadArticles(this.assoId);
+	mounted() {
+		this.loadArticles();
 	}
 }
 </script>
