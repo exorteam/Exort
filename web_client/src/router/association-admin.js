@@ -7,8 +7,9 @@ import Activity from '@/views/association-admin/activity/Activity'
 import About from '@/views/association-admin/activity/About'
 
 export default {
-    path: '/association-admin',
+	path: '/association-admin/:assoId',
     component: AssociationAdminIndex,
+	props: true,
     children: [
 		{
 			path: '/',

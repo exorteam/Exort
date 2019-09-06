@@ -87,7 +87,7 @@ export default {
 					id: res.data.data.id,
 					name: res.data.data.name
 				})
-				this.$router.push({name:'AssociationMemList'});
+				this.$router.push({name:'AssociationMemList',params:{assoId:this.assoId}});
 			});
 		},
 		searchArticle(search,newPageNum){

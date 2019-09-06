@@ -48,6 +48,7 @@ import NavHeader from '@/components/nav/Header'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
+	props:['assoId'],
     components: {
         NavHeader
     },
@@ -61,6 +62,11 @@ export default {
         ...mapState('common/currentUser', ['admin'])
     },
     methods: {
+        ...mapActions('common/associationSelector', ['listByIds','listByFilters']),
+        ...mapActions('common/associationOps', [
+			'queryAssociationById'
+		]),
+        ...mapMutations('associationAdmin/currentAssociation', ['setAssociation']),
         showAssociations(visible) {
             if (visible) {
                 let that = this;
@@ -80,11 +86,17 @@ export default {
         selectAssociation(association) {
             this.setAssociation(association);
         },
-        ...mapActions('common/associationSelector', ['listByIds','listByFilters']),
-        ...mapMutations('associationAdmin/currentAssociation', ['setAssociation'])
     },
     created() {
         this.active = this.$route.name;
+		this.queryAssociationById({
+			assoId: this.assoId
+		}).then(res => {
+			this.setAssociation({
+				id: this.assoId,
+				name: res.data.data.name
+			});
+		})
     },
     watch: {
         '$route': function(newValue, oldValue) {
