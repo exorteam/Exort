@@ -66,8 +66,6 @@ public class CommentController {
     @RequestMapping(method = RequestMethod.GET, value = "/articles/{articleId}/comments")
     public ApiResponse<List<Comment>> getOneArticleAllComments(@PathVariable(value = "articleId") String articleId) {
 
-        // 如果不存在此文章
-
         List<Comment> comments = commentService.getCommentsByTypeAndCommentedId("article", articleId);
 
         List<Comment> replies = new ArrayList<>();
@@ -81,8 +79,6 @@ public class CommentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/activities/{activityId}/comments")
     public ApiResponse<List<Comment>> getOneActivityAllComments(@PathVariable(value = "activityId") String activityId) {
-
-        // 如果不存在此活动
 
         List<Comment> comments = commentService.getCommentsByTypeAndCommentedId("activity", activityId);
 
