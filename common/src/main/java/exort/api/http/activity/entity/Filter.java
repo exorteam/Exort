@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class Filter {
-    private String associationId;
+    private List<String> associationId;
     private String keyword;
     private List<String> tags;
     private TimeRange createTime;
