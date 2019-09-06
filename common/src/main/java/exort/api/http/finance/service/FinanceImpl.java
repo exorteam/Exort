@@ -55,4 +55,22 @@ public class FinanceImpl extends RestTemplate implements FinanceService {
         return request(new TypeToken<PagedData<FinanceInfo>>() {
         }, filters, HttpMethod.POST, pageQuery, "/finances/filters");
     }
+
+    @Override
+    public ApiResponse<FinanceInfo> acceptFinanceApplication(String id) {
+        return request(new TypeToken<FinanceInfo>() {
+        }, HttpMethod.PUT, "/finances/{financeId}/accept",id);
+    }
+
+    @Override
+    public ApiResponse<FinanceInfo> refuseFinanceApplication(String id) {
+        return request(new TypeToken<FinanceInfo>() {
+        }, HttpMethod.PUT, "/finances/{financeId}/refuse",id);
+    }
+
+    @Override
+    public ApiResponse<Float> getAssociationBalance(String associationId) {
+        return request(new TypeToken<Float>() {
+        }, HttpMethod.GET, "associations/{associationId}/balance",associationId);
+    }
 }

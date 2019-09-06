@@ -18,4 +18,10 @@ public interface FinanceService {
 
     public ApiResponse<PagedData<FinanceInfo>> getAssociationFiances(Filters filters, PageQuery pageQuery);
 
+    public ApiResponse<FinanceInfo> acceptFinanceApplication(String id);
+
+    public ApiResponse<FinanceInfo> refuseFinanceApplication(String id);
+
+    public ApiResponse<Float> getAssociationBalance(String associationId);
+
 }
