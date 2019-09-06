@@ -2,6 +2,7 @@ import {api} from '@/http'
 
 const actions = {
 	queryPagedAssociationsWithFilter: ({commit},{filter,pageArgs}) => new Promise((resolve,reject) => {
+		console.log(filter,pageArgs);
 		api({
 			method:'post',
 			url:'/associations/list',

@@ -7,10 +7,10 @@
 					<i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
 					<Button @click="getAssociationList">搜索</Button>
 					<Button @click="showCreateForm">创建社团</Button>
-					<div style="display:inline">
-						<Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
-						<TagChoose :tag="tag"/>
-					</div>
+					<!--<div style="display:inline">                                                    -->
+					<!--    <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>-->
+					<!--    <TagChoose :tag="tag"/>                                                     -->
+					<!--</div>                                                                          -->
 					<Modal v-model="form.onshow" @on-ok="info_ok()" @on-cancel="info_cancel" loading :closable="false">
 						<Form ref="form" :model="form"  :label-width="112" :rules="ruleValidate" >
 							<FormItem label="社团名称" prop="name">
@@ -54,7 +54,7 @@
 					</Modal>
 					<div>
 						<div v-if="tag.tagList.length" style="display:inline">
-							<Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
+							<!--<Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>-->
 						</div>
 					</div>
 				</div>

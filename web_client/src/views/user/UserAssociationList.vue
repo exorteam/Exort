@@ -1,17 +1,8 @@
 <template>
 	<Card>
 		<div id="AssoList">
-			<div id=SearchAsso>
+			<div >
 				<Input search @on-search="getAssociationList" placeholder="请输入关键词" style="width: 300px" />
-				<div style="display:inline">
-					<Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>
-					<TagChoose :tag="tag"/>
-				</div>
-				<div>
-					<div v-if="tag.tagList.length" style="display:inline">
-						<Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
-					</div>
-				</div>
 			</div>
 
 			<br>
@@ -45,9 +36,9 @@
 						<p>{{ item.description }}</p>
 					</div>
 					<div style="margin-top:80px">
-						<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">
-							{{ tag }}
-						</Tag>
+						<!--<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">-->
+						<!--    {{ tag }}                                                            -->
+						<!--</Tag>                                                                   -->
 					</div>
 					<div style="text-align:center">
 						<Button @click="onClickCard(item.id)" long>查看社团详情</Button>
@@ -104,7 +95,7 @@ export default {
 
 			this.queryPagedAssociationsWithFilter({
 				filter: {
-					keyword: search?search:'',
+					keyword: search,
 					tags: tags?tags:[],
 					state: 1
 				},
