@@ -2,21 +2,11 @@ import {api} from '@/http'
 
 const state = {
     commentList: [],
-    comment: {
-        id: null,
-        userId: null,
-        type: null,
-        commentedId: null,
-        content: null,
-        time: null,
-        replies: null
-    }
 }
 
 const mutations = {
     setCommentList(state, list) {
         state.commentList = list;
-        console.log(state.commentList);
     }
 }
 

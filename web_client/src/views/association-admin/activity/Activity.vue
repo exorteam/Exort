@@ -122,7 +122,7 @@
                     </div>
                 </Card>
 
-                <ActivityCreate :onshow="form.onshow" :initform="form.data"/>
+                <ActivityCreate :onshow="form.onshow" v-on:close="form.onshow=false" :initform="form.data"/>
             </div>
 
             <Divider style="width: 100%;"/>

@@ -38,7 +38,7 @@
             </div>
             <br/>
             <div>
-                <activityCreate :onshow="newform.onshow" :initform="newform.data" :changeOnShow="changeOnShow"/>
+                <activityCreate :onshow="newform.onshow" v-on:close="newform.onshow=false" :initform="newform.data"/>
                 <Button @click="edit" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
                 <Button v-if="this.curActivity.publishState===1" @click="handlePublish" type="warning"
                         style="margin: 10px 10px 20px 40px; ">发布
