@@ -32,7 +32,6 @@ const actions = {
 			});
 	}),
 	queryPagedArticlesWithFilter: ({commit},filter) => new Promise((resolve,reject) => {
-		console.log(filter);
 		api({
 			method: 'post',
 			url:'/articles/list',
@@ -48,7 +47,6 @@ const actions = {
 				e.lastModifyTime = d.toLocaleString();
 				return e;
 			})
-			console.log(res);
 			resolve(res);
 		}).catch(err => {
 			if (err.response && err.response.data) {
@@ -57,7 +55,24 @@ const actions = {
 				reject({ error: 'unknown', message: err });
 			}
 		});
-	})
+	}),
+	publishArticleById: ({commit},{id,publish}) =>new Promise((resolve,reject) => {
+		api({
+			method: 'post',
+			url: '/articles/'+id+'/publish',
+			params: {
+				publish
+			}
+		}).then(res => {
+			resolve(res);
+		}).catch(err => {
+			if (err.response && err.response.data) {
+				reject(err.response.data);
+			} else {
+				reject({ error: 'unknown', message: err });
+			}
+		});
+	}),
 
 
 }

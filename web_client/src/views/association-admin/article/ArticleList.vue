@@ -11,6 +11,9 @@
 			</Row>
 			<br><br>
 			<Table :columns="columns" :data="list">
+				<template slot-scope="{ row,index}" slot="publish">
+					<Checkbox v-model="row.published" @on-change="togglePublish(row.id, row.published)">发布</Checkbox>
+				</template>
 				<template slot-scope="{ row, index }" slot="action">
 					<Button @click="onClickView(row.id)">查看</Button>
 					<Button @click="onClickEdit(row.id)">编辑</Button>
@@ -37,7 +40,7 @@ export default {
 			columns:[
 				{title:'标题',key:'title'},
 				{title:'作者',key:'associationId'},
-				{title:'已发布',key:'published'},
+				{title:'发布状态',slot:'publish'},
 				{title:'上次修改时间',key:'lastModifyTime'},
 				{title:'操作',slot:'action'},
 			],
@@ -51,7 +54,16 @@ export default {
 		}),
 	},
 	methods: {
-		...mapActions('common/articleOps',['queryPagedArticlesWithFilter']),
+		...mapActions('common/articleOps',[
+			'queryPagedArticlesWithFilter',
+			'publishArticleById'
+		]),
+		togglePublish(id,publish) {
+			this.publishArticleById({
+				id,
+				publish
+			})
+		},
 		loadArticles(keyword,pageNum) {
 			if(keyword){
 				this.searchKeyword = keyword;
