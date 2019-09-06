@@ -65,9 +65,7 @@ export default {
 			})
 		},
 		loadArticles(keyword,pageNum) {
-			if(keyword){
-				this.searchKeyword = keyword;
-			}
+			this.searchKeyword = keyword;
 			this.queryPagedArticlesWithFilter({
 				keyword,
 				authorIds: [this.assoId],

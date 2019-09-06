@@ -91,7 +91,7 @@ export default {
 			});
 		},
 		searchArticle(search,newPageNum){
-			if(search){this.articlePageAttr.keyword = search;}
+			this.articlePageAttr.keyword = search;
 			this.queryPagedArticlesWithFilter({
 				authorIds: [this.assoId],
 				keyword: search,

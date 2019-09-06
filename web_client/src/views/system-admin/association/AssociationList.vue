@@ -1,115 +1,94 @@
 <template>
 	<Card>
-		<!--<Tabs active-key="tab_key">                           -->
-		<!--    <Tab-pane label="社团管理" key="tabpane_key1">-->
-			<div id="AssoList">
-				<div id=SearchAsso>
-					<i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
-					<Button @click="getAssociationList">搜索</Button>
-					<Button @click="showCreateForm">创建社团</Button>
-					<!--<div style="display:inline">                                                    -->
-					<!--    <Button @click="tag.tag_show=true" style="width: 80px">选择标签</Button>-->
-					<!--    <TagChoose :tag="tag"/>                                                     -->
-					<!--</div>                                                                          -->
-					<Modal v-model="form.onshow" @on-ok="info_ok()" @on-cancel="info_cancel" loading :closable="false">
-						<Form ref="form" :model="form"  :label-width="112" :rules="ruleValidate" >
-							<FormItem label="社团名称" prop="name">
-								<Input v-model="form.name"/>
-							</FormItem>
-							<FormItem label="社团描述" prop="description">
-								<Input v-model="form.description" type="textarea" :rows="4"/>
-							</FormItem>
-							<FormItem label="社团标签">
-								<div>
-									<div style="display:inline">
-										<Button @click="form.tag.tag_show=true" style="width: 80px;position:relative ;top:5px">选择标签</Button>
-										<TagChoose :tag="form.tag"/>
-								   </div>
-									<div v-if="form.tag.tagList.length" style="display:inline">
-										<Tag v-for="tag in form.tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
-									</div>
-								</div>
-							</FormItem>
-							<FormItem label="社团Logo">
-								<Upload 
-									:before-upload="handleUpload"
-									action="//jsonplaceholder.typicode.com/posts/">
-									<Button icon="ios-cloud-upload-outline">Upload files</Button>
-								</Upload>
-								<!--<div>                                                                                                                   -->
-								<!--    <b-form-file v-model="file" ref="file-input" style="width:270px"></b-form-file>                                     -->
-								<!--    <Button type="primary" @click="clearFiles" style="height:33px ; margin-bottom:8px;margin-left:11px" >重设</Button>-->
-								<!--</div>                                                                                                                  -->
-							</FormItem>
-							<FormItem label="报名材料" v-if="form.needMaterial">
-								<Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
-							</FormItem>
-							<FormItem label="社团状态" v-if="form.showState">
-								<Icon type="ios-checkmark-circle" size="30" color="green" v-if="form.assoState"/>
-								<Icon type="ios-close-circle" size="30" color="red" v-if="!form.assoState"/>
-								<Button type="warning" @click="changeState" style="height:33px ; margin-bottom:8px ; margin-left:230px" >变更状态</Button>
-							</FormItem>
-						</Form>
+		<div id="AssoList">
+			<div id=SearchAsso>
+				<Row type="flex" justify="space-between">
+				<Col span="4">
+				<Input search @on-search="getAssociationList" placeholder="请输入关键词" style="width: 300px" />
+				</Col>
+				<Col span="2">
+				<Button @click="showCreateForm">创建社团</Button>
+				</Col>
+				</Row>
+				<Modal v-model="form.onshow" @on-ok="info_ok()" @on-cancel="info_cancel" loading :closable="false">
+					<Form ref="form" :model="form"  :label-width="112" :rules="ruleValidate" >
+						<FormItem label="社团名称" prop="name">
+							<Input v-model="form.name"/>
+						</FormItem>
+						<FormItem label="社团描述" prop="description">
+							<Input v-model="form.description" type="textarea" :rows="4"/>
+						</FormItem>
+						<FormItem label="社团Logo">
+							<Upload 
+								:before-upload="handleUpload"
+								action="//jsonplaceholder.typicode.com/posts/">
+								<Button icon="ios-cloud-upload-outline">Upload files</Button>
+							</Upload>
+						</FormItem>
+						<FormItem label="报名材料" v-if="form.needMaterial">
+							<Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
+						</FormItem>
+						<FormItem label="社团状态" v-if="form.showState">
+							<Button @click="changeState">{{form.assoState?"未禁用":"已禁用"}}</Button>
+						</FormItem>
+					</Form>
 
-					</Modal>
-					<div>
-						<div v-if="tag.tagList.length" style="display:inline">
-							<!--<Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>-->
-						</div>
-					</div>
-				</div>
-
-				<br>
+				</Modal>
 				<div>
-				<!--<b-form-checkbox-group @input="get" v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>-->
-					<CheckboxGroup v-model="assoStateSelected">
-						<Checkbox label="active">
-							<span>已激活</span>
-						</Checkbox>
-						<Checkbox label="blocked">
-							<span>已锁定</span>
-						</Checkbox>
-					</CheckboxGroup>
-				</div>
-				<br>
-
-				<div id="CardList"  style="display: flex; flex-wrap: wrap">
-					<Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
-					<p slot="title">
-						<Icon type="ios-people" ></Icon>
-
-						{{item.name}}
-						<Icon type="ios-checkmark-circle" style="position:absolute;right:10px;" size="30" color="green" v-if="item.state"/>
-						<Icon type="ios-close-circle" style="position:absolute;right:10px;" size="30" color="red" v-if="!item.state"/>
-					</p>
-
-
-					<div style="text-align: center;height:100px">
-						<img :src="item.logo" style="width:80px;height:80px;"/>
+					<div v-if="tag.tagList.length" style="display:inline">
+						<!--<Tag v-for="tag in tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>-->
 					</div>
-					<div style= "min-height: 100%; ">
-						<p>{{ item.description }}</p>
-					</div>
-					<div style="margin-top:80px">
-						<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">
-							{{ tag }}
-						</Tag>
-					</div>
-					<div >
-						<Button type="info" v-on:click="showEditForm(item)">编辑</Button>
-						<Button type="warning" v-on:click="deleteAssociation(item)">删除</Button>
-					</div>
-					</Card>
-				</div>
-				<div style="margin-top:15px;text-align: center">
-					<Page id = "page" show-elevator show-total
-					:total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-					:current.sync = "pageProp.pageNum"  @on-change="getAssociationList"></Page>
 				</div>
 			</div>
-			<!--</Tab-pane>-->
-			<!--<Application :pendingAppData  ="pendingAppData" :handledAppData  ="handledAppData"/>-->
-		<!--</Tabs>-->
+
+			<!--<br>-->
+			<!--<div>-->
+			<!--<b-form-checkbox-group @input="get" v-model="assoStateSelected" :options="assoStateList" switches></b-form-checkbox-group>-->
+			<!--    <CheckboxGroup v-model="assoStateSelected">-->
+			<!--        <Checkbox label="active">              -->
+			<!--            <span>已激活</span>             -->
+			<!--        </Checkbox>                            -->
+			<!--        <Checkbox label="blocked">             -->
+			<!--            <span>已锁定</span>             -->
+			<!--        </Checkbox>                            -->
+			<!--    </CheckboxGroup>                           -->
+			<!--</div>                                         -->
+			<br>
+
+			<div id="CardList"  style="display: flex; flex-wrap: wrap">
+				<Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
+				<p slot="title">
+					<Icon type="ios-people" ></Icon>
+
+					{{item.name}}
+					<Icon type="ios-checkmark-circle" style="position:absolute;right:10px;" size="30" color="green" v-if="item.state"/>
+					<Icon type="ios-close-circle" style="position:absolute;right:10px;" size="30" color="grey" v-if="!item.state"/>
+				</p>
+
+
+				<div style="text-align: center;height:100px">
+					<img :src="item.logo" style="width:80px;height:80px;"/>
+				</div>
+				<div style= "min-height: 100%; ">
+					<p>{{ item.description }}</p>
+				</div>
+				<div style="margin-top:80px">
+					<!--<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">-->
+					<!--    {{ tag }}                                                            -->
+					<!--</Tag>                                                                   -->
+				</div>
+				<div >
+					<Button @click="showEditForm(item)">编辑</Button>
+					<Button @click="deleteAssociation(item)" style="margin-left:20px">删除</Button>
+				</div>
+				</Card>
+			</div>
+			<div style="margin-top:15px;text-align: center">
+				<Page id = "page" show-total
+				:total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+				:current.sync = "pageProp.pageNum"  @on-change="onChangePage"></Page>
+			</div>
+		</div>
 	</Card>
 </template>
 
@@ -170,17 +149,19 @@ export default {
             AssoList: [],
             assoSearch:{
                 keyword:"",
-                tags:"asd",
-                state:2,
+                tags:[],
+                state:1,
                 pageNum:0,
                 pageSize:7
 
-            }
+            },
+			assoSearchKeyword:'',
         }
     },
     methods: {
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter',
+			'deleteAssociationById'
 		]),
 		handleUpload(f){
 			this.file = f;
@@ -203,17 +184,27 @@ export default {
             this.form.onshow=true
         },
         deleteAssociation(item){
-            api({
-				method:'delete',
-				url:'/associations/'+item.id,
-			})
-            .then(response => {
-                this.$Message.info('删除成功');
-                this.getAssociationList();
-            })
-            .catch(e => {
-                console.log(e)
-            });
+			this.$Modal.confirm({
+				title: '提示',
+				content: '<p>确认删除社团？(ID:'+item.id+')</p>',
+				onOk: () => {
+					this.deleteAssociationById({
+						assoId: item.id
+					}).then(response => {
+						this.$Message.info('删除成功');
+						this.getAssociationList();
+					}).catch(err => {
+						this.$Notice.error({
+							title: '删除消息时出现错误ID: ' + msgId ,
+							desc: err
+						})
+					})
+
+				},
+				onCancel: () => {
+
+				}
+			});
         },
         changeState(){
             var state = this.form.assoState
@@ -276,25 +267,20 @@ export default {
         get(){
             this.getAssociationList()
         },
-
-        getAssociationList() {
-			/*
-            this.assoSearch.pageNum = this.pageProp.pageNum - 1;
-            this.assoSearch.pageSize = this.pageProp.pageSize;
-            this.assoSearch.tags = this.tag.tagList.join();
-			*/
-
-            const tags = this.tag.tagList.join();
+		onChangePage(newPageNum) {
+			this.getAssociationList(this.assoSearchKeyword,newPageNum);
+		},
+        getAssociationList(search,newPageNum) {
+			this.assoSearchKeyword = search;
             this.getState();
 
 			this.queryPagedAssociationsWithFilter({
 				filter: {
-					keyword: search?search:'',
-					tags: tags?tags:[],
-					state: 1
+					keyword: search == ''?null:search,
+					tags: [],
 				},
 				pageArgs: {
-					pageNum: this.pageProp.pageNum,
+					pageNum: newPageNum?newPageNum:this.pageProp.pageNum,
 					pageSize: this.pageProp.pageSize
 				}
 			}).then(response => {
@@ -305,28 +291,6 @@ export default {
 				console.log(e)
 			});
 
-			/*
-			api({
-				method:'post',
-				url:'/associations/list',
-				data: {
-					pageNum:this.assoSearch.pageNum,
-					pageSize:this.assoSearch.pageSize-1,
-					keyword:this.assoSearch.keyword,
-					tags:this.tag.tagList.join(),
-					state:this.assoSearch.state
-				}
-			})
-			.then(response => {
-				console.log(response);
-				this.AssoList = response.data.data.content
-				this.pageProp.totalSize = response.data.data.totalSize
-			})
-			.catch(e => {
-				console.log(e)
-			});
-			*/
-			
         },
         clearFiles() {
             this.$refs['file-input'].reset();

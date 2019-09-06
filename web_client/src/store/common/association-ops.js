@@ -35,6 +35,36 @@ const actions = {
                 reject({ error: 'unknown', message: err });
             }
         });
+	}),
+	createAssociation: ({commit}, asso) => new Promise((resolve,reject) => {
+		api({
+			method: 'post',
+			url: '/associations',
+			data: asso
+		}).then(res => {
+			resolve(res);
+		}).catch(err => {
+            if (err.response && err.response.data) {
+                reject(err.response.data);
+            } else {
+                reject({ error: 'unknown', message: err });
+            }
+        });
+	}),
+	deleteAssociationById: ({commit},{assoId}) => new Promise((resolve,reject) => {
+		api({
+			method:'delete',
+			url:'/associations/'+assoId
+		})
+		.then(res => {
+			resolve(res);
+		}).catch(err => {
+            if (err.response && err.response.data) {
+                reject(err.response.data);
+            } else {
+                reject({ error: 'unknown', message: err });
+            }
+        });
 	})
 }
 

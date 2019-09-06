@@ -43,6 +43,7 @@ const actions = {
 			url: '/com/msg/page',
 			params: pageArgs
 		}).then(res => {
+			console.log(res);
 			res.data.data.content = res.data.data.content.map(e => {
 				const ts = new Date(e.timestamp);
 				e.timestamp = ts.toLocaleString();

@@ -46,9 +46,9 @@
 				</Card>
 			</div>
 			<div style="margin-top:15px;text-align: center">
-				<Page id = "page" show-elevator show-total
+				<Page id = "page" show-total
 				:total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-				:current.sync = "pageProp.pageNum"  @on-change="getAssociationList"></Page>
+				:current.sync = "pageProp.pageNum"  @on-change="onPageChange"></Page>
 			</div>
 		</div>
 	</Card>
@@ -74,6 +74,7 @@ export default {
                 tagrepo : ["运动", "饮食", "音乐", "舞蹈", "历史", "游戏", "户外", "天文","航模","动漫"]
             },
             AssoList: [],
+			searchText: '',
         }
     },
 	computed: {
@@ -90,17 +91,18 @@ export default {
 			'commitSubscription',
 			'removeSubscription'
 		]),
-        getAssociationList(search) {
+        getAssociationList(search,newPageNum) {
+			this.searchText = search;
             const tags = this.tag.tagList.join();
 
 			this.queryPagedAssociationsWithFilter({
 				filter: {
-					keyword: search,
+					keyword: search == ''?null:search,
 					tags: tags?tags:[],
 					state: 1
 				},
 				pageArgs: {
-					pageNum: this.pageProp.pageNum,
+					pageNum: newPageNum?newPageNum:this.pageProp.pageNum,
 					pageSize: this.pageProp.pageSize
 				}
 			}).then(response => {
@@ -111,6 +113,9 @@ export default {
 				console.log(e)
 			});
         },
+		onPageChange(newPageNum) {
+			this.getAssociationList(this.searchText,newPageNum);
+		},
 		onClickCard(id){
 			this.$router.push({
 				name:'UserAssociationDetail',

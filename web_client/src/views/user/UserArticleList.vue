@@ -36,9 +36,7 @@ export default {
 		...mapActions('common/currentUserSubscription',['refreshSubscription']),
 		...mapActions('common/articleOps',['queryPagedArticlesWithFilter']),
 		loadArticles(keyword,pageNum) {
-			if(keyword){
-				this.searchKeyword = keyword;
-			}
+			this.searchKeyword = keyword;
 			this.queryPagedArticlesWithFilter({
 				keyword,
 				authorIds: this.subscribed,
