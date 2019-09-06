@@ -43,9 +43,10 @@ public class FinanceInfo implements Serializable {
         this.associationName = associationName;
         this.content = content;
         this.supervisor = supervisor;
-        this.time=new Date();
+        this.time = new Date();
         this.transactionAmount = transactionAmount;
         this.direction = direction;
         this.operatorId = operatorId;
+        this.state = 1;
     }
 }
