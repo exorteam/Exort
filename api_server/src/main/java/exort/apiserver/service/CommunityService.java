@@ -10,17 +10,20 @@ import lombok.Data;
 public interface CommunityService {
 
 	@Data
-	public class CoummunityMessage {
+	public class CommunityMessage {
 
 		private int id;
 		private int senderId;
+		private String senderAssociation;
+
 		private String content;
 		private Date timestamp;
 		private boolean read;
 
 	}
 
-	ApiResponse postMessage(int uid,CoummunityMessage msg);
+	ApiResponse postNotifications(CommunityMessage msg);
+	ApiResponse postMessage(int uid,CommunityMessage msg);
 	ApiResponse markMessageReadById(int uid,int mid);
 	ApiResponse markAllMessageRead(int uid);
 	ApiResponse dropMessageById(int uid,int mid);

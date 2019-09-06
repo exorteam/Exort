@@ -20,6 +20,7 @@ import exort.apiserver.service.ArticleService;
 import exort.apiserver.service.ArticleService.Article;
 import exort.apiserver.service.ArticleService.ArticleFilterParam;
 import exort.apiserver.service.CommunityService;
+import exort.apiserver.service.CommunityService.CommunityMessage;
 
 @RestController
 @RequestMapping(path="/articles")
@@ -67,7 +68,12 @@ public class ArticleController {
 			@RequestParam boolean publish){
 		if(publish){
 			//TODO: notify subscribed users
-			//
+			final Article article = (Article)articleSvc.getArticle(articleId).getData();
+			CommunityMessage msg = new CommunityMessage();
+			final String assoId = article.getAssociationId();
+			msg.setSenderAssociation(assoId);
+			msg.setContent(assoId + "just published new article!");
+			System.out.println(cmSvc.postNotifications(msg));
 		}
 		return articleSvc.publishArticle(articleId,publish);
 	}

@@ -17,7 +17,7 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.errorhandler.ApiError;
 import exort.apiserver.service.CommunityService;
-import exort.apiserver.service.CommunityService.CoummunityMessage;
+import exort.apiserver.service.CommunityService.CommunityMessage;
 
 @RestController
 @RequestMapping(path="/com")
@@ -37,7 +37,7 @@ public class CommunityController {
 		if(!body.containsKey(POST_MSG_CONTENT_KEY)){
 			throw new ApiError(403,"MsgErr","Message content not found");
 		}
-		CoummunityMessage msg = new CoummunityMessage();
+		CommunityMessage msg = new CommunityMessage();
 		msg.setSenderId(operatorId);
 		msg.setContent(String.valueOf(body.get(POST_MSG_CONTENT_KEY)));
 
