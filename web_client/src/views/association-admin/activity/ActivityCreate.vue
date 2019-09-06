@@ -186,7 +186,7 @@
                 'updateActivity'
             ]),
             cancel(){
-              this.$emit('changeOnShow');
+              this.$emit('close');
             },
             info_ok() {
                 // console.log(this.form)
