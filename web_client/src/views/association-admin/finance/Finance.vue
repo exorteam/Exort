@@ -7,7 +7,7 @@
                 新建
             </a>
             <div>
-                社团余额：<strong style="color: red">{{this.balance}}￥</strong>
+                社团经费余额：<strong style="color: red">{{this.balance}}￥</strong>
             </div>
             <br/>
             <Row>
@@ -26,7 +26,7 @@
                 </Col>
             </Row>
             <br/>
-            <Table border :columns="columns" :data="this.financeList">
+            <Table v-if="this.assoId" border :columns="columns" :data="this.financeList">
                 <template slot-scope="{row}" slot="time">
                     <Time type="datetime" :time="row.time"/>
                 </template>
@@ -42,8 +42,18 @@
             </div>
         </Card>
         <finance-create v-on:close="modal=false" :modal="modal"></finance-create>
-        <Card>
-
+        <br/>
+        <Card v-if="this.assoId">
+            <div v-if="this.financeList.length!==0">
+                <GChart
+                        type="ComboChart"
+                        :data="chartData"
+                        :options="chartOption"
+                />
+            </div>
+            <div>
+                区间消费总额：{{this.totalCost}}元
+            </div>
         </Card>
     </div>
 </template>
@@ -51,9 +61,10 @@
 <script>
     import {mapActions, mapState} from 'vuex';
     import FinanceCreate from './FinanceCreate'
+    import {GChart} from 'vue-google-charts'
 
     export default {
-        components: {FinanceCreate},
+        components: {FinanceCreate, GChart},
         data() {
             return {
                 balance: 0,
@@ -63,7 +74,8 @@
                     pageNum: 0,
                     pageSize: 6
                 },
-                timeRange:null,
+                totalCost: 0,
+                timeRange: null,
                 columns: [
                     {
                         title: "项目名称",
@@ -109,9 +121,18 @@
                     associationId: null,
                     keyword: null,
                     timeRange: {
-                        start:"",
-                        end:""
+                        start: "",
+                        end: ""
                     },
+                },
+
+                chartData: [],
+                chartOption: {
+                    title: '社团经费变化情况',
+                    vAxis: {title: '金额（￥)'},
+                    hAxis: {title: '日期'},
+                    seriesType: 'bars',
+                    series: {1: {type: 'line'}}
                 }
             }
         },
@@ -131,7 +152,7 @@
             ]),
             view(index) {
                 this.$Modal.info({
-                    title: `${this.financeList[index].projectName}`+"的金额使用情况说明",
+                    title: `${this.financeList[index].projectName}` + "的金额使用情况说明",
                     content: `${this.financeList[index].content}`
                 })
             },
@@ -146,7 +167,50 @@
                 this.page.pageNum = e - 1;
                 this.init();
             },
-            handleSelect(){
+            getTotalCost() {
+                let item;
+                let total = 0;
+                for (item in this.financeList) {
+                    if (this.financeList[item].direction === "汇入") {
+                        total += this.financeList[item].transactionAmount;
+                    } else {
+                        total -= this.financeList[item].transactionAmount;
+                    }
+                }
+                this.totalCost=total;
+            },
+            createChart() {
+                let item;
+                let input;
+                let head = ['日期', '余额', '使用情况'];
+
+                let m = [];
+
+
+                for (item in this.financeList) {
+
+                    let t = Date.parse(this.financeList[item].time);
+
+                    if (this.financeList[item].direction === "汇入") {
+                        input = [this.formatDate(new Date(t)), this.financeList[item].balance + this.financeList[item].transactionAmount, this.financeList[item].transactionAmount]
+                    } else {
+                        input = [this.formatDate(new Date(t)), this.financeList[item].balance - this.financeList[item].transactionAmount, -this.financeList[item].transactionAmount]
+                    }
+
+                    m.unshift(input);
+                }
+                m.unshift(head);
+                this.chartData = m;
+            },
+            formatDate(now) {
+                var year = now.getFullYear();
+                var month = now.getMonth() + 1;
+                var date = now.getDate();
+                var hour = now.getHours();
+                var minute = now.getMinutes();
+                return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+            },
+            handleSelect() {
                 if (this.timeRange != null && this.timeRange.length == 2) {
                     if (this.timeRange[0] === "") {
                         this.select.timeRange = null
@@ -159,11 +223,11 @@
                     }
                 }
 
-                if(this.timeRange===null||this.timeRange[0]===""||this.timeRange[1]===""){
-                    this.select.timeRange=null;
-                }else{
-                    this.select.timeRange.start=this.timeRange[0];
-                    this.select.timeRange.end=this.timeRange[1];
+                if (this.timeRange === null || this.timeRange[0] === "" || this.timeRange[1] === "") {
+                    this.select.timeRange = null;
+                } else {
+                    this.select.timeRange.start = this.timeRange[0];
+                    this.select.timeRange.end = this.timeRange[1];
                 }
 
                 this.getAssociationFiances({
@@ -173,19 +237,28 @@
                     this.page.pageNum = res.data.pageNum;
                     this.page.pageSize = res.data.pageSize;
                     this.page.totalSize = res.data.totalSize;
+
+                    if (this.financeList.length !== 0) {
+                        this.createChart();
+                        this.getTotalCost();
+                    }else{
+                        this.totalCost=0;
+                    }
                     // console.log(res);
                 });
-            },
+            }
+            ,
             init() {
                 this.handleSelect();
-                this.getAssociationBalance("assoId").then((res) => {
+                this.getAssociationBalance(this.assoId).then((res) => {
                     this.balance = res;
                 });
             }
         },
         mounted() {
             this.init();
-        },
+        }
+        ,
     }
 </script>
 

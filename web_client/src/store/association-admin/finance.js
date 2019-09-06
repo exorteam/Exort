@@ -53,7 +53,7 @@ const actions = {
                 'sortby': "0",
             },
         }).then((res) => {
-            console.log(res.data.data);
+            // console.log(res.data.data);
             if(res.data.data.content===null){
                 commit('setFinanceList', []);
             }else{

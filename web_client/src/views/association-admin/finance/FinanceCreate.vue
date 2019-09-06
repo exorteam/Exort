@@ -89,10 +89,10 @@
         },
         methods: {
             submit() {
-                // this.formData.associationId = this.assoId;
-                // this.formData.associationName = this.assoName;
-                this.formData.associationId = "assoId";
-                this.formData.associationName = "aaa";
+                this.formData.associationId = this.assoId;
+                this.formData.associationName = this.assoName;
+                // this.formData.associationId = "assoId";
+                // this.formData.associationName = "aaa";
                 this.formData.operatorId = this.uid;
 
                 this.createFinance(this.formData).then(() => {

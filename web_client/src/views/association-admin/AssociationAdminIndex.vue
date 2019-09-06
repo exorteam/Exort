@@ -30,6 +30,10 @@
 					<Icon type="md-briefcase" />
 					活动管理
 				</MenuItem>
+                <MenuItem name="AssociationAdminFinanceList" :to="{name:'AssociationAdminFinanceList'}">
+                    <Icon type="ios-checkbox" />
+                    资产管理
+                </MenuItem>
 				<MenuItem :name="''">
 					<Icon type="ios-checkbox" />
 					申请列表
