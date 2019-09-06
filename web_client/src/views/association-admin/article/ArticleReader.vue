@@ -7,14 +7,17 @@
 			<br>
 			<p>{{article.content}}</p>
 		</Card>
+		<comment type="article"></comment>
 	</div>
 </template>
 
 <script>
 import {api} from '@/http'
+import comment from '../../../components/Comment'
 export default {
 	name: "ArticleReader",
 	props:['id'],
+    components: {comment},
 	data: function(){
 		return {
 			article:{}

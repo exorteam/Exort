@@ -48,17 +48,19 @@
                 </Button>
             </div>
         </Card>
+        <comment type="activity"></comment>
     </div>
 </template>
 
 <script>
     import expandRow from './ExpandTable'
     import activityCreate from './ActivityCreate'
+    import comment from '../../../components/Comment'
     import {mapState, mapActions,mapMutations} from 'vuex'
 
     export default {
         name: "about",
-        components: {expandRow, activityCreate},
+        components: {expandRow, activityCreate,comment},
         data() {
             return {
                 stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
