@@ -99,7 +99,7 @@ public class ActivityServiceImpl implements ActivityService {
 
         query.skip(pageQuery.getPageSize()*pageQuery.getPageNum());
         query.limit(pageQuery.getPageSize());
-        String sortBy = pageQuery.getSortBy() == "publishTime" ? "publishTime" : "createTime";
+        String sortBy = "publishTime".equals(pageQuery.getSortBy()) ? "publishTime" : "createTime";
         query.with(Sort.by(Sort.Direction.DESC, sortBy));
 
         long totalsize = mongoTemplate.count(query, ActivityInfo.class, "activity");
