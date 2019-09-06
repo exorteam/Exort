@@ -66,4 +66,22 @@ public class FinanceController {
     public ApiResponse<Float> getAssociationBalance(@PathVariable(value = "associationId") String associationId) {
         return new ApiResponse<>(financeService.getAssociationBalance(associationId));
     }
+
+    @PutMapping(value = "/finances/{financeId}/accept")
+    public ApiResponse<Finance> acceptFinanceApplication(@PathVariable(value = "financeId") String id) {
+        Finance ret = financeService.acceptFinanceApplication(id);
+        if (ret == null) {
+            throw new ApiError(404, "Finance not found!", "财务记录不存在");
+        }
+        return new ApiResponse<>(ret);
+    }
+
+    @PutMapping(value = "/finances/{financeId}/refuse")
+    public ApiResponse<Finance> refuseFinanceApplication(@PathVariable(value = "financeId") String id) {
+        Finance ret = financeService.refuseFinanceApplication(id);
+        if (ret == null) {
+            throw new ApiError(404, "Finance not found!", "财务记录不存在");
+        }
+        return new ApiResponse<>(ret);
+    }
 }
