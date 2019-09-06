@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -98,6 +99,8 @@ public class ActivityServiceImpl implements ActivityService {
 
         query.skip(pageQuery.getPageSize()*pageQuery.getPageNum());
         query.limit(pageQuery.getPageSize());
+        String sortBy = pageQuery.getSortBy() == "publishTime" ? "publishTime" : "createTime";
+        query.with(Sort.by(Sort.Direction.DESC, sortBy));
 
         long totalsize = mongoTemplate.count(query, ActivityInfo.class, "activity");
         List<ActivityInfo> activities = mongoTemplate.find(query, ActivityInfo.class, "activity");

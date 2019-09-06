@@ -43,8 +43,8 @@ public class ActivityInfo implements Serializable {
                         boolean ifReview, boolean ifOnlyMem, int maxParticipants, List<Integer> materialTemplateIds, List<String> tags, String image) {
         this.associationIds = associationIds;
         this.createTime = new Date();
-        this.publishTime = new Date();
-        this.lastPublishTime = new Date();
+        this.publishTime = null;
+        this.lastPublishTime = null;
         this.lastModifyTime = new Date();
         this.signupTime = signupTime;
         this.time = time;

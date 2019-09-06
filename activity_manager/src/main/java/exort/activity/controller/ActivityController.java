@@ -77,6 +77,8 @@ public class ActivityController {
         activityInfo.setTags(activity.getTags());
         activityInfo.setImage(activity.getImage());
 
+        activityInfo.setLastModifyTime(new Date());
+
         activityInfo = as.updateActivity(activityInfo);
         return new ApiResponse<>(changeActivityInfo2Activity(activityInfo));
     }
@@ -106,6 +108,7 @@ public class ActivityController {
 
         if (requestActivity.getType().equals("publish")) {
             activityInfo.setPublishState(2);
+            activityInfo.setPublishTime(new Date());
         } else {
             activityInfo.setPublishState(1);
         }
