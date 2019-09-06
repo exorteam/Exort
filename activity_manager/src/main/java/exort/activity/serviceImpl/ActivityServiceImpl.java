@@ -4,6 +4,7 @@ import exort.activity.entity.ActivityInfo;
 import exort.activity.repository.ActivityRepository;
 import exort.activity.service.ActivityService;
 import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.TimeRange;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,21 +48,28 @@ public class ActivityServiceImpl implements ActivityService {
         return activityRepository.findById(id).orElse(null);
     }
 
+    private Criteria inTimeRange(String field, TimeRange timeRange) {
+        Criteria criteria = Criteria.where(field);
+        if (timeRange.getStart() != null) {
+            criteria.gte(timeRange.getStart());
+        }
+        if (timeRange.getEnd() != null) {
+            criteria.lte(timeRange.getEnd());
+        }
+        return criteria;
+    }
+
     @Override
     public PagedData<ActivityInfo> getActivities(Filter filter, PageQuery pageQuery) {
         Query query = new Query();
-
         if (filter.getCreateTime() != null) {
-            query.addCriteria(Criteria.where("createTime").gte(filter.getCreateTime().getStart())
-                    .lte(filter.getCreateTime().getEnd()));
+            query.addCriteria(inTimeRange("createTime", filter.getCreateTime()));
         }
         if (filter.getSignupTime() != null) {
-            query.addCriteria(Criteria.where("signupTime.time.start").gte(filter.getSignupTime().getStart())
-                    .lte(filter.getSignupTime().getEnd()));
+            query.addCriteria(inTimeRange("signupTime.time.start", filter.getSignupTime()));
         }
         if (filter.getStartTime() != null) {
-            query.addCriteria(Criteria.where("time.time.start").gte(filter.getStartTime().getStart())
-                    .lte(filter.getStartTime().getEnd()));
+            query.addCriteria(inTimeRange("time.time.start", filter.getStartTime()));
         }
         if (filter.getPublishState() != 0) {
             query.addCriteria(Criteria.where("publishState").is(filter.getPublishState()));
@@ -81,9 +89,11 @@ public class ActivityServiceImpl implements ActivityService {
         if (filter.getKeyword() != null) {
             query.addCriteria(Criteria.where("content").regex(filter.getKeyword()));
         }
-
-        if (filter.getTags() != null && !filter.getTags().equals(new ArrayList<>())) {
+        if (filter.getTags() != null && !filter.getTags().isEmpty()) {
             query.addCriteria(Criteria.where("tags").in(filter.getTags()));
+        }
+        if (filter.getAssociationId() != null && !filter.getAssociationId().isEmpty()) {
+            query.addCriteria(Criteria.where("associationIds").in(filter.getAssociationId()));
         }
 
         query.skip(pageQuery.getPageSize()*pageQuery.getPageNum());
