@@ -14,12 +14,20 @@ import exort.api.http.review.entity.details.AssociationInfo;
 import exort.api.http.review.entity.details.AssociationMemberSignUp;
 import exort.api.http.review.entity.receipt.AssociationMemberReceipt;
 import exort.api.http.review.entity.receipt.NormalReceipt;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 public class ReviewServiceImpl extends RestTemplate implements ReviewService {
+
+    @Value("${exort.review.protocol:http}")
+    public void setProtocol(String protocol) { super.setProtocol(protocol); }
+
+    @Value("${exort.review.endpoint:localhost}")
+    public void setEndpoint(String endpoint) { super.setEndpoint(endpoint); }
+
 
     private Application getType(@NotNull Application application) {
         switch (application.getType()) {
