@@ -13,6 +13,8 @@ public class CommunityMessage {
 	private int id;
 
 	private Integer senderId;
+	private String senderAssociation;
+
 	private String content;
 	private Date timestamp;
 	private boolean read;

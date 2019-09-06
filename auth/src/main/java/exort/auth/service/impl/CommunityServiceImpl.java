@@ -46,6 +46,23 @@ public class CommunityServiceImpl implements CommunityService {
 	// Operations on messages
 	// treat message box as list
 	// post(update), marking read(update), dropping messages(update)
+	public Integer postNotifications(CommunityMessage msg) {
+		final String senderAsso = msg.getSenderAssociation();
+		if(senderAsso == null){
+			return null;
+		}
+
+		final List<UserCommunityEntity> users = repo.findAll();
+		int count = 0;
+		for(UserCommunityEntity e : users){
+			if(e.getSubscribed().contains(senderAsso)){
+				postMessage(e.getId(),msg);
+				++count;
+			}
+		}
+		return count;
+	}
+
 	public Integer postMessage(int uid,CommunityMessage msg){
 		if(!repo.existsById(uid)){
 			return null;
