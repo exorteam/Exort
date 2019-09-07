@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.reflect.TypeToken;
 
+import exort.api.http.common.entity.PageQuery;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -60,20 +61,20 @@ public class ArticleServiceImpl extends RestTemplate implements ArticleService {
 				id);
 	}
 
-	public ApiResponse listArticle(ArticleFilterParam param,Integer pn,Integer ps){
+	public ApiResponse listArticle(ArticleFilterParam param, PageQuery pageQuery){
 		return request(new TypeToken<PagedData<Article>>(){},
 				param,
 				HttpMethod.GET,
-				urlBase+"?pageNum={pn}&pageSize={ps}",
-				pn,ps);
+				pageQuery,
+				urlBase);
 	}
 
-	public ApiResponse listArticleWithAssociation(List<String> assoIds,Integer pn,Integer ps){
+	public ApiResponse listArticleWithAssociation(List<String> assoIds, PageQuery pageQuery){
 		return request(new TypeToken<PagedData<Article>>(){},
 				assoIds,
 				HttpMethod.POST,
-				urlBase+"/asso?pageNum={pn}&pageSize={ps}",
-				pn,ps);
+				pageQuery,
+				urlBase+"/asso");
 	}
 
 }
