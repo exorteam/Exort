@@ -209,7 +209,7 @@ steps:
   commands:
   - cd ./api_server
   - rm -rf src/main/resources
-  - cp -rf /root/resources/auth src/main/resources
+  - cp -rf /root/resources/apiserver src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
 
 trigger:
