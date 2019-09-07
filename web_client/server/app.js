@@ -34,10 +34,6 @@ app.use(session({
     saveUninitialized: false
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(history({ disableDotRule: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.post(
     '/upload/image',
     uploader.filter(
@@ -117,5 +113,9 @@ app.get('/auth/token', async (req, res) => {
         res.status(401).json({error: 'not_login', message: '未登录'});
     }
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(history({ disableDotRule: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
