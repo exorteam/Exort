@@ -33,19 +33,19 @@ public class UserInfoController {
 	private SystemAdministratorInfo sysAdmin;
 
 	@GetMapping("/{id}")
-	public ApiResponse<UserInfo> getUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId){
+	public ApiResponse<UserInfo> getUserInfoById(@RequestAttribute("id") Integer operatorId,@PathVariable("id") int userId){
 		log.info("Operator("+String.valueOf(operatorId)+") get user info of user("+String.valueOf(userId)+").");
 		return infoSvc.getUserInfo(userId);
 	}
 
 	@GetMapping("/self")
-	public ApiResponse<UserInfo> getCurrentUserInfo(@RequestAttribute("id") int operatorId){
+	public ApiResponse<UserInfo> getCurrentUserInfo(@RequestAttribute("id") Integer operatorId){
 		log.info("Operator("+String.valueOf(operatorId)+") get current user info.");
 		return infoSvc.getUserInfo(operatorId);
 	}
 
 	@PostMapping("/{id}")
-	public ApiResponse<UserInfo> updateUserInfoById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestBody UserInfo info){
+	public ApiResponse<UserInfo> updateUserInfoById(@RequestAttribute("id") Integer operatorId,@PathVariable("id") int userId,@RequestBody UserInfo info){
 		log.info("Operator("+String.valueOf(operatorId)+") update user info of user("+String.valueOf(userId)+").");
 		if(operatorId != userId){
 			throw new ApiError(403,"PermErr","Updating operation from another user should be rejected");
@@ -54,7 +54,7 @@ public class UserInfoController {
 	}
 
 	@PatchMapping("/{id}")
-	public ApiResponse<Boolean> disableUserById(@RequestAttribute("id") int operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
+	public ApiResponse<Boolean> disableUserById(@RequestAttribute("id") Integer operatorId,@PathVariable("id") int userId,@RequestParam boolean disabled){
 		log.info("Operator("+String.valueOf(operatorId)+") toggle disability for user("+String.valueOf(userId)+").");
 		if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME).getData() == null){
 			throw new ApiError(403,"PermErr","Disabling by non-admin user should be rejected");
@@ -73,7 +73,7 @@ public class UserInfoController {
 	}
 
     @GetMapping("/{id}/admin")
-    public ApiResponse<UserAdminResponse> getUserAdmin(@RequestAttribute("id") long operatorId, @PathVariable("id") long userId) {
+    public ApiResponse<UserAdminResponse> getUserAdmin(@RequestAttribute("id") Long operatorId, @PathVariable("id") long userId) {
         if (operatorId != userId) {
             throw new ApiError(401, "PermErr", "Only available for user-self");
         }

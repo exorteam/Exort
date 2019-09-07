@@ -38,7 +38,7 @@ public class ArticleController {
 
 	@PostMapping
 	public ApiResponse createArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute("id") Long operatorId,
 			@RequestBody Article e){
 		return articleSvc.createArticle(e);
 	}
@@ -51,14 +51,14 @@ public class ArticleController {
 
 	@DeleteMapping("/{id}")
 	public ApiResponse deleteArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute("id") Long operatorId,
 			@PathVariable("id") int articleId){
 		return articleSvc.deleteArticle(articleId);
 	}
 
 	@PutMapping("/{id}")
 	public ApiResponse updateArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute("id") Long operatorId,
 			@PathVariable("id") int articleId,
 			@RequestBody Article e){
 		return articleSvc.updateArticle(articleId,e);
@@ -66,7 +66,7 @@ public class ArticleController {
 
 	@PostMapping("/{id}/publish")
 	public ApiResponse publishArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute("id") Long operatorId,
 			@PathVariable("id") int articleId,
 			@RequestParam boolean publish){
 		if(publish){
@@ -96,7 +96,7 @@ public class ArticleController {
 	}
 
 	@GetMapping("/list/user")
-	public ApiResponse listArticle(@RequestAttribute("id") int operatorId, PageQuery pageQuery) {
+	public ApiResponse listArticle(@RequestAttribute("id") Integer operatorId, PageQuery pageQuery) {
 		ApiResponse<List<String>> res = cmSvc.listSubscribed(operatorId);
 		List<String> associationIds = res.getData();
 		if (associationIds == null) {
