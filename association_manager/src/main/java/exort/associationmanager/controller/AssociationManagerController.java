@@ -32,7 +32,7 @@ public class AssociationManagerController{
 
     @GetMapping("/associations")
     public ApiResponse<PagedData<Association>> listAssociations(
-			@RequestBody AssociationFilterParams body, 
+			@RequestBody AssociationFilterParams body,
 			PageQuery page){
 
 		return new ApiResponse(service.listAssociations(body,page.getPageNum(),page.getPageSize()));
@@ -78,7 +78,7 @@ public class AssociationManagerController{
         exort.associationmanager.entity.Association association = service.getAssociation(assoId);
         Association association1 = association.toCommon();
         if (association == null){
-            throw  new  ApiError(404,"notFound","社团不存在");
+            throw new ApiError(404,"notFound","社团不存在");
         }
         return new ApiResponse<>(association1);
     }
@@ -94,7 +94,7 @@ public class AssociationManagerController{
         exort.associationmanager.entity.Association association= service.createAssociation(body.getName(),body.getDescription(),body.getTags(),body.getLogo());
         Association association1 = association.toCommon();
         if(association == null){
-            throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
+            throw new ApiError(500,"unfoundBug","未发现的Bug，请由提交给Exort");
         }
         return  new ApiResponse(association);
     }
@@ -113,7 +113,7 @@ public class AssociationManagerController{
     }
     @PutMapping("/associations/{assoId}")
     public ApiResponse<Association> editAssociation(
-			@RequestBody AssociationInfo body, 
+			@RequestBody AssociationInfo body,
 			@PathVariable(value="assoId") String assoId ){
         if(body.getDescription() == null || body.getLogo() == null || body.getName() == null){
             throw new ApiError(400,"invalidFormat","无效的申请格式");
@@ -124,7 +124,7 @@ public class AssociationManagerController{
         exort.associationmanager.entity.Association association = service.editAssociation(assoId, body.getName(),body.getDescription(),body.getTags(),body.getLogo());
         Association association1 = association.toCommon();
         if(association == null){
-            throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
+            throw new ApiError(500,"unfoundBug","未发现的Bug，请由提交给Exort");
         }
         return new ApiResponse(association);
     }
@@ -132,7 +132,7 @@ public class AssociationManagerController{
 
     @PutMapping("/associations/{assoId}/state")
     public ApiResponse<Object> patchAssociation(
-			@RequestBody Operation<String> body, 
+			@RequestBody Operation<String> body,
 			@PathVariable(value="assoId") String assoId ){
 
         if(body.getArg()==null){
@@ -143,29 +143,17 @@ public class AssociationManagerController{
             throw new ApiError(400,"invlaidType","无效的申请类型");
         }
         if(!service.patchAssociation(assoId,body.getOperation(),body.getArg())){
-            throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
+            throw new ApiError(500,"unfoundBug","未发现的Bug，请由提交给Exort");
         }
         return new ApiResponse(new HashMap<>());
     }
-
-    //@PostMapping("/callback")
-    //public ApiResponse<Object> handleAssociationApplication(
-	//        @RequestBody CallbackParam<MyObject> body){
-    //    if( !(Arrays.asList("refuse", "accept", "cancel","create").contains (body.getEvent()))){
-    //        throw new ApiError(400,"invalidEvent","无效的申请类型");
-    //    }
-    //    if(!service.handleAsoociationApplication(body.getUserId(),body.getEvent(),body.getApplication())){
-    //        throw new ApiError(400,"unfoundBug","未发现的Bug，请由提交给Exort");
-    //    }
-    //    return new ApiResponse(new HashMap<>());
-    //}
 
 	@PostMapping("/associations/batch")
 	public ApiResponse<PagedData<Association>> getAssociationsInBatch(
 			@RequestBody List<String> ids,
 			PageQuery pq){
 		if(ids.isEmpty()){
-			throw new ApiError(400,"QuertErr","Empty id list.");
+			throw new ApiError(400,"emptyList","Empty id list.");
 		}
 		return new ApiResponse(service.getAssociationsInBatch(ids,pq.getPageNum(),pq.getPageSize()));
 	}
