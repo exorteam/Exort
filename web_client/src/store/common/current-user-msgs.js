@@ -10,13 +10,7 @@ const actions = {
 			}
 		}).then(res => {
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	queryMessage: ({commit}) => new Promise((resolve,reject) => {
 		api({
@@ -29,13 +23,7 @@ const actions = {
 				return e;
 			})
 			resolve(ret);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	queryPagedMessage: ({commit} , pageArgs) => new Promise((resolve,reject) => {
 		api({
@@ -50,13 +38,7 @@ const actions = {
 				return e;
 			})
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	dropMessageById: ({commit},{msgId}) => new Promise((resolve,reject) => {
 		api({
@@ -64,13 +46,7 @@ const actions = {
 			url: '/com/msg/drop/' + msgId
 		}).then(res => {
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	})
 }
 
@@ -78,4 +54,3 @@ export default {
 	namespaced: true,
 	actions
 }
-

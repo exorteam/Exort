@@ -18,8 +18,8 @@ const actions = {
             data: data
         }).then((res) => {
             resolve();
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
     deleteComment: ({commit, state}, {id, userId}) => new Promise((resolve, reject) => {
@@ -34,8 +34,8 @@ const actions = {
             data: data
         }).then(() => {
             resolve();
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
     getArticleCommentList: ({commit, state}, id) => new Promise((resolve, reject) => {
@@ -45,8 +45,8 @@ const actions = {
         }).then((res) => {
             commit('setCommentList', res.data.data);
             resolve();
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
     getActivityCommentList: ({commit, state}, id) => new Promise((resolve, reject) => {
@@ -56,8 +56,8 @@ const actions = {
         }).then((res) => {
             commit('setCommentList', res.data.data);
             resolve();
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
 }

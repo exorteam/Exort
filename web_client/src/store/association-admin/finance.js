@@ -17,8 +17,8 @@ const actions = {
             url: "/associations/"+associationId+"/balance"
         }).then((res) => {
             resolve(res.data.data);
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
     createFinance: ({commit, state}, data) => new Promise((resolve, reject) => {
@@ -28,8 +28,8 @@ const actions = {
             data: data
         }).then((res) => {
             resolve(res.data.data);
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
     deleteFinance: ({commit, state}, id) => new Promise((resolve, reject) => {
@@ -38,8 +38,8 @@ const actions = {
             url: "/finances/"+id
         }).then((res) => {
             resolve(res.data.data);
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     }),
     getAssociationFiances: ({commit, state}, {select,page}) => new Promise((resolve, reject) => {
@@ -60,8 +60,8 @@ const actions = {
                 commit('setFinanceList', res.data.data.content);
             }
             resolve(res.data);
-        }).catch(error => {
-            reject(error);
+        }).catch(err => {
+            reject(err);
         })
     })
 }

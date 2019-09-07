@@ -21,13 +21,7 @@ const actions = {
 				ids:res.data.data
 			});
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	removeSubscription: ({commit} , {ids}) => new Promise((resolve,reject)=>{
 		api({
@@ -39,13 +33,7 @@ const actions = {
 				ids:res.data.data
 			});
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	refreshSubscription: ({commit}) => new Promise((resolve,reject)=>{
 		api({
@@ -56,13 +44,7 @@ const actions = {
 				ids:res.data.data
 			});
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	})
 }
 
@@ -72,4 +54,3 @@ export default {
     actions,
     mutations
 }
-

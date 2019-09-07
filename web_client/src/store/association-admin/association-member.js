@@ -97,14 +97,10 @@ const actions = {
             method: 'get',
             url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.parentId + '/permissions'
         }).then(res => {
-            if (res.data.data) {
-                commit('getMockData', res.data.data);
-                resolve();
-            } else {
-                commit('getMockData', []);
-                reject(res.data);
-            }
+            commit('getMockData', res.data.data);
+            resolve();
         }).catch(err => {
+            commit('getMockData', []);
             reject(err);
         });
     }),
@@ -113,14 +109,10 @@ const actions = {
             method: 'get',
             url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.departmentId + '/permissions'
         }).then(res => {
-            if (res.data.data) {
-                commit('getTargetKeys', res.data.data);
-                resolve();
-            } else {
-                commit('getTargetKeys', []);
-                reject(res.data);
-            }
+            commit('getTargetKeys', res.data.data);
+            resolve();
         }).catch(err => {
+            commit('getTargetKeys', []);
             reject(err);
         });
     }),
@@ -130,15 +122,9 @@ const actions = {
             data: data,
             url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.departmentId + '/permissions'
         }).then(res => {
-            if (res.data.data) {
-                commit('getTargetKeys', res.data.data);
-                resolve();
-            } else {
-                reject(res.data.message);
-            }
-        }).catch(err => {
-            reject(err);
-        });
+            commit('getTargetKeys', res.data.data);
+            resolve();
+        }).catch(err => reject(err));
     }),
     addTargetkeys: ({commit}, {nodedata, data}) => new Promise((resolve, reject) => {
         api({
@@ -146,15 +132,9 @@ const actions = {
             data: data,
             url: '/associations/' + nodedata.department.associationId + "/departments/" + nodedata.department.departmentId + '/permissions'
         }).then(res => {
-            if (res.data.data) {
-                commit('getTargetKeys', res.data.data);
-                resolve();
-            } else {
-                reject(res.data.message);
-            }
-        }).catch(err => {
-            reject(err);
-        });
+            commit('getTargetKeys', res.data.data);
+            resolve();
+        }).catch(err => reject(err));
     }),
     getDepartmentInfo: ({commit}, {associationId, departmentId}) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments/" + departmentId;
@@ -162,22 +142,16 @@ const actions = {
             method: "get",
             url: url
         }).then((res) => {
-            if (res.data.data) {
-                let department = res.data.data;
-                commit('setSpecDept', {
-                    associationId: associationId,
-                    departmentId: departmentId,
-                    name: department.name,
-                    description: department.description,
-                    parentId: department.parentId
-                });
-                resolve();
-            } else {
-                reject(res.data.message);
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            let department = res.data.data;
+            commit('setSpecDept', {
+                associationId: associationId,
+                departmentId: departmentId,
+                name: department.name,
+                description: department.description,
+                parentId: department.parentId
+            });
+            resolve();
+        }).catch(err => reject(err))
     }),
     createDept: ({commit, dispatch}, {associationId, name, description, parentId}) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments";
@@ -191,15 +165,9 @@ const actions = {
             url: url,
             data: departinfo
         }).then((res) => {
-            if (res.data.data !== null) {
-                dispatch('gettree', associationId);
-                resolve("添加成功！")
-            } else {
-                reject("添加失败！" + res.data.message);
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            dispatch('gettree', associationId);
+            resolve()
+        }).catch(err => reject(err))
     }),
     editDeptInfo: ({commit, dispatch}, {url, data}) => new Promise((resolve, reject) => {
         api({
@@ -207,15 +175,9 @@ const actions = {
             data: data,
             url: url
         }).then((res) => {
-            if (res.data.data) {
-                dispatch('gettree', data.associationId);
-                resolve("修改成功！");
-            } else {
-                reject("修改失败！" + res.data.message);
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            dispatch('gettree', data.associationId);
+            resolve();
+        }).catch(err => reject(err))
     }),
     removeDept: ({commit, dispatch}, data) => new Promise((resolve, reject) => {
         let url = "/associations/" + data.department.associationId + "/departments/" + data.department.departmentId;
@@ -224,9 +186,7 @@ const actions = {
             url: url
         }).then(() => {
             dispatch('gettree', data.department.associationId);
-        }).catch(error => {
-            reject(error);
-        })
+        }).catch(err => reject(err))
     }),
     gettree: ({commit}, associationId) => new Promise((resolve, reject) => {
 		console.log(associationId);
@@ -235,17 +195,9 @@ const actions = {
             method: "get",
             url: url
         }).then((res) => {
-            if (res.data.data) {
-                commit("setDepartments", res.data.data);
-                resolve();
-            } else {
-				console.log(res);
-                reject(res.data.message);
-            }
-        }).catch((error) => {
-			console.log(error);
-            reject(error);
-        })
+            commit("setDepartments", res.data.data);
+            resolve();
+        }).catch(err => reject(err))
     }),
     getDepartmentUsers: ({commit}, {associationId, departmentId}) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments/" + departmentId + "/members";
@@ -268,10 +220,7 @@ const actions = {
                 commit("setDeptUserList", response.data.data);
                 resolve();
             })
-        }).catch((error) => {
-            console.log(error.response);
-            reject(error);
-        })
+        }).catch(err => reject(err))
     }),
     addDeptUser: ({commit, state, dispatch}, userId) => new Promise((resolve, reject) => {
         let addUserInfo = {
@@ -282,19 +231,12 @@ const actions = {
             url: "/associations/" + state.specdept.associationId + "/departments/" + state.specdept.departmentId + "/members",
             data: addUserInfo
         }).then((res) => {
-            if (res.data.data) {
-                console.log(res.data);
-                dispatch('getDepartmentUsers', {
-                    associationId: state.specdept.associationId,
-                    departmentId: state.specdept.departmentId
-                });
-                resolve()
-            } else {
-                reject("添加失败！" + res.data.message)
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            dispatch('getDepartmentUsers', {
+                associationId: state.specdept.associationId,
+                departmentId: state.specdept.departmentId
+            });
+            resolve()
+        }).catch(err => reject(err))
     }),
     deleteDeptUser: ({commit, state, dispatch}, index) => new Promise((resolve, reject) => {
         let url = "/associations/" + state.specdept.associationId + "/departments/" + state.specdept.departmentId + "/members/" + state.deptUserList[index].id;
@@ -302,20 +244,12 @@ const actions = {
             method: 'delete',
             url: url
         }).then((res) => {
-            console.log(res);
-            if (res.data.data) {
-                dispatch('getDepartmentUsers', {
-                    associationId: this.specdept.associationId,
-                    departmentId: this.specdept.departmentId
-                });
-                resolve();
-            }
-            else {
-                reject("移除失败!" + res.data.message);
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            dispatch('getDepartmentUsers', {
+                associationId: this.specdept.associationId,
+                departmentId: this.specdept.departmentId
+            });
+            resolve();
+        }).catch(err => reject(err))
     }),
 };
 

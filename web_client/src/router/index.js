@@ -28,7 +28,9 @@ let first_time = true;
 
 router.beforeEach((to, from, next) => {
     if (first_time) {
-        store.dispatch('common/currentUser/getToken').finally(() => next());
+        store.dispatch('common/currentUser/getToken').catch(err => {
+            console.log('[INFO] user not login');
+        }).finally(() => next());
         first_time = false;
     } else {
         next();
