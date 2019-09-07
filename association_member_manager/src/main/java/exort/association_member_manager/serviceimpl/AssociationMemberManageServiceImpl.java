@@ -67,14 +67,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     }
 
     @Override
-    @Transactional
-    public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application) {
-
-        return addOneToAssociation(application.getObject().getAssociationId(), userId);
-    }
-
-
-    @Override
     public List<Department> getDepartmentTree(String associationId) {
 
         return findDepartmentList(associationId);

@@ -8,7 +8,6 @@ import exort.api.http.member.entity.UserId;
 import exort.api.http.perm.service.PermService;
 import exort.api.http.review.entity.Application;
 import exort.api.http.review.entity.ApplicationDepartmentInfo;
-import exort.api.http.review.entity.CallbackParam;
 import exort.association_member_manager.entity.Department;
 import exort.association_member_manager.service.AssociationMemberManageService;
 import io.swagger.annotations.Api;
@@ -28,23 +27,6 @@ public class AssociationMemberManageController {
 
     @Autowired
     private PermService ps;
-
-    @RequestMapping(method = RequestMethod.POST, value = "/application/accept")
-    @ApiOperation(value = "通过某个申请")
-    public ApiResponse adoptApplication(@RequestBody CallbackParam<ApplicationDepartmentInfo> appli) {
-        Application<ApplicationDepartmentInfo> application = appli.getApplication();
-
-        if (associationMemberManageService.checkUserInAsso(application.getApplicantId(), application.getObject().getAssociationId())) {
-
-            associationMemberManageService.adoptApplication(appli.getUserId().intValue(), appli.getEvent(), application);
-
-            return new ApiResponse();
-
-        } else {
-            throw new ApiError(400, "InvalidUser", "用户已存在");
-        }
-
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
     @ApiOperation(value = "得到部门树")
