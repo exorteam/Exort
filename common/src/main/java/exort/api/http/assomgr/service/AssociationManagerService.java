@@ -7,6 +7,8 @@ import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 
 public interface AssociationManagerService {
@@ -23,4 +25,5 @@ public interface AssociationManagerService {
 
     ApiResponse<Object> patchAssociation(String assoId, Operation<String> body);
 
+    ApiResponse<PagedData<Association>> getAssociationsInBatch(List<String> ids, PageQuery pageQuery);
 }
