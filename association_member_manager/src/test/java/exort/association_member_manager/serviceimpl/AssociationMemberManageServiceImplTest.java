@@ -65,20 +65,6 @@ public class AssociationMemberManageServiceImplTest {
     }
 
     @Test
-    public void adoptApplication() {
-
-        ApplicationDepartmentInfo applicationDepartmentInfo = new ApplicationDepartmentInfo();
-        applicationDepartmentInfo.setAssociationId("a");
-        applicationDepartmentInfo.setDepartmentId(2);
-        Application<ApplicationDepartmentInfo> application = new Application<>(3L, "acceptApplication", applicationDepartmentInfo);
-
-        Assert.assertEquals(true, associationMemberManageService.adoptApplication(3, "create", application));
-
-        // 删去创建的用户
-        associationMemberManageService.deleteOneInAssociation("a", 3);
-    }
-
-    @Test
     public void getDepartmentTree() {
         associationMemberManageService.initDepartment("b", 2);
 
