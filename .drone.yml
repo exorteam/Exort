@@ -208,7 +208,6 @@ steps:
   - cd ./api_server
   - rm -rf src/main/resources
   - cp -rf /root/resources/apiserver src/main/resources
-  - cp -rf /root/resources/default static_file
   - mvn clean package docker:removeImage -DimageName=exort/apiserver docker:build -DpushImage
 
 trigger:
