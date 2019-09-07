@@ -22,6 +22,8 @@ import exort.api.http.perm.service.PermService;
 import exort.apiserver.service.ArticleService;
 import exort.apiserver.service.ArticleService.Article;
 import exort.apiserver.service.ArticleService.ArticleFilterParam;
+import exort.apiserver.service.CommunityService;
+import exort.apiserver.service.CommunityService.CommunityMessage;
 
 @RestController
 @RequestMapping(path="/articles")
@@ -30,9 +32,9 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleSvc;
 	@Autowired
-	private CommunityService cs;
-	@Autowired
 	private PermService permSvc;
+	@Autowired
+	private CommunityService cmSvc;
 
 	@PostMapping
 	public ApiResponse createArticle(
@@ -67,6 +69,15 @@ public class ArticleController {
 			@RequestAttribute("id") long operatorId,
 			@PathVariable("id") int articleId,
 			@RequestParam boolean publish){
+		if(publish){
+			//TODO: notify subscribed users
+			final Article article = (Article)articleSvc.getArticle(articleId).getData();
+			CommunityMessage msg = new CommunityMessage();
+			final String assoId = article.getAssociationId();
+			msg.setSenderAssociation(assoId);
+			msg.setContent(assoId + "just published new article!");
+			System.out.println(cmSvc.postNotifications(msg));
+		}
 		return articleSvc.publishArticle(articleId,publish);
 	}
 
@@ -86,7 +97,7 @@ public class ArticleController {
 
 	@GetMapping("/list/user")
 	public ApiResponse listArticle(@RequestAttribute("id") int operatorId, PageQuery pageQuery) {
-		ApiResponse<List<String>> res = cs.listSubscribed(operatorId);
+		ApiResponse<List<String>> res = cmSvc.listSubscribed(operatorId);
 		List<String> associationIds = res.getData();
 		if (associationIds == null) {
 			throw new ApiError(500, res.getError(), res.getMessage());

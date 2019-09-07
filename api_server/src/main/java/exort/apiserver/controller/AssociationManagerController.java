@@ -100,9 +100,9 @@ public class AssociationManagerController{
 
     @PutMapping("/{assoId}/state")
     public ApiResponse<Object> patchAssociation(@RequestAttribute("id") int operatorId, @RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
-        if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
-            throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
-        }
+        //if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
+        //    throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
+        //}
         return service.patchAssociation(assoId,body);
     }
 

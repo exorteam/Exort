@@ -23,7 +23,16 @@ public class CommunityServiceImpl extends RestTemplate implements CommunityServi
     @Value("${exort.auth.endpoint:localhost}")
     public void setEndpoint(String endpoint) {super.setEndpoint(endpoint);}
 
-	public ApiResponse postMessage(int uid,CoummunityMessage msg){
+	public ApiResponse postNotifications(CommunityMessage msg) {
+		final String assoId = msg.getSenderAssociation();
+		return request(new TypeToken<Integer>(){},
+				msg,
+				HttpMethod.POST,
+				"/com/notifiy/{assoId}",
+				assoId);
+	}
+
+	public ApiResponse postMessage(int uid,CommunityMessage msg){
 		return request(new TypeToken<Integer>(){},
 				msg,
 				HttpMethod.POST,
@@ -60,7 +69,7 @@ public class CommunityServiceImpl extends RestTemplate implements CommunityServi
 	}
 
 	public ApiResponse getMessageForUser(int uid){
-		return request(new TypeToken<List<CoummunityMessage>>(){},
+		return request(new TypeToken<List<CommunityMessage>>(){},
 				HttpMethod.GET,
 				"/com/msg/{uid}",
 				uid);
@@ -69,7 +78,7 @@ public class CommunityServiceImpl extends RestTemplate implements CommunityServi
 	public ApiResponse getPagedMessageForUser(int uid,PageQuery pq){
 		final int pn = pq.getPageNum();
 		final int ps = pq.getPageSize();
-		return request(new TypeToken<PagedData<CoummunityMessage>>(){},
+		return request(new TypeToken<PagedData<CommunityMessage>>(){},
 				HttpMethod.GET,
 				"/com/msg/page/{uid}?pageNum={pn}&pageSize={ps}",
 				uid,pn,ps);

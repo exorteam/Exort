@@ -20,7 +20,7 @@ steps:
 trigger:
   branch:
   - article-mgr
-  
+
 volumes:
   - name: cache
     host:
@@ -63,7 +63,7 @@ steps:
 trigger:
   branch:
   - auth
-  
+
 volumes:
   - name: cache
     host:
@@ -109,7 +109,7 @@ steps:
 trigger:
   branch:
   - asso_mem_manage
-  
+
 volumes:
   - name: cache
     host:
@@ -187,3 +187,44 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+---
+
+kind: pipeline
+name: exort-apiserver
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: app-config
+    path: /root/resources
+  commands:
+  - cd ./api_server
+  - rm -rf src/main/resources
+  - cp -rf /root/resources/apiserver src/main/resources
+  - cp -rf /root/resources/default static_file
+  - mvn clean package docker:removeImage -DimageName=exort/apiserver docker:build -DpushImage
+
+trigger:
+  branch:
+  - api-server
+
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: app-config
+    host:
+      path: /home/ubuntu/exort
