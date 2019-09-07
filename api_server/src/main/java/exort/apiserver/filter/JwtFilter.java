@@ -42,7 +42,7 @@ public class JwtFilter extends GenericFilterBean {
                 final AuthResponse authRes = JwtResolver.parseToken(token);
 
                 if (authRes == null) {
-                    throw new ApiError(401, "failedParseToken", "Auth service parse returns null");
+                    throw new ApiError(401, "badToken", "Token invalid or expired.");
                 }
 
                 request.setAttribute("id", authRes.getId());
