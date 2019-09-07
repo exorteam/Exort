@@ -30,7 +30,7 @@ public class CommunityController {
 
 	@PostMapping("/msg/{uid}")
 	public ApiResponse postMessage(
-			@RequestAttribute("id") Integer operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("uid") int uid,
 			@RequestBody Map<String,String> body){
 
@@ -46,60 +46,60 @@ public class CommunityController {
 
 	@PostMapping("/msg/read/{mid}")
 	public ApiResponse markMessageReadById(
-			@RequestAttribute("id") Integer operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("mid") int mid){
 		return cmSvc.markMessageReadById(operatorId,mid);
 	}
 
 	@PostMapping("/msg/readall")
 	public ApiResponse markAllMessageRead(
-			@RequestAttribute("id") Integer operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.markAllMessageRead(operatorId);
 	}
 
 	@PostMapping("/msg/drop/{mid}")
 	public ApiResponse dropMessageById(
-			@RequestAttribute("id") Integer operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("mid") int mid){
 		return cmSvc.dropMessageById(operatorId,mid);
 	}
 
 	@PostMapping("/msg/dropall")
 	public ApiResponse dropAllMessage(
-			@RequestAttribute("id") Integer operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.dropAllMessage(operatorId);
 	}
 
 	@GetMapping("/msg")
 	public ApiResponse getMessage(
-			@RequestAttribute("id") Integer operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.getMessageForUser(operatorId);
 	}
 
 	@GetMapping("/msg/page")
 	public ApiResponse getPagedMessage(
-			@RequestAttribute("id") Integer operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			PageQuery pq){
 		return cmSvc.getPagedMessageForUser(operatorId,pq);
 	}
 
 	@PostMapping("/sub")
 	public ApiResponse commitSubscription(
-			@RequestAttribute("id") Integer operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@RequestBody List<String> assoIds){
 		return cmSvc.addToSubscribed(operatorId,assoIds);
 	}
 
 	@DeleteMapping("/sub")
 	public ApiResponse removeSubscription(
-			@RequestAttribute("id") Integer operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@RequestBody List<String> assoIds){
 		return cmSvc.removeFromSubscribed(operatorId,assoIds);
 	}
 
 	@GetMapping("/sub")
 	public ApiResponse listSubscribed(
-			@RequestAttribute("id") Integer operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.listSubscribed(operatorId);
 	}
 

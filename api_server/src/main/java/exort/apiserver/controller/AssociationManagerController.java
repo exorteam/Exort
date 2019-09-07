@@ -68,7 +68,7 @@ public class AssociationManagerController{
     }
 
     @PostMapping
-    public ApiResponse createAssociation(@RequestAttribute("id") Integer operatorId,@RequestBody AssociationInfo body){
+    public ApiResponse createAssociation(@RequestAttribute(name="id", required=false) Integer operatorId,@RequestBody AssociationInfo body){
         if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have create permission on association");
         }
@@ -81,7 +81,7 @@ public class AssociationManagerController{
     }
 
     @DeleteMapping("/{assoId}")
-    public ApiResponse deleteAssociation(@RequestAttribute("id") Integer operatorId,@PathVariable(value="assoId") String assoId ){
+    public ApiResponse deleteAssociation(@RequestAttribute(name="id", required=false) Integer operatorId,@PathVariable(value="assoId") String assoId ){
         if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
         }
@@ -90,7 +90,7 @@ public class AssociationManagerController{
     }
 
     @PutMapping("/{assoId}")
-    public ApiResponse editAssociation(@RequestAttribute("id") Integer operatorId,@RequestBody AssociationInfo body, @PathVariable(value="assoId") String assoId ){
+    public ApiResponse editAssociation(@RequestAttribute(name="id", required=false) Integer operatorId,@RequestBody AssociationInfo body, @PathVariable(value="assoId") String assoId ){
         if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
             throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
         }
@@ -99,7 +99,7 @@ public class AssociationManagerController{
 
 
     @PutMapping("/{assoId}/state")
-    public ApiResponse<Object> patchAssociation(@RequestAttribute("id") Integer operatorId, @RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
+    public ApiResponse<Object> patchAssociation(@RequestAttribute(name="id", required=false) Integer operatorId, @RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
         //if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
         //    throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
         //}

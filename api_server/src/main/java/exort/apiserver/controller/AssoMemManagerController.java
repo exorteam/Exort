@@ -56,7 +56,7 @@ public class AssoMemManagerController {
 
 
     @PostMapping("/{associationId}/departments")
-    public ApiResponse<DepartmentInfo> createDepartment(@RequestAttribute("id") Integer operatorId, @PathVariable String associationId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> createDepartment(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable String associationId, @RequestBody DepartmentInfo departmentInfo) {
 //        log.info("[createDepartment] Operator: " + operatorId);
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_CREATE)) {
             return new ApiResponse<DepartmentInfo>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to create department on association[" + String.valueOf(associationId) + "]");
@@ -66,7 +66,7 @@ public class AssoMemManagerController {
 
 
     @DeleteMapping("/{associationId}/departments/{departmentId}")
-    public ApiResponse<DepartmentInfo> deleteDepartment(@RequestAttribute("id") Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId) {
+    public ApiResponse<DepartmentInfo> deleteDepartment(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId) {
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_DELETE)) {
             return new ApiResponse<DepartmentInfo>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to delete department[" + String.valueOf(departmentId) + "] on association[" + String.valueOf(associationId) + "]");
         }
@@ -75,7 +75,7 @@ public class AssoMemManagerController {
 
 
     @PutMapping("/{associationId}/departments/{departmentId}")
-    public ApiResponse<DepartmentInfo> editDepartment(@RequestAttribute("id") Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
+    public ApiResponse<DepartmentInfo> editDepartment(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody DepartmentInfo departmentInfo) {
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_UPDATE)) {
             return new ApiResponse<DepartmentInfo>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to delete department[" + String.valueOf(departmentId) + "] on association[" + String.valueOf(associationId) + "]");
         }
@@ -90,7 +90,7 @@ public class AssoMemManagerController {
 
 
     @DeleteMapping("/{associationId}/departments/{departmentId}/members/{userId}")
-    public ApiResponse<Boolean> removeOneFromDepartment(@RequestAttribute("id") Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<Boolean> removeOneFromDepartment(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @PathVariable(value = "userId") int userId) {
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_UPDATE)) {
             return new ApiResponse<Boolean>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to modify association[" + String.valueOf(associationId) + "]");
         }
@@ -99,7 +99,7 @@ public class AssoMemManagerController {
 
 
     @PostMapping("/{associationId}/departments/{departmentId}/members")
-    public ApiResponse<Boolean> addOneToDepartment(@RequestAttribute("id") Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody UserId userId) {
+    public ApiResponse<Boolean> addOneToDepartment(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "departmentId") int departmentId, @RequestBody UserId userId) {
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_UPDATE)) {
             return new ApiResponse<Boolean>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to modify association[" + String.valueOf(associationId) + "]");
         }
@@ -126,7 +126,7 @@ public class AssoMemManagerController {
 
 
     @DeleteMapping("/associations/{associationId}/members/{userId}")
-    public ApiResponse<Boolean> deleteOneInAssociation(@RequestAttribute("id") Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "userId") int userId) {
+    public ApiResponse<Boolean> deleteOneInAssociation(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable(value = "associationId") String associationId, @PathVariable(value = "userId") int userId) {
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_UPDATE)) {
             return new ApiResponse<Boolean>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to modify association[" + String.valueOf(associationId) + "]");
         }
@@ -135,7 +135,7 @@ public class AssoMemManagerController {
 
 
     @PostMapping("/{associationId}/members")
-    public ApiResponse<Boolean> addOneToAssociation(@RequestAttribute("id") Integer operatorId, @PathVariable(value = "associationId") String associationId, @RequestBody UserId userId) {
+    public ApiResponse<Boolean> addOneToAssociation(@RequestAttribute(name="id", required=false) Integer operatorId, @PathVariable(value = "associationId") String associationId, @RequestBody UserId userId) {
         if (!checkPermissionOnAssociationById(operatorId, associationId, PERM_UPDATE)) {
             return new ApiResponse<Boolean>("PermErr", "Operator[" + String.valueOf(operatorId) + "] does not have permission to modify association[" + String.valueOf(associationId) + "]");
         }
