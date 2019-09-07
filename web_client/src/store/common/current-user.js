@@ -73,7 +73,7 @@ const actions = {
         });
     }),
     getToken: ({commit}) => new Promise((resolve, reject) => {
-        return fe({
+        fe({
             method: 'get',
             url: '/auth/token'
         }).then(res => {

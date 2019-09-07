@@ -7,11 +7,16 @@ var uploader = require('./uploader');
 
 var app = express();
 
+app.set('case sensitive routing', true);
+app.set('trust proxy', true);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(history());
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(history({ disableDotRule: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post(

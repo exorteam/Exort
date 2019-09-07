@@ -20,13 +20,12 @@ api.interceptors.response.use(undefined, async err => {
     }
 
     if(response && response.data) {
-        err = response.data;
+        return Promise.reject(response.data);
     } else {
         console.log('[ERROR] Failed to get response:');
         console.log(err);
+        return Promise.reject({ error: 'unknown', message: err });
     }
-
-    return Promise.reject({ error: 'unknown', message: err });
 });
 
 const fe = axios.create({withCredentials: true})
