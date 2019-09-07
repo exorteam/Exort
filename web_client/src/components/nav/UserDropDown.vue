@@ -60,7 +60,16 @@ export default {
                     break;
             }
         }
-    }
+    },
+	watch: {
+		uid: function(val) {
+			console.log('aaa',val);
+			if(!val)this.$router.push({name:'UserHomePage'});
+		}
+	},
+	mounted() {
+		if(!this.uid){this.$router.push({name:'UserHomePage'});}
+	}
 }
 </script>
 
