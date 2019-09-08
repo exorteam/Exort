@@ -34,6 +34,11 @@ Page({
         if (res.data.data == null) {
           //login failed or error
           wx.removeStorageSync('jwt')
+          wx.showToast({
+            title: '登陆失败',
+            icon: 'none',
+            duration: 2000
+          })
           console.log(res)
         } else {
           const token = res.data.data.token;
