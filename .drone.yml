@@ -280,7 +280,7 @@ steps:
   commands:
   - cd ./comment
   - rm -rf src/main/resources
-  - cp -rf /resources/comment src/main/resources
+  - cp -rf src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/comment docker:build -DpushImage
 
 trigger:
