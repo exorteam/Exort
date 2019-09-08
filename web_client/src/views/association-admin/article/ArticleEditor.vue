@@ -105,7 +105,7 @@ export default {
 </script>
 
 <style>
-.md-editor {
+.article-editor .md-editor {
 	height: 480px;
 }
 </style>

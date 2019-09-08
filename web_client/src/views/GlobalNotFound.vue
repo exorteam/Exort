@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="no-found-wrapper">
     <h>404</h>
     <p>Not Found</p>
     <span>{{filename}}</span>
@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style>
-.md-editor{
+.no-found-wrapper .md-editor{
     width: 50%;
     height: 560px;
 }
