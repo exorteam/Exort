@@ -1,0 +1,23 @@
+/* pages/msgbox.wxss */
+.msg {
+  /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s; */
+  width: 96%;
+
+  /* background-color: rgb(229, 243, 248); */
+  border-style: solid;
+  border-radius: 3px;
+  border-width: 1rpx;
+  border-color: rgb(235, 235, 235);
+
+  margin-top: 6px;
+}
+.msg-container {
+  padding: 2px 16px;
+}
+.msg-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
