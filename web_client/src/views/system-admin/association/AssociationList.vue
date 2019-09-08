@@ -63,7 +63,7 @@
 
 
 				<div style="text-align: center;height:100px">
-					<img :src="item.logo && ('/files/' + item.logo)" style="width:80px;height:80px;"/>
+					<img :src="associationIcon(item.logo)" style="width:80px;height:80px;"/>
 				</div>
 				<div style= "min-height: 100%; ">
 					<p>{{ item.description }}</p>
@@ -94,6 +94,7 @@ import TagChoose from '@/components/TagChoose'
 import ImageUploader from '@/components/uploader/ImageUploader'
 import {api} from '@/http'
 import { mapState, mapActions, mapMutations } from 'vuex'
+import { associationIcon } from '@/const'
 
 export default {
     name:'associationList',
@@ -110,21 +111,21 @@ export default {
             },
             file: null,
             form:{
-                assoId:"",
+                assoId:'',
                 onshow: false,
-                name: "",
-                description: "",
+                name: '',
+                description: '',
                 tag:{
                     tag_show: false,
                     tagList:[],
                     tagrepo : ["运动", "饮食", "音乐", "舞蹈", "历史", "游戏", "户外", "天文","航模","动漫"]
                 },
-                logo:"",
+                logo:'',
                 needMaterial:false,
                 assoState:null,
                 showState:false,
-                materials: "",
-                type:""
+                materials: '',
+                type:''
             },
             pageProp:{
                 totalSize : 0,
@@ -142,10 +143,10 @@ export default {
                 { text: '已激活', value: 'active' },
                 { text: '已锁定', value: 'blocked' },
             ],
-            inputDefaultValue : "",
+            inputDefaultValue : '',
             AssoList: [],
             assoSearch:{
-                keyword:"",
+                keyword:'',
                 tags:[],
                 state:1,
                 pageNum:0,
@@ -156,6 +157,7 @@ export default {
         }
     },
     methods: {
+        associationIcon,
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter',
 			'deleteAssociationById'
@@ -217,7 +219,7 @@ export default {
 				method:'put',
                 url:'/associations/'+this.form.assoId+'/state',
                 data:{
-                    Arg:"",
+                    Arg:'',
                     operation:type,
                 }
 			})
@@ -325,11 +327,12 @@ export default {
             }
         },
         info_cancel(){
-            this.form.name=""
-            this.form.description=""
+            this.form.name=''
+            this.form.description=''
             this.form.tag.tagList=[]
             this.form.materials=[]
-            this.form.type=""
+            this.form.type=''
+            this.form.logo=''
             this.form.onshow = false
         }
     },

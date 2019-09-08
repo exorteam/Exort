@@ -7,30 +7,30 @@
 
 			<br>
 			<div id="CardList"  style="display: flex; flex-wrap: wrap">
-				<Card v-for="item in AssoList" 
-						:key="item.id" 
-						:row="item" 
+				<Card v-for="item in AssoList"
+						:key="item.id"
+						:row="item"
 						style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
 					<p slot="title">
 						<Icon type="ios-people" ></Icon>
 						{{item.name}}
 						<Tooltip content="已订阅" placement="top"
-								style="position:absolute;right:10px;" 
+								style="position:absolute;right:10px;"
 								v-if="subscribed.includes(item.id)">
-							<Icon type="ios-notifications" size="20" color="green" 
+							<Icon type="ios-notifications" size="20" color="green"
 								@click.native="onClickUnsubscribe(item.id,item.name)" />
 						</Tooltip>
 						<Tooltip content="订阅" placement="top"
-								style="position:absolute;right:10px;" 
+								style="position:absolute;right:10px;"
 								v-else>
-							<Icon type="ios-notifications-off" size="20" 
+							<Icon type="ios-notifications-off" size="20"
 							    @click.native="onClickSubscribe(item.id,item.name)" />
 						</Tooltip>
 					</p>
 
 
 					<div style="text-align: center;height:100px">
-						<img :src="item.logo" style="width:80px;height:80px;"/>
+						<img :src="associationIcon(item.logo)" style="width:80px;height:80px;"/>
 					</div>
 					<div style= "min-height: 100%; ">
 						<p>{{ item.description }}</p>
@@ -57,6 +57,7 @@
 <script>
 import TagChoose from '@/components/TagChoose'
 import { mapState, mapActions, mapMutations } from 'vuex'
+import { associationIcon } from '@/const'
 
 export default {
     name:'UserAssociationList',
@@ -83,6 +84,7 @@ export default {
 		])
 	},
     methods: {
+		associationIcon,
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter',
 		]),
