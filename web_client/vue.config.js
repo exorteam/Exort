@@ -11,9 +11,9 @@ module.exports = {
     productionSourceMap: false,
     devServer: {
         proxy: {
-            '/files': process.env.PROXY_TARGET,
-            '/upload': process.env.PROXY_TARGET,
-            '/auth': process.env.AUTH_PROXY_TARGET
+            '/files': { target: process.env.PROXY_TARGET },
+            '/upload': { target: process.env.PROXY_TARGET },
+            '/auth': { target: process.env.AUTH_PROXY_TARGET }
         }
     }
 }
