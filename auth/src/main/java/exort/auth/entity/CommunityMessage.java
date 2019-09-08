@@ -14,6 +14,7 @@ public class CommunityMessage {
 
 	private Integer senderId;
 	private String senderAssociation;
+	private String senderName;
 
 	private String content;
 	private Date timestamp;
