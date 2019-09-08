@@ -14,6 +14,15 @@ Page({
     console.log(acc)
     let that = this
 
+    if(acc.username == '' || acc.password == ''){
+      wx.showToast({
+        title: '用户名和密码不能为空',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+
     wx.request({
       url: 'https://api.cirno.wang:30722/auth/login',
       method: 'POST',
