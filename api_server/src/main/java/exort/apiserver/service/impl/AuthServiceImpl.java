@@ -2,6 +2,7 @@ package exort.apiserver.service.impl;
 
 import com.google.common.reflect.TypeToken;
 
+import exort.api.http.common.errorhandler.ApiError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,7 @@ public class AuthServiceImpl extends RestTemplate implements AuthService {
 		return new ApiResponse(JwtResolver.parseToken(token));
 	}
 
-	public ApiResponse<RefreshResponse> refreshToken(String rtoken){
-		final AuthResponse jwtRes = JwtResolver.parseToken(rtoken);
-		return new ApiResponse(new RefreshResponse(jwtRes.getId(),jwtRes.getUsername(),rtoken,rtoken));
+	public ApiResponse<TokenPair> refreshToken(String rtoken){
+		return new ApiResponse<>(new TokenPair(rtoken, rtoken));
 	}
 }

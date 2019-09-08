@@ -49,10 +49,19 @@ public interface AuthService {
 
 	}
 
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class TokenPair {
+
+		private String token;
+		private String rtoken;
+
+	}
 
 	public ApiResponse<LoginResponse>	login(AuthRequest req);
 	public ApiResponse<Integer> 		register(AuthRequest req);
 	public ApiResponse<AuthResponse>	parseToken(String token);
-	public ApiResponse<RefreshResponse> refreshToken(String token);
+	public ApiResponse<TokenPair>       refreshToken(String rtoken);
 
 }
