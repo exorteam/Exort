@@ -5,19 +5,21 @@
 			<hr>
 			<p>作者: {{article.associationId}}, 创建时间: {{article.createTime}}, 上次修改时间: {{article.lastModifyTime}}</p>
 			<br>
-			<p>{{article.content}}</p>
+			<MdEditor ref="md" :value="article.content" read-mode />
 		</Card>
-		<comment type="article"></comment>
+		<Comment type="article"></Comment>
 	</div>
 </template>
 
 <script>
 import {api} from '@/http'
-import comment from '../../../components/Comment'
+import Comment from '../../../components/Comment'
+import MdEditor from '@/components/MdEditor'
+
 export default {
 	name: "ArticleReader",
 	props:['id'],
-    components: {comment},
+    components: {Comment,MdEditor},
 	data: function(){
 		return {
 			article:{}
@@ -30,17 +32,12 @@ export default {
 				method: 'get',
 				url:'/articles/'+id,
 			}).then((res)=>{
-				console.log(res);
-				if(res.data.data){
-					this.article = res.data.data;
-					const cTime = new Date(this.article.createTime);
-					this.article.createTime = cTime.toLocaleString();
-					const lmTime = new Date(this.article.lastModifyTime);
-					this.article.lastModifyTime = lmTime.toLocaleString();
-				}
-				else{
-					// error
-				}
+				this.article = res.data.data;
+				const cTime = new Date(this.article.createTime);
+				this.article.createTime = cTime.toLocaleString();
+				const lmTime = new Date(this.article.lastModifyTime);
+				this.article.lastModifyTime = lmTime.toLocaleString();
+				this.$nextTick(()=>{this.$refs.md.$reload()});
 			}).catch((err)=>{
 				console.log(err);
 			})

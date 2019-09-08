@@ -1,7 +1,7 @@
 <template>
 <div class="md-editor">
     <mavon-editor ref="md" :toolbars="mdOptions" :subfield="false"
-                  :toolbars-flag="!readMode" :editable="!readMode"
+                  :toolbars-flag="!readMode" :editable="(!readMode)&&(!processing)"
                   :default-open="readMode?'preview':'edit'"
                   v-model="content" @imgAdd="imgAdd"
                   style="width:100%;height:100%"/>
