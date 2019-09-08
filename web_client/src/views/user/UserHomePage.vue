@@ -8,10 +8,9 @@
 		<br>
 		<div id="MsgCardList">
 			<h5 v-if="msgs.isEmpty">Nothing new here.</h5>
-			<Scroll :on-reach-bottom="loadMoreMsgs" :height="400">
 			<Card v-for="(item,index) in msgs" :key="item.id" :row="item" style="margin-top:10px">
 			<Row type="flex" justify="space-between">
-				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 #{{item.senderId}}</p></Col>
+				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 {{item.senderName?"社团 "+item.senderName:"用户 #"+item.senderId}}</p></Col>
 				<Col span="1">
 					<Tooltip content="删除信息" placement="top">
 						<Icon @click.native="onClickDropMsg(item.id,index)" type="ios-trash" />
@@ -20,7 +19,9 @@
 			</Row>
 				<p style="word-break: break-all;white-space: normal;">{{item.content}}</p>
 			</Card>
-			</Scroll>
+			<Row type="flex" justify="center" style="margin-top:50px">
+				<Button @click="loadMoreMsgs">加载更多</Button>
+			</Row>
 		</div>
 
 		<Modal v-model="postMsgModal"
@@ -92,17 +93,14 @@ export default {
 
 		},
 		loadMoreMsgs(){
-			return new Promise(resolve => {
-				this.queryPagedMessage({
-					pageNum: ++this.msgPageNum,
-					pageSize: this.msgPageSize
-				}).then(res => {
-					this.msgs.push(...res.data.data.content);
-					if(res.data.data.pageNum * res.data.data.pageSize > res.data.data.totalSize){
-						--this.msgPageNum;
-					}
-					resolve();
-				})
+			this.queryPagedMessage({
+				pageNum: ++this.msgPageNum,
+				pageSize: this.msgPageSize
+			}).then(res => {
+				this.msgs.push(...res.data.data.content);
+				if(res.data.data.pageNum * res.data.data.pageSize > res.data.data.totalSize){
+					--this.msgPageNum;
+				}
 			})
 		},
 
