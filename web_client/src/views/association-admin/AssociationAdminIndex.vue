@@ -38,11 +38,28 @@
 					<Icon type="ios-checkbox" />
 					申请列表
 				</MenuItem>
+				<MenuItem @click.native="postNotificationModal = true">
+					<Icon type="ios-chatboxes" />
+					推送通知
+				</MenuItem>
             </Menu>
         </Sider>
         <Content style="min-height:420px;margin:10px;">
             <router-view/>
         </Content>
+
+		<Modal v-model="postNotificationModal"
+				title="New Notification"
+				:loading="true"
+				@on-ok="onClickPostNotification">
+			<Form :model="newNotification" :label-width="20">
+				<p>向订阅用户推送通知:</p>
+				<br>
+				<FormItem>
+					<Input v-model="newNotification.content" type="textarea" :rows="5" />
+				</FormItem>
+			</Form>
+		</Modal>
     </Layout>
 </Layout>
 </template>
@@ -58,7 +75,9 @@ export default {
     },
     data() { return {
         active: '',
-        selecting: false
+        selecting: false,
+		postNotificationModal: false,
+		newNotification: {}
     };},
     computed: {
         ...mapState('associationAdmin/currentAssociation', ['id', 'name']),
@@ -68,7 +87,8 @@ export default {
     methods: {
         ...mapActions('common/associationSelector', ['listByIds','listByFilters']),
         ...mapActions('common/associationOps', [
-			'queryAssociationById'
+			'queryAssociationById',
+			'postNotification'
 		]),
         ...mapMutations('associationAdmin/currentAssociation', ['setAssociation']),
         showAssociations(visible) {
@@ -90,6 +110,20 @@ export default {
         selectAssociation(association) {
             this.setAssociation(association);
         },
+		onClickPostNotification(){
+			this.postNotification({
+				assoId: this.assoId,
+				content: this.newNotification.content
+			}).then(res => {
+				if(res.data.data){
+					this.$Notice.success({
+						desc: '成功推送通知'
+					})
+				}
+			
+				this.postNotificationModal = false;
+			})
+		}
     },
     created() {
         this.active = this.$route.name;
