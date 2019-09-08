@@ -1,5 +1,3 @@
-var target = { 'target': process.env.PROXY_TARGET };
-
 module.exports = {
     assetsDir: 'static',
     pages: {
@@ -13,9 +11,9 @@ module.exports = {
     productionSourceMap: false,
     devServer: {
         proxy: {
-            '/files': target,
-            '/upload': target,
-            '/auth': target
+            '/files': process.env.PROXY_TARGET,
+            '/upload': process.env.PROXY_TARGET,
+            '/auth': process.env.AUTH_PROXY_TARGET
         }
     }
 }
