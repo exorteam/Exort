@@ -20,7 +20,7 @@ steps:
 trigger:
   branch:
   - article-mgr
-  
+
 volumes:
   - name: cache
     host:
@@ -63,7 +63,7 @@ steps:
 trigger:
   branch:
   - auth
-  
+
 volumes:
   - name: cache
     host:
@@ -109,7 +109,7 @@ steps:
 trigger:
   branch:
   - asso_mem_manage
-  
+
 volumes:
   - name: cache
     host:
@@ -202,20 +202,18 @@ steps:
     path: /var/run/docker.sock
   - name: docker-cred
     path: /root/.docker/config.json
-  - name: server-hosts
-    path: /etc/hosts
   - name: app-config
     path: /root/resources
   commands:
   - cd ./api_server
   - rm -rf src/main/resources
   - cp -rf /root/resources/apiserver src/main/resources
-  - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
+  - mvn clean package docker:removeImage -DimageName=exort/apiserver docker:build -DpushImage
 
 trigger:
   branch:
   - api-server
-  
+
 volumes:
   - name: cache
     host:
@@ -226,9 +224,6 @@ volumes:
   - name: docker-cred
     host:
       path: /home/ubuntu/.docker/config.json
-  - name: server-hosts
-    host:
-      path: /etc/hosts
   - name: app-config
     host:
       path: /home/ubuntu/exort

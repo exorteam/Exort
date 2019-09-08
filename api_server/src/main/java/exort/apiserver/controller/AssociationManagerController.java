@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import exort.api.http.assomgr.entity.Association;
 import exort.api.http.assomgr.entity.AssociationFilterParams;
 import exort.api.http.assomgr.entity.AssociationInfo;
+import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.Operation;
 import exort.api.http.common.entity.PageQuery;
@@ -25,7 +26,6 @@ import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.service.AssoMemService;
 import exort.api.http.perm.service.PermService;
 import exort.apiserver.config.SysAdminInitConfig.SystemAdministratorInfo;
-import exort.apiserver.service.AssoMgrSvc;
 
 @RestController
 @RequestMapping(path="/associations")
@@ -36,19 +36,19 @@ public class AssociationManagerController{
     // Delete, create operations need system admin
 
     @Autowired
-    private AssoMgrSvc service;
-    @Autowired
     private PermService permSvc;
     @Autowired
     private AssoMemService assoMemService;
     @Autowired
     private SystemAdministratorInfo sysAdmin;
+    @Autowired
+    private AssociationManagerService assoService;
 
 	@PostMapping("/batch")
 	public ApiResponse<PagedData<Association>> getAssociationsInBatch(
 			@RequestBody List<String> ids,
 			PageQuery pq){
-		return service.getAssociationsInBatch(ids,pq.getPageNum(),pq.getPageSize());
+		return assoService.getAssociationsInBatch(ids, pq);
 	}
 
     @PostMapping("/list")
@@ -58,22 +58,22 @@ public class AssociationManagerController{
 	public ApiResponse<PagedData<Association>> listAssociations(
 			@RequestBody AssociationFilterParams filter,
 			PageQuery pq){
-        return service.listAssociations(filter,pq);
+        return assoService.listAssociations(filter,pq);
     }
 
     //ok
     @GetMapping("/{assoId}")
     public ApiResponse<Association> getAssociation(@PathVariable(value="assoId") String assoId){
-        return service.getAssociation(assoId);
+        return assoService.getAssociation(assoId);
     }
 
     @PostMapping
-    public ApiResponse createAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationInfo body){
+    public ApiResponse createAssociation(@RequestAttribute(name="id", required=false) Integer operatorId,@RequestBody AssociationInfo body){
         if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
-            throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have create permission on association");
+            throw new ApiError(400,"PermErr","Operator["+operatorId+"] does not have create permission on association");
         }
 
-        Association association = service.createAssociation(body).getData();
+        Association association = assoService.createAssociation(body).getData();
         InitAssociationInfo associationInfo = new InitAssociationInfo(operatorId,association.getId());
         assoMemService.initDepartment(associationInfo);
 
@@ -81,29 +81,29 @@ public class AssociationManagerController{
     }
 
     @DeleteMapping("/{assoId}")
-    public ApiResponse deleteAssociation(@RequestAttribute("id") int operatorId,@PathVariable(value="assoId") String assoId ){
+    public ApiResponse deleteAssociation(@RequestAttribute(name="id", required=false) Integer operatorId,@PathVariable(value="assoId") String assoId ){
         if(permSvc.hasRole(Long.valueOf(operatorId),sysAdmin.SCOPE_NAME,sysAdmin.ROLE_NAME) == null){
-            throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have delete permission on association");
+            throw new ApiError(400,"PermErr","Operator["+operatorId+"] does not have delete permission on association");
         }
         assoMemService.deleteAllDepartments(assoId);
-        return service.deleteAssociation(assoId);
+        return assoService.deleteAssociation(assoId);
     }
 
     @PutMapping("/{assoId}")
-    public ApiResponse editAssociation(@RequestAttribute("id") int operatorId,@RequestBody AssociationInfo body, @PathVariable(value="assoId") String assoId ){
+    public ApiResponse editAssociation(@RequestAttribute(name="id", required=false) Integer operatorId,@RequestBody AssociationInfo body, @PathVariable(value="assoId") String assoId ){
         if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
-            throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
+            throw new ApiError(400,"PermErr","Operator["+operatorId+"] does not have update permission on association["+assoId+"]");
         }
-        return service.editAssociation(assoId, body);
+        return assoService.editAssociation(assoId, body);
     }
 
 
     @PutMapping("/{assoId}/state")
-    public ApiResponse<Object> patchAssociation(@RequestAttribute("id") int operatorId, @RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
+    public ApiResponse<Object> patchAssociation(@RequestAttribute(name="id", required=false) Integer operatorId, @RequestBody Operation<String> body, @PathVariable(value="assoId") String assoId ){
         //if(!checkPermissionOnAssociationById(operatorId,assoId,PERM_UPDATE)){
-        //    throw new ApiError(400,"PermErr","Operator["+String.valueOf(operatorId)+"] does not have update permission on association["+String.valueOf(assoId)+"]");
+        //    throw new ApiError(400,"PermErr","Operator["+operatorId+"] does not have update permission on association["+assoId+"]");
         //}
-        return service.patchAssociation(assoId,body);
+        return assoService.patchAssociation(assoId,body);
     }
 
     private boolean checkPermissionOnAssociationById(int operatorId,String assoId,String perm){

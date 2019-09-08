@@ -1,5 +1,6 @@
 package exort.apiserver;
 
+import exort.api.http.assomgr.service.AssociationServiceImpl;
 import exort.api.http.finance.service.FinanceImpl;
 import exort.api.http.review.service.ReviewServiceImpl;
 import exort.api.http.comment.service.CommentServiceImplement;
@@ -18,7 +19,8 @@ import exort.api.http.perm.service.PermServiceImpl;
 		ActivityServiceImpl.class,
 		ReviewServiceImpl.class,
 		CommentServiceImplement.class,
-		FinanceImpl.class
+		FinanceImpl.class,
+		AssociationServiceImpl.class
 })
 public class ApiserverApplication {
 	public static void main(String[] args) {

@@ -40,13 +40,13 @@ public class ActivityManagerController {
 	private CommunityService cs;
 
 	@PostMapping
-	public ApiResponse<Activity> createNewActivity(@RequestAttribute("id") int operatorId,
+	public ApiResponse<Activity> createNewActivity(@RequestAttribute(name="id", required=false) Integer operatorId,
 			@RequestBody Activity activity) {
 		return activitySvc.createNewActivity(activity);
 	}
 
 	@PutMapping("/{id}")
-	public ApiResponse<Activity> updateActivity(@RequestAttribute("id") int operatorId, @RequestBody Activity activity,
+	public ApiResponse<Activity> updateActivity(@RequestAttribute(name="id", required=false) Integer operatorId, @RequestBody Activity activity,
 			@PathVariable("id") String activityId) {
 		if (!activity.getId().equals(activityId)) {
 			return new ApiResponse<>("OptErr", "Entity id differs from path param when updating");
@@ -60,7 +60,7 @@ public class ActivityManagerController {
 	}
 
 	@GetMapping("/user")
-	public ApiResponse<PagedData<Activity>> getActivitiesThisUser(@RequestAttribute("id") int operatorId, PageQuery pageQuery) {
+	public ApiResponse<PagedData<Activity>> getActivitiesThisUser(@RequestAttribute(name="id", required=false) Integer operatorId, PageQuery pageQuery) {
 		Filter filter = new Filter();
 		List<String> associationIds = (List<String>)cs.listSubscribed(operatorId).getData();
 		filter.setAssociationId(associationIds);
@@ -70,25 +70,25 @@ public class ActivityManagerController {
 	}
 
 	@PutMapping("/{id}/state")
-	public ApiResponse<Activity> publishActivity(@RequestAttribute("id") int operatorId,
+	public ApiResponse<Activity> publishActivity(@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
 		return activitySvc.publishActivity(activityId, request);
 	}
 
 	@PostMapping("/{id}/participants")
-	public ApiResponse<Activity> addParticipants(@RequestAttribute("id") int operatorId,
+	public ApiResponse<Activity> addParticipants(@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
 		return activitySvc.addParticipants(activityId, request);
 	}
 
 	@PostMapping("/{id}/realparticipants")
-	public ApiResponse<Activity> addRealParticipants(@RequestAttribute("id") int operatorId,
+	public ApiResponse<Activity> addRealParticipants(@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
 		return activitySvc.addRealParticipants(activityId, request);
 	}
 
 	@DeleteMapping("/{id}/participants")
-	public ApiResponse<Activity> deleteParticipants(@RequestAttribute("id") int operatorId,
+	public ApiResponse<Activity> deleteParticipants(@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
 		return activitySvc.deleteParticipants(activityId, request);
 	}

@@ -7,6 +7,7 @@ import exort.apiserver.service.AuthService.AuthResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 public class JwtResolver {
 
@@ -24,7 +25,12 @@ public class JwtResolver {
 	}
 
 	public static AuthResponse parseToken(String token){
-		final Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+		Claims claims;
+		try {
+			 claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+		} catch (SignatureException e) {
+			return null;
+		}
 		AuthResponse response = new AuthResponse();
 		response.setUsername(claims.getSubject());
 		response.setId(claims.get("id",Integer.class));

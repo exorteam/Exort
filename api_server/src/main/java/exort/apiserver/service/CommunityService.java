@@ -15,6 +15,7 @@ public interface CommunityService {
 		private int id;
 		private int senderId;
 		private String senderAssociation;
+		private String senderName;
 
 		private String content;
 		private Date timestamp;

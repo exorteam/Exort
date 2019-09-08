@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.errorhandler.ApiError;
 import exort.api.http.perm.service.PermService;
+import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.apiserver.service.ArticleService;
 import exort.apiserver.service.ArticleService.Article;
 import exort.apiserver.service.ArticleService.ArticleFilterParam;
@@ -32,10 +35,12 @@ public class ArticleController {
 	private PermService permSvc;
 	@Autowired
 	private CommunityService cmSvc;
+	@Autowired
+	private AssociationManagerService assoSvc;
 
 	@PostMapping
 	public ApiResponse createArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute(name="id", required=false) Long operatorId,
 			@RequestBody Article e){
 		return articleSvc.createArticle(e);
 	}
@@ -48,14 +53,14 @@ public class ArticleController {
 
 	@DeleteMapping("/{id}")
 	public ApiResponse deleteArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute(name="id", required=false) Long operatorId,
 			@PathVariable("id") int articleId){
 		return articleSvc.deleteArticle(articleId);
 	}
 
 	@PutMapping("/{id}")
 	public ApiResponse updateArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute(name="id", required=false) Long operatorId,
 			@PathVariable("id") int articleId,
 			@RequestBody Article e){
 		return articleSvc.updateArticle(articleId,e);
@@ -63,7 +68,7 @@ public class ArticleController {
 
 	@PostMapping("/{id}/publish")
 	public ApiResponse publishArticle(
-			@RequestAttribute("id") long operatorId,
+			@RequestAttribute(name="id", required=false) Long operatorId,
 			@PathVariable("id") int articleId,
 			@RequestParam boolean publish){
 		if(publish){
@@ -71,8 +76,10 @@ public class ArticleController {
 			final Article article = (Article)articleSvc.getArticle(articleId).getData();
 			CommunityMessage msg = new CommunityMessage();
 			final String assoId = article.getAssociationId();
+			final String assoName = assoSvc.getAssociation(assoId).getData().getName();
 			msg.setSenderAssociation(assoId);
-			msg.setContent(assoId + "just published new article!");
+			msg.setSenderName(assoName);
+			msg.setContent("已发布新文章:\""+article.getTitle()+"\"");
 			System.out.println(cmSvc.postNotifications(msg));
 		}
 		return articleSvc.publishArticle(articleId,publish);
@@ -81,17 +88,29 @@ public class ArticleController {
 	@PostMapping("/list")
 	public ApiResponse listArticle(
 			@RequestBody ArticleFilterParam param,
-			@RequestParam Integer pageNum,
-			@RequestParam Integer pageSize){
-		return articleSvc.listArticle(param,pageNum,pageSize);
+			PageQuery pageQuery){
+		return articleSvc.listArticle(param,pageQuery);
 	}
 
 	@PostMapping("/list/asso")
 	public ApiResponse listArticle(
 			@RequestBody List<String> assoIds,
-			@RequestParam Integer pageNum,
-			@RequestParam Integer pageSize){
-		return articleSvc.listArticleWithAssociation(assoIds,pageNum,pageSize);
+			PageQuery pageQuery){
+		return articleSvc.listArticleWithAssociation(assoIds,pageQuery);
+	}
+
+	@GetMapping("/list/user")
+	public ApiResponse listArticle(@RequestAttribute(name="id", required=false) Integer operatorId, PageQuery pageQuery) {
+		ApiResponse<List<String>> res = cmSvc.listSubscribed(operatorId);
+		List<String> associationIds = res.getData();
+		if (associationIds == null) {
+			throw new ApiError(500, res.getError(), res.getMessage());
+		}
+		ArticleFilterParam filter = new ArticleFilterParam();
+		filter.setAuthorIds(associationIds);
+		filter.setState(2);
+		pageQuery.setSortBy("publishTime");
+		return articleSvc.listArticle(filter, pageQuery);
 	}
 
 }

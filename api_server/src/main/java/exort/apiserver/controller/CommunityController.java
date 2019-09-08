@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.errorhandler.ApiError;
@@ -25,12 +26,14 @@ public class CommunityController {
 
 	@Autowired
 	private CommunityService cmSvc;
+	@Autowired
+	private AssociationManagerService assoSvc;
 
 	private final String POST_MSG_CONTENT_KEY = "content";
 
 	@PostMapping("/msg/{uid}")
 	public ApiResponse postMessage(
-			@RequestAttribute("id") int operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("uid") int uid,
 			@RequestBody Map<String,String> body){
 
@@ -44,62 +47,81 @@ public class CommunityController {
 		return cmSvc.postMessage(uid,msg);
 	}
 
+	@PostMapping("/notify/{assoId}")
+	public ApiResponse postNotification(
+			@RequestAttribute(name="id") Integer operatorId,
+			@PathVariable("assoId") String assoId,
+			@RequestBody Map<String,String> body){
+
+		if(!body.containsKey(POST_MSG_CONTENT_KEY)){
+			throw new ApiError(403,"MsgErr","Message content not found");
+		}
+		final String assoName = assoSvc.getAssociation(assoId).getData().getName();
+		CommunityMessage msg = new CommunityMessage();
+		msg.setSenderId(operatorId);
+		msg.setSenderAssociation(assoId);
+		msg.setSenderName(assoName);
+		msg.setContent(String.valueOf(body.get(POST_MSG_CONTENT_KEY)));
+
+		return cmSvc.postNotifications(msg);
+	}
+
 	@PostMapping("/msg/read/{mid}")
 	public ApiResponse markMessageReadById(
-			@RequestAttribute("id") int operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("mid") int mid){
 		return cmSvc.markMessageReadById(operatorId,mid);
 	}
 
 	@PostMapping("/msg/readall")
 	public ApiResponse markAllMessageRead(
-			@RequestAttribute("id") int operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.markAllMessageRead(operatorId);
 	}
 
 	@PostMapping("/msg/drop/{mid}")
 	public ApiResponse dropMessageById(
-			@RequestAttribute("id") int operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@PathVariable("mid") int mid){
 		return cmSvc.dropMessageById(operatorId,mid);
 	}
 
 	@PostMapping("/msg/dropall")
 	public ApiResponse dropAllMessage(
-			@RequestAttribute("id") int operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.dropAllMessage(operatorId);
 	}
 
 	@GetMapping("/msg")
 	public ApiResponse getMessage(
-			@RequestAttribute("id") int operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.getMessageForUser(operatorId);
 	}
 
 	@GetMapping("/msg/page")
 	public ApiResponse getPagedMessage(
-			@RequestAttribute("id") int operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			PageQuery pq){
 		return cmSvc.getPagedMessageForUser(operatorId,pq);
 	}
 
 	@PostMapping("/sub")
 	public ApiResponse commitSubscription(
-			@RequestAttribute("id") int operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@RequestBody List<String> assoIds){
 		return cmSvc.addToSubscribed(operatorId,assoIds);
 	}
 
 	@DeleteMapping("/sub")
 	public ApiResponse removeSubscription(
-			@RequestAttribute("id") int operatorId,
+			@RequestAttribute(name="id", required=false) Integer operatorId,
 			@RequestBody List<String> assoIds){
 		return cmSvc.removeFromSubscribed(operatorId,assoIds);
 	}
 
 	@GetMapping("/sub")
 	public ApiResponse listSubscribed(
-			@RequestAttribute("id") int operatorId){
+			@RequestAttribute(name="id", required=false) Integer operatorId){
 		return cmSvc.listSubscribed(operatorId);
 	}
 
