@@ -257,6 +257,3 @@ volumes:
   - name: exort-resources
     host:
       path: /home/ubuntu/exort
-
-
----
