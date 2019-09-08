@@ -1,6 +1,10 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/comment
+      username: comment
+      password: 2019comment
+      host: ci.cirno.wang
+      port: 30722
+      database: comment
 server:
   port: 8899

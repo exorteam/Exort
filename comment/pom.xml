@@ -10,9 +10,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>exort</groupId>
-    <artifactId>exort</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>Exort</groupId>
+    <artifactId>comment</artifactId>
+    <version>1.0</version>
+	<name>comment</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -53,6 +54,32 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+			<plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <configuration>
+                    <imageName>exort/comment</imageName>
+                    <baseImage>java</baseImage>
+                    <maintainer>bertzhang</maintainer>
+                    <exposes>
+                        <expose>8080</expose>
+                    </exposes>
+                    <imageTags>
+                        <imageTag>1.0</imageTag>
+                        <!--<imageTag>latest</imageTag>-->
+                    </imageTags>
+                    <entryPoint>["java", "-jar", "/comment-1.0.jar"]</entryPoint>
+                    <rm>true</rm>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>target</directory>
+                            <include>comment-1.0.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+			</plugin>
         </plugins>
     </build>
 
