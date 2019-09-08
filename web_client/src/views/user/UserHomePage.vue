@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
 	name: 'UserHomePage',
@@ -55,6 +55,9 @@ export default {
 			newMsgForm: {}
 		}
 	},
+	computed: {
+        ...mapState('common/currentUser', ['uid'])
+	},
 	methods: {
 		...mapActions('common/currentUserMsgs',[
 			'queryPagedMessage',
@@ -63,10 +66,10 @@ export default {
 		]),
 
 		onClickSendMsg(){
-			const id = this.newMsgForm.receiverId; 
+			const id = this.newMsgForm.receiverId;
 			const content = this.newMsgForm.content;
 			if(!id
-				|| id.isEmpty 
+				|| id.isEmpty
 				|| !content
 				|| content.isEmpty){
 
@@ -130,12 +133,30 @@ export default {
 		}
 	},
 	mounted(){
-		this.queryPagedMessage({
-			pageNum: this.msgPageNum,
-			pageSize: this.msgPageSize
-		}).then(res => {
-			this.msgs = res.data.data.content;
-		})
-	}
+		if (this.uid) {
+			this.queryPagedMessage({
+				pageNum: this.msgPageNum,
+				pageSize: this.msgPageSize
+			}).then(res => {
+				this.msgs = res.data.data.content;
+			})
+		}
+	},
+    watch: {
+        'uid': function(newUid, oldUid) {
+			console.log(newUid);
+			console.log(oldUid);
+            if (newUid) {
+				this.queryPagedMessage({
+					pageNum: this.msgPageNum,
+					pageSize: this.msgPageSize
+				}).then(res => {
+					this.msgs = res.data.data.content;
+				})
+            } else {
+                this.msgs = [];
+            }
+        }
+    }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <Layout>
 	<Sider :style="{background: '#fff'}">
-		<UsrNavbar/>
+		<HomeSider/>
 	</Sider>
 	<Content style="min-height:420px;margin:10px;">
 		<router-view/>
@@ -10,11 +10,11 @@
 </template>
 
 <script>
-import UsrNavbar from '@/components/user/UsrNavbar'
+import HomeSider from '@/components/nav/HomeSider'
 
 export default {
     components: {
-		UsrNavbar
+		HomeSider
     },
 }
 </script>

@@ -13,13 +13,7 @@ const actions = {
 			data: filter
 		}).then(res => {
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	queryAssociationById: ({commit},{assoId}) => new Promise((resolve,reject) => {
 		api({
@@ -28,13 +22,7 @@ const actions = {
 		}).then(res => {
 			console.log(res);
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	createAssociation: ({commit}, asso) => new Promise((resolve,reject) => {
 		api({
@@ -43,13 +31,7 @@ const actions = {
 			data: asso
 		}).then(res => {
 			resolve(res);
-		}).catch(err => {
-            if (err.response && err.response.data) {
-                reject(err.response.data);
-            } else {
-                reject({ error: 'unknown', message: err });
-            }
-        });
+		}).catch(err => reject(err));
 	}),
 	deleteAssociationById: ({commit},{assoId}) => new Promise((resolve,reject) => {
 		api({
@@ -88,5 +70,3 @@ export default {
     namespaced: true,
     actions,
 }
-
-

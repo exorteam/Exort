@@ -83,13 +83,8 @@ const actions = {
             method: 'get',
             url: '/permission/list_perm'
         }).then(res => {
-            if (res.data.data) {
-                commit('setCategories', res.data.data);
-                resolve();
-            } else {
-                commit('setCategories', []);
-                reject(res.data);
-            }
+            commit('setCategories', res.data.data);
+            resolve();
         }).catch(err => {
             commit('setCategories', []);
             reject(err);
@@ -103,13 +98,8 @@ const actions = {
                 category
             }
         }).then(res => {
-            if (res.data.data) {
-                commit('setRoleList', {category: category, roleList: res.data.data});
-                resolve();
-            } else {
-                commit('setRoleList', {category: '', roleList: []});
-                reject(res.data);
-            }
+            commit('setRoleList', {category: category, roleList: res.data.data});
+            resolve();
         }).catch(err => {
             commit('setRoleList', {category: '', roleList: []});
             reject(err);
@@ -121,12 +111,8 @@ const actions = {
             url: '/permission/create_role',
             data: role
         }).then(res => {
-            if (res.data.data) {
-                commit('modifyRole', {oldRole: null, newRole: res.data.data});
-                resolve();
-            } else {
-                reject(res.data);
-            }
+            commit('modifyRole', {oldRole: null, newRole: res.data.data});
+            resolve();
         }).catch(err => {
             reject(err);
         })
@@ -137,12 +123,8 @@ const actions = {
             url: '/permission/update_role',
             data: newRole
         }).then(res => {
-            if (res.data.data) {
-                commit('modifyRole', {oldRole, newRole: res.data.data});
-                resolve();
-            } else {
-                reject(res.data);
-            }
+            commit('modifyRole', {oldRole, newRole: res.data.data});
+            resolve();
         }).catch(err => {
             reject(err);
         })
@@ -153,12 +135,8 @@ const actions = {
             url: '/permission/delete_role',
             data: role
         }).then(res => {
-            if (res.data.data) {
-                commit('modifyRole', {oldRole: role, newRole: null});
-                resolve();
-            } else {
-                reject(res.data);
-            }
+            commit('modifyRole', {oldRole: role, newRole: null});
+            resolve();
         }).catch(err => {
             reject(err);
         });
@@ -169,12 +147,8 @@ const actions = {
             url: '/permission/create_perm',
             data: perm
         }).then(res => {
-            if (res.data.data) {
-                commit('modifyPerm', {oldPerm: null, newPerm: perm});
-                resolve();
-            } else {
-                reject(res.data);
-            }
+            commit('modifyPerm', {oldPerm: null, newPerm: perm});
+            resolve();
         }).catch(err => {
             reject(err);
         });
@@ -185,12 +159,8 @@ const actions = {
             url: '/permission/update_perm',
             data: newPerm
         }).then(res => {
-            if (res.data.data) {
-                commit('modifyPerm', {oldPerm, newPerm: res.data.data});
-                resolve();
-            } else {
-                reject(res.data);
-            }
+            commit('modifyPerm', {oldPerm, newPerm: res.data.data});
+            resolve();
         }).catch(err => {
             reject(err);
         })
@@ -201,12 +171,8 @@ const actions = {
             url: '/permission/delete_perm',
             data: perm
         }).then(res => {
-            if (res.data.data) {
-                commit('modifyPerm', {oldPerm: perm, newPerm: null});
-                resolve();
-            } else {
-                reject(res.data);
-            }
+            commit('modifyPerm', {oldPerm: perm, newPerm: null});
+            resolve();
         }).catch(err => {
             reject(err);
         });
@@ -217,12 +183,8 @@ const actions = {
                 method: 'get',
                 url: '/permission/list_perm/' + role.name
             }).then(res => {
-                if (res.data.data) {
-                    commit('updateCurRole', {role, perms: res.data.data});
-                    resolve();
-                } else {
-                    reject(res.data);
-                }
+                commit('updateCurRole', {role, perms: res.data.data});
+                resolve();
             }).catch(err => {
                 reject(err);
             });
@@ -238,17 +200,13 @@ const actions = {
                 url: '/permission/grant/' + role.name,
                 data: permNames
             }).then(res => {
-                if (res.data.data) {
-                    commit('updateCurRole', {role, perms: res.data.data});
-                    resolve();
-                } else {
-                    reject(res.data);
-                }
+                commit('updateCurRole', {role, perms: res.data.data});
+                resolve();
             }).catch(err => {
                 reject(err);
             });
         } else {
-            reject();
+            reject({ error: 'unknow', message: '不正确的role'});
         }
     }),
     revokePerms: ({commit}, {role, permNames}) => new Promise((resolve, reject) => {
@@ -258,17 +216,11 @@ const actions = {
                 url: '/permission/revoke/' + role.name,
                 data: permNames
             }).then(res => {
-                if (res.data.data) {
-                    commit('updateCurRole', {role, perms: res.data.data});
-                    resolve();
-                } else {
-                    reject(res.data);
-                }
-            }).catch(err => {
-                reject(err);
-            });
+                commit('updateCurRole', {role, perms: res.data.data});
+                resolve();
+            }).catch(err => reject(err));
         } else {
-            reject();
+            reject({ error: 'unknow', message: '不正确的role'});
         }
     })
 }

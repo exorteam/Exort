@@ -19,11 +19,7 @@
 							<Input v-model="form.description" type="textarea" :rows="4"/>
 						</FormItem>
 						<FormItem label="社团Logo">
-							<Upload 
-								:before-upload="handleUpload"
-								action="//jsonplaceholder.typicode.com/posts/">
-								<Button icon="ios-cloud-upload-outline">Upload files</Button>
-							</Upload>
+                            <ImageUploader v-model="form.logo" />
 						</FormItem>
 						<FormItem label="报名材料" v-if="form.needMaterial">
 							<Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
@@ -67,7 +63,7 @@
 
 
 				<div style="text-align: center;height:100px">
-					<img :src="item.logo" style="width:80px;height:80px;"/>
+					<img :src="associationIcon(item.logo)" style="width:80px;height:80px;"/>
 				</div>
 				<div style= "min-height: 100%; ">
 					<p>{{ item.description }}</p>
@@ -95,12 +91,14 @@
 <script>
 import AssociationCreatingModal from './AssociationCreatingModal'
 import TagChoose from '@/components/TagChoose'
+import ImageUploader from '@/components/uploader/ImageUploader'
 import {api} from '@/http'
 import { mapState, mapActions, mapMutations } from 'vuex'
+import { associationIcon } from '@/const'
 
 export default {
     name:'associationList',
-    components:{AssociationCreatingModal, TagChoose},
+    components:{AssociationCreatingModal, TagChoose, ImageUploader},
     data () {
         return {
             ruleValidate: {
@@ -113,21 +111,21 @@ export default {
             },
             file: null,
             form:{
-                assoId:"",
+                assoId:'',
                 onshow: false,
-                name: "",
-                description: "",
+                name: '',
+                description: '',
                 tag:{
                     tag_show: false,
                     tagList:[],
                     tagrepo : ["运动", "饮食", "音乐", "舞蹈", "历史", "游戏", "户外", "天文","航模","动漫"]
                 },
-                logo:"",
+                logo:'',
                 needMaterial:false,
                 assoState:null,
                 showState:false,
-                materials: "",
-                type:""
+                materials: '',
+                type:''
             },
             pageProp:{
                 totalSize : 0,
@@ -145,10 +143,10 @@ export default {
                 { text: '已激活', value: 'active' },
                 { text: '已锁定', value: 'blocked' },
             ],
-            inputDefaultValue : "",
+            inputDefaultValue : '',
             AssoList: [],
             assoSearch:{
-                keyword:"",
+                keyword:'',
                 tags:[],
                 state:1,
                 pageNum:0,
@@ -159,16 +157,13 @@ export default {
         }
     },
     methods: {
+        associationIcon,
 		...mapActions('common/associationOps',[
 			'queryPagedAssociationsWithFilter',
 			'deleteAssociationById'
 		]),
-		handleUpload(f){
-			this.file = f;
-			return false;
-		},
         showCreateForm(){
-            this.form.type = "create"
+            this.form.type = 'create'
             this.form.showState=false
             this.form.onshow=true
         },
@@ -224,7 +219,7 @@ export default {
 				method:'put',
                 url:'/associations/'+this.form.assoId+'/state',
                 data:{
-                    Arg:"",
+                    Arg:'',
                     operation:type,
                 }
 			})
@@ -292,119 +287,52 @@ export default {
 			});
 
         },
-        clearFiles() {
-            this.$refs['file-input'].reset();
-        },
         info_ok(){
             const _self = this;
 
-            if(this.form.name === "" || this.form.name === null || this.form.description === ""){
-                this.form.onshow = false
+            if(!this.form.name || !this.form.description){
                 this.$Message.error('创建失败，请完善表单信息');
                 return
             }
             if(_self.form.type=="create"){
-                var imgFile;
-                let reader = new FileReader();
-                console.log(this.form)
-                console.log("_self.form.name:" + _self.form.name);
-                if(this.file != null){
-                    reader.readAsDataURL(this.file);
-                    reader.onload=function(e) {        //读取完毕后调用接口
-                        imgFile = e.target.result;
-                        console.log("_self.form.name:" + _self.form.name);
-                        api.post('/associations',
-                            {
-                                name:_self.form.name,
-                                description:_self.form.description,
-                                tags:_self.form.tag.tagList,
-
-								//TODO: bind logo attr to md5 following logo image file stored by api server
-                                logo:imgFile
-                            }
-                        ).then(response => {
-                            _self.
-                            _self.form.name=""
-                            _self.form.description=""
-                            _self.form.tag.taglist=[]
-                            //_self.clearFiles()
-                            _self.getAssociationList()
-                        }).catch(e => {
-                            console.log(e)
-                        })
-                    };
-                }
-                else{
-                    _self.form.onshow = false
-                    _self.$Message.error('创建失败，请上传图片');
-                    return
-                }
-                _self.form.onshow = false;
-                _self.$Message.success('创建成功');
-                _self.getAssociationList();
+                api.post('/associations',{
+                    name:_self.form.name,
+                    description:_self.form.description,
+                    tags:_self.form.tag.tagList,
+                    logo:_self.form.logo
+                }).then(response => {
+                    _self.getAssociationList()
+                    _self.$Message.success('创建成功');
+                    _self.info_cancel();
+                }).catch(e => {
+                    console.log(e)
+                    _self.$Message.error('创建失败: ' + e.message);
+                })
             }
             else{
-                var imgFile;
-                let reader = new FileReader();
-                if(this.file != null){
-                    reader.readAsDataURL(this.file);
-                    reader.onload=function(e) {        //读取完毕后调用接口
-                        imgFile = e.target.result;
-                        console.log(imgFile)
-                        api
-                        .put('/associations/'+_self.form.assoId,
-                            {
-                                name:_self.form.name,
-                                description:_self.form.description,
-                                tags:_self.form.tag.tagList,
-                                logo:imgFile
-                            }
-                        )
-                        .then(response => {
-                            _self.getAssociationList()
-                            _self.form.name=""
-                            _self.form.description=""
-                            _self.form.tag.taglist=[]
-                            _self.clearFiles()
-                            console.log(response.data)
-                        })
-                        .catch(e => {
-                            console.log(e)
-                        })
-                    };
-                }
-                else{
-                    api
-                    .put('/associations/'+_self.form.assoId,
-                        {
-                            name:_self.form.name,
-                            description:_self.form.description,
-                            tags:_self.form.tag.tagList,
-                            logo:_self.form.logo
-                        }
-                    )
-                    .then(response => {
-                        _self.getAssociationList()
-                        _self.form.name=""
-                        _self.form.description=""
-                        _self.form.tag.taglist=[]
-                        _self.clearFiles()
-                        console.log(response.data)
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-                }
-                _self.form.onshow = false
-                _self.$Message.success('修改成功');
+                api.put('/associations/'+_self.form.assoId, {
+                    name:_self.form.name,
+                    description:_self.form.description,
+                    tags:_self.form.tag.tagList,
+                    logo:_self.form.logo
+                }).then(response => {
+                    _self.getAssociationList()
+                    _self.$Message.success('修改成功');
+                    _self.info_cancel();
+                })
+                .catch(e => {
+                    console.log(e)
+                    _self.$Message.error('修改失败: ' + e.message);
+                })
             }
         },
         info_cancel(){
-            this.form.name=""
-            this.form.description=""
+            this.form.name=''
+            this.form.description=''
             this.form.tag.tagList=[]
             this.form.materials=[]
-            this.form.type=""
+            this.form.type=''
+            this.form.logo=''
             this.form.onshow = false
         }
     },

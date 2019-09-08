@@ -69,23 +69,16 @@ const actions = {
             data: select
         }).then(res => {
             let resdata = res.data.data;
-            if (resdata) {
-                // console.log(resdata);
-                commit('setActivities', {
-                    activities: resdata.content,
-                    totalSize: resdata.totalSize,
-                    pageNum: resdata.pageNum,
-                    pageSize: resdata.pageSize
-                });
-
-                resolve();
-            } else {
-                commit('setActivities', {activity: [], totalSize: 0, pageNum: 1, pageSize: 0});
-                reject(res.data.message);
-            }
-        }).catch(error => {
+            commit('setActivities', {
+                activities: resdata.content,
+                totalSize: resdata.totalSize,
+                pageNum: resdata.pageNum,
+                pageSize: resdata.pageSize
+            });
+            resolve();
+        }).catch(err => {
             commit('setActivities', {activity: [], totalSize: 0, pageNum: 1, pageSize: 0});
-            reject(error);
+            reject(err);
         })
     }),
     getCurActivity: ({commit, state,dispatch}, id) => new Promise((resolve, reject) => {
@@ -93,25 +86,18 @@ const actions = {
             method: "get",
             url: "/activities/" + id,
         }).then(res => {
-            let resdata = res.data.data;
-            if (resdata) {
-                // console.log(resdata);
-                commit('updateCurActivity', resdata);
-                if(state.curActivity.participantIds){
-                    dispatch('getParticipants');
-                }
-                if(state.curActivity.realParticipantIds){
-                    dispatch('getRealParticipants');
-                }
-                // console.log(state.curActivity);
-                resolve();
-            } else {
-                commit('updateCurActivity', {});
-                reject(res.data.message);
+            commit('updateCurActivity', resdata);
+            if(state.curActivity.participantIds){
+                dispatch('getParticipants');
             }
-        }).catch(error => {
+            if(state.curActivity.realParticipantIds){
+                dispatch('getRealParticipants');
+            }
+            // console.log(state.curActivity);
+            resolve();
+        }).catch(err => {
             commit('updateCurActivity', {});
-            reject(error);
+            reject(err);
         })
     }),
     createActivtity: ({commit}, activityInfo) => new Promise((resolve, reject) => {
@@ -120,14 +106,8 @@ const actions = {
             url: "/activities",
             data: activityInfo
         }).then(res => {
-            if (res.data.data !== null) {
-                resolve();
-            } else {
-                reject(res.data);
-            }
-        }).catch(error => {
-            console.log(error);
-        })
+            resolve();
+        }).catch(err => reject(err))
     }),
     updateActivity: ({commit}, {activityInfo, activityId}) => new Promise((resolve, reject) => {
         api({
@@ -135,14 +115,8 @@ const actions = {
             url: "/activities/" + activityId,
             data: activityInfo
         }).then(res => {
-            if (res.data.data !== null) {
-                resolve()
-            } else {
-                reject(res.data);
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            resolve()
+        }).catch(err => reject(err))
     }),
     changeActivityState: ({commit, state}, stateChangeInfo) => new Promise((resolve, reject) => {
         api({
@@ -150,15 +124,8 @@ const actions = {
             url: "/activities/" + state.curActivity.id + "/state",
             data: stateChangeInfo
         }).then(res => {
-            if (res.data.data !== null) {
-                // console.log(res.data);
-                resolve()
-            } else {
-                reject(res.data.message);
-            }
-        }).catch(error => {
-            reject(error);
-        })
+            resolve()
+        }).catch(err => reject(err))
     }),
     getParticipants: ({commit, state}) => new Promise((resolve, reject) => {
         let participantsIds=state.curActivity.participantIds;
@@ -166,17 +133,12 @@ const actions = {
             method: "post",
             url: "/users",
             data: participantsIds,
-        }).then((response) => {
-            if(response.data.data){
-                commit("setParticipants",response.data.data);
-                resolve();
-            }else{
-                commit("setParticipants",[]);
-                reject(response.data.message);
-            }
-        }).catch(error => {
+        }).then((res) => {
+            commit("setParticipants",res.data.data);
+            resolve();
+        }).catch(err => {
             commit("setParticipants",[]);
-            reject(error);
+            reject(err);
         })
     }),
     getRealParticipants: ({commit, state}) => new Promise((resolve, reject) => {
@@ -186,18 +148,12 @@ const actions = {
             method: "post",
             url: "/users",
             data: realParticipantsIds
-        }).then((response) => {
-            // console.log(response.data.data);
-            if(response.data.data){
-                commit("setRealParticipants",response.data.data);
-                resolve();
-            }else{
-                commit("setRealParticipants",[]);
-                reject(response.data.message);
-            }
-        }).catch(error => {
+        }).then((res) => {
+            commit("setRealParticipants",res.data.data);
+            resolve();
+        }).catch(err => {
             commit("setRealParticipants",[]);
-            reject(error);
+            reject(err);
         })
     }),
 }

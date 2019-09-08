@@ -45,7 +45,6 @@ import { mapState, mapActions } from 'vuex'
 import LoginModal from '@/components/auth/LoginModal'
 
 export default {
-	name: 'UsrNavbar',
 	components:{
 		LoginModal
 	},

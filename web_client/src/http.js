@@ -6,7 +6,12 @@ const api = axios.create({
     withCredentials: true
 });
 api.defaults.headers.common['Content-Type'] = 'application/json';
-api.interceptors.response.use(undefined, async err => {
+api.interceptors.response.use(res => {
+    if (res.data.data === null) {
+        throw res.data;
+    }
+    return res;
+}, async err => {
     let config = err.config;
     let response = err.response;
 
@@ -16,17 +21,18 @@ api.interceptors.response.use(undefined, async err => {
         try {
             await store.dispatch('common/currentUser/getToken');
             return api(config);
-        } catch (err) { }
+        } catch (err) {
+            console.log('[INFO] user not login');
+        }
     }
 
     if(response && response.data) {
-        err = response.data;
+        return Promise.reject(response.data);
     } else {
         console.log('[ERROR] Failed to get response:');
         console.log(err);
+        return Promise.reject({ error: 'unknown', message: err });
     }
-
-    return Promise.reject({ error: 'unknown', message: err });
 });
 
 const fe = axios.create({withCredentials: true})

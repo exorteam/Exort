@@ -20,16 +20,10 @@ const actions = {
 					})
 				}
 				else{
-					ret = []; 
+					ret = [];
 				}
 				resolve(ret);
-			}).catch(err => {
-				if (err.response && err.response.data) {
-					reject(err.response.data);
-				} else {
-					reject({ error: 'unknown', message: err });
-				}
-			});
+			}).catch(err => reject(err));
 	}),
 	queryPagedArticlesWithFilter: ({commit},filter) => new Promise((resolve,reject) => {
 		api({
@@ -48,13 +42,7 @@ const actions = {
 				return e;
 			})
 			resolve(res);
-		}).catch(err => {
-			if (err.response && err.response.data) {
-				reject(err.response.data);
-			} else {
-				reject({ error: 'unknown', message: err });
-			}
-		});
+		}).catch(err => reject(err));
 	}),
 	publishArticleById: ({commit},{id,publish}) =>new Promise((resolve,reject) => {
 		api({
@@ -65,13 +53,7 @@ const actions = {
 			}
 		}).then(res => {
 			resolve(res);
-		}).catch(err => {
-			if (err.response && err.response.data) {
-				reject(err.response.data);
-			} else {
-				reject({ error: 'unknown', message: err });
-			}
-		});
+		}).catch(err => reject(err));
 	}),
 
 
@@ -81,4 +63,3 @@ export default {
     namespaced: true,
     actions,
 }
-

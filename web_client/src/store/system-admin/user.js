@@ -71,17 +71,11 @@ const actions = {
                     disabled
                 }
             }).then(res => {
-                if (res.data.data) {
-                    commit('setUserState', {index, disabled});
-                    resolve();
-                } else {
-                    reject(res);
-                }
-            }).catch(err => {
-                reject(err);
-            });
+                commit('setUserState', {index, disabled});
+                resolve();
+            }).catch(err => reject(err));
         } else {
-            reject(uid);
+            reject({ error: 'unknown', message: '对应列表项没有用户ID'});
         }
     }),
     updateCurUser: ({commit}, {user, scope}) => new Promise((resolve, reject) => {
@@ -97,9 +91,7 @@ const actions = {
                     roles: res.data.data
                 });
                 resolve();
-            }).catch(err => {
-                reject(err);
-            })
+            }).catch(err => reject(err));
         } else {
             commit('setCurUser', {
                 user: null,
@@ -123,11 +115,9 @@ const actions = {
                     roles: res.data.data
                 });
                 resolve();
-            }).catch(err => {
-                reject(err);
-            })
+            }).catch(err => reject(err));
         } else {
-            reject(user);
+            reject({ error: 'unknown', message: '用户或角色对象不正确: ' + {user, role} });
         }
     }),
     revokeCurUser: ({commit}, {user, scope, role}) => new Promise((resolve, reject) => {
@@ -144,11 +134,9 @@ const actions = {
                     roles: res.data.data
                 });
                 resolve();
-            }).catch(err => {
-                reject(err);
-            })
+            }).catch(err => reject(err));
         } else {
-            reject(user);
+            reject({ error: 'unknown', message: '用户或角色对象不正确: ' + {user, role} });
         }
     })
 }
