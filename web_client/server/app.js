@@ -51,6 +51,20 @@ app.post(
         });
     }
 );
+app.post(
+    '/upload/text',
+    uploader.filter(
+        512*1024, // Byte
+        function(mimetype) {
+            return mimetype == 'text/plain';
+        }
+    ),
+    function(req, res) {
+        res.json({
+            filename: uploader.saveFile(req.file.buffer, '.txt')
+        });
+    }
+);
 
 app.post('/auth/logout', (req, res) => {
     console.log('[Logout] ' + req.session.id);

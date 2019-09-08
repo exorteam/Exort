@@ -1,18 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VueCookies from 'vue-cookies'
+import VueGoogleCharts from 'vue-google-charts'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
-import VueGoogleCharts from 'vue-google-charts'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 import router from './router'
 import store from './store'
 import App from './App'
 
 Vue.use(Vuex);
-Vue.use(VueCookies)
-Vue.use(iView);
 Vue.use(VueGoogleCharts)
+Vue.use(iView);
+Vue.use(mavonEditor);
 
 new Vue({
     el: '#app',
