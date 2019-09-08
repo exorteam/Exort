@@ -31,6 +31,7 @@ export default {
 	},
 	computed: {
 		...mapState('common/currentUserSubscription',['subscribed']),
+        ...mapState('common/currentUser', ['uid'])
 	},
 	methods: {
 		...mapActions('common/currentUserSubscription',['refreshSubscription']),
@@ -63,10 +64,20 @@ export default {
 		}
 	},
 	mounted(){
-		//console.log(this.id);
-		this.refreshSubscription().then(()=>{
-			this.loadArticles();
-		})
-	}
+		if (this.uid) {
+			this.refreshSubscription().then(()=>{
+				this.loadArticles();
+			})
+		}
+	},
+    watch: {
+        'uid': function(newUid, oldUid) {
+            if (newUid) {
+				this.refreshSubscription().then(()=>{
+					this.loadArticles();
+				})
+            }
+        }
+    }
 }
 </script>

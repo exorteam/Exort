@@ -146,8 +146,6 @@ export default {
 	},
     watch: {
         'uid': function(newUid, oldUid) {
-			console.log(newUid);
-			console.log(oldUid);
             if (newUid) {
 				this.queryPagedMessage({
 					pageNum: this.msgPageNum,
