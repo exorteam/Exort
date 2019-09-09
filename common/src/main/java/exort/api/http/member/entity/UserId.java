@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InitAssociationInfo {
+public class UserId {
     int userId;
-    String associationId;
 }

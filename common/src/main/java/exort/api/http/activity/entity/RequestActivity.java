@@ -4,6 +4,11 @@ import java.util.List;
 
 import lombok.Data;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class RequestActivity {
     private int userId;

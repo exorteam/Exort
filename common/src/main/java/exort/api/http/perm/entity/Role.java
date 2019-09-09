@@ -11,9 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Role {
     private String name;
+    private String category;
     private String description;
 
     public Role(String name) {
         this.name = name;
+    }
+
+    public Role(String name, String category) {
+        this.name = name;
+        this.category = category;
     }
 }

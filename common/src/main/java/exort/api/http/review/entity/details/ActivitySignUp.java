@@ -1,4 +1,4 @@
-package exort.api.http.member.entity;
+package exort.api.http.review.entity.details;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InitAssociationInfo {
-    int userId;
-    String associationId;
+public class ActivitySignUp {
+
+    private String activityId;
+
 }

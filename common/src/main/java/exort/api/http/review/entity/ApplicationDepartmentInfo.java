@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ApplicationDepartmentInfo {
-    int associationId;
+    String associationId;
     int departmentId;
 }

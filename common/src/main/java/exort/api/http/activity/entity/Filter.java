@@ -3,10 +3,14 @@ package exort.api.http.activity.entity;
 import java.util.List;
 
 import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Filter {
-
+    private List<String> associationId;
     private String keyword;
     private List<String> tags;
     private TimeRange createTime;

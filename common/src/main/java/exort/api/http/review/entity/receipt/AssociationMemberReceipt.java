@@ -1,4 +1,4 @@
-package exort.api.http.member.entity;
+package exort.api.http.review.entity.receipt;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class InitAssociationInfo {
-    int userId;
-    String associationId;
+@AllArgsConstructor
+public class AssociationMemberReceipt {
+
+    Integer departmentId;
+    String message;
+
 }
