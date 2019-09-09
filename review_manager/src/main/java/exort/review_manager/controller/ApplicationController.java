@@ -262,7 +262,10 @@ public class ApplicationController {
                 break;
             }
         }
-
-        return new ApiResponse<>(toDTO(as.setState(id, state, operator, input.getReceipt())));
+        exort.review_manager.entity.Application result = as.setState(id, state, operator, input.getReceipt());
+        if (result == null) {
+            throw new ApiError(404, "notFound", "No such application.");
+        }
+        return new ApiResponse<>(toDTO(result));
     }
 }
