@@ -47,6 +47,21 @@ public class CommunityController {
 		return cmSvc.postMessage(uid,msg);
 	}
 
+	@PostMapping("/notify/sys")
+	public ApiResponse postSysNotifications(
+			@RequestAttribute(name="id", required=false) Integer operatorId,
+			@RequestBody Map<String,String> body){
+
+		if(!body.containsKey(POST_MSG_CONTENT_KEY)){
+			throw new ApiError(403,"MsgErr","Message content not found");
+		}
+		CommunityMessage msg = new CommunityMessage();
+		msg.setSenderId(operatorId);
+		msg.setContent(String.valueOf(body.get(POST_MSG_CONTENT_KEY)));
+
+		return cmSvc.postSysNotifications(msg);
+	}
+
 	@PostMapping("/notify/{assoId}")
 	public ApiResponse postNotification(
 			@RequestAttribute(name="id") Integer operatorId,

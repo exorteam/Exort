@@ -24,6 +24,7 @@ public interface CommunityService {
 	}
 
 	ApiResponse postNotifications(CommunityMessage msg);
+	ApiResponse postSysNotifications(CommunityMessage msg);
 	ApiResponse postMessage(int uid,CommunityMessage msg);
 	ApiResponse markMessageReadById(int uid,int mid);
 	ApiResponse markAllMessageRead(int uid);

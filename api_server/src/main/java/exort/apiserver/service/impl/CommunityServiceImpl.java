@@ -32,6 +32,13 @@ public class CommunityServiceImpl extends RestTemplate implements CommunityServi
 				assoId);
 	}
 
+	public ApiResponse postSysNotifications(CommunityMessage msg) {
+		return request(new TypeToken<Integer>(){},
+				msg,
+				HttpMethod.POST,
+				"/com/notifiy/sys");
+	}
+
 	public ApiResponse postMessage(int uid,CommunityMessage msg){
 		return request(new TypeToken<Integer>(){},
 				msg,
