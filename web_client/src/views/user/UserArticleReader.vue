@@ -11,6 +11,7 @@
 		</div>
 	</template>
 	<MdEditor ref="md" :value="article.content" read-mode />
+	<Comment type="article"></Comment>
 </ContentPage>
 </template>
 
@@ -18,6 +19,7 @@
 import {api} from '@/http'
 import MdEditor from '@/components/MdEditor'
 import ContentPage from '@/components/ContentPage'
+import Comment from '@/components/Comment'
 
 export default {
 	name: "UserArticleReader",

@@ -34,25 +34,62 @@
                         角色列表
                     </MenuItem>
                 </MenuGroup>
+				<MenuGroup title="其他操作">
+					<MenuItem @click.native="postNotificationModal = true">
+						<Icon type="ios-chatboxes" />
+						发布公告
+					</MenuItem>
+				</MenuGroup>
             </Menu>
         </Sider>
         <Content style="min-height:420px;margin:10px;">
             <router-view/>
         </Content>
+
+		<Modal v-model="postNotificationModal"
+				title="New Notification"
+				:loading="true"
+				@on-ok="onClickPostNotification">
+			<Form :model="newNotification" :label-width="20">
+				<p>向订阅用户推送通知:</p>
+				<br>
+				<FormItem>
+					<Input v-model="newNotification.content" type="textarea" :rows="5" />
+				</FormItem>
+			</Form>
+		</Modal>
     </Layout>
 </Layout>
 </template>
 
 <script>
 import NavHeader from '@/components/nav/Header'
+import { mapActions } from 'vuex'
 
 export default {
     components: {
         NavHeader
     },
-    data() { return {
-        active: ''
-    };},
+    data() { 
+		return {
+			active: '',
+			postNotificationModal : false,
+			newNotification: {
+				content: ''
+			}
+		};
+	},
+	methods: {
+		...mapActions('common/currentUserMsgs',['postSysNotification']),
+		onClickPostNotification() {
+			this.postSysNotification({
+				content: this.newNotification.content
+			}).then(res => {
+				console.log(res)
+				this.postNotificationModal = false
+			})
+		}
+	},
     created() {
         this.active = this.$route.name;
     },

@@ -37,11 +37,33 @@ const actions = {
 		api({
 			method:'delete',
 			url:'/associations/'+assoId
-		})
-		.then(res => {
+		}).then(res => {
 			resolve(res);
-		}).catch(err => reject(err));
-	})
+		}).catch(err => {
+            if (err.response && err.response.data) {
+                reject(err.response.data);
+            } else {
+                reject({ error: 'unknown', message: err });
+            }
+        });
+	}),
+	postNotification: ({commit},{assoId,content}) => new Promise((resolve,reject) => {
+		api({
+			method: 'post',
+			url: '/com/notify/'+assoId,
+			data: {
+				content
+			}
+		}).then(res => {
+			resolve(res);
+		}).catch(err => {
+            if (err.response && err.response.data) {
+                reject(err.response.data);
+            } else {
+                reject({ error: 'unknown', message: err });
+            }
+        });
+	}),
 }
 
 export default {

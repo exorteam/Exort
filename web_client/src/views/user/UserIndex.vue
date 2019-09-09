@@ -14,7 +14,7 @@
 					<Icon type="md-albums" />
 					社团
 				</MenuItem>
-				<MenuItem name="UsrActivityList">
+				<MenuItem name="UserActivityList" :to="{name:'UserActivityList'}">
 					<Icon type="md-american-football" />
 					活动
 				</MenuItem>

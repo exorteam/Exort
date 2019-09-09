@@ -113,10 +113,7 @@
                 'tree',
                 'specdept',
                 'nodePerm'
-            ]),
-            ...mapState("associationAdmin/currentAssociation", {
-                assoId: state => state.id
-            })
+            ])
         },
         methods: {
             ...mapMutations("associationAdmin/assoMem", [
@@ -525,7 +522,7 @@
             }
         },
         mounted() {
-            this.gettree(this.assoId).then().catch(error => {
+            this.gettree(this.$route.params.assoId).then().catch(error => {
                 this.$Message.error(error);
                 // console.log(error);
             });

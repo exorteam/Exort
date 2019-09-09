@@ -125,6 +125,22 @@ const actions = {
 			resolve(res);
 		}).catch(err => reject(err));
 	}),
+	getUserAssociations: ({commit},{uid}) => new Promise((resolve,reject) => {
+		api({
+			method:'get',
+			url: '/associations/users/'+uid+'/associations'
+		}).then(res => {
+			resolve(res);
+		}).catch(err => reject(err));
+	}),
+	getUserInfoById: ({commit},{uid}) => new Promise((resolve,reject) => {
+		api({
+			method:'get',
+			url: '/users/'+uid
+		}).then(res => {
+			resolve(res);
+		}).catch(err => reject(err));
+	})
 }
 
 export default {

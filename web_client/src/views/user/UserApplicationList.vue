@@ -56,7 +56,8 @@
             <span style="font-size:smaller;color:gray">
                 结果: {{ application.receipt.message }}
             </span>
-            <span v-if="application.receipt.departmentId">
+            <br>
+            <span style="font-size:smaller;color:gray" v-if="application.receipt.departmentId">
                 加入部门: {{ application.receipt.departmentId }}
             </span>
         </div>
