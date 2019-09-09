@@ -13,6 +13,7 @@ public interface CommunityService {
 	UserCommunityEntity updateUser(UserCommunityEntity e);
 
 	Integer postNotifications(CommunityMessage msg);
+	Integer postSysNotifications(CommunityMessage msg);
 	Integer postMessage(int uid,CommunityMessage msg);
 	Integer markMessageAsReadById(int uid,int msgId);
 	Integer markAllMessageAsRead(int uid);
