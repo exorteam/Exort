@@ -1,4 +1,49 @@
 kind: pipeline
+name: exort-article-manager
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  - name: app-config
+    path: /root/resources
+  commands:
+  - cd ./article_manager
+  - rm -rf src/main/resources
+  - cp -rf /root/resources/article src/main/resources
+  - mvn clean package docker:removeImage -DimageName=exort/article-manager docker:build -DpushImage
+
+trigger:
+  branch:
+  - article-mgr
+  
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+  - name: app-config
+    host:
+      path: /home/ubuntu/exort
+---
+
+kind: pipeline
 name: exort-auth
 
 steps:
@@ -13,8 +58,12 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
+  - name: app-config
+    path: /root/resources
   commands:
   - cd ./auth
+  - rm -rf src/main/resources
+  - cp -rf /root/resources/auth src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/auth docker:build -DpushImage
 
 trigger:
@@ -34,6 +83,9 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
+  - name: app-config
+    host:
+      path: /home/ubuntu/exort
 
 ---
 
@@ -212,11 +264,103 @@ volumes:
   - name: exort-resources
     host:
       path: /home/ubuntu/exort
+
+---
+kind: pipeline
+name: exort-association-manager
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  - name: exort-resources
+    path: /resources
+  commands:
+  - cd ./association_manager
+  - rm -rf src/main/resources
+  - cp -rf /resources/assomgr src/main/resources
+  - mvn clean package docker:removeImage -DimageName=exort/association-manager docker:build -DpushImage
+
+trigger:
+  branch:
+  - association_dev
+
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+  - name: exort-resources
+    host:
+      path: /home/ubuntu/exort
+
+---
+
+kind: pipeline
+name: exort-comment
+
+
+steps:
+- name: build
+  image: thomasf/drone-mvn
+  volumes:
+  - name: cache
+    path: /root/.m2
+  - name: docker-sock
+    path: /var/run/docker.sock
+  - name: docker-cred
+    path: /root/.docker/config.json
+  - name: server-hosts
+    path: /etc/hosts
+  - name: exort-resources
+    path: /resources
+  commands:
+    - cd ./comment
+    - rm -rf src/main/resources
+    - cp -rf /resources/comment src/main/resources
+    - mvn clean package docker:removeImage -DimageName=exort/comment docker:build -DpushImage
+
+trigger:
+  branch:
+  - comment_dev
+  
+volumes:
+  - name: cache
+    host:
+      path: /home/ubuntu/repo
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock
+  - name: docker-cred
+    host:
+      path: /home/ubuntu/.docker/config.json
+  - name: server-hosts
+    host:
+      path: /etc/hosts
+  - name: exort-resources
+    host:
+      path: /home/ubuntu/exort
+
 ---
 
 kind: pipeline
 name: exort-finance
-
 steps:
 - name: build
   image: thomasf/drone-mvn

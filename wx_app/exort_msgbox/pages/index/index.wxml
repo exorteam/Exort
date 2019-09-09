@@ -1,0 +1,11 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="logo">Exort</view>
+  <form bindsubmit="login">
+    <input class="login-input" name="username" placeholder="用户名" />
+    <input class="login-input" name="password" placeholder="密码" />
+    <button 
+        class="login-btn"
+        form-type="submit">登陆</button>
+  </form>
+</view>

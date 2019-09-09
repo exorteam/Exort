@@ -1,0 +1,52 @@
+2019-08-02 16:52:42,511 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2019-08-02 16:52:42,537 INFO o.a.j.JMeter: Loading user properties from: /Users/DGY/Desktop/apache-jmeter-5.1.1/bin/user.properties
+2019-08-02 16:52:42,538 INFO o.a.j.JMeter: Loading system properties from: /Users/DGY/Desktop/apache-jmeter-5.1.1/bin/system.properties
+2019-08-02 16:52:42,544 INFO o.a.j.JMeter: Copyright (c) 1998-2019 The Apache Software Foundation
+2019-08-02 16:52:42,544 INFO o.a.j.JMeter: Version 5.1.1 r1855137
+2019-08-02 16:52:42,544 INFO o.a.j.JMeter: java.version=12.0.1
+2019-08-02 16:52:42,544 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2019-08-02 16:52:42,544 INFO o.a.j.JMeter: os.name=Mac OS X
+2019-08-02 16:52:42,544 INFO o.a.j.JMeter: os.arch=x86_64
+2019-08-02 16:52:42,545 INFO o.a.j.JMeter: os.version=10.14.5
+2019-08-02 16:52:42,545 INFO o.a.j.JMeter: file.encoding=UTF-8
+2019-08-02 16:52:42,545 INFO o.a.j.JMeter: java.awt.headless=null
+2019-08-02 16:52:42,545 INFO o.a.j.JMeter: Max memory     =1073741824
+2019-08-02 16:52:42,545 INFO o.a.j.JMeter: Available Processors =8
+2019-08-02 16:52:42,553 INFO o.a.j.JMeter: Default Locale=English (EN)
+2019-08-02 16:52:42,554 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2019-08-02 16:52:42,554 INFO o.a.j.JMeter: JMeterHome=/Users/DGY/Desktop/apache-jmeter-5.1.1
+2019-08-02 16:52:42,554 INFO o.a.j.JMeter: user.dir  =/Users/DGY/Desktop/Exort/api_server
+2019-08-02 16:52:42,554 INFO o.a.j.JMeter: PWD       =/Users/DGY/Desktop/Exort/api_server
+2019-08-02 16:52:42,555 INFO o.a.j.JMeter: IP: 10.166.223.75 Name: Hate.local FullName: 10.166.223.75
+2019-08-02 16:52:44,244 INFO o.a.j.g.a.LookAndFeelCommand: Installing Darcula LAF
+2019-08-02 16:52:44,252 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: com.bulenkov.darcula.DarculaLaf [Darcula]
+2019-08-02 16:52:44,252 INFO o.a.j.JMeter: Setting LAF to: com.bulenkov.darcula.DarculaLaf
+2019-08-02 16:52:44,332 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2019-08-02 16:52:44,939 INFO o.j.r.JARSourceHTTP: Found cached repo
+2019-08-02 16:52:45,082 INFO o.j.r.PluginManager: Plugins Status: [jpgc-casutg=2.9, jpgc-plugins-manager=1.3, jmeter-core=5.1.1, jmeter-ftp=5.1.1, jmeter-http=5.1.1, jmeter-jdbc=5.1.1, jmeter-jms=5.1.1, jmeter-junit=5.1.1, jmeter-java=5.1.1, jmeter-ldap=5.1.1, jmeter-mail=5.1.1, jmeter-mongodb=5.1.1, jmeter-native=5.1.1, jmeter-tcp=5.1.1, jmeter-components=5.1.1]
+2019-08-02 16:52:46,540 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-08-02 16:52:46,541 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-08-02 16:52:46,541 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-08-02 16:52:46,541 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2019-08-02 16:52:46,541 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2019-08-02 16:52:46,541 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2019-08-02 16:52:46,862 INFO o.a.j.e.KeyToolUtils: keytool found at 'keytool'
+2019-08-02 16:52:46,862 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file /Users/DGY/Desktop/apache-jmeter-5.1.1/bin/proxyserver.jks
+2019-08-02 16:52:47,005 INFO o.a.j.s.FileServer: Default base='/Users/DGY/Desktop/Exort/api_server'
+2019-08-02 16:52:47,270 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2019-08-02 16:52:47,271 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2019-08-02 16:52:47,271 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2019-08-02 16:52:47,271 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2019-08-02 16:52:47,286 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2019-08-02 16:52:55,638 INFO o.a.j.g.a.Load: Loading file: /Users/DGY/Desktop/Test Plan.jmx
+2019-08-02 16:52:55,638 INFO o.a.j.s.FileServer: Set new base='/Users/DGY/Desktop'
+2019-08-02 16:52:55,741 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2019-08-02 16:52:55,748 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2019-08-02 16:52:55,750 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2019-08-02 16:52:55,751 INFO o.a.j.s.SaveService: Loading file: /Users/DGY/Desktop/Test Plan.jmx
+2019-08-02 16:52:55,947 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2019-08-02 16:52:55,947 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2019-08-02 16:52:56,187 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2019-08-02 16:52:56,253 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2019-08-02 16:52:56,299 INFO o.a.j.v.ViewResultsFullVisualizer: Add JavaFX to your Java installation if you want to use renderer: org.apache.jmeter.visualizers.RenderInBrowser
+2019-08-02 16:52:56,342 INFO o.a.j.s.FileServer: Set new base='/Users/DGY/Desktop'
