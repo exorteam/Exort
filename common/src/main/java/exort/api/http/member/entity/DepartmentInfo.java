@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DepartmentInfo {
-    int associationId;
+    String associationId;
     int departmentId;
     String name;
     String description;
     int parentId;
 
 
-    public DepartmentInfo(int associationId, String name, String description, int parentId) {
+    public DepartmentInfo(String associationId, String name, String description, int parentId) {
         this.associationId = associationId;
         this.name = name;
         this.description = description;

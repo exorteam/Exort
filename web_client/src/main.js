@@ -1,48 +1,23 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import Vuex from 'vuex'
+import VueGoogleCharts from 'vue-google-charts'
+import iView from 'iview';
+import 'iview/dist/styles/iview.css';
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
 import router from './router'
 import store from './store'
 import App from './App'
-import Vuex from 'vuex'
 
-// bootstrap vue
-import BootstrapVue from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-// iview
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
-
-//引入qs
-import qs from 'qs'
-
-// 引入axios
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-
-Vue.use(iView);
-Vue.use(BootstrapVue);
-Vue.use(router);
 Vue.use(Vuex);
-Vue.use(VueAxios, axios)
-Vue.prototype.$qs = qs;
-
-axios.defaults.baseURL = 'http://localhost:8080';
-axios.defaults.withCredentials = true;
-
-// The routing configuration
-const RouterConfig = {
-  routes: router
-};
-Vue.config.productionTip = false;
-
-store.dispatch('setStatus');
+Vue.use(VueGoogleCharts)
+Vue.use(iView);
+Vue.use(mavonEditor);
 
 new Vue({
-  el: '#app',
-  router: router,
-  store,
-  render: h => h(App)
+    el: '#app',
+    router: router,
+    store: store,
+    render: h => h(App)
 });

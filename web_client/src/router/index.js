@@ -1,115 +1,40 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 
-// import Index from '@/components/index'
-import Activity from '../components/activity/activity.vue'
-import About from '../components/activity/about.vue'
+Vue.use(VueRouter);
 
-import SysManaAsso from '../components/association_management/sys_manage_association'
-import SysCreateAsso from '../components/association_management/sys_create_association'
-import EditAsso from '../components/association_management/edit_association'
-import SysAssoList from '../components/association_management/sys_association_list'
-import AssoList from '../components/association_management/association_list'
-import CreateAsso from '../components/association_management/create_association'
+import systemAdmin from './system-admin'
+import associationAdmin from './association-admin'
+import user from './user'
+import GlobalNotFound from '@/views/GlobalNotFound'
 
-import AdminIndex from '../components/admin_index'
-
-import AssociaMemManage from '../components/association_member_management/association_member_table'
-import AppliManagement from '../components/association_member_management/application_management_table'
-
-import UserList from '../components/user_management/UserList.vue'
-import PermList from '../components/user_management/PermList.vue'
-
-import SignIn from '../components/auth/signin/signin'
-import SignUp from '../components/auth/signup/signup'
-
-Vue.use(Router);
-
-export default new Router({
+const router = new VueRouter({
     mode: 'history',
     routes: [
+        systemAdmin,
+        associationAdmin,
+        user,
         {
-            path: '/',
-            name: 'Home',
-            redirect: '/signIn'
-        },
-        {
-            path: '/signIn',
-            name: 'SignIn',
-            component: SignIn
-        },
-        {
-            path: '/signUp',
-            name: 'SignUp',
-            component: SignUp
-        },
-        {
-            path: "/admin",
-            name: 'Admin',
-            component: AdminIndex,
-            children: [
-                {
-                    path: 'activity',
-                    name: 'activity',
-                    component: Activity
-                },
-                {
-                    path: 'activity/about',
-                    name: 'about',
-                    component: About
-                },
-                {
-                    path: 'asso_list',
-                    name: 'AssoList',
-                    component: AssoList
-                },
-                {
-                    path: 'sys_asso_list',
-                    name: 'SysAssoList',
-                    component: SysAssoList
-                },
-                {
-                    path: 'create_asso',
-                    name: 'CreateAsso',
-                    component: CreateAsso
-                },
-                {
-                    path: 'sys_mana_asso',
-                    name: 'SysManaAsso',
-                    component: SysManaAsso
-                },
-                {
-                    path: 'edit_asso',
-                    name: 'EditAsso',
-                    component: EditAsso
-                },
-                {
-                    path: 'sys_create_asso',
-                    name: 'SysCreateAsso',
-                    component: SysCreateAsso
-                },
-                {
-                    path: 'application_management',
-                    name: 'AppliManagement',
-                    component: AppliManagement
-                },
-                {
-                    path: 'association_member_management',
-                    name: 'AssociaMemManage',
-                    component: AssociaMemManage
-                },
-                {
-                    path: 'user_list',
-                    name: 'UserList',
-                    component: UserList
-                },
-                {
-                    path: 'perm_list',
-                    name: 'PermList',
-                    component: PermList
-                }
-
-            ]
+            path: '*',
+            name: 'GlobalNotFound',
+            component: GlobalNotFound
         }
     ]
-})
+});
+
+import store from '../store'
+
+let first_time = true;
+
+router.beforeEach((to, from, next) => {
+    if (first_time) {
+        store.dispatch('common/currentUser/getToken').catch(err => {
+            console.log('[INFO] user not login');
+        }).finally(() => next());
+        first_time = false;
+    } else {
+        next();
+    }
+});
+
+export default router

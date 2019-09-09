@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AssociationServiceImpl extends RestTemplate implements AssociationManagerService {
     @Value("${exort.assomgr.protocol:http}")
@@ -49,6 +51,14 @@ public class AssociationServiceImpl extends RestTemplate implements AssociationM
     public ApiResponse<Object> patchAssociation(String assoId, Operation<String> body){
         return request(new TypeToken<Object>() {}, body,
                 HttpMethod.PUT, "/associations/{assoId}/state", assoId);
+    }
 
+    @Override
+    public ApiResponse<PagedData<Association>> getAssociationsInBatch(List<String> ids, PageQuery pageQuery){
+        return request(new TypeToken<PagedData<Association>>(){},
+                ids,
+                HttpMethod.POST,
+                pageQuery,
+                "/associations/batch");
     }
 }

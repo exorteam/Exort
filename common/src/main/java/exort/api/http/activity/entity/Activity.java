@@ -5,10 +5,15 @@ import java.util.List;
 
 import lombok.Data;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Activity {
     private String id;
-    private List<Integer> associationIds;
+    private List<String> associationIds;
     private Date createTime;
     private Date publishTime;
     private Date lastPublishTime;
@@ -28,4 +33,23 @@ public class Activity {
     private List<Integer> realParticipantIds;
     private List<String> tags;
     private String image;
+
+    public Activity(List<String> associationIds, ActivityTime signupTime, ActivityTime time, String title, String content,
+                     boolean ifReview, boolean ifOnlyMem, int maxParticipants, List<Integer> materialTemplateIds, List<String> tags, String image) {
+        this.associationIds = associationIds;
+        this.createTime = new Date();
+        this.publishTime = new Date();
+        this.lastPublishTime = new Date();
+        this.lastModifyTime = new Date();
+        this.signupTime = signupTime;
+        this.time = time;
+        this.title = title;
+        this.content = content;
+        this.ifReview = ifReview;
+        this.ifOnlyMem = ifOnlyMem;
+        this.maxParticipants = maxParticipants;
+        this.materialTemplateIds = materialTemplateIds;
+        this.tags = tags;
+        this.image = image;
+    }
 }

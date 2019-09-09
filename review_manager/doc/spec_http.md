@@ -22,7 +22,7 @@
    |`applicantId` _int_|申请者ID|
    |`type` _string_|申请类型|
    |`object` _any_|自定义json对象|
-   |`materialIds` _int[]_|申请材料ID列表|
+   |`materialIds` _string[]_|申请材料ID列表|
    |`createdTime` _string_|申请时间|
    |`handledTime` _string_|处理时间|
    |`state` _string_|状态,可以是 _pending_, _accepted_, _refused_, _canceled_|
@@ -49,7 +49,7 @@
    |`applicantId` _int_|申请者ID|
    |`type` _string_|申请类型|
    |`object` _any_|自定义json对象|
-   |`materialIds` _int[]_|申请材料ID列表|
+   |`materialIds` _string[]_|申请材料ID列表|
 
 - Response
 
@@ -283,7 +283,7 @@
    |Parameter|Description|
    |--|--|
    |`applicantId` _int_|申请者ID, 默认为null|
-   |`type` _int_|申请类型, 默认为null(全部)|
+   |`type` _string_|申请类型, 默认为null(全部)|
    |`createdAfter` _string_|申请创建于此时间之后,默认为最早|
    |`createdBefore` _string_|申请创建于此时间之前,默认为当前时间|
    |`state` _string_|申请状态|
@@ -411,8 +411,9 @@
    |Field|Description|
    |--|--|
    |`id` _int_|回调函数ID|
+   |`type` _string_|申请类型|
    |`event` _string_|事件, 可以是 _created_, _accepted_, _refused_, _canceled_|
-   |`target` _string_|回调函数服务地址|
+   |`endpoint` _string_|回调函数服务地址|
    |`url` _string_|回调函数url|
    |`description` _string_|回调函数描述|
 
@@ -428,7 +429,7 @@
    |--|--|
    |`type` _string_|申请类型|
    |`event` _string_|事件, 可以是 _created_, _accepted_, _refused_, _canceled_|
-   |`target` _string_|回调函数服务地址|
+   |`endpoint` _string_|回调函数服务地址|
    |`url` _string_|回调函数url|
    |`description` _string_|回调函数描述, 默认为""|
 
@@ -436,7 +437,7 @@
 
    |Code|Description|
    |--|--|
-   |200 [_Callback_](#Callback)|绑定成功|
+   |200 _{}_|绑定成功|
    |400 "invalidEvent"|无效的事件, 只能是 _created_, _accepted_, _refused_, _canceld_ 之一|
    |409 "conflic"|给定申请类型和给定事件已经绑定了回调函数, 先解除绑定再进行注册|
 
@@ -447,7 +448,7 @@
    {
      "type": "signupActivity",
      "event": "accepted",
-     "target": "xxx.xxx.xxx.xxx",
+     "endpoint": "xxx.xxx.xxx.xxx",
      "url": "/callback/acceptsignup",
      "description": "处理接受活动报名申请"
    }
@@ -458,7 +459,7 @@
        "id": 1,
        "type": "signupActivity",
        "event": "accepted",
-       "target": "xxx.xxx.xxx.xxx",
+       "endpoint": "xxx.xxx.xxx.xxx",
        "url": "/callback/acceptsignup",
        "description": "处理接受活动报名申请"
      }
@@ -528,7 +529,7 @@
          "id": 1,
          "type": "signupActivity",
          "event": "accepted",
-         "target": "xxx.xxx.xxx.xxx",
+         "endpoint": "xxx.xxx.xxx.xxx",
          "url": "/callback/acceptsignup",
          "description": "处理接受活动报名申请"
        },
@@ -536,7 +537,7 @@
          "id": 2,
          "type": "createAssociation",
          "event": "accepted",
-         "target": "xxx.xxx.xxx.xxx",
+         "endpoint": "xxx.xxx.xxx.xxx",
          "url": "/callback/acceptcreation",
          "description": "处理接受社团创建申请"
        },

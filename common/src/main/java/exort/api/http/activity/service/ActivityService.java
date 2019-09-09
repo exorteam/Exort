@@ -1,10 +1,12 @@
 package exort.api.http.activity.service;
 
-import exort.api.http.activity.entity.*;
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.RequestActivity;
+import exort.api.http.activity.entity.Signup;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
-import exort.api.http.review.entity.CallbackParam;
 
 public interface ActivityService {
 
@@ -14,20 +16,13 @@ public interface ActivityService {
 
     public ApiResponse<PagedData<Activity>> getActivities(Filter select, PageQuery pageQuery);
 
-    public ApiResponse<Object> publishActivity(String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> publishActivity(String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> addParticipants(String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> addParticipants(String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> addRealParticipants(String activityid, RequestActivity requestActivity);
+    public ApiResponse<Activity> addRealParticipants(String activityid, RequestActivity requestActivity);
 
-    public ApiResponse<Object> deleteParticipants(String activityid, RequestActivity requestActivity);
-
-    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
-
-    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery, String activityid, RequestActivity requestActivity);
-
-    public ApiResponse<Object> acceptSignup(CallbackParam<Signup> operation);
+    public ApiResponse<Activity> deleteParticipants(String activityid, RequestActivity requestActivity);
 
     public ApiResponse<Activity> getActivity(String activityid);
-
 }

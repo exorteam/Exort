@@ -22,4 +22,5 @@ public class Permission {
         this.name = name;
         this.category = category;
     }
+
 }

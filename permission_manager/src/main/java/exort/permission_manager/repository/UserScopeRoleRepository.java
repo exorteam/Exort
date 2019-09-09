@@ -55,6 +55,11 @@ public interface UserScopeRoleRepository extends JpaRepository<UserScopeRole, Lo
     @Query("DELETE FROM UserScopeRole usr WHERE usr.userId = ?1 AND usr.scope = ?2")
     void deleteByUserIdAndScope(Long userId, String scope);
 
+    /* delete (user, scope, role) by scope */
+    @Modifying
+    @Query("DELETE FROM UserScopeRole usr WHERE usr.scope = ?1")
+    void deleteByScope(String scope);
+
     /* delete (user, scope, role) by (user, scope, role) */
     @Modifying
     @Query("DELETE FROM UserScopeRole usr WHERE usr.userId = ?1 AND usr.scope = ?2 AND usr.roleId = ?3")

@@ -139,4 +139,11 @@ public class UserController {
         us.revokeAllRoles(userId);
         return ApiResponse.emptyResponse();
     }
+
+    @DeleteMapping("/scopes/{scope}")
+    public ApiResponse clearScope(
+            @PathVariable("scope") String scope) {
+        us.clearScope(scope);
+        return ApiResponse.emptyResponse();
+    }
 }
