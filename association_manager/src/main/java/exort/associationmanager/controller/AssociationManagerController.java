@@ -85,13 +85,13 @@ public class AssociationManagerController{
     @PostMapping("/associations")
     public ApiResponse<Association> createAssociation(
 			@RequestBody AssociationInfo body){
-        if(body.getDescription() == null || body.getLogo() == null || body.getName() == null){
-            throw new ApiError(400,"invalidFormat","无效的申请格式");
-        }
+        String description = body.getDescription() == null ? "" : body.getDescription();
+        String logo = body.getLogo() == null ? "" : body.getLogo();
+        String name = body.getName() == null ? "请设置名字" : body.getName();
         if(body.getTags() == null){
             body.setTags(new LinkedList<>());
         }
-        exort.associationmanager.entity.Association association= service.createAssociation(body.getName(),body.getDescription(),body.getTags(),body.getLogo());
+        exort.associationmanager.entity.Association association= service.createAssociation(name,description,body.getTags(),logo);
         Association association1 = association.toCommon();
         if(association == null){
             throw new ApiError(500,"unfoundBug","未发现的Bug，请由提交给Exort");
@@ -115,13 +115,13 @@ public class AssociationManagerController{
     public ApiResponse<Association> editAssociation(
 			@RequestBody AssociationInfo body,
 			@PathVariable(value="assoId") String assoId ){
-        if(body.getDescription() == null || body.getLogo() == null || body.getName() == null){
-            throw new ApiError(400,"invalidFormat","无效的申请格式");
-        }
+        String description = body.getDescription() == null ? "" : body.getDescription();
+        String logo = body.getLogo() == null ? "" : body.getLogo();
+        String name = body.getName() == null ? "请设置名字" : body.getName();
         if(body.getTags() == null){
             body.setTags(new LinkedList<>());
         }
-        exort.associationmanager.entity.Association association = service.editAssociation(assoId, body.getName(),body.getDescription(),body.getTags(),body.getLogo());
+        exort.associationmanager.entity.Association association = service.editAssociation(assoId, name, description,body.getTags(),logo);
         Association association1 = association.toCommon();
         if(association == null){
             throw new ApiError(500,"unfoundBug","未发现的Bug，请由提交给Exort");
