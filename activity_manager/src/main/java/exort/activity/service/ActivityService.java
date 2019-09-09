@@ -1,24 +1,19 @@
 package exort.activity.service;
 
-import exort.activity.entity.Activity;
-import exort.activity.entity.PageList;
-import exort.activity.entity.Filter;
+import exort.activity.entity.ActivityInfo;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
 
 import java.util.List;
 
 public interface ActivityService {
 
-    Activity upsertActivity(Activity activity);
+    ActivityInfo createActivity(ActivityInfo activityInfo);
 
-    PageList<Activity> getActivities(Filter select, int pagesize, int pagenum, int sortby);
+    ActivityInfo updateActivity(ActivityInfo activityInfo);
+    ActivityInfo getActivity(String id);
 
-    boolean changeActivityState(String activityid, String type);
+    PagedData<ActivityInfo> getActivities(Filter filter, PageQuery pageQuery);
 
-    boolean addUserIds(String activityid, List<Integer> userIds, int type);
-
-    boolean removeParticipants(String activityid, List<Integer> participantIds);
-
-    PageList<Integer> getActivityUserIds(int pagesize, int pagenum, String activityid, int userId, int type);
-
-    Activity getActivity(String acticityid);
 }

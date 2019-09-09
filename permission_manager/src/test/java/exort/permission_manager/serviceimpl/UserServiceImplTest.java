@@ -149,6 +149,12 @@ class UserServiceImplTest {
     }
 
     @Test
+    void clearScope() {
+        us.clearScope("scope1");
+        assertEquals(3, usrr.findAll().size());
+    }
+
+    @Test
     void hasRole() {
         assertTrue(us.hasRole(1L, "scope1", "role1"));
         assertTrue(us.hasRole(1L, "scope1", "role2"));

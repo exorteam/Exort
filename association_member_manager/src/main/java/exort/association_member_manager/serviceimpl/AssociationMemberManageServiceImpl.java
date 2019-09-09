@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class AssociationMemberManageServiceImpl implements AssociationMemberManageService {
@@ -67,14 +65,6 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
     public List<Department> findDepartmentList(String associationId) {
         return departmentRepository.findAllByAssociationId(associationId);
     }
-
-    @Override
-    @Transactional
-    public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application) {
-
-        return addOneToAssociation(application.getObject().getAssociationId(), userId);
-    }
-
 
     @Override
     public List<Department> getDepartmentTree(String associationId) {
@@ -273,6 +263,9 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
             for (Department department : list) {
                 departmentRepository.delete(department);
             }
+
+            ps.clearScope(scope(associationId));
+            ps.deleteRolesByCategory(scope(associationId)).getData();
         }
 
         Department manageDepartment = new Department(associationId, 1, "管理层", "管理部门的最基础部门", 0);
@@ -280,26 +273,25 @@ public class AssociationMemberManageServiceImpl implements AssociationMemberMana
         Department allUsers = new Department(associationId, 2, "所有成员", "社团中所有成员", 0);
 
         departmentRepository.save(manageDepartment);
-        ps.createRole(new Role(roleName(associationId, manageDepartment.getDepartmentId()), scope(associationId), manageDepartment.getDescription()));
-
         departmentRepository.save(allUsers);
-        ps.createRole(new Role(roleName(associationId, allUsers.getDepartmentId()), scope(associationId), allUsers.getDescription()));
 
+        ps.grantRoles((long) userId, scope(associationId), Arrays.asList(MEMBER, MANAGER));
 
         return true;
     }
 
     @Override
+    @Transactional
     public Boolean deleteAllDepartments(String associationId) {
         List<Department> departments = departmentRepository.findAllByAssociationId(associationId);
 
         for (Department department : departments) {
             departmentRepository.delete(department);
-
-            if (ps.deleteRole(roleName(associationId, department.getDepartmentId())).getData() == null) {
-                return false;
-            }
         }
+
+        ps.clearScope(scope(associationId));
+
+        ps.deleteRolesByCategory(scope(associationId)).getData();
 
         return true;
     }

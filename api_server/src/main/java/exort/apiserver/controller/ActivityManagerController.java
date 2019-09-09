@@ -1,6 +1,14 @@
 package exort.apiserver.controller;
 
-import javax.websocket.server.PathParam;
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.RequestActivity;
+import exort.api.http.activity.entity.Signup;
+import exort.api.http.activity.service.ActivityService;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.review.entity.CallbackParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +19,7 @@ import exort.apiserver.service.ActivityManagerService.*;
 @RestController
 @RequestMapping(path="/activities")
 public class ActivityManagerController {
+
 
     @Autowired
     private ActivityManagerService service;
@@ -73,6 +82,26 @@ public class ActivityManagerController {
     @GetMapping(value = "/{id}")
     public Response getActivity(@PathVariable("id")String id){
         return service.getActivity(id);
+    }
+
+    private boolean checkPermissionOnActivity(int operatorId, Activity activity, String permission) {
+        System.out.println(operatorId);
+        System.out.println(activity.getTitle());
+        System.out.println(permission);
+        for (int i : activity.getAssociationIds()) {
+            final String assoScope = "asso-" + String.valueOf(i);
+            if (permSvc.hasPermission(Long.valueOf(operatorId), assoScope, permission) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPermissionByActivityId(int operatorId, String activityId, String permission) {
+        Activity activity = (Activity) activitySvc.getActivity(activityId).getData();
+        if (activity == null)
+            return false;
+        return checkPermissionOnActivity(operatorId, activity, permission);
     }
 
 }
