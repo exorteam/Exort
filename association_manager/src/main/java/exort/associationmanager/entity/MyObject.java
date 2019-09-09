@@ -10,7 +10,7 @@ public class MyObject {
     private String description;
     private List<String> tags;
     private  String logo;
-    private  Integer assoId;
+    private  String associationId;
     private  String reason;
 }
 

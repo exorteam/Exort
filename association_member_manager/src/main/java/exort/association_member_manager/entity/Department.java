@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Department extends exort.api.http.member.entity.DepartmentInfo {
 
     @Id
-    int associationId;
+    String associationId;
     @Id
     int departmentId;
     @ApiModelProperty(value = "部门名称", name = "name")
@@ -25,14 +25,14 @@ public class Department extends exort.api.http.member.entity.DepartmentInfo {
 
 
 
-    public Department(int associationId, String name, String description, int parentId) {
+    public Department(String associationId, String name, String description, int parentId) {
         this.associationId = associationId;
         this.name = name;
         this.description = description;
         this.parentId = parentId;
     }
 
-    public Department(int associationId, int departmentId, String name, String description, int parentId) {
+    public Department(String associationId, int departmentId, String name, String description, int parentId) {
         this.associationId = associationId;
         this.departmentId = departmentId;
         this.name = name;
@@ -40,7 +40,7 @@ public class Department extends exort.api.http.member.entity.DepartmentInfo {
         this.parentId = parentId;
     }
 
-    public Department(int associationId) {
+    public Department(String associationId) {
         this.associationId = associationId;
     }
 
