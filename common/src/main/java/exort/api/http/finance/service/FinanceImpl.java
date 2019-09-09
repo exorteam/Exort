@@ -71,6 +71,6 @@ public class FinanceImpl extends RestTemplate implements FinanceService {
     @Override
     public ApiResponse<Float> getAssociationBalance(String associationId) {
         return request(new TypeToken<Float>() {
-        }, HttpMethod.GET, "associations/{associationId}/balance",associationId);
+        }, HttpMethod.GET, "/associations/{associationId}/balance",associationId);
     }
 }
