@@ -84,3 +84,4 @@ volumes:
     host:
       path: /etc/hosts
 
+
