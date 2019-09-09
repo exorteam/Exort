@@ -44,7 +44,7 @@ public interface ApplicationRepository extends MongoRepository<Application, Long
     @Query("{'type': 'AssociationMemberSignUp', 'details.association_id': ?0, 'state': {$in: ?1}}")
     Page<Application> findAssociationMemberSignUpByAssociationIdAndStateIn(String associationId, Collection<String> states, Pageable pageable);
 
-    @Query("{'type': 'AssociationMemberSignUp', 'details.association_id': ?0, 'details.department_ids': ?1, 'state': {$in: ?2}}")
+    @Query("{'type': 'AssociationMemberSignUp', 'details.association_id': ?0, 'details.department_id': ?1, 'state': {$in: ?2}}")
     Page<Application> findAssociationMemberSignUpByAssociationIdAndDepartmentIdAndStateIn(String associationId, Integer departmentId, Collection<String> states, Pageable pageable);
 
 }
