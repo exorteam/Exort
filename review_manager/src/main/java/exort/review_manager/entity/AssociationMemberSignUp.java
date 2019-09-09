@@ -15,7 +15,7 @@ public class AssociationMemberSignUp {
     @Field("association_id")
     String associationId;
 
-    @Field("department_ids")
-    List<Integer> departmentIds;
+    @Field("department_id")
+    List<Integer> departmentId;
 
 }
