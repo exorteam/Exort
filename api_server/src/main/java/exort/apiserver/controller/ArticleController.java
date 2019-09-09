@@ -108,7 +108,7 @@ public class ArticleController {
 		}
 		ArticleFilterParam filter = new ArticleFilterParam();
 		filter.setAuthorIds(associationIds);
-		filter.setState(2);
+		filter.setState(1);
 		pageQuery.setSortBy("publishTime");
 		return articleSvc.listArticle(filter, pageQuery);
 	}
