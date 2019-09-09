@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 
 /**
+ * Load .env
+ */
+
+var dotenv = require('dotenv');
+var path = require('path');
+dotenv.config(path.join(__dirname, '..', '.env'));
+
+/**
  * Module dependencies.
  */
 
