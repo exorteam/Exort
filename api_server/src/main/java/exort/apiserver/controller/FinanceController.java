@@ -42,7 +42,7 @@ public class FinanceController {
         return fsi.getAssociationFiances(filters, new PageQuery(pagenum, pagesize, sortby));
     }
 
-    @GetMapping(value = "associations/{associationId}/balance")
+    @GetMapping(value = "/associations/{associationId}/balance")
     public ApiResponse<Float> getAssociationBalance(@PathVariable(value = "associationId") String associationId) {
         return fsi.getAssociationBalance(associationId);
     }
