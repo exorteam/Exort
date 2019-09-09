@@ -13,8 +13,12 @@ steps:
     path: /root/.docker/config.json
   - name: server-hosts
     path: /etc/hosts
+  - name: app-config
+    path: /root/resources
   commands:
   - cd ./article_manager
+  - rm -rf src/main/resources
+  - cp -rf /root/resources/article src/main/resources
   - mvn clean package docker:removeImage -DimageName=exort/article-manager docker:build -DpushImage
 
 trigger:
@@ -34,7 +38,9 @@ volumes:
   - name: server-hosts
     host:
       path: /etc/hosts
-
+  - name: app-config
+    host:
+      path: /home/ubuntu/exort
 ---
 
 kind: pipeline
