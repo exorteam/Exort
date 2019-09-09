@@ -1,46 +1,54 @@
 package exort.apiserver.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import com.google.common.reflect.TypeToken;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import exort.api.http.common.RestTemplate;
+import exort.api.http.common.entity.ApiResponse;
 import exort.apiserver.service.UserInfoService;
 
 @Service
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserInfoServiceImpl extends RestTemplate implements UserInfoService {
 
-	private RestTemplate rt = new RestTemplate();
+	@Value("${exort.auth.protocol:http}")
+    public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
-	public UserInfo getUserInfo(int id){
-		HttpHeaders headers = new HttpHeaders();
-		HttpMethod method = HttpMethod.GET;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Object> requestEntity = new HttpEntity<>(null,headers);
-		ResponseEntity<RestResponse<UserInfo>> response = rt.exchange("http://202.120.40.8:30728/users/info/"+String.valueOf(id),method,requestEntity,new ParameterizedTypeReference<RestResponse<UserInfo>>(){});
-		return (UserInfo)response.getBody().getData();
+    @Value("${exort.auth.endpoint:localhost}")
+    public void setEndpoint(String endpoint) {super.setEndpoint(endpoint);}
+
+
+	public ApiResponse<UserInfo> getUserInfo(int id){
+		return request(new TypeToken<UserInfo>(){},
+				HttpMethod.GET,"/users/info/"+String.valueOf(id));
 	}
 
-	public UserInfo updateUserInfo(int id,UserInfo info){
-		HttpHeaders headers = new HttpHeaders();
-		HttpMethod method = HttpMethod.POST;
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<UserInfo> requestEntity = new HttpEntity<>(info,headers);
-		ResponseEntity<RestResponse<UserInfo>> response = rt.exchange("http://202.120.40.8:30728/users/info/"+String.valueOf(id),method,requestEntity,new ParameterizedTypeReference<RestResponse<UserInfo>>(){});
-		return response.getBody().getData();
+	public ApiResponse<UserInfo> updateUserInfo(int id,UserInfo info){
+		return request(new TypeToken<UserInfo>(){},
+				info,HttpMethod.POST,"/users/info/"+String.valueOf(id));
 	}
 
-	public boolean disableUser(int id,boolean disabled){
+	public ApiResponse<Boolean> disableUser(int id,boolean disabled){
 		HashMap<String,Boolean> param = new HashMap<>();
 		param.put("disabled",disabled);
-		RestResponse<Object> response = rt.patchForObject("http://202.120.40.8:30728/users/info/"+String.valueOf(id),param,RestResponse.class);
-		return response.getData() != null;
+		return request(new TypeToken<Boolean>(){},
+				param,HttpMethod.POST,"/users/info/disable/"+String.valueOf(id));
+	}
+
+	public ApiResponse<List<UserInfo>> getUserInfoInBatch(List<Integer> ids){
+		return request(new TypeToken<List<UserInfo>>(){},
+				ids,HttpMethod.GET,"/users/info");
+	}
+
+	public ApiResponse<List<UserInfo>> getUserInfoByPage(int pageNum,int pageSize,String sortBy){
+		return request(new TypeToken<List<UserInfo>>(){},
+				HttpMethod.GET,"/users/info/page?pageNum={pageNum}&pageSize={pageSize}&sortBy={sortBy}",
+				Integer.valueOf(pageNum),Integer.valueOf(pageSize),sortBy);
 	}
 
 }

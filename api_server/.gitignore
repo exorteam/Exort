@@ -34,3 +34,8 @@ build/
 mvnw
 mvnw.cmd
 .mvn/**
+
+static_file/
+!static_file/default_logo
+
+application*.properties

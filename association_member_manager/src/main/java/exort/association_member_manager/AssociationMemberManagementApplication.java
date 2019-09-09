@@ -2,8 +2,10 @@ package exort.association_member_manager;
 
 import exort.api.http.common.errorhandler.ApiErrorHandler;
 import exort.api.http.perm.service.PermServiceImpl;
+import exort.association_member_manager.config.TaskRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
@@ -14,4 +16,8 @@ public class AssociationMemberManagementApplication {
         SpringApplication.run(AssociationMemberManagementApplication.class, args);
     }
 
+    @Bean
+    public TaskRunner taskRunner(){
+        return new TaskRunner();
+    }
 }

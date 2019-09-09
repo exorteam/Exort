@@ -20,6 +20,9 @@ public class JwtConfig {
 		registrationBean.addUrlPatterns("/permission/*");
 		registrationBean.addUrlPatterns("/activities/*");
 		registrationBean.addUrlPatterns("/associations/*");
+		registrationBean.addUrlPatterns("/articles/*");
+		registrationBean.addUrlPatterns("/com/*");
+		registrationBean.addUrlPatterns("/applications/*");
 
 		return registrationBean;
 	}

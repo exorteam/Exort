@@ -9,6 +9,7 @@ import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.review.entity.CallbackParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class ActivityManagerController {
     public static final String PERM_DELETE = "delete-activity";
     // Create operations require specific permission
     public static final String PERM_CREATE = "create-activity";
+
 
     @Autowired
     private ActivityService service;
@@ -114,4 +116,5 @@ public class ActivityManagerController {
             return false;
         return checkPermissionOnActivity(operatorId, activity, permission);
     }
+
 }
