@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import exort.api.http.activity.entity.Activity;
 import exort.api.http.activity.entity.RequestActivity;
 import exort.api.http.activity.service.ActivityService;
+import exort.api.http.assomgr.entity.Association;
 import exort.api.http.assomgr.service.AssociationManagerService;
 import exort.api.http.common.entity.ApiResponse;
 import exort.api.http.common.entity.PageQuery;
 import exort.api.http.common.entity.PagedData;
 import exort.api.http.common.errorhandler.ApiError;
+import exort.api.http.member.entity.InitAssociationInfo;
 import exort.api.http.member.entity.UserId;
 import exort.api.http.member.service.AssoMemService;
 import exort.api.http.review.entity.Application;
@@ -235,8 +237,13 @@ public class ApplicationController {
                         info.setDescription(details.getDescription());
                         info.setLogo(details.getLogo());
                         info.setTags(details.getTags());
-                        ApiResponse res = associationManagerService.createAssociation(info);
+                        ApiResponse<Association> res = associationManagerService.createAssociation(info);
                         if (res.getData() == null) {
+                            throw new ApiError(500, res.getError(), res.getMessage());
+                        }
+                        InitAssociationInfo initInfo = new InitAssociationInfo(applicantId.intValue(), res.getData().getId());
+                        ApiResponse res2 = assoMemService.initDepartment(initInfo);
+                        if (res2.getData() == null) {
                             throw new ApiError(500, res.getError(), res.getMessage());
                         }
                         break;
