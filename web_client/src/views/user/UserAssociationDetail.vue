@@ -10,7 +10,8 @@
 					<p>"{{asso.description}}"</p>
 				</div>
 				<div style="margin-top:20px">
-					<Button>申请加入</Button>
+					<Button v-if="!isMember">申请加入</Button>
+					<Button v-else>退出社团</Button>
 					<Button v-if="isAdmin" @click="routeToAssoAdmin" style="margin-left:10px">社团管理</Button>
 				</div>
 			</Col>
@@ -61,10 +62,14 @@ export default {
 				{title:'上次修改时间',key:'lastModifyTime'},
 			],
 
+			isMember: false
 		}
 	},
 	computed: {
-		...mapState('common/currentUser',['admin']),
+		...mapState('common/currentUser',[
+			'admin',
+			'uid'
+		]),
 		isAdmin() {
 			//TODO: replace return true after debug
 			return true;
@@ -77,6 +82,9 @@ export default {
 		]),
 		...mapActions('common/associationOps',[
 			'queryAssociationById'
+		]),
+		...mapActions('common/currentUser',[
+			'getUserAssociations'
 		]),
 		...mapActions('common/articleOps',['queryPagedArticlesWithFilter']),
 		routeToAssoAdmin(){
@@ -117,6 +125,14 @@ export default {
 			assoId: this.assoId
 		}).then(res => {
 			this.asso = res.data.data
+		})
+
+		this.getUserAssociations({
+			uid: this.uid
+		}).then(res => {
+			console.log(res)
+			const assos = res.data.data;
+			this.isMember = assos.includes(this.assoId);
 		})
 
 		this.searchArticle();

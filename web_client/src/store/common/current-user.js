@@ -97,7 +97,15 @@ const actions = {
         } else {
             reject({ error: 'not_login', message: '未登录.' });
         }
-    })
+    }),
+	getUserAssociations: ({commit},{uid}) => new Promise((resolve,reject) => {
+		api({
+			method:'get',
+			url: '/associations/users/'+uid+'/associations'
+		}).then(res => {
+			resolve(res);
+		}).catch(err => reject(err));
+	})
 }
 
 export default {

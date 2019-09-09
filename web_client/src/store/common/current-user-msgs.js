@@ -47,6 +47,18 @@ const actions = {
 		}).then(res => {
 			resolve(res);
 		}).catch(err => reject(err));
+	}),
+	postSysNotification: ({commit},{content}) => new Promise((resolve,reject) => {
+		console.log('aaa')
+		api({
+			method: 'post',
+			url: '/com/notify/sys',
+			data: {
+				content
+			}
+		}).then(res => {
+			resolve(res);
+		}).catch(err => reject(err));
 	})
 }
 
