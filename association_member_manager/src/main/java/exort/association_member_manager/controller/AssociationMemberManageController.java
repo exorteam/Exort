@@ -29,7 +29,7 @@ public class AssociationMemberManageController {
     private PermService ps;
 
     @RequestMapping(method = RequestMethod.GET, value = "/associations/{associationId}/departments")
-    @ApiOperation(value = "得到部门树")
+    @ApiOperation(value = "得到部门树 ")
     public ApiResponse<List<DepartmentInfo>> getDepartmentTree(@PathVariable(value = "associationId") String associationId) {
 
         List<Department> departments = associationMemberManageService.getDepartmentTree(associationId);
