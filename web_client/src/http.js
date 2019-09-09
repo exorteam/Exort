@@ -2,24 +2,37 @@ import axios from 'axios'
 import store from './store'
 
 const api = axios.create({
-    baseURL: process.env.API_PROTOCOL + '://' + process.env.API_ENDPOINT
+    baseURL: process.env.VUE_APP_API_BASE,
+    withCredentials: true
 });
-api.defaults.withCredentials = true;
-api.defaults.headers.post['Content-Type'] = 'application/json';
-api.interceptors.response.use(undefined, async err => {
+api.defaults.headers.common['Content-Type'] = 'application/json';
+api.interceptors.response.use(res => {
+    if (res.data.data === null) {
+        throw res.data;
+    }
+    return res;
+}, async err => {
     let config = err.config;
     let response = err.response;
-    if (response) {
-        console.log(responses);
-        if (response.status == 401 && !config.__retried) {
-            config.__retried = true;
-            try {
-                await store.dispatch('common/auth/getToken');
-                return api(config);
-            } catch (err) { }
+
+    if (response && response.status == 401 && !config.__retried) {
+        console.log('[INFO] not login or token expired, refresh token and retry request.');
+        config.__retried = true;
+        try {
+            await store.dispatch('common/currentUser/getToken');
+            return api(config);
+        } catch (err) {
+            console.log('[INFO] user not login');
         }
     }
-    return Promise.reject(err);
+
+    if(response && response.data) {
+        return Promise.reject(response.data);
+    } else {
+        console.log('[ERROR] Failed to get response:');
+        console.log(err);
+        return Promise.reject({ error: 'unknown', message: err });
+    }
 });
 
 const fe = axios.create({withCredentials: true})
