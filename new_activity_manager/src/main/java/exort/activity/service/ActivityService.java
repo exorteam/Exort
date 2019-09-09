@@ -11,10 +11,12 @@ public interface ActivityService {
 
     ActivityInfo createActivity(ActivityInfo activityInfo);
 
-    ActivityInfo updateActivity(ActivityInfo activityInfo);
+    ActivityInfo updateActivity(String id, ActivityInfo activityInfo);
 
     ActivityInfo getActivity(String id);
 
     PagedData<ActivityInfo> getActivities(Filter filter, PageQuery pageQuery);
+
+    PagedData<Integer> fromList2Paged(List<Integer> list,PageQuery pageQuery);
 
 }

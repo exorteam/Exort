@@ -97,7 +97,7 @@ public class ActivityServiceImplTest {
         filter1.setIfOnlyMem(0);
         System.out.println(activityService.getActivities(filter1, new PageQuery(0, 9, "time")));
 
-       // assertEquals(1, activityService.getActivities(filter1, new PageQuery(0, 9, "time")).getContent().size());
+        assertEquals(1, activityService.getActivities(filter1, new PageQuery(0, 9, "time")).getContent().size());
 
     }
 
@@ -130,7 +130,7 @@ public class ActivityServiceImplTest {
         ActivityInfo activityInfo = activityRepository.findById(globalId).get();
         activityInfo.setContent("asaedawdasd");
 
-        ActivityInfo ret = activityService.updateActivity(activityInfo);
+        ActivityInfo ret = activityService.updateActivity(globalId, activityInfo);
 
         assertEquals("asaedawdasd", ret.getContent());
     }

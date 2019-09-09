@@ -1,6 +1,15 @@
 package exort.apiserver.controller;
 
-import exort.apiserver.service.CommunityService;
+import exort.api.http.activity.entity.Activity;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.RequestActivity;
+import exort.api.http.activity.entity.Signup;
+import exort.api.http.activity.service.ActivityService;
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
+import exort.api.http.common.entity.PagedData;
+import exort.api.http.review.entity.CallbackParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,90 +21,100 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import exort.api.http.activity.service.ActivityService;
-import exort.api.http.activity.entity.Activity;
-import exort.api.http.activity.entity.Filter;
-import exort.api.http.activity.entity.RequestActivity;
-import exort.api.http.common.entity.ApiResponse;
-import exort.api.http.common.entity.PageQuery;
-import exort.api.http.common.entity.PagedData;
-
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "/activities")
 public class ActivityManagerController {
-	// Get operations are open to every one
-	// Update operations require specific permission
-	public static final String PERM_UPDATE = "update-activity";
-	// Delete operations require specific permission
-	public static final String PERM_DELETE = "delete-activity";
-	// Create operations require specific permission
-	public static final String PERM_CREATE = "create-activity";
+    // Get operations are open to every one
+    // Update operations require specific permission
+    public static final String PERM_UPDATE = "update-activity";
+    // Delete operations require specific permission
+    public static final String PERM_DELETE = "delete-activity";
+    // Create operations require specific permission
+    public static final String PERM_CREATE = "create-activity";
 
-	@Autowired
-	private ActivityService activitySvc;
 
-	@Autowired
-	private CommunityService cs;
+    @Autowired
+    private ActivityService service;
 
-	@PostMapping
-	public ApiResponse<Activity> createNewActivity(@RequestAttribute(name="id", required=false) Integer operatorId,
-			@RequestBody Activity activity) {
-		return activitySvc.createNewActivity(activity);
-	}
+    @PostMapping("/")
+    public ApiResponse<Activity> createNewActivity(@RequestBody Activity activity) {
+        return service.createNewActivity(activity);
+    }
 
-	@PutMapping("/{id}")
-	public ApiResponse<Activity> updateActivity(@RequestAttribute(name="id", required=false) Integer operatorId, @RequestBody Activity activity,
-			@PathVariable("id") String activityId) {
-		if (!activity.getId().equals(activityId)) {
-			return new ApiResponse<>("OptErr", "Entity id differs from path param when updating");
-		}
-		return activitySvc.updateActivity(activity, activityId);
-	}
+    @PutMapping("/{id}")
+    public ApiResponse<Activity> updateActivity(@RequestBody Activity activity, @PathVariable("id") String id) {
+        return service.updateActivity(activity, id);
+    }
 
-	@PostMapping("/filter")
-	public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, PageQuery pageQuery) {
-		return activitySvc.getActivities(filter, pageQuery);
-	}
+    @GetMapping("/")
+    public ApiResponse<PagedData<Activity>> getActivities(@RequestBody Filter filter, PageQuery pageQuery) {
+        return service.getActivities(filter, pageQuery);
+    }
 
-	@GetMapping("/user")
-	public ApiResponse<PagedData<Activity>> getActivitiesThisUser(@RequestAttribute(name="id", required=false) Integer operatorId, PageQuery pageQuery) {
-		Filter filter = new Filter();
-		List<String> associationIds = (List<String>)cs.listSubscribed(operatorId).getData();
-		filter.setAssociationId(associationIds);
-		filter.setPublishState(2);
-		pageQuery.setSortBy("publishTime");
-		return activitySvc.getActivities(filter, pageQuery);
-	}
+    @PutMapping("/{id}/state")
+    public ApiResponse<Object> publishActivity(@PathVariable("id") String id,
+            @RequestBody RequestActivity requestActivity) {
+        return service.publishActivity(id, requestActivity);
+    }
 
-	@PutMapping("/{id}/state")
-	public ApiResponse<Activity> publishActivity(@RequestAttribute(name="id", required=false) Integer operatorId,
-			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
-		return activitySvc.publishActivity(activityId, request);
-	}
+    @PostMapping("/{id}/participants")
+    public ApiResponse<Object> addParticipants(@PathVariable("id") String id,
+            @RequestBody RequestActivity requestActivity) {
+        return service.addParticipants(id, requestActivity);
+    }
 
-	@PostMapping("/{id}/participants")
-	public ApiResponse<Activity> addParticipants(@RequestAttribute(name="id", required=false) Integer operatorId,
-			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
-		return activitySvc.addParticipants(activityId, request);
-	}
+    @PostMapping("/{id}/realparticipants")
+    public ApiResponse<Object> addRealParticipants(@PathVariable("id") String id,
+            @RequestBody RequestActivity requestActivity) {
+        return service.addRealParticipants(id, requestActivity);
+    }
 
-	@PostMapping("/{id}/realparticipants")
-	public ApiResponse<Activity> addRealParticipants(@RequestAttribute(name="id", required=false) Integer operatorId,
-			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
-		return activitySvc.addRealParticipants(activityId, request);
-	}
+    @DeleteMapping("/{id}/participants")
+    public ApiResponse<Object> deleteParticipants(@PathVariable("id") String id,
+            @RequestBody RequestActivity requestActivity) {
+        return service.deleteParticipants(id, requestActivity);
+    }
 
-	@DeleteMapping("/{id}/participants")
-	public ApiResponse<Activity> deleteParticipants(@RequestAttribute(name="id", required=false) Integer operatorId,
-			@PathVariable("id") String activityId, @RequestBody RequestActivity request) {
-		return activitySvc.deleteParticipants(activityId, request);
-	}
+    @GetMapping("/{id}/participants")
+    public ApiResponse<PagedData<Integer>> getActivityParticipants(PageQuery pageQuery, @PathVariable("id") String id,
+            @RequestBody RequestActivity requestActivity) {
+        return service.getActivityParticipants(pageQuery, id, requestActivity);
+    }
 
-	@GetMapping(value = "/{id}")
-	public ApiResponse<Activity> getActivity(@PathVariable("id") String id) {
-		return activitySvc.getActivity(id);
-	}
+    @GetMapping("/{id}/realparticipants")
+    public ApiResponse<PagedData<Integer>> getActivityRealParticipants(PageQuery pageQuery,
+            @PathVariable("id") String id, @RequestBody RequestActivity requestActivity) {
+        return service.getActivityRealParticipants(pageQuery, id, requestActivity);
+    }
+
+    @PostMapping(value = "/callback/acceptsignup")
+    public ApiResponse<Object> acceptSignup(@RequestBody CallbackParam<Signup> operation) {
+        return service.acceptSignup(operation);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ApiResponse<Activity> getActivity(@PathVariable("id") String id) {
+        return service.getActivity(id);
+    }
+
+    private boolean checkPermissionOnActivity(int operatorId, Activity activity, String permission) {
+        System.out.println(operatorId);
+        System.out.println(activity.getTitle());
+        System.out.println(permission);
+        for (int i : activity.getAssociationIds()) {
+            final String assoScope = "asso-" + String.valueOf(i);
+            if (permSvc.hasPermission(Long.valueOf(operatorId), assoScope, permission) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkPermissionByActivityId(int operatorId, String activityId, String permission) {
+        Activity activity = (Activity) activitySvc.getActivity(activityId).getData();
+        if (activity == null)
+            return false;
+        return checkPermissionOnActivity(operatorId, activity, permission);
+    }
 
 }
