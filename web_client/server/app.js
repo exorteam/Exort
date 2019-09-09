@@ -84,10 +84,13 @@ app.post('/auth/login', async (req, res) => {
                 'password': password
             }
         });
-
-        console.log('new session: ' + req.session.id);
-        req.session.rtoken = apires.data.data.rtoken;
-        res.status(200).json((({token, uid}) => ({token, uid}))(apires.data.data));
+        if (apires.data.data) {
+            console.log('new session: ' + req.session.id);
+            req.session.rtoken = apires.data.data.rtoken;
+            res.status(200).json((({token, uid}) => ({token, uid}))(apires.data.data));
+        } else {
+            res.status(401).json(apires.data);
+        }
     } catch (err) {
         console.log(err);
         if (err.response && err.response.data) {

@@ -2,9 +2,9 @@
 <Header class="nav-header">
     <Row type="flex" justify="space-between" align="middle" class="nav-header-row">
         <Col class="nav-header-logo">
-			<a href='/'>
+			<router-link to="/">
 				<Avatar shape="square" :src="logo" size="large" style="margin-bottom:25px"/>
-			</a>
+			</router-link>
         </Col>
         <Col class="nav-header-menu">
             <UserDropDown/>

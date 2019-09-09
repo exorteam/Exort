@@ -6,6 +6,12 @@
                 <Option v-for="(label, value) in states" :key="value" :value="value">{{label}}</Option>
             </Select>
         </FormItem>
+        <FormItem label="部门">
+            <Select v-model="filter.departmentId" @on-change="changeDepartment" clearable>
+                <Option v-for="dept in departments" :key="dept.departmentId"
+                        :value="dept.departmentId" :label="dept.name" />
+            </Select>
+        </FormItem>
     </Form>
     <Card v-for="application in applications" :key="application.id"
           style="margin-top:10px">
@@ -54,6 +60,12 @@
                     <span slot="close">拒绝</span>
                 </i-switch>
             </FormItem>
+            <FormItem label="部门" v-if="result">
+                <Select v-model="departmentId" clearable>
+                    <Option v-for="dept in departments" :key="dept.departmentId"
+                            :value="dept.departmentId" :label="dept.name" />
+                </Select>
+            </FormItem>
             <FormItem label="理由">
                 <Input type="textarea" v-model="message" />
             </FormItem>
@@ -65,14 +77,17 @@
 <script>
 import {api} from '@/http'
 import {associationIcon} from '@/const'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
     data() {return {
         filter: {
+            departmentId: null,
             state: "all",
             pageNum: 0,
             pageSize: 5
         },
+        departments: [],
         applications: [],
         totalSize: 0,
         states: {
@@ -85,15 +100,25 @@ export default {
         applicationId: null,
         reviewing: false,
         result: false,
+        departmentId: null,
         message: ''
     };},
+    computed: {
+        ...mapState('associationAdmin/currentAssociation', ['id', 'name']),
+    },
     methods: {
         associationIcon,
         refreshList() {
+            if (!this.id) {
+                return;
+            }
             api({
                 method: 'get',
-                url: '/applications/list/association_creation',
-                params: this.filter
+                url: '/applications/list/association_member_signup',
+                params: {
+                    associationId: this.id,
+                    ...this.filter
+                }
             }).then(res => {
                 this.applications = res.data.data.content;
                 this.filter.pageNum = res.data.data.pageNum;
@@ -114,9 +139,27 @@ export default {
             this.filter.state = state;
             this.refreshList();
         },
-        changeType(type) {
-            this.filter.type = type;
+        changeDepartment(departmentId) {
+            this.filter.departmentId = departmentId;
             this.refreshList();
+        },
+        refreshDepartments() {
+            if (!this.id) {
+                return;
+            }
+			api({
+				method: 'get',
+				url: '/associations/' + this.id + '/departments'
+			}).then(res => {
+				this.departments = res.data.data;
+			}).catch(err => {
+				this.$Notice.error({
+					title: '获取部门失败',
+					desc: err.message || err
+				});
+			}).finally(() => {
+				this.loading = false;
+			});
         },
         beginReview(id) {
             this.reviewing = true;
@@ -129,7 +172,8 @@ export default {
                 method: 'post',
                 url: '/applications/'+ (this.result ? 'accept': 'refuse') +'/' + this.applicationId,
                 data: {
-                    message: this.message
+                    message: this.message,
+                    departmentId: this.departmentId
                 }
             }).then(res => {
                 this.$Notice.success({
@@ -146,6 +190,7 @@ export default {
         }
     },
     mounted() {
+        this.refreshDepartments();
         this.refreshList();
     }
 }

@@ -1,11 +1,11 @@
 import UserIndex from '@/views/user/UserIndex'
 import UserHomePage from '@/views/user/UserHomePage'
-import UserArticleList from '@/views/user/UserArticleList'
 import UserArticleReader from '@/views/user/UserArticleReader'
 import UserInfoDetail from '@/views/user/UserInfoDetail'
-import UserInfoEditor from '@/views/user/UserInfoEditor'
 import UserAssociationList from '@/views/user/UserAssociationList'
 import UserAssociationDetail from '@/views/user/UserAssociationDetail'
+import UserMessagePage from '@/views/user/UserMessagePage'
+import UserApplicationList from '@/views/user/UserApplicationList'
 
 export default {
     path: '/',
@@ -17,25 +17,9 @@ export default {
 			component: UserHomePage
 		},
 		{
-			path: 'articles',
-			name: 'UserArticleList',
-			component: UserArticleList
-		},
-        {
-            path: 'articles/:id',
-            name: 'UserArticleReader',
-            component: UserArticleReader,
-            props: true
-        },
-		{
-			path: 'info',
-			name: 'UserInfoDetail',
-			component: UserInfoDetail
-		},
-		{
-			path: 'info/edit',
-			name: 'UserInfoEditor',
-			component: UserInfoEditor
+			path: 'messages',
+			name: 'UserMessagePage',
+			component: UserMessagePage
 		},
 		{
 			path: 'associations',
@@ -43,11 +27,28 @@ export default {
 			component: UserAssociationList
 		},
 		{
+			path: 'applications',
+			name: 'UserApplicationList',
+			component: UserApplicationList
+		},
+		{
 			path: 'association/:assoId',
 			name: 'UserAssociationDetail',
 			component: UserAssociationDetail,
 			props: true
-		}
+		},
+		{
+			path: 'users/:id',
+			name: 'UserInfoDetail',
+			component: UserInfoDetail,
+			props: true
+		},
+        {
+            path: 'articles/:id',
+            name: 'UserArticleReader',
+            component: UserArticleReader,
+            props: true
+        }
 
     ]
 }

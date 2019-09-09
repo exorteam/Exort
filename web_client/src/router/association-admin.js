@@ -3,9 +3,10 @@ import ArticleList from '@/views/association-admin/article/ArticleList'
 import ArticleEditor from '@/views/association-admin/article/ArticleEditor'
 import ArticleReader from '@/views/association-admin/article/ArticleReader'
 import MemManager from '@/views/association-admin/member/AssociationMemberTable'
+import AssociationMemberReview from '@/views/association-admin/member/AssociationMemberReview'
 import Activity from '@/views/association-admin/activity/Activity'
 import About from '@/views/association-admin/activity/About'
-import Finance from "@/views/association-admin/finance/Finance"
+import Finance from '@/views/association-admin/finance/Finance'
 
 export default {
 	path: '/association-admin/:assoId',
@@ -48,6 +49,11 @@ export default {
             path: 'finance',
             name: 'AssociationAdminFinanceList',
             component: Finance
+        },
+        {
+            path: 'applications',
+            name: 'AssociationMemberReview',
+            component: AssociationMemberReview
         }
     ]
 }

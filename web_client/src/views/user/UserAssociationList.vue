@@ -1,69 +1,78 @@
 <template>
-	<Card>
-		<div id="AssoList">
-			<div >
-				<Input search @on-search="getAssociationList" placeholder="请输入关键词" style="width: 300px" />
-			</div>
+<ContentPage no-back>
+	<template #header>
+		<div>
+			<Input search @on-search="getAssociationList" placeholder="请输入关键词" style="width: 300px" />
+		</div>
+		<div>
+			<Button @click="creating=true">创建社团</Button>
+		</div>
+		<Modal v-model="creating" footer-hide title="申请创建社团">
+			<AssociationInfoEditor :value="{}" @cancel="creating=false" @input="creating=false" has-cancel review/>
+		</Modal>
+	</template>
 
-			<br>
-			<div id="CardList"  style="display: flex; flex-wrap: wrap">
-				<Card v-for="item in AssoList"
-						:key="item.id"
-						:row="item"
-						style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
-					<p slot="title">
-						<Icon type="ios-people" ></Icon>
-						{{item.name}}
-						<Tooltip content="已订阅" placement="top"
-								style="position:absolute;right:10px;"
-								v-if="subscribed.includes(item.id)">
-							<Icon type="ios-notifications" size="20" color="green"
-								@click.native="onClickUnsubscribe(item.id,item.name)" />
-						</Tooltip>
-						<Tooltip content="订阅" placement="top"
-								style="position:absolute;right:10px;"
-								v-else>
-							<Icon type="ios-notifications-off" size="20"
-							    @click.native="onClickSubscribe(item.id,item.name)" />
-						</Tooltip>
-					</p>
+	<br>
+	<div id="CardList"  style="display: flex; flex-wrap: wrap">
+		<Card v-for="item in AssoList"
+				:key="item.id"
+				:row="item"
+				style="width:100%;margin-left:5px;margin-top:5px" >
+			<p slot="title">
+				<Icon type="ios-people" ></Icon>
+				{{item.name}}
+				<Tooltip content="已订阅" placement="top"
+						style="position:absolute;right:10px;"
+						v-if="subscribed.includes(item.id)">
+					<Icon type="ios-notifications" size="20" color="green"
+						@click.native="onClickUnsubscribe(item.id,item.name)" />
+				</Tooltip>
+				<Tooltip content="订阅" placement="top"
+						style="position:absolute;right:10px;"
+						v-else>
+					<Icon type="ios-notifications-off" size="20"
+						@click.native="onClickSubscribe(item.id,item.name)" />
+				</Tooltip>
+			</p>
 
-
-					<div style="text-align: center;height:100px">
-						<img :src="associationIcon(item.logo)" style="width:80px;height:80px;"/>
-					</div>
-					<div style= "min-height: 100%; ">
-						<p>{{ item.description }}</p>
-					</div>
-					<div style="margin-top:80px">
+			<div style="display:flex;width:100%;cursor:pointer;" @click="onClickCard(item.id)">
+				<div style="text-align: center;height:100px">
+					<img :src="associationIcon(item.logo)" style="width:80px;height:80px;"/>
+				</div>
+				<div style="margin-left:16px">
+					<div>
 						<!--<Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">-->
 						<!--    {{ tag }}                                                            -->
 						<!--</Tag>                                                                   -->
 					</div>
-					<div style="text-align:center">
-						<Button @click="onClickCard(item.id)" long>查看社团详情</Button>
+					<div>
+						<p>{{ item.description }}</p>
 					</div>
-				</Card>
+				</div>
 			</div>
-			<div style="margin-top:15px;text-align: center">
-				<Page id = "page" show-total
-				:total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
-				:current.sync = "pageProp.pageNum"  @on-change="onPageChange"></Page>
-			</div>
-		</div>
-	</Card>
+		</Card>
+	</div>
+	<div style="margin-top:15px;text-align: center">
+		<Page id = "page" show-total
+		:total="pageProp.totalSize" :page-size.sync="pageProp.pageSize" :page-size-opts="pageProp.pageSizeOpt"
+		:current.sync = "pageProp.pageNum"  @on-change="onPageChange"></Page>
+	</div>
+</ContentPage>
 </template>
 
 <script>
 import TagChoose from '@/components/TagChoose'
+import AssociationInfoEditor from '@/components/editor/AssociationInfoEditor'
+import ContentPage from '@/components/ContentPage'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { associationIcon } from '@/const'
 
 export default {
     name:'UserAssociationList',
-    components:{ TagChoose },
+    components:{ TagChoose,ContentPage,AssociationInfoEditor },
     data () {
         return {
+			creating: false,
             pageProp:{
                 totalSize : 0,
                 pageSize : 6,
@@ -110,9 +119,11 @@ export default {
 			}).then(response => {
 				this.AssoList = response.data.data.content
 				this.pageProp.totalSize = response.data.data.totalSize
-			})
-			.catch(e => {
-				console.log(e)
+			}).catch(err => {
+				this.$Notice.error({
+					title: '获取社团列表失败',
+					desc: err.message || err
+				})
 			});
         },
 		onPageChange(newPageNum) {

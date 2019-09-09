@@ -7,7 +7,8 @@ const state = {
     admin: {
         isSysAdmin: false,
         assoAdmins: []
-    }
+    },
+	info: null
 }
 
 const mutations = {
@@ -35,7 +36,12 @@ const mutations = {
             isSysAdmin: false,
             assoAdmins: []
         };
-    }
+    },
+	setInfo(state, info) {
+        state.info = info && {...info};
+        // state.info.birthday = new Date(state.info.birthday).toLocaleDateString();
+        // state.info.gender = ['Secret', 'Male', 'Female'][state.info.gender];
+	}
 }
 
 const actions = {
@@ -97,7 +103,28 @@ const actions = {
         } else {
             reject({ error: 'not_login', message: '未登录.' });
         }
-    })
+    }),
+	refreshInfo: ({commit}) => new Promise((resolve,reject)=>{
+		api({
+			method: 'get',
+			url: '/users/self'
+		}).then(res => {
+			commit('setInfo', res.data.data);
+			resolve(res);
+		}).catch(err => reject(err));
+	}),
+	updateInfo: ({commit},uinfo) => new Promise((resolve,reject) => {
+		api({
+			method: 'post',
+			url: '/users/'+uinfo.id,
+			data: uinfo
+		}).then(res => {
+			commit('setInfo', {
+				info: res.data.data
+			});
+			resolve(res);
+		}).catch(err => reject(err));
+	}),
 }
 
 export default {

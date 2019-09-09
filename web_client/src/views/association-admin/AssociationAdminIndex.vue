@@ -34,7 +34,7 @@
                     <Icon type="ios-checkbox" />
                     资产管理
                 </MenuItem>
-				<MenuItem :name="''">
+				<MenuItem name="AssociationMemberReview" :to="{name:'AssociationMemberReview'}">
 					<Icon type="ios-checkbox" />
 					申请列表
 				</MenuItem>

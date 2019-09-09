@@ -10,7 +10,7 @@
 					<p>"{{asso.description}}"</p>
 				</div>
 				<div style="margin-top:20px">
-					<Button>申请加入</Button>
+					<Button @click="showSignup">申请加入</Button>
 					<Button v-if="isAdmin" @click="routeToAssoAdmin" style="margin-left:10px">社团管理</Button>
 				</div>
 			</Col>
@@ -18,6 +18,17 @@
 				<img :src="asso.logo"  style="width:120px;height:120px"/>
 			</Col>
 		</Row>
+		<Modal v-model="signuping" :title="'申请加入社团 '+asso.name" @on-ok="sighup">
+			<Form :label-width="80">
+				<Spin v-if="loading">加载部门中</Spin>
+				<FormItem label="选择部门">
+					<Select multiple v-model="selectedDepartments">
+						<Option v-for="dept in departments" :key="dept.departmentId"
+								:value="dept.departmentId" :label="dept.name" />
+					</Select>
+				</FormItem>
+			</Form>
+		</Modal>
 		<br>
 		<Row type="flex" justify="space-between">
 			<Col span="10">
@@ -39,6 +50,7 @@
 </template>
 
 <script>
+import {api} from '@/http'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
@@ -60,7 +72,10 @@ export default {
 				{title:'作者',key:'associationId'},
 				{title:'上次修改时间',key:'lastModifyTime'},
 			],
-
+			signuping: false,
+			loading: false,
+			departments: [],
+			selectedDepartments: []
 		}
 	},
 	computed: {
@@ -102,7 +117,7 @@ export default {
 				this.articleList = res.data.data.content;
 				this.articlePageAttr.totalSize = res.data.data.totalSize;
 			})
-		
+
 		},
 		onChangeArticlePage(newValue) {
 			this.searchArticle(this.articlePageAttr.keyword,newValue);
@@ -110,7 +125,43 @@ export default {
 		viewArticle(row){
 			this.$router.push({ name: 'UserArticleReader', params: { id: row.id }});
 		},
-
+		showSignup() {
+			this.signuping = true;
+			this.loading = true;
+			api({
+				method: 'get',
+				url: '/associations/' + this.assoId + '/departments'
+			}).then(res => {
+				this.departments = res.data.data;
+			}).catch(err => {
+				this.$Notice.error({
+					title: '获取部门失败',
+					desc: err.message || err
+				});
+			}).finally(() => {
+				this.loading = false;
+			});
+		},
+		sighup() {
+			api({
+				method: 'post',
+				url: '/applications/signup_association_member',
+				data: {
+					associationId: this.assoId,
+					departmentId: this.selectedDepartments
+				}
+			}).then(res => {
+				this.$Notice.success({
+					title: '申请加入社团成功',
+					desc: '请等待社团管理员审核'
+				});
+			}).catch(err => {
+				this.$Notice.error({
+					title: '申请失败',
+					desc: err.message || err
+				})
+			})
+		}
 	},
 	mounted() {
 		this.queryAssociationById({
@@ -124,4 +175,3 @@ export default {
 }
 
 </script>
-

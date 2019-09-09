@@ -6,7 +6,6 @@ import associationOps from './association-ops'
 import articleOps from './article-ops'
 
 import currentUser from './current-user'
-import currentUserInfo from './current-user-info'
 import currentUserSubscription from './current-user-subscription'
 import currentUserMsgs from './current-user-msgs'
 
@@ -23,7 +22,6 @@ export default {
 		articleOps,
 
         currentUser,
-        currentUserInfo,
         currentUserSubscription,
 		currentUserMsgs,
 

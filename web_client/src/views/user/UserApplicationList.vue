@@ -1,9 +1,17 @@
 <template>
-<Card>
+<ContentPage no-back>
+    <template #header>
+        <h2>我的申请</h2>
+    </template>
     <Form inline :label-width="40">
         <FormItem label="状态">
             <Select v-model="filter.state" @on-change="changeState">
                 <Option v-for="(label, value) in states" :key="value" :value="value">{{label}}</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="类型">
+            <Select v-model="filter.type" @on-change="changeType">
+                <Option v-for="(label, value) in types" :key="value" :value="value">{{label}}</Option>
             </Select>
         </FormItem>
     </Form>
@@ -12,21 +20,29 @@
         <div slot="title">
             <span style="font-size:smaller;color:gray;">{{ application.id }}</span>
             <Divider type="vertical" />
+            <span style="font-size:larger;margin-right:10px">
+                {{ types[application.type] }}
+            </span>
             <span style="font-size:smaller;color:gray">
-                提交于 {{ new Date(application.createdTime).toLocaleString() }}
+                {{ new Date(application.createdTime).toLocaleString() }}
             </span>
         </div>
         <div slot="extra">
             <span>{{states[application.state]}}</span>
-            <span v-if="application.state!='pending'">
-                <Divider type="vertical" />
-                <span style="font-size:smaller;color:gray">
-                    {{ new Date(application.handledTime).toLocaleString()}}
-                </span>
+            <Divider type="vertical" />
+            <Tooltip v-if="application.state=='pending'" content="取消申请" placement="top">
+                <Button ghost size="small" type="warning" icon="md-undo"
+                        @click="cancel(application.id)"/>
+            </Tooltip>
+            <span v-else style="font-size:smaller;color:gray">
+                {{ new Date(application.handledTime).toLocaleString()}}
             </span>
         </div>
-        <div @click="application.state=='pending' && beginReview(application.id)"
-             :style="application.state=='pending' ? {cursor:'pointer'} : {}">
+        <div v-if="application.type=='ActivitySignUp'">
+        </div>
+        <div v-else-if="application.type=='AssociationMemberSignUp'">
+        </div>
+        <div v-else-if="application.type=='AssociationInfo'">
             <div style="margin:0 8px">
                 <Avatar :src="associationIcon(application.details.logo)" size="large"/>
                 <span style="font-size:larger;margin-left:12px">{{ application.details.name }}</span>
@@ -34,42 +50,36 @@
             <div style="margin:8px">
                 {{ application.details.description}}
             </div>
-            <div v-if="application.receipt">
-                <Divider />
-                <span style="font-size:smaller;color:gray">
-                    结果: {{ application.receipt.message }}
-                </span>
-            </div>
+        </div>
+        <div v-if="application.receipt">
+            <Divider />
+            <span style="font-size:smaller;color:gray">
+                结果: {{ application.receipt.message }}
+            </span>
+            <span v-if="application.receipt.departmentId">
+                加入部门: {{ application.receipt.departmentId }}
+            </span>
         </div>
     </Card>
     <Page v-if="totalSize > filter.pageSize" show-total :current="filter.pageNum+1"
           :total="totalSize" :page-size="filter.pageSize"
           @on-change="turnPage" @on-page-size-change="filter.pageSize=$event"/>
-    <Modal :title="'审核: '+applicationId" v-model="reviewing"
-           @on-ok="review()">
-        <Form :label-width="40">
-            <FormItem label="结果">
-                <i-switch v-model="result" size="large">
-                    <span slot="open">通过</span>
-                    <span slot="close">拒绝</span>
-                </i-switch>
-            </FormItem>
-            <FormItem label="理由">
-                <Input type="textarea" v-model="message" />
-            </FormItem>
-        </Form>
-    </Modal>
-</Card>
+</ContentPage>
 </template>
 
 <script>
 import {api} from '@/http'
 import {associationIcon} from '@/const'
+import ContentPage from '@/components/ContentPage'
 
 export default {
+    components: {
+        ContentPage
+    },
     data() {return {
         filter: {
             state: "all",
+            type: "all",
             pageNum: 0,
             pageSize: 5
         },
@@ -82,17 +92,19 @@ export default {
             refused: '未通过',
             canceled: '已取消'
         },
-        applicationId: null,
-        reviewing: false,
-        result: false,
-        message: ''
+        types: {
+            all: '全部',
+            ActivitySignUp: '加入活动',
+            AssociationMemberSignUp: '加入社团',
+            AssociationInfo: '创建社团'
+        }
     };},
     methods: {
         associationIcon,
         refreshList() {
             api({
                 method: 'get',
-                url: '/applications/list/association_creation',
+                url: '/applications/list/user',
                 params: this.filter
             }).then(res => {
                 this.applications = res.data.data.content;
@@ -118,28 +130,16 @@ export default {
             this.filter.type = type;
             this.refreshList();
         },
-        beginReview(id) {
-            this.reviewing = true;
-            this.result = false;
-            this.message = '';
-            this.applicationId = id;
-        },
-        review() {
+        cancel(id) {
             api({
                 method: 'post',
-                url: '/applications/'+ (this.result ? 'accept': 'refuse') +'/' + this.applicationId,
-                data: {
-                    message: this.message
-                }
+                url: '/applications/cancel/' + id,
+                data: { message: '用户取消' }
             }).then(res => {
-                this.$Notice.success({
-                    title: this.result ? '通过申请成功' : '拒绝申请成功'
-                });
                 this.refreshList();
             }).catch(err => {
-                console.log(err)
                 this.$Notice.error({
-                    title: '审核失败',
+                    title: '取消失败',
                     desc: err.message || err
                 });
             })
@@ -150,3 +150,7 @@ export default {
     }
 }
 </script>
+
+<style>
+
+</style>

@@ -1,22 +1,28 @@
 <template>
-	<div class="article-reader">
-		<Card>
-			<h2>{{article.title}}</h2>
-			<hr>
-			<p>作者: {{article.associationId}}, 创建时间: {{article.createTime}}, 上次修改时间: {{article.lastModifyTime}}</p>
-			<br>
-			<MdEditor ref="md" :value="article.content" read-mode />
-		</Card>
-	</div>
+<ContentPage>
+	<template #header>
+		<h2>{{article.title}}</h2>
+		<div style="line-height:normal">
+		作者: {{article.associationId}}
+		<br>
+		创建时间: {{article.createTime}}
+		<br>
+		上次修改时间: {{article.lastModifyTime}}
+		</div>
+	</template>
+	<MdEditor ref="md" :value="article.content" read-mode />
+</ContentPage>
 </template>
 
 <script>
 import {api} from '@/http'
 import MdEditor from '@/components/MdEditor'
+import ContentPage from '@/components/ContentPage'
+
 export default {
 	name: "UserArticleReader",
 	props:['id'],
-    components: {Comment,MdEditor},
+    components: {Comment,MdEditor,ContentPage},
 	data: function(){
 		return {
 			article:{}

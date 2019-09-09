@@ -1,162 +1,94 @@
 <template>
-	<Card>
-		<Row type="flex" justify="space-between">
-			<Col span="3"><h1>主页</h1></Col>
-			<Col span="2"><Button @click="postMsgModal=true"><Icon type="ios-mail-outline" size="22"/></Button></Col>
-		</Row>
+<ContentPage no-back class="home-page">
+    <template #header>
+        <h2>新发表</h2>
+    </template>
+    <BrowserScroll @bottom="loadArticles" />
+    <div v-for="article in articles" :key="article.id" class="preview">
+        <div class="cover">
 
-		<br>
-		<div id="MsgCardList">
-			<h5 v-if="msgs.isEmpty">Nothing new here.</h5>
-			<Scroll :on-reach-bottom="loadMoreMsgs" :height="400">
-			<Card v-for="(item,index) in msgs" :key="item.id" :row="item" style="margin-top:10px">
-			<Row type="flex" justify="space-between">
-				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 #{{item.senderId}}</p></Col>
-				<Col span="1">
-					<Tooltip content="删除信息" placement="top">
-						<Icon @click.native="onClickDropMsg(item.id,index)" type="ios-trash" />
-					</Tooltip>
-				</Col>
-			</Row>
-				<p style="word-break: break-all;white-space: normal;">{{item.content}}</p>
-			</Card>
-			</Scroll>
-		</div>
-
-		<Modal v-model="postMsgModal"
-				title="New Message"
-				:loading="true"
-				@on-ok="onClickSendMsg">
-			<Form :model="newMsgForm" :label-width="20">
-				<FormItem label="To">
-					<Input v-model="newMsgForm.receiverId" type="text" style="width:80px"/>
-				</FormItem>
-				<FormItem>
-					<Input v-model="newMsgForm.content" type="textarea" :rows="5" />
-				</FormItem>
-			</Form>
-		</Modal>
-	</Card>
+        </div>
+	    <MdEditor ref="md" :value="article.content" read-mode class="content"/>
+    </div>
+</ContentPage>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
+import { api } from '@/http'
+import ContentPage from '@/components/ContentPage'
+import BrowserScroll from '@/components/BrowserScroll'
+import MdEditor from '@/components/MdEditor'
 
 export default {
-	name: 'UserHomePage',
-	data() {
-		return {
-			msgs: [],
-			msgPageNum: 0,
-			msgPageSize: 5,
-
-			postMsgModal: false,
-			newMsgForm: {}
-		}
-	},
-	computed: {
+    components: {
+        ContentPage,
+        BrowserScroll,
+        MdEditor
+    },
+    data() {return {
+        loading: false,
+        articles: [],
+        nextPage: 0,
+        pageSize: 10,
+        totalSize: 0
+    };},
+    computed: {
         ...mapState('common/currentUser', ['uid'])
-	},
-	methods: {
-		...mapActions('common/currentUserMsgs',[
-			'queryPagedMessage',
-			'postMessage',
-			'dropMessageById'
-		]),
-
-		onClickSendMsg(){
-			const id = this.newMsgForm.receiverId;
-			const content = this.newMsgForm.content;
-			if(!id
-				|| id.isEmpty
-				|| !content
-				|| content.isEmpty){
-
-				this.$Message.warning('接受者ID和消息内容不能为空');
-				this.postMsgModal = false;
-
-				return;
-			}
-			this.postMessage({
-				receiverId: id,
-				msg: content
-			}).then(res => {
-				this.postMsgModal = false;
-				this.newMsgForm = {};
-				this.$Notice.success({
-					desc: '已发送消息至用户#' + id,
-				})
-			}).catch(err => {
-				this.$Notice.error({
-					title: '发送消息至用户#' + id + '时出现错误',
-					desc: err
-				})
-			})
-
-		},
-		loadMoreMsgs(){
-			return new Promise(resolve => {
-				this.queryPagedMessage({
-					pageNum: ++this.msgPageNum,
-					pageSize: this.msgPageSize
-				}).then(res => {
-					this.msgs.push(...res.data.data.content);
-					if(res.data.data.pageNum * res.data.data.pageSize > res.data.data.totalSize){
-						--this.msgPageNum;
-					}
-					resolve();
-				})
-			})
-		},
-
-
-		onClickDropMsg(msgId,index){
-			this.$Modal.confirm({
-				title: '提示',
-				content: '<p>确认删除消息？(ID:'+msgId+')</p>',
-				onOk: () => {
-					this.dropMessageById({msgId}).then(() => {
-						this.msgs.splice(index,1);
-						this.$Notice.success({
-							desc: '已删除消息ID: ' + msgId
-						})
-					}).catch(err => {
-						this.$Notice.error({
-							title: '删除消息时出现错误ID: ' + msgId ,
-							desc: err
-						})
-					})
-
-				},
-				onCancel: () => {
-
-				}
-			});
-		}
-	},
-	mounted(){
-		if (this.uid) {
-			this.queryPagedMessage({
-				pageNum: this.msgPageNum,
-				pageSize: this.msgPageSize
-			}).then(res => {
-				this.msgs = res.data.data.content;
-			})
-		}
-	},
-    watch: {
-        'uid': function(newUid, oldUid) {
-            if (newUid) {
-				this.queryPagedMessage({
-					pageNum: this.msgPageNum,
-					pageSize: this.msgPageSize
-				}).then(res => {
-					this.msgs = res.data.data.content;
-				})
-            } else {
-                this.msgs = [];
+    },
+    methods: {
+        loadArticles() {
+            if (!this.uid) {
+                return;
             }
+            if (this.loading) {
+                return;
+            }
+            this.loading = true;
+            api({
+                method: 'get',
+                url: '/articles/list/user',
+                params: {
+                    pageNum: this.nextPage,
+                    pageSize: this.pageSize
+                }
+            }).then(res => {
+                console.log(res);
+                var paged = res.data.data;
+                if (paged.content.length) {
+                    this.nextPage = paged.pageNum + 1;
+                    this.pageSize = paged.pageSize;
+                    this.totalSize = paged.totalSize;
+                    this.articles.push(...paged.content)
+                }
+            }).catch(err => {
+                this.$Notice.error({
+                    title: '加载失败',
+                    desc: err.message || err
+                });
+            }).finally(() => {
+                this.loading = false;
+            });
         }
+    },
+    mounted() {
+        this.loadArticles();
     }
 }
 </script>
+
+<style>
+.home-page .preview {
+    height: 320px;
+    overflow: hidden;
+    position: relative;
+}
+.home-page .preview .content{
+    position: relative;
+    top:-320px;
+}
+.home-page .preview .cover {
+    height: 320px;
+    background: rgba(255,255,255, 0);
+}
+</style>

@@ -39,7 +39,7 @@ export default {
             this.$emit('input', data.filename);
         },
         handleMaxSize(file) {
-            this.$Notice.warning({
+            this.$Notice.error({
                 title: '文件大小超过限制',
                 desc: '文件 ' + file.name + ' 过大，应不超过 512KB'
             });
