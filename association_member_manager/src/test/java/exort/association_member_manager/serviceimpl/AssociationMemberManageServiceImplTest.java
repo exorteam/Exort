@@ -37,7 +37,7 @@ public class AssociationMemberManageServiceImplTest {
     final private static String MEMBER = "association_member";
     final private static String MANAGER = "association_root";
 
-    private String roleName(int associationId, int departmentId) {
+    private String roleName(String associationId, int departmentId) {
         switch (departmentId) {
             case 1:
                 return MANAGER;
@@ -48,27 +48,27 @@ public class AssociationMemberManageServiceImplTest {
         }
     }
 
-    private String scope(int associationId) {
+    private String scope(String associationId) {
         return "association_" + associationId;
     }
 
     @Before
     public void setUp() {
-        associationMemberManageService.initDepartment(1, 1);
+        associationMemberManageService.initDepartment("a", 1);
         ps.deletePermission("asso_member_test_write");
     }
 
     @After
     public void afterAll() {
         departmentRepository.deleteAll();
-        associationMemberManageService.initDepartment(1, 1);
+        associationMemberManageService.initDepartment("a", 1);
     }
 
     @Test
     public void adoptApplication() {
 
         ApplicationDepartmentInfo applicationDepartmentInfo = new ApplicationDepartmentInfo();
-        applicationDepartmentInfo.setAssociationId(1);
+        applicationDepartmentInfo.setAssociationId("a");
         applicationDepartmentInfo.setDepartmentId(2);
         Application<ApplicationDepartmentInfo> application = new Application<>(3L, "acceptApplication", applicationDepartmentInfo);
 
@@ -77,69 +77,69 @@ public class AssociationMemberManageServiceImplTest {
         Assert.assertEquals(true, associationMemberManageService.adoptApplication(3, "create", application));
 
         // 删去创建的用户
-        associationMemberManageService.deleteOneInAssociation(1, 3);
+        associationMemberManageService.deleteOneInAssociation("a", 3);
     }
 
     @Test
     public void getDepartmentTree() {
-        associationMemberManageService.initDepartment(2, 2);
+        associationMemberManageService.initDepartment("b", 2);
 
-        associationMemberManageService.getDepartmentTree(2);
+        associationMemberManageService.getDepartmentTree("b");
 
-        Assert.assertEquals(2, associationMemberManageService.getDepartmentTree(2).size());
+        Assert.assertEquals(2, associationMemberManageService.getDepartmentTree("b").size());
 
     }
 
     @Test
     public void getSpecDepartmentInfo() {
-        associationMemberManageService.initDepartment(2, 2);
-        Department departmentInfo = associationMemberManageService.getSpecDepartmentInfo(2, 1);
+        associationMemberManageService.initDepartment("b", 2);
+        Department departmentInfo = associationMemberManageService.getSpecDepartmentInfo("b", 1);
         Assert.assertEquals("管理层", departmentInfo.getName());
     }
 
     @Test
     public void createDepartment() {
-        Department department = associationMemberManageService.createDepartment(1, "hello", "hello try", 0);
+        Department department = associationMemberManageService.createDepartment("a", "hello", "hello try", 0);
         Assert.assertEquals("hello", department.getName());
 
         // 删除新创建的role
-        ps.deleteRole(roleName(1, department.getDepartmentId()));
+        ps.deleteRole(roleName("a", department.getDepartmentId()));
     }
 
     @Test
     public void deleteDepartment() {
-        Department createDepartment = associationMemberManageService.createDepartment(1, "hello", "das", 1);
+        Department createDepartment = associationMemberManageService.createDepartment("b", "hello", "das", 1);
 
         Department department = associationMemberManageService.deleteDepartment(createDepartment.getAssociationId(), createDepartment.getDepartmentId());
 
-        Assert.assertEquals(3, department.getDepartmentId());
+        Assert.assertEquals(1, department.getDepartmentId());
 
         // 删除新创建的role
-        ps.deleteRole(roleName(1, department.getDepartmentId()));
+        ps.deleteRole(roleName("b", department.getDepartmentId()));
     }
 
     @Test
     public void editDepartment() {
-        Department createDepartment = associationMemberManageService.createDepartment(1, "hello", "das", 1);
+        Department createDepartment = associationMemberManageService.createDepartment("a", "hello", "das", 1);
 
         Department department = associationMemberManageService.editDepartment(createDepartment.getAssociationId(), createDepartment.getDepartmentId(), "black", "back", 0);
 
         Assert.assertEquals("black", department.getName());
 
         // 删除新创建的role
-        ps.deleteRole(roleName(1, department.getDepartmentId()));
+        ps.deleteRole(roleName("a", department.getDepartmentId()));
     }
 
     @Test
     public void getSpecMemberList() {
-        Department department = associationMemberManageService.createDepartment(1, "asd", "asd", 1);
-        associationMemberManageService.addOneToDepartment(1, department.getDepartmentId(), 1);
-        associationMemberManageService.addOneToDepartment(1, department.getDepartmentId(), 2);
-        associationMemberManageService.addOneToDepartment(1, department.getDepartmentId(), 3);
-        associationMemberManageService.addOneToDepartment(1, department.getDepartmentId(), 4);
-        associationMemberManageService.addOneToDepartment(1, department.getDepartmentId(), 5);
+        Department department = associationMemberManageService.createDepartment("a", "asd", "asd", 1);
+        associationMemberManageService.addOneToDepartment("a", department.getDepartmentId(), 1);
+        associationMemberManageService.addOneToDepartment("a", department.getDepartmentId(), 2);
+        associationMemberManageService.addOneToDepartment("a", department.getDepartmentId(), 3);
+        associationMemberManageService.addOneToDepartment("a", department.getDepartmentId(), 4);
+        associationMemberManageService.addOneToDepartment("a", department.getDepartmentId(), 5);
 
-        Assert.assertEquals(5, associationMemberManageService.getSpecMemberList(1, department.getDepartmentId()).size());
+        Assert.assertEquals(5, associationMemberManageService.getSpecMemberList("a", department.getDepartmentId()).size());
 
         // 删除role
         ps.deleteRole(roleName(department.getAssociationId(), department.getDepartmentId()));
@@ -148,12 +148,13 @@ public class AssociationMemberManageServiceImplTest {
     @Test
     public void removeOneFromDepartment() {
 
-        int userId = 3, associationId = 1;
+        int userId = 3;
+        String associationId = "a";
         int beforesize = ps.grantRoles(Long.valueOf(userId), scope(associationId), Arrays.asList(MEMBER)).getData().size();
 
         Assert.assertEquals(true, associationMemberManageService.removeOneFromDepartment(associationId, 2, userId));
 
-        int aftersize = ps.getRoles((long) 3, roleName(1, 2)).getData().size();
+        int aftersize = ps.getRoles((long) 3, roleName("a", 2)).getData().size();
 
         Assert.assertEquals(beforesize, aftersize + 1);
     }
@@ -161,68 +162,68 @@ public class AssociationMemberManageServiceImplTest {
     @Test
     public void addOneToDepartment() {
 
-        Assert.assertEquals(true, associationMemberManageService.addOneToDepartment(1, 2, 6));
+        Assert.assertEquals(true, associationMemberManageService.addOneToDepartment("a", 2, 6));
 
-        ps.removeUser((long) 6, scope(1));
+        ps.removeUser((long) 6, scope("a"));
     }
 
     @Test
     public void checkUserPerm() {
 
-        associationMemberManageService.addOneToDepartment(1, 2, 10);
+        associationMemberManageService.addOneToDepartment("a", 2, 10);
 
         ps.createPermission(new Permission("asso_member_test_write"));
-        ps.grantPermissions(roleName(1, 2), Arrays.asList("asso_member_test_write"));
+        ps.grantPermissions(roleName("a", 2), Arrays.asList("asso_member_test_write"));
 
 
-        Assert.assertEquals(true, associationMemberManageService.checkUserPerm(10, 1, "asso_member_test_write"));
-        ps.removeUser((long) 10, scope(1));
+        Assert.assertEquals(true, associationMemberManageService.checkUserPerm(10, "a", "asso_member_test_write"));
+        ps.removeUser((long) 10, scope("a"));
         ps.deletePermission("asso_member_test_write");
     }
 
     @Test
     public void getUserAssociation() {
-        associationMemberManageService.addOneToDepartment(1, 2, 10);
+        associationMemberManageService.addOneToDepartment("a", 2, 10);
 
-        List<Integer> b = associationMemberManageService.getUserAssociation(ps.getScopes((long) 10).getData());
+        List<String> b = associationMemberManageService.getUserAssociation(ps.getScopes((long) 10).getData());
 
         Assert.assertEquals(1, b.size());
 
 
-        ps.removeUser((long) 10, scope(1));
-    }
+        ps.removeUser((long) 10, scope("a"));
+}
 
     @Test
     public void getUserDepartment() {
-        associationMemberManageService.addOneToDepartment(1, 2, 10);
+        associationMemberManageService.addOneToDepartment("a", 2, 10);
 
-        List<Department> departments = associationMemberManageService.getUserDepartment(1, 10);
+        List<Department> departments = associationMemberManageService.getUserDepartment("a", 10);
         Assert.assertEquals(1, departments.size());
 
-        ps.removeUser((long) 10, scope(1));
+        ps.removeUser((long) 10, scope("a"));
     }
 
     @Test
     public void deleteOneInAssociation() {
-        associationMemberManageService.addOneToDepartment(1, 2, 10);
+        associationMemberManageService.addOneToDepartment("a", 2, 10);
 
-        long before = ps.getUsers(scope(1)).getData().getTotalSize();
+        long before = ps.getUsers(scope("a")).getData().getTotalSize();
 
-        associationMemberManageService.deleteOneInAssociation(1, 10);
-        long after = ps.getUsers(scope(1)).getData().getTotalSize();
+        associationMemberManageService.deleteOneInAssociation("a", 10);
+        long after = ps.getUsers(scope("a")).getData().getTotalSize();
         Assert.assertEquals(after, before - 1);
 
     }
 
     @Test
     public void addOneToAssociation() {
-        long before = ps.getUsers(scope(1)).getData().getTotalSize();
+        long before = ps.getUsers(scope("a")).getData().getTotalSize();
 
-        associationMemberManageService.addOneToDepartment(1, 2, 10);
+        associationMemberManageService.addOneToDepartment("a", 2, 10);
 
-        long after = ps.getUsers(scope(1)).getData().getTotalSize();
+        long after = ps.getUsers(scope("a")).getData().getTotalSize();
 
-        associationMemberManageService.deleteOneInAssociation(1, 10);
+        associationMemberManageService.deleteOneInAssociation("a", 10);
 
         Assert.assertEquals(after, before + 1);
     }
@@ -230,11 +231,11 @@ public class AssociationMemberManageServiceImplTest {
     @Test
     public void getAssoUserList() {
 
-        associationMemberManageService.initDepartment(2, 10);
+        associationMemberManageService.initDepartment("b", 10);
 
-        ps.grantRoles((long) 3, scope(2), Arrays.asList(roleName(2, 2)));
+        ps.grantRoles((long) 3, scope("b"), Arrays.asList(roleName("b", 2)));
 
-        List<Integer> list = associationMemberManageService.getAssoUserList(2);
+        List<Integer> list = associationMemberManageService.getAssoUserList("b");
 
         Assert.assertEquals(1, list.size());
     }
@@ -242,7 +243,7 @@ public class AssociationMemberManageServiceImplTest {
     @Test
     public void initDepartment() {
 //        int ran = (int) (Math.random() * 100 + 10);
-        int ran = 1;
+        String ran = "a";
 
         Boolean b = associationMemberManageService.initDepartment(ran, 3);
 

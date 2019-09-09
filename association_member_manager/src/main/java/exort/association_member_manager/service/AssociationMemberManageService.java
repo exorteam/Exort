@@ -8,47 +8,49 @@ import java.util.List;
 
 public interface AssociationMemberManageService {
 
-    public List<Department> findDepartmentList(int associationId);
+    public List<Department> findDepartmentList(String associationId);
 
-    public Department findDepartment(int associationId, int departmentId);
+    public Department findDepartment(String associationId, int departmentId);
 
-    public Boolean checkUserInAsso(long userId, int associationId);
+    public Boolean checkUserInAsso(long userId, String associationId);
 
-    public Boolean checkUserInAsso(int userId, int associationId);
+    public Boolean checkUserInAsso(int userId, String associationId);
 
-    public Boolean checkAsso(int associationId);
+    public Boolean checkAsso(String associationId);
 
-    public Boolean checkDepartment(int associationId, int departmentId);
+    public Boolean checkDepartment(String associationId, int departmentId);
 
     public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application);
 
-    public List<Department> getDepartmentTree(int associationId);
+    public List<Department> getDepartmentTree(String associationId);
 
-    public Department getSpecDepartmentInfo(int associationId, int departmentId);
+    public Department getSpecDepartmentInfo(String associationId, int departmentId);
 
-    public Department createDepartment(int associationId, String departmentName, String departmentDesc, int parentId);
+    public Department createDepartment(String associationId, String departmentName, String departmentDesc, int parentId);
 
-    public Department deleteDepartment(int associationId, int departmentId);
+    public Department deleteDepartment(String associationId, int departmentId);
 
-    public Department editDepartment(int associationId, int departmentId, String departmentName, String departmentDesc, int parentId);
+    public Department editDepartment(String associationId, int departmentId, String departmentName, String departmentDesc, int parentId);
 
-    public List<Integer> getSpecMemberList(int associationId, int departmentId);
+    public List<Integer> getSpecMemberList(String associationId, int departmentId);
 
-    public Boolean removeOneFromDepartment(int associationId, int departmentId, int userId);
+    public Boolean removeOneFromDepartment(String associationId, int departmentId, int userId);
 
-    public Boolean addOneToDepartment(int associationId, int departmentId, int userId);
+    public Boolean addOneToDepartment(String associationId, int departmentId, int userId);
 
-    public boolean checkUserPerm(int userId,int associationId,String permission);
+    public boolean checkUserPerm(int userId, String associationId, String permission);
 
-    public List<Integer> getUserAssociation(List<String> assos);
+    public List<String> getUserAssociation(List<String> assos);
 
-    public List<Department> getUserDepartment(int associationId, int userId);
+    public List<Department> getUserDepartment(String associationId, int userId);
 
-    public Boolean deleteOneInAssociation(int associationId, int userId);
+    public Boolean deleteOneInAssociation(String associationId, int userId);
 
-    public Boolean addOneToAssociation(int associationId, int userId);
+    public Boolean addOneToAssociation(String associationId, int userId);
 
-    public List<Integer> getAssoUserList(int associationId);
+    public List<Integer> getAssoUserList(String associationId);
 
-    public Boolean initDepartment(int associationId, int userId);
+    public Boolean initDepartment(String associationId, int userId);
+
+    public Boolean deleteAllDepartments(String associationId);
 }

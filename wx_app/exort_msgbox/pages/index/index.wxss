@@ -1,0 +1,12 @@
+/**index.wxss**/
+.login-btn {
+  margin-top: 15px;
+}
+.login-input {
+  border: 1px solid #ccc;
+  height: 30px;
+  margin-top: 5px;
+}
+.logo {
+  margin-bottom: 30px;
+}
