@@ -17,7 +17,10 @@ public class JwtConfig {
 		registrationBean.setFilter(new JwtFilter());
 		registrationBean.addUrlPatterns("/users/*");
 		registrationBean.addUrlPatterns("/test/auth");
-		registrationBean.addUrlPatterns("/perm/*");
+		registrationBean.addUrlPatterns("/permission/*");
+		registrationBean.addUrlPatterns("/activities/*");
+		registrationBean.addUrlPatterns("/associations/*");
+		registrationBean.addUrlPatterns("/articles/*");
 
 		return registrationBean;
 	}

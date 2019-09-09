@@ -1,7 +1,7 @@
 HELP.md
 target/
 !**/src/main/**
-**/src/test/**
+!**/src/test/**
 
 ### STS ###
 .apt_generated
