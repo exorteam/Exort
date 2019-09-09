@@ -1,71 +1,54 @@
 package exort.apiserver.service.impl;
 
-import java.util.Date;
-import java.util.UUID;
-
 import com.google.common.reflect.TypeToken;
 
+import exort.api.http.common.errorhandler.ApiError;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
-import exort.api.http.common.errorhandler.ApiError;
+import exort.apiserver.component.JwtResolver;
 import exort.apiserver.service.AuthService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class AuthServiceImpl extends RestTemplate implements AuthService {
 
 	@Value("${exort.auth.protocol:http}")
     public void setProtocol(String protocol) { super.setProtocol(protocol); }
 
     @Value("${exort.auth.endpoint:localhost}")
-    public void setEndpoint(String endpoint) {
-	   	super.setEndpoint(endpoint);
-		urlBase = "http://"+endpoint;
-	}
+    public void setEndpoint(String endpoint) { super.setEndpoint(endpoint); }
 
-	private String urlBase = "http://202.120.40.8:30728";
-	private final String jwtSecretKey = UUID.randomUUID().toString().substring(0,5);
-	
-	public ApiResponse<String> login(AuthRequest req){
+	public ApiResponse<LoginResponse> login(AuthRequest req){
+		log.info("Login: "+req.getUsername()+"/"+req.getPassword());
+
 		final ApiResponse<Integer> res = request(new TypeToken<Integer>(){},
-				HttpMethod.POST,"/validate",req);
+				req,HttpMethod.POST,"/validate");
+
 		if(res.getData() == null){
-			throw new ApiError(403,"LoginErr","Null user ID when login");
+			return new ApiResponse("LoginFailed","Wrong username or password");
 		}
 
-		return new ApiResponse(generateToken(res.getData(),req.getUsername()));
+		final Integer uid = res.getData();
+		final String token = JwtResolver.generateToken(uid,req.getUsername());
+
+		return new ApiResponse(new LoginResponse(uid,token,token));
 	}
 
 	public ApiResponse<Integer> register(AuthRequest req){
 		return request(new TypeToken<Integer>(){},
-				HttpMethod.POST,"/register",req);
+				req,HttpMethod.POST,"/register");
 	}
 
-	private String generateToken(int id,String usr){
-		return Jwts.builder()
-			.setSubject(usr)
-			.claim("id", id)
-			.setIssuedAt(new Date())
-			.signWith(SignatureAlgorithm.HS256, jwtSecretKey)
-			.compact();
+	public ApiResponse<AuthResponse> parseToken(String token){
+		return new ApiResponse(JwtResolver.parseToken(token));
 	}
 
-	public AuthResponse parseToken(String token){
-		final Claims claims = Jwts.parser().setSigningKey(jwtSecretKey).parseClaimsJws(token).getBody();
-		AuthResponse response = new AuthResponse();
-		response.setUsername(claims.getSubject());
-		response.setId(claims.get("id",Integer.class));
-		return response;
+	public ApiResponse<TokenPair> refreshToken(String rtoken){
+		return new ApiResponse<>(new TokenPair(rtoken, rtoken));
 	}
-
 }

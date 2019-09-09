@@ -4,12 +4,14 @@ import java.util.List;
 
 import com.google.common.reflect.TypeToken;
 
+import exort.api.http.common.entity.PageQuery;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import exort.api.http.common.RestTemplate;
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PagedData;
 import exort.apiserver.service.ArticleService;
 
 @Service
@@ -52,18 +54,27 @@ public class ArticleServiceImpl extends RestTemplate implements ArticleService {
 				id);
 	}
 
-	public ApiResponse listArticle(ArticleFilterParam param){
-		return request(new TypeToken<List<Article>>(){},
-				param,
-				HttpMethod.GET,
-				urlBase);
-	}
-
 	public ApiResponse publishArticle(int id,boolean publish){
 		return request(new TypeToken<Boolean>(){},
 				HttpMethod.PATCH,
 				urlBase+"/{id}?publish="+String.valueOf(publish),
 				id);
+	}
+
+	public ApiResponse listArticle(ArticleFilterParam param, PageQuery pageQuery){
+		return request(new TypeToken<PagedData<Article>>(){},
+				param,
+				HttpMethod.GET,
+				pageQuery,
+				urlBase);
+	}
+
+	public ApiResponse listArticleWithAssociation(List<String> assoIds, PageQuery pageQuery){
+		return request(new TypeToken<PagedData<Article>>(){},
+				assoIds,
+				HttpMethod.POST,
+				pageQuery,
+				urlBase+"/asso");
 	}
 
 }

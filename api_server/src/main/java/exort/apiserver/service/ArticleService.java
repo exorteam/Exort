@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.entity.PageQuery;
 import lombok.Data;
 
 public interface ArticleService {
@@ -12,8 +13,9 @@ public interface ArticleService {
 	ApiResponse deleteArticle(int id);
 	ApiResponse updateArticle(int id,Article e);
 	ApiResponse getArticle(int id);
-	ApiResponse listArticle(ArticleFilterParam param);
 	ApiResponse publishArticle(int id,boolean publish);
+	ApiResponse listArticle(ArticleFilterParam param, PageQuery pageQuery);
+	ApiResponse listArticleWithAssociation(List<String> assoIds, PageQuery pageQuery);
 
 	@Data
 	public class Article {
@@ -33,7 +35,7 @@ public interface ArticleService {
 	@Data
 	public class ArticleFilterParam {
 		private String keyword;
-		private String authorId;
+		private List<String> authorIds;
 		private Date startTime;
 		private Date endTime;
 		private Integer state;

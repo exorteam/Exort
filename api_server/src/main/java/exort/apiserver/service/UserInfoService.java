@@ -1,8 +1,9 @@
 package exort.apiserver.service;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
+import exort.api.http.common.entity.ApiResponse;
 import lombok.Data;
 
 public interface UserInfoService {
@@ -34,10 +35,9 @@ public interface UserInfoService {
 
 	}
 
-	UserInfo getUserInfo(int id);
-	UserInfo updateUserInfo(int id,UserInfo info);
-	boolean  disableUser(int id,boolean disabled);
-	List	 getUserInfoInBatch(List<Integer> ids);
-	List 	 getUserInfoByPage(int pageNum,int pageSize,String sortBy);
+	ApiResponse<UserInfo> 		getUserInfo(int id);
+	ApiResponse<UserInfo> 		updateUserInfo(int id,UserInfo info);
+	ApiResponse<Boolean>  		disableUser(int id,boolean disabled);
+	ApiResponse<List<UserInfo>> getUserInfoInBatch(List<Integer> ids);
+	ApiResponse<List<UserInfo>>	getUserInfoByPage(int pageNum,int pageSize,String sortBy);
 }
-

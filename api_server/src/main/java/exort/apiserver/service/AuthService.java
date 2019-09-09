@@ -26,9 +26,42 @@ public interface AuthService {
 
 	}
 
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class LoginResponse {
 
-	public ApiResponse<String>	login(AuthRequest req);
-	public ApiResponse<Integer> register(AuthRequest req);
-	public AuthResponse 		parseToken(String token);
+		private int uid;
+		private String token;
+		private String rtoken;
+
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class RefreshResponse {
+
+		private int uid;
+		private String username;
+		private String token;
+		private String rtoken;
+
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public class TokenPair {
+
+		private String token;
+		private String rtoken;
+
+	}
+
+	public ApiResponse<LoginResponse>	login(AuthRequest req);
+	public ApiResponse<Integer> 		register(AuthRequest req);
+	public ApiResponse<AuthResponse>	parseToken(String token);
+	public ApiResponse<TokenPair>       refreshToken(String rtoken);
 
 }
