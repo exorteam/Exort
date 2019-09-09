@@ -20,8 +20,6 @@ public interface AssociationMemberManageService {
 
     public Boolean checkDepartment(String associationId, int departmentId);
 
-    public Boolean adoptApplication(int userId, String event, Application<ApplicationDepartmentInfo> application);
-
     public List<Department> getDepartmentTree(String associationId);
 
     public Department getSpecDepartmentInfo(String associationId, int departmentId);

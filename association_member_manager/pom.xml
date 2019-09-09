@@ -127,16 +127,15 @@
                         <expose>8900</expose>
                     </exposes>
                     <imageTags>
-                        <imageTag>0.9.0</imageTag>
                         <!--<imageTag>latest</imageTag>-->
                     </imageTags>
-                    <entryPoint>["java", "-jar", "/association-member-manager-0.9.0.jar"]</entryPoint>
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <rm>true</rm>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
-                            <directory>target</directory>
-                            <include>association-member-manager-0.9.0.jar</include>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
                         </resource>
                     </resources>
                 </configuration>
