@@ -38,7 +38,7 @@
 					<Icon type="ios-checkbox" />
 					申请列表
 				</MenuItem>
-				<MenuItem @click.native="postNotificationModal = true">
+				<MenuItem name="popup" @click.native="postNotificationModal = true">
 					<Icon type="ios-chatboxes" />
 					推送通知
 				</MenuItem>
@@ -120,7 +120,7 @@ export default {
 						desc: '成功推送通知'
 					})
 				}
-			
+
 				this.postNotificationModal = false;
 			})
 		}

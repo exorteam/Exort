@@ -4,12 +4,16 @@
         <h2>新发表</h2>
     </template>
     <BrowserScroll @bottom="loadArticles" />
-    <div v-for="article in articles" :key="article.id" class="preview">
-        <div class="cover">
-
+    <Card v-for="article in articles" :key="article.id" class="preview">
+        <div class="info" slot="title">
+            标题： {{article.title}}
+            <Divider type="vertical" />
+            作者： {{article.associationId}}
+            <Divider type="vertical" />
+            发布时间: {{new Date(article.publishTime).toLocaleString()}}
         </div>
 	    <MdEditor ref="md" :value="article.content" read-mode class="content"/>
-    </div>
+    </Card>
 </ContentPage>
 </template>
 
@@ -78,17 +82,4 @@ export default {
 </script>
 
 <style>
-.home-page .preview {
-    height: 320px;
-    overflow: hidden;
-    position: relative;
-}
-.home-page .preview .content{
-    position: relative;
-    top:-320px;
-}
-.home-page .preview .cover {
-    height: 320px;
-    background: rgba(255,255,255, 0);
-}
 </style>
