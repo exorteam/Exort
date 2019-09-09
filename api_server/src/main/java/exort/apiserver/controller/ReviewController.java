@@ -39,7 +39,7 @@ public class ReviewController {
 
     @GetMapping("/list/association_member_signup")
     public ApiResponse<PagedData<Application<AssociationMemberSignUp, AssociationMemberReceipt>>> listAssociationMemberSignUp(
-            @RequestParam("aid") String aid, @RequestParam(name="state", required=false) String state,
+            @RequestParam("associationId") String aid, @RequestParam(name="state", required=false) String state,
             @RequestParam(name="departmentId", required=false) Integer did, PageQuery pageQuery) {
         return rs.listAssociationMemberSignUp(aid, did, state, pageQuery);
     }
