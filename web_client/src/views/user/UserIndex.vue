@@ -18,6 +18,10 @@
 					<Icon type="md-american-football" />
 					活动
 				</MenuItem>
+				<MenuItem name="UsrIndexSearchUser" @click.native="searchUserModal=true">
+					<Icon type="ios-search" />
+					搜索用户
+				</MenuItem>
 				<MenuItem name="UserApplicationList" :to="{name:'UserApplicationList'}">
 					<Icon type="md-paper-plane" />
 					申请
@@ -32,6 +36,12 @@
 				</MenuItem>
 			</Menu>
 			<Login v-else class="login" />
+			<Modal v-model="searchUserModal" style="z-index:5010"
+					title="根据用户ID搜索用户"
+					:loading="true"
+					@on-ok="onClickSearchUser">
+				<Input v-model="searchUserId"/>
+			</Modal>
 		</div>
 	</Sider>
 	<Content style="min-height:420px;margin-left:10px">
@@ -51,7 +61,8 @@ export default {
 	data(){
 		return {
 			active:'',
-			login_show:false
+			searchUserModal: false,
+			searchUserId: ''
 		}
 	},
     computed: {
@@ -61,11 +72,31 @@ export default {
             'admin'
         ]),
 		...mapState('common/applicationEntries',[
-			'logo'
+			'logo',
 		])
     },
 	methods: {
-		...mapActions('common/currentUser',['logout'])
+		...mapActions('common/currentUser',[
+			'logout',
+			'getUserInfoById'
+		]),
+		onClickSearchUser(){
+			console.log(this.searchUserId);
+			this.getUserInfoById({
+				uid:this.searchUserId
+			}).then(res => {
+				console.log(res);
+				if(res.data.data){
+					this.$router.push({
+						name:'UserInfoDetail',
+						params: {
+							id: this.searchUserId
+						}
+					});
+				}
+				this.searchUserModal = false
+			})
+		}
 	},
 	created(){
 		this.active = this.$route.name;

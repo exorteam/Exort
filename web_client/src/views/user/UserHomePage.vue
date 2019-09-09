@@ -4,8 +4,8 @@
         <h2>新发表</h2>
     </template>
     <BrowserScroll @bottom="loadArticles" />
-    <Card v-for="article in articles" :key="article.id" class="preview">
-        <div class="info" slot="title">
+    <Card v-for="article in articles" :key="article.id" class="preview" style="cursor:pointer">
+        <div class="info" slot="title" @click="$router.push({name:'UserArticleReader',params:{id:article.id}})">
             标题： {{article.title}}
             <Divider type="vertical" />
             作者： {{article.associationId}}

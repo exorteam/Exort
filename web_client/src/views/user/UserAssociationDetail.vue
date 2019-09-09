@@ -16,7 +16,7 @@
 				</div>
 			</Col>
 			<Col span="8">
-				<img :src="asso.logo"  style="width:120px;height:120px"/>
+				<img :src="associationIcon(asso.logo)"  style="width:120px;height:120px"/>
 			</Col>
 		</Row>
 		<Modal v-model="signuping" :title="'申请加入社团 '+asso.name" @on-ok="sighup">
@@ -53,6 +53,7 @@
 <script>
 import {api} from '@/http'
 import { mapState, mapMutations, mapActions } from 'vuex'
+import {associationIcon} from '@/const'
 
 export default {
 	name: 'UserAssociationDetail',
@@ -92,6 +93,7 @@ export default {
 		}
 	},
 	methods: {
+		associationIcon,
         ...mapMutations('associationAdmin/currentAssociation', [
 			'setAssociation'
 		]),
