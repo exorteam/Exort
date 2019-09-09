@@ -6,7 +6,6 @@ import exort.permission_manager.entity.RolePerm;
 import exort.permission_manager.repository.PermRepository;
 import exort.permission_manager.repository.RolePermRepository;
 import exort.permission_manager.repository.RoleRepository;
-import exort.permission_manager.repository.UserScopeRoleRepository;
 import exort.permission_manager.service.PermService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -82,4 +82,11 @@ public class UserServiceImpl implements UserService {
     public void revokeAllRoles(Long userId) {
         usrr.deleteByUserId(userId);
     }
+
+    @Transactional
+    @Override
+    public void clearScope(String scope) {
+        usrr.deleteByScope(scope);
+    }
+
 }

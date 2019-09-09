@@ -1,11 +1,19 @@
 package exort.activity.serviceImpl;
 
-import exort.activity.entity.*;
+import exort.activity.entity.ActivityInfo;
+import exort.activity.repository.ActivityRepository;
 import exort.activity.service.ActivityService;
+import exort.api.http.activity.entity.ActivityTime;
+import exort.api.http.activity.entity.Filter;
+import exort.api.http.activity.entity.TimeRange;
+import exort.api.http.common.entity.PageQuery;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -16,17 +24,21 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 public class ActivityServiceImplTest {
 
     @Autowired
-    private ActivityService as;
+    private ActivityRepository activityRepository;
 
-    String globalid;
+    @Autowired
+    private ActivityService activityService;
 
-    @Test
-    public void upsertActivity() {
-        List<Integer> associationIds = new ArrayList<>();
-        associationIds.add(32);
+    String globalId;
+
+    @Before
+    public void before() {
+        List<String> associationIds = new ArrayList<>();
+        associationIds.add("32");
 
         List<TimeRange> timeList = new ArrayList<>();
         timeList.add(new TimeRange(new Date(), new Date()));
@@ -36,95 +48,97 @@ public class ActivityServiceImplTest {
         materialTemplateIds.add(3);
         materialTemplateIds.add(2);
 
-        List<Integer> participantIds = new ArrayList<>();
-        participantIds.add(342);
-        participantIds.add(42);
+        List<String> tags = new ArrayList<>();
+        tags.add("运动");
 
-        List<Integer> realParticipantIds = new ArrayList<>();
-        realParticipantIds.add(342);
-        realParticipantIds.add(412);
+        String image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmkAAAGyCAIAAAAwAsT0AAAACXBIWXMAAA7EAAAO";
+        ActivityInfo activity = new ActivityInfo(associationIds, time, time, "first", "hope to run test successfully", true, false, 10, materialTemplateIds, tags, image);
+
+        ActivityInfo activityInfo = activityRepository.save(activity);
+        globalId = activityInfo.getId();
+    }
+
+    @After
+    public void after() {
+//        activityRepository.deleteAll();
+    }
+
+
+    @Test
+    public void getAcitivities() {
+        List<String> associationIds = new ArrayList<>();
+        associationIds.add("32");
+
+        List<TimeRange> timeList = new ArrayList<>();
+        timeList.add(new TimeRange(new Date(), new Date()));
+        ActivityTime time = new ActivityTime(0, timeList);
+
+        List<Integer> materialTemplateIds = new ArrayList<>();
+        materialTemplateIds.add(3);
+        materialTemplateIds.add(2);
 
         List<String> tags = new ArrayList<>();
         tags.add("运动");
 
-        Activity activity = new Activity(associationIds, time, time, "demo", "hope to run test successfully", 1, 2, 1,
-                true, false, 10, materialTemplateIds, participantIds, realParticipantIds, tags, "");
+        String image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmkAAAGyCAIAAAAwAsT0AAAACXBIWXMAAA7EAAAO";
+        ActivityInfo activity = new ActivityInfo(associationIds, time, time, "first", "hope to run test successfully", true, false, 10, materialTemplateIds, tags, image);
 
-        globalid = activity.getId();
 
-        Activity activity1 = as.upsertActivity(activity);
-        assertEquals(Activity.class, activity1.getClass());
+        Filter filter1 = new Filter();
+        System.out.println(filter1.getCreateTime());
+        assertNull(filter1.getCreateTime());
+
+        filter1.setIfOnlyMem(2);
+        System.out.println(activityService.getActivities(filter1, new PageQuery(0, 9, "time")));
+        filter1.setState(1);
+        System.out.println(activityService.getActivities(filter1, new PageQuery(0, 9, "time")));
+        filter1.setState(0);
+        System.out.println(activityService.getActivities(filter1, new PageQuery(0, 9, "time")));
+        filter1.setIfOnlyMem(0);
+        System.out.println(activityService.getActivities(filter1, new PageQuery(0, 9, "time")));
+
+       // assertEquals(1, activityService.getActivities(filter1, new PageQuery(0, 9, "time")).getContent().size());
+
+    }
+
+
+    @Test
+    public void createActivity() {
+        List<String> associationIds = new ArrayList<>();
+        associationIds.add("32");
+
+        List<TimeRange> timeList = new ArrayList<>();
+        timeList.add(new TimeRange(new Date(), new Date()));
+        ActivityTime time = new ActivityTime(0, timeList);
+
+        List<Integer> materialTemplateIds = new ArrayList<>();
+        materialTemplateIds.add(3);
+        materialTemplateIds.add(2);
+
+        List<String> tags = new ArrayList<>();
+        tags.add("运动");
+
+        String image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAmkAAAGyCAIAAAAwAsT0AAAACXBIWXMAAA7EAAAO";
+        ActivityInfo activity = new ActivityInfo(associationIds, time, time, "demo", "hope to run test successfully", true, false, 10, materialTemplateIds, tags, image);
+
+        ActivityInfo activity1 = activityService.createActivity(activity);
+        assertEquals("demo", activity1.getTitle());
     }
 
     @Test
-    public void changeActivityState() {
-        upsertActivity();
+    public void updateActivity() {
+        ActivityInfo activityInfo = activityRepository.findById(globalId).get();
+        activityInfo.setContent("asaedawdasd");
 
-        String type1 = "publish";
-        String type2 = "withdraw";
-        boolean response = as.changeActivityState(globalid, type2);
-        assertTrue(response);
-        boolean response1 = as.changeActivityState(globalid, type1);
-        assertTrue(response1);
+        ActivityInfo ret = activityService.updateActivity(activityInfo);
+
+        assertEquals("asaedawdasd", ret.getContent());
     }
 
     @Test
-    public void getActivities() {
-        Filter filter = new Filter();
-        filter.setKeyword(null);
-        filter.setTags(null);
-        filter.setCreateTime(null);
-        filter.setStartTime(null);
-        filter.setSignupTime(null);
-        filter.setPublishState(0);
-        filter.setSignupState(0);
-        filter.setState(0);
-        filter.setIfReview(1);
-        filter.setIfOnlyMem(1);
+    public void getAcitivity() {
+        ActivityInfo activityInfo = activityService.getActivity(globalId);
 
-        PageList<Activity> response = as.getActivities(filter, 9, 0, 0);
-        assertTrue(response.getPageSize() > 0);
+        assertEquals("first", activityInfo.getTitle());
     }
-
-    @Test
-    public void addUserIds() {
-        upsertActivity();
-
-        List<Integer> userIds = new ArrayList<>();
-        userIds.add(35);
-        userIds.add(42);
-        boolean response1 = as.addUserIds(globalid, userIds, 1);
-        boolean response2 = as.addUserIds(globalid, userIds, 2);
-        assertTrue(response1);
-        assertTrue(response2);
-    }
-
-    @Test
-    public void removeParticipants() {
-        upsertActivity();
-
-        List<Integer> userIds = new ArrayList<>();
-        userIds.add(35);
-        boolean ifok = as.removeParticipants(globalid, userIds);
-        assertTrue(ifok);
-    }
-
-    @Test
-    public void getActivityUserIds() {
-        upsertActivity();
-
-        PageList<Integer> pageList1 = as.getActivityUserIds(9, 0, globalid, 0, 1);
-        PageList<Integer> pageList2 = as.getActivityUserIds(0, 0, globalid, 32, 1);
-        assertTrue(pageList1.getPageSize()>0);
-        assertEquals(ArrayList.class, pageList2.getContent().getClass());
-    }
-
-    @Test
-    public void getActivity() {
-        upsertActivity();
-
-        Activity activity = as.getActivity(globalid);
-        assertEquals(Activity.class, activity.getClass());
-    }
-
 }

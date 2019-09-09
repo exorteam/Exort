@@ -55,29 +55,13 @@ public class AssociationMemberManageServiceImplTest {
     @Before
     public void setUp() {
         associationMemberManageService.initDepartment("a", 1);
-        ps.deletePermission("asso_member_test_write");
     }
 
     @After
     public void afterAll() {
         departmentRepository.deleteAll();
-        associationMemberManageService.initDepartment("a", 1);
-    }
-
-    @Test
-    public void adoptApplication() {
-
-        ApplicationDepartmentInfo applicationDepartmentInfo = new ApplicationDepartmentInfo();
-        applicationDepartmentInfo.setAssociationId("a");
-        applicationDepartmentInfo.setDepartmentId(2);
-        Application<ApplicationDepartmentInfo> application = new Application<>(3L, "acceptApplication", applicationDepartmentInfo);
-
-        associationMemberManageService.adoptApplication(3, "create", application);
-
-        Assert.assertEquals(true, associationMemberManageService.adoptApplication(3, "create", application));
-
-        // 删去创建的用户
-        associationMemberManageService.deleteOneInAssociation("a", 3);
+        ps.clearScope(scope("a"));
+        ps.deleteRolesByCategory(scope("a"));
     }
 
     @Test
@@ -187,11 +171,10 @@ public class AssociationMemberManageServiceImplTest {
 
         List<String> b = associationMemberManageService.getUserAssociation(ps.getScopes((long) 10).getData());
 
-        Assert.assertEquals(1, b.size());
-
+        Assert.assertEquals(2, b.size());
 
         ps.removeUser((long) 10, scope("a"));
-}
+    }
 
     @Test
     public void getUserDepartment() {
@@ -219,11 +202,11 @@ public class AssociationMemberManageServiceImplTest {
     public void addOneToAssociation() {
         long before = ps.getUsers(scope("a")).getData().getTotalSize();
 
-        associationMemberManageService.addOneToDepartment("a", 2, 10);
+        associationMemberManageService.addOneToDepartment("a", 2, 11);
 
         long after = ps.getUsers(scope("a")).getData().getTotalSize();
 
-        associationMemberManageService.deleteOneInAssociation("a", 10);
+        associationMemberManageService.deleteOneInAssociation("a", 11);
 
         Assert.assertEquals(after, before + 1);
     }
@@ -237,7 +220,7 @@ public class AssociationMemberManageServiceImplTest {
 
         List<Integer> list = associationMemberManageService.getAssoUserList("b");
 
-        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(3, list.size());
     }
 
     @Test

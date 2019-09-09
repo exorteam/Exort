@@ -1,8 +1,15 @@
 package exort.auth.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import exort.api.http.common.entity.ApiResponse;
+import exort.api.http.common.errorhandler.ApiError;
 import exort.auth.entity.UserInfo;
 import exort.auth.repository.InfoRepository;
 import exort.auth.service.InfoService;
@@ -11,34 +18,45 @@ import exort.auth.service.InfoService;
 public class InfoServiceImpl implements InfoService {
 
 	@Autowired
-	private InfoRepository infoRepository;
+	private InfoRepository infoRepo;
 
-	public UserInfo getUserInfo(int id){
-		if(!infoRepository.existsById(id)){
-			return null;
-		}else{
-			return infoRepository.findById(id).get();
+	public ApiResponse<UserInfo> getUserInfo(int id){
+		if(!infoRepo.existsById(id)){
+			throw new ApiError(403,"QueryErr","No such user information when getting with id: "+String.valueOf(id));
 		}
+
+		return new ApiResponse<UserInfo>(infoRepo.findById(id).get());
 	}
 
-	public boolean updateUserInfo(UserInfo info){
-		if(!infoRepository.existsById(info.getId())){
-			return false;
+	public ApiResponse<UserInfo> updateUserInfo(UserInfo info){
+		final int id = info.getId();
+		if(!infoRepo.existsById(id)){
+			throw new ApiError(403,"QueryErr","No such user information when updating with id: "+String.valueOf(id));
 		}
 
-		infoRepository.save(info);
-		return true;
+		infoRepo.save(info);
+		return new ApiResponse(info);
 	}
 
-	public boolean disableUser(int id,boolean disabled){
-		if(!infoRepository.existsById(id)){
-			return false;
+	public ApiResponse<Boolean> disableUser(int id,boolean disabled){
+		if(!infoRepo.existsById(id)){
+			throw new ApiError(403,"QueryErr","No such user information when diabling user with id: "+String.valueOf(id));
 		}
 
-		UserInfo info = infoRepository.findById(id).get();
+		UserInfo info = infoRepo.findById(id).get();
 		info.setEnabled(!disabled);
-		infoRepository.save(info);
+		infoRepo.save(info);
 
-		return true;
+		return new ApiResponse(Boolean.TRUE);
+	}
+
+	public ApiResponse<List<UserInfo>> getUserInfoInBatch(Iterable<Integer> ids){
+		ArrayList<UserInfo> res = new ArrayList<>();
+		infoRepo.findAllById(ids).forEach((UserInfo info) -> res.add(info));
+		return new ApiResponse<List<UserInfo>>(res);
+	}
+
+	public ApiResponse<List<UserInfo>> getUserInfoByPage(int pageNum,int pageSize,String sortBy){
+		return new ApiResponse<List<UserInfo>>(infoRepo.findAll(PageRequest.of(pageNum,pageSize,Sort.by(sortBy))).getContent());
 	}
 }
