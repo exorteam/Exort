@@ -63,6 +63,17 @@ public class CommunityServiceImpl implements CommunityService {
 		return count;
 	}
 
+	public Integer postSysNotifications(CommunityMessage msg) {
+		final List<UserCommunityEntity> users = repo.findAll();
+		int count = 0;
+		msg.setSenderName("系统管理员");
+		for(UserCommunityEntity e : users){
+			postMessage(e.getId(),msg);
+			++count;
+		}
+		return count;
+	}
+
 	public Integer postMessage(int uid,CommunityMessage msg){
 		if(!repo.existsById(uid)){
 			return null;

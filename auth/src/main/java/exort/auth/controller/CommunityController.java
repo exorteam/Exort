@@ -42,6 +42,21 @@ public class CommunityController {
 		return new ApiResponse<Integer>(res);
 	}
 
+	@PostMapping("/notifiy/sys")
+	public ApiResponse<Integer> postSysNotifications(
+			@RequestBody CommunityMessage msg){
+		if(msg.getContent() == null || msg.getContent().isEmpty()){
+			throw new ApiError(403,"MsgErr","Message content is null or empty");
+		}
+
+		final Integer res = cmSvc.postSysNotifications(msg);
+		if(res == null){
+			throw new ApiError(403,"QueryErr","Cannot found such user");
+		}
+
+		return new ApiResponse<Integer>(res);
+	}
+
 	@PostMapping("/msg/{uid}")
 	public ApiResponse<Integer> postMessage(
 			@PathVariable("uid") Integer uid,
