@@ -40,4 +40,7 @@ public interface UserService {
     // remove user from all scope
     void revokeAllRoles(Long userId);
 
+    // clear scope
+    void clearScope(String scope);
+
 }
