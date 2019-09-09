@@ -1,9 +1,6 @@
 HELP.md
 target/
-.mvn/**
-mvnw
-mvnw.cmd
-.DS_Store
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
 
@@ -33,4 +30,7 @@ build/
 ### VS Code ###
 .vscode/
 
-**/application.properties
+**/application*.properties
+
+**/.DS_Store
+*.swp

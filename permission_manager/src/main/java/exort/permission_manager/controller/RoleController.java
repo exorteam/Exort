@@ -48,11 +48,22 @@ public class RoleController {
         return ApiResponse.emptyResponse();
     }
 
+    @DeleteMapping("/roles")
+    public ApiResponse deleteRole(
+            @RequestBody Role roleArg) {
+        if (roleArg.getCategory() != null) {
+            rs.deleteByCategory(roleArg.getCategory());
+        }
+        return ApiResponse.emptyResponse();
+    }
+
     @PutMapping("/roles/{name}")
     public ApiResponse<Role> updateRole(
             @PathVariable("name") String name,
             @RequestBody Role roleArg) {
-        ExortRole role = rs.update(name, roleArg.getDescription());
+        String category = roleArg.getCategory() == null ? "" : roleArg.getCategory();
+        String description = roleArg.getDescription() == null ? "" : roleArg.getDescription();
+        ExortRole role = rs.update(name, category, description);
         if (role == null) {
             throw new ApiError(404, "roleNotFound", "Role named \"" + name + "\" not exists.");
         }

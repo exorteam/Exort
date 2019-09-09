@@ -2,30 +2,28 @@ package exort.associationmanager.service;
 
 import java.util.List;
 
-
-//import ......Materials
-
-import exort.associationmanager.entity.Application;
+import exort.api.http.assomgr.entity.AssociationFilterParams;
+import exort.api.http.common.entity.PagedData;
 import exort.associationmanager.entity.Association;
-import exort.associationmanager.entity.AssociationFilterParams;
-import exort.associationmanager.entity.ResponseBody;
+
 
 public interface AssociationService{
-    public  ResponseBody getAssociation(Integer assoId);
+    public Association getAssociation(String assoId);
 
-    public ResponseBody listAssociations(AssociationFilterParams params,Integer pageNum,Integer pageSize);
+    public PagedData<Association> getAssociationsInBatch(List<String> ids,Integer pn,Integer ps);
 
-    public ResponseBody createAssociation(String name, String description, List<String> tags, String logo);
+    public PagedData<Association> listAssociations(AssociationFilterParams params, Integer pageNum, Integer pageSize);
 
-    public ResponseBody deleteAssociation(Integer assoId );
+    public Association createAssociation(String name, String description, List<String> tags, String logo);
 
-    public ResponseBody editAssociation(Integer assoId, String name,String description,List<String> tags,String logo);
+    public Association createAssociationWithId(String assoId, String name,String description,List<String> tags,String logo);
 
-    public  ResponseBody patchAssociation(Integer assoId,String type,String descripion);
+    public boolean deleteAssociation(String assoId );
 
-    public  ResponseBody handleAsoociationApplication(Integer user_id, String type, Application app );
+    public Association editAssociation(String assoId, String name,String description,List<String> tags,String logo);
 
+    public  boolean patchAssociation(String assoId,String type,String descripion);
 
-//    public  boolean createTestData();
+    //public  boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app );
 
 }

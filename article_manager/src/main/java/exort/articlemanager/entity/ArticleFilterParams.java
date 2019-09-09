@@ -1,6 +1,7 @@
 package exort.articlemanager.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import lombok.Data;
 public class ArticleFilterParams {
 
 	private String keyword;
-	private Integer authorId;
+	private List<String> authorIds;
 	private Date startTime;
 	private Date endTime;
 	private Integer state;

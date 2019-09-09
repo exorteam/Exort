@@ -4,10 +4,10 @@
         <div>
             <div style="margin-top: 15px; margin-left: 20px">
                 创建时间<!-- 活动创建时间搜索 -->
-                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>                
-                报名时间<!-- 活动报名时间搜索 -->            
+                <DatePicker v-model="select.createTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
+                报名时间<!-- 活动报名时间搜索 -->
                 <DatePicker v-model="select.signupTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
-                开始时间<!-- 活动开始时间搜索 -->            
+                开始时间<!-- 活动开始时间搜索 -->
                 <DatePicker v-model="select.startTime" type="daterange" split-panels placeholder="Select date" style="width: 180px; margin-right: 45px"></DatePicker>
                 发布状态<!-- 根据活动发布状态搜索 -->
                 <b-form-select v-model="select.publishSelected" :options="publishSelectList" style="width: 120px; height: 32px; margin-right: 45px"></b-form-select>
@@ -22,7 +22,7 @@
                 发起社团<!-- 直接输入社团名称 -->
                 <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
                 关键词<!-- keyword -->
-                <Input v-model="select.keyword" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                <Input v-model="select.keyword" placeholder="请输入搜索关键词" style="width: 300px; margin-right: 40px"/>
                 是否需要审核
                 <Checkbox v-model="select.ifReview" style="margin-right: 40px"/>
                 是否允许非本组织成员参加
@@ -65,7 +65,7 @@
                 </Card>
             </div>
             <div>
-                <Page :total="totalSize" :current="pageNum" :page-size="pageSize" simple @on-change="handlePage" style="text-align: center;"></Page>
+                <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum" :page-size.sync="page.pageSize" simple @on-change="handleSelect" style="text-align: center;"></Page>
             </div>
         </div>
     </div>
@@ -125,49 +125,49 @@
         }
     ]
 
-let cardLists=[
-    {
-        id: "5d302c76a5fabe1702283262",
-        name:"五一长跑节",
-        text:"已结束",
-        image: image,
-        state:"processing",
-        time: "2019-05-01",
-        bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
-    },
-    {
-        id: "5d302c76a5fabe1702283263",
-        name:"MVIG大型数据集标注",
-        text:"未开始",
-        image: image,
-        state: "success",
-        time:"2019-07-18 22:17 - 2019-07-31 23:59",
-        bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
-    },
-    {
-        id: "5d302b3ba5fabe1702283264",
-        name:"联名文化衫Line Up",
-        text:"进行中",
-        image: image,
-        state: "warning",
-        time:"2019-07-23 08:00 - 2019-07-31 08:00",
-        bd:"明天，你就要去很远的地方，带上我们的故事。"
-    },
-    {
-        id: "5d302b3ba5fabe1702283265",
-        name:"校园带队志愿者招募",
-        text:"未发布",
-        image: image,
-        state:"default",
-        time:"2019-07-11 15:00 - 2019-07-11 18:30",
-        bd:"招募校园带队讲解志愿者",
-    }
-]
+    let cardLists=[
+        {
+            id: "5d302c76a5fabe1702283262",
+            name:"五一长跑节",
+            text:"已结束",
+            image: image,
+            state:"processing",
+            time: "2019-05-01",
+            bd:"法规发生的加法的方式上电视看大家都老夫妇可发生了骄傲的叫法可怜死啦开发顾问费即可收到"
+        },
+        {
+            id: "5d302c76a5fabe1702283263",
+            name:"MVIG大型数据集标注",
+            text:"未开始",
+            image: image,
+            state: "success",
+            time:"2019-07-18 22:17 - 2019-07-31 23:59",
+            bd:"我们根据描述人体动作的标签，你们要做的，就是给图片贴上最适合的标签。",
+        },
+        {
+            id: "5d302b3ba5fabe1702283264",
+            name:"联名文化衫Line Up",
+            text:"进行中",
+            image: image,
+            state: "warning",
+            time:"2019-07-23 08:00 - 2019-07-31 08:00",
+            bd:"明天，你就要去很远的地方，带上我们的故事。"
+        },
+        {
+            id: "5d302b3ba5fabe1702283265",
+            name:"校园带队志愿者招募",
+            text:"未发布",
+            image: image,
+            state:"default",
+            time:"2019-07-11 15:00 - 2019-07-11 18:30",
+            bd:"招募校园带队讲解志愿者",
+        }
+    ]
 
-    import ActivityCreate from './activity_create.vue'
-    import TagChoose from './tag_choose'
-    import axios from 'axios'
-    import image from '../../assets/activity/cover1.jpeg'
+import ActivityCreate from './activity_create.vue'
+import TagChoose from './tag_choose'
+import axios from 'axios'
+import image from '../../assets/activity/cover1.jpeg'
 
 export default {
     name: 'activity',
@@ -182,6 +182,23 @@ export default {
             startSelected: null,
             startSelectList: startSelectLists,
             cardList: cardLists,
+            page:{
+                totalSize: 9,
+                pageNum: 0,
+                pageSize: 9,
+            },
+            select:{
+                association: "",
+                keyword: "",
+                createTime: "",
+                signupTime: "",
+                startTime: "",
+                publishSelected: null,
+                signupSelected: null,
+                startSelected: null,
+                ifReview: 0,
+                ifOnlyMem: 0
+            },
             form:{
                 onshow: false,
                 title: "",
@@ -194,7 +211,7 @@ export default {
                     }]
                 },
                 time: {
-                    type: 0, 
+                    type: 0,
                     time:[{
                         start: "",
                         end: ""
@@ -209,42 +226,7 @@ export default {
             tag:{
                 tag_show: false,
                 tagList:[],
-            },
-            handleSelect() {
-                let data = this.select
-                data.tags = this.tag.tagList
-                axios.get('http://localhost:8000/activities', {
-                    params: {
-                        pagenum: 0,
-                        pagesize: 10,
-                        _body: btoa(JSON.stringify({data}))
-                    }
-                })
-                    .then(response => {
-                        this.cardList = response.data
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
             }
-        },
-        mounted() {
-            let data = {
-                tagList: [],
-                association: [],
-                keyword: "",
-                createTime: "",
-                signupTime: "",
-                startTime: "",
-                publishSelected: null,
-                signupSelected: null,
-                startSelected: null,
-                ifReview: false,
-                ifOnlyMem: false,
-            },
-            totalSize: 103,
-            pageNum: 2,
-            pageSize: 9,
         }
     },
     methods: {
@@ -261,11 +243,12 @@ export default {
         handleSelect(){
             let data = this.select
             data.tags = this.tag.tagList
+            console.log(data)
             axios.
                 get('http://202.120.40.8:30727/activities', {
                     params:{
-                        pagenum:0,
-                        pagesize:9,
+                        pagenum: this.page.pageNum,
+                        pagesize: this.page.pageSize,
                         _body: btoa(JSON.stringify({data}))
                     }
                 })
@@ -281,39 +264,30 @@ export default {
         }
     },
     mounted() {
-        let data = {
-            tagList:[],
-            association: [],
-            keyword: "",
-            createTime: "",
-            signupTime: "",
-            startTime: "",
-            publishSelected: null,
-            signupSelected: null,
-            startSelected: null,
-            ifReview: 0,
-            ifOnlyMem: 0,
-        }
-        axios
-            .get('http://202.120.40.8:30727/activities', {
-                params:{
-                    pagenum:0,
-                    pagesize:9,
-                    _body: btoa(JSON.stringify({data}))
-                }
-            })
-            .then(response => {
-                this.cardList = response.data.content
-                this.totalSize = response.data.totalSize
-                this.pageNum = response.data.pageNum
-                this.pageSize = response.data.pageSize
-            })
-            .catch(e => {
-                console.log(e)
-            })
+        // this.handleSelect()
+        // let data = this.select
+        // data.tagList = this.tag.tagList
+
+        // this.axios({
+        //     method:"get",
+        //     url:"activities",
+        //     data: {
+        //         // params:{
+        //             pagenum:0,
+        //             pagesize:9,
+        //             _body: btoa(JSON.stringify({data}))
+        //         // }
+        //     }
+        // }) 
+        // .then(response => {
+        //     this.cardList = response.data.content
+        //     this.totalSize = response.data.totalSize
+        //     this.pageNum = response.data.pageNum
+        //     this.pageSize = response.data.pageSize
+        // })
+        // .catch(e => {
+        //     console.log(e)
+        // })
     },
 }
 </script>
-
-<style scoped>
-</style>
