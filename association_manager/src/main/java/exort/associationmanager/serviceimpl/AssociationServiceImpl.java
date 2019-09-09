@@ -27,9 +27,6 @@ import exort.associationmanager.service.AssociationService;
 @Service
 public class AssociationServiceImpl implements AssociationService{
     @Autowired
-    private PermService permService;
-
-    @Autowired
     private AssociationRepository assoRepository;
 
 	@Autowired
@@ -82,7 +79,7 @@ public class AssociationServiceImpl implements AssociationService{
 		//            Criteria.where("tags").all(tags));
 		//}
 		q.with(pr);
-		
+
 		final List<Association> content = mt.find(q,Association.class);
 		final Page<Association> p = PageableExecutionUtils.getPage(
 				content,
@@ -181,70 +178,6 @@ public class AssociationServiceImpl implements AssociationService{
         return true;
     }
 
-    private boolean hasAuth(Long user_id,String scope,String roleName){
-//        ApiResponse<Permission> response = permService.hasPermission(user_id,scope,permission);
-        ApiResponse<Permission> response = permService.hasRole(user_id,scope,roleName);
-        if (response.getData() == null) {
-            return false;
-        } else {
-            return true;
-        }
-    };
-
-    //public boolean handleAsoociationApplication(Long user_id, String type, Application<MyObject> app ){
-    //    switch (type) {
-    //        case "accept": //create association
-    //            switch (app.getType()) {
-    //                case "createAssociation":
-    //                    if (!hasAuth(user_id,"system","SysManager")) {    //有权限，待修改
-    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-    //                    }
-    //                    MyObject assoInfo = app.getObject();
-    //                    createAssociation(assoInfo.getName(),assoInfo.getDescription(),assoInfo.getTags(),assoInfo.getLogo());
-    //                    return true;
-    //                case "unblockAssociation":
-    //                    if (!hasAuth(user_id,"system","SysManager")) {
-    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-    //                    }
-    //                    MyObject blockInfo = app.getObject();
-    //                    Association asso = assoRepository.findById(blockInfo.getAssociationId()).get();
-    //                    asso.setState(1);
-    //                    assoRepository.save(asso);
-    //                    return true;
-    //            }
-    //            throw new ApiError(400,"invalidType","无效的申请类型");
-    //        case "refuse":
-    //            switch (app.getType()) {
-    //                case "createAssociation":
-    //                    if (!hasAuth(user_id,"system","SysManager")) {    //有权限，待修改
-    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-    //                    }
-    //                    return true;
-    //                case "unblockAssociation":
-    //                    if (hasAuth(user_id,"system","SysManager")) {
-    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-    //                    }
-    //                    return true;
-    //            }
-    //            throw new ApiError(400,"invalidType","无效的申请类型");
-    //        case "cancel":
-    //            switch (app.getType()) {
-    //                case "createAssociation":
-    //                    if (!hasAuth(user_id,"system","AssoManager")) {    //有权限，待修改
-    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-    //                    }
-    //                    return true;
-    //                case "unblockAssociation":
-    //                    if (hasAuth(user_id,"system","AsooManager")) {
-    //                        throw new ApiError(400, "noAuthorized", "用户未提供身份验证凭据，或者没有通过身份验证");
-    //                    }
-    //                    return true;
-    //            }
-    //            throw new ApiError(400,"invalidType","无效的申请类型");
-    //        default:
-    //            throw new ApiError(400,"invalidType","无效的申请类型");
-    //    }
-    //};
     public  boolean createTestData(){
 
         for (int i = 0; i <10000 ; i++) {
