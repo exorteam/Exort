@@ -20,9 +20,9 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import {api} from '@/http';
 
-    let tagrepo = ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座"]
+    // let tagrepo = ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座"]
 
     export default {
         props: {
@@ -72,7 +72,7 @@
         mounted() {
             // axios.
             //     get('/')
-            this.tagRepository = tagrepo
+            this.tagRepository = this.tag.tagrepo
         },
     }
 </script>

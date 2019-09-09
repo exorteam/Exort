@@ -6,22 +6,20 @@
                 <i-input v-model="assoSearch.keyword" placeholder="请输入关键词" style="width: 300px" />
                 <Button type="info" @click="getAssociationList">搜索</Button>
                 <Button type="info" @click="showCreateForm" style="  position:relative ;left:20px;">创建社团</Button>
-                <!-- <CreateAssociation :form ="form"/> -->
-                <!-- <child :activeSon="getAssociationList()"></child> -->
-                <Modal v-model="form.onshow" @on-ok="info_ok" @on-cancel="info_cancel" loading :closable="false">
-                    <Form v-model="form" :label-width="112">
-                        <FormItem label="社团名称">
+                <Modal v-model="form.onshow" @on-ok="info_ok()" @on-cancel="info_cancel" loading :closable="false">
+                    <Form ref="form" :model="form"  :label-width="112" :rules="ruleValidate" >
+                        <FormItem label="社团名称" prop="name">
                             <Input v-model="form.name"/>
                         </FormItem>
-                        <FormItem label="社团描述">
-                            <Input v-model="form.description"/>
+                        <FormItem label="社团描述" prop="description">
+                            <Input v-model="form.description" type="textarea" :rows="4"/>
                         </FormItem>
                         <FormItem label="社团标签">
                             <div>
                                 <div style="display:inline">
                                     <Button @click="form.tag.tag_show=true" style="width: 80px;position:relative ;top:5px">选择标签</Button>
                                     <TagChoose :tag="form.tag"/>
-                                </div>
+                               </div>
                                 <div v-if="form.tag.tagList.length" style="display:inline">
                                     <Tag v-for="tag in form.tag.tagList" :key="tag.id" :row="tag" color="blue">{{ tag }}</Tag>
                                 </div>
@@ -32,7 +30,6 @@
                             <b-form-file v-model="file" ref="file-input" style="width:270px"></b-form-file>
                             <Button type="primary" @click="clearFiles" style="height:33px ; margin-bottom:8px;margin-left:11px" >重设</Button>
                             </div>
-
                         </FormItem>
                         <FormItem label="报名材料" v-if="form.needMaterial">
                             <Input placeholder="请输入材料Id，用,分割"  v-model="form.materials"/>
@@ -43,6 +40,7 @@
                             <Button type="warning" @click="changeState" style="height:33px ; margin-bottom:8px ; margin-left:230px" >变更状态</Button>
                         </FormItem>
                     </Form>
+
                 </Modal>
                 <div>
                     <div style="display:inline">
@@ -64,22 +62,27 @@
            <Divider />
         </div>
 
-        <div id="CardList"  style="display: flex;justify-content: space-around;flex-wrap: wrap">
-            <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px" >
+        <div id="CardList"  style="display: flex; flex-wrap: wrap">
+            <Card v-for="item in AssoList" :key="item.id" :row="item" style="width:350px;height:350px;margin-left:5px;margin-top:5px" >
             <p slot="title">
-                <Icon type="ios-film-outline"></Icon>
-                {{item.name}}（{{StateList(item.state)}}）
+                <Icon type="ios-people" ></Icon>
+
+                {{item.name}}
+                <Icon type="ios-checkmark-circle" style="position:absolute;right:10px;" size="30" color="green" v-if="item.state"/>
+                <Icon type="ios-close-circle" style="position:absolute;right:10px;" size="30" color="red" v-if="!item.state"/>
             </p>
+
+
             <div style="text-align: center;height:100px">
                 <img :src="item.logo" style="width:80px;height:80px;"/>
             </div>
-            <div style= "min-height: 100%;">
+            <div style= "min-height: 100%; ">
                 <p>{{ item.description }}</p>
-                <ul v-for="tag in item.tags" :key="tag.id" :row="tag" style="color:#5cadff">
-                    <li>
-                        <p>{{ tag }}</p>
-                    </li>
-                </ul>
+            </div>
+            <div style="margin-top:80px">
+                <Tag v-for="tag in item.tags" :key="tag.id" :row="tag"  color="geekblue">
+                    {{ tag }}
+                </Tag>
             </div>
 
             <div style="position:absolute;bottom:10px;">
@@ -103,20 +106,24 @@
 </template>
 
 <script>
-import Solid from '../../../assets/AssociationLogo/solid.jpg'
 import CreateAssociation from './create_association.vue'
 import TagChoose from '../../common/tag_choose.vue'
 import Application from './application.vue'
-import axios from 'axios'
+import {api} from '@/http'
 export default {
     name:'associationList',
     components:{CreateAssociation,TagChoose,Application},
     data () {
         return {
+            ruleValidate: {
+                name: [
+                    { required: true, message: '社团名称不能为空', trigger: 'blur' }
+                ],
+                description: [
+                    { required: true, message: '社团描述不能为空', trigger: 'blur' }
+                ]
+            },
             file: null,
-            tagrepo : ["运动", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座", "讲座","zxc","asd"],
-
-
             form:{
                 assoId:"",
                 onshow: false,
@@ -125,6 +132,7 @@ export default {
                 tag:{
                     tag_show: false,
                     tagList:[],
+                    tagrepo : ["运动", "饮食", "音乐", "舞蹈", "历史", "游戏", "户外", "天文","航模","动漫"]
                 },
                 logo:"",
                 needMaterial:false,
@@ -133,8 +141,6 @@ export default {
                 materials: "",
                 type:""
             },
-
-
             pageProp:{
                 totalSize : 50,
                 pageSize : 6,
@@ -143,6 +149,7 @@ export default {
             tag:{
                 tag_show: false,
                 tagList:[],
+                tagrepo : ["运动", "饮食", "音乐", "舞蹈", "历史", "游戏", "户外", "天文","航模","动漫"]
             },
             pendingAppColumn: [
                 {
@@ -306,50 +313,7 @@ export default {
                 { text: '已拒绝申请', value: 'refused' },
             ],
             inputDefaultValue : "",
-            AssoList: [
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
-
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
-
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
-
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
-
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
-
-                },
-                {
-                    name:"Test",
-                    description:"描述",
-                    tags:["q","w"],
-                    logo:Solid
-
-                }
-            ],
+            AssoList: [],
             assoSearch:{
                 keyword:"",
                 tags:"asd",
@@ -363,6 +327,7 @@ export default {
     methods: {
         showCreateForm(){
             this.form.type = "create"
+            this.form.showState=false
             this.form.onshow=true
         },
         showEditForm(item){
@@ -372,11 +337,12 @@ export default {
             this.form.name=item.name
             this.form.description=item.description
             this.form.tag.tagList=item.tags
+            this.form.logo=item.logo
             this.form.type = "edit"
             this.form.onshow=true
         },
         deleteAssociation(item){
-            this.axios({
+            api({
 				method:'delete',
 				url:'/associations/'+item.id,
 			})
@@ -403,7 +369,7 @@ export default {
 
             console.log(this.form.assoState)
 
-            this.axios({
+            api({
 				method:'put',
                 url:'/associations/'+this.form.assoId+'/state',
                 data:{
@@ -413,8 +379,6 @@ export default {
 			})
             .then(response => {
                 // this.AssoList = response.data.data.content
-                // console.log(this.AssoList)
-                // this.pageProp.totalSize = response.data.data.totalSize
                 console.log(response.data.data)
                 this.getAssociationList()
             })
@@ -462,12 +426,12 @@ export default {
         },
 
         getAssociationList() {
-            console.log("我请求了列表")
+            // console.log("我请求了列表")
             this.assoSearch.pageNum = this.pageProp.pageNum - 1;
             this.assoSearch.pageSize = this.pageProp.pageSize;
             this.assoSearch.tags = this.tag.tagList.join();
             this.getState();
-            this.axios({
+            api({
 				method:'get',
                 url:'/associations/',
                 params: {
@@ -480,99 +444,152 @@ export default {
 			})
             .then(response => {
                 this.AssoList = response.data.data.content
-                console.log(this.AssoList)
                 this.pageProp.totalSize = response.data.data.totalSize
             })
             .catch(e => {
                 console.log(e)
             });
         },
-                clearFiles() {
+        clearFiles() {
             this.$refs['file-input'].reset();
         },
         info_ok(){
+            // this.$refs[name].validate((valid) => {
+            //     if (valid) {
+            //         this.$Message.success('Success!');
+            //     } else {
+            //         this.$Message.error('Fail!');
+            //     }
+            // })
+
+
             const _self = this;
-            console.log(_self.form.type);
+            console.log(this.form);
+
+            console.log("this.form.name:" + this.form.name);
+            // console.log("_self.form.name:" + _self.form.name);
+            if(this.form.name === "" || this.form.name === null || this.form.description === ""){
+                this.form.onshow = false
+                this.$Message.error('创建失败，请完善表单信息');
+                return
+            }
+            // console.log("this.form.name:" + this.form.name);
+            // console.log("_self.form.name:" + _self.form.name);
+            // console.log(this.form)
             if(_self.form.type=="create"){
                 var imgFile;
                 let reader = new FileReader();
-                if(this.file!=null){
+                console.log(this.form)
+                console.log("_self.form.name:" + _self.form.name);
+                if(this.file != null){
                     reader.readAsDataURL(this.file);
+                    reader.onload=function(e) {        //读取完毕后调用接口
+                        imgFile = e.target.result;
+                        console.log("_self.form.name:" + _self.form.name);
+                        api
+                        .post('http://localhost:8080/associations',
+                            {
+                                name:_self.form.name,
+                                description:_self.form.description,
+                                tags:_self.form.tag.tagList,
+                                logo:imgFile
+                            }
+                        )
+                        .then(response => {
+                            _self.
+                            _self.form.name=""
+                            _self.form.description=""
+                            _self.form.tag.taglist=[]
+                            _self.clearFiles()
+                            _self.getAssociationList()
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        })
+                    };
                 }
-                reader.onload=function(e) {        //读取完毕后调用接口
-                    imgFile = e.target.result;
-                    axios
-                    .post('http://localhost:8080/associations',
-                        {
-                            name:_self.form.name,
-                            description:_self.form.description,
-                            tags:_self.form.tag.tagList,
-                            logo:imgFile
-                        }
-                    )
-                    .then(response => {
-                        console.log("我想请求列表")
-                        _self.getAssociationList()
-                        console.log(response.data)
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-                };
-
+                else{
+                    _self.form.onshow = false
+                    _self.$Message.error('创建失败，请上传图片');
+                    return
+                }
                 _self.form.onshow = false
-                _self.$Message.info('创建成功');
+                _self.$Message.success('创建成功');
                 _self.getAssociationList()
-
-
             }
             else{
                 var imgFile;
                 let reader = new FileReader();
-                if(this.file!=null){
+                if(this.file != null){
                     reader.readAsDataURL(this.file);
+                    reader.onload=function(e) {        //读取完毕后调用接口
+                        imgFile = e.target.result;
+                        console.log(imgFile)
+                        api
+                        .put('http://localhost:8080/associations/'+_self.form.assoId,
+                            {
+                                name:_self.form.name,
+                                description:_self.form.description,
+                                tags:_self.form.tag.tagList,
+                                logo:imgFile
+                            }
+                        )
+                        .then(response => {
+                            _self.getAssociationList()
+                            _self.form.name=""
+                            _self.form.description=""
+                            _self.form.tag.taglist=[]
+                            _self.clearFiles()
+                            console.log(response.data)
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        })
+                    };
                 }
-                reader.onload=function(e) {
-                    imgFile = e.target.result;
-                    axios
-                    .put('http://localhost:8080/associations/'+_self.form.assoId,{
-                        name:_self.form.name,
-                        description:_self.form.description,
-                        tags:_self.form.tag.tagList,
-                        logo:imgFile
-                    })
+                else{
+                    api
+                    .put('http://localhost:8080/associations/'+_self.form.assoId,
+                        {
+                            name:_self.form.name,
+                            description:_self.form.description,
+                            tags:_self.form.tag.tagList,
+                            logo:_self.form.logo
+                        }
+                    )
                     .then(response => {
-                        console.log(response.data)
-                        console.log("我想请求列表")
                         _self.getAssociationList()
-
+                        _self.form.name=""
+                        _self.form.description=""
+                        _self.form.tag.taglist=[]
+                        _self.clearFiles()
+                        console.log(response.data)
                     })
                     .catch(e => {
                         console.log(e)
                     })
                 }
                 _self.form.onshow = false
-                _self.$Message.info('修改成功');
+                _self.$Message.success('修改成功');
             }
         },
         info_cancel(){
-            console.log("I'm here")
+            // console.log("I'm here")
             this.form.name=""
             this.form.description=""
-            this.form.tagList=""
-            this.form.materials=""
+            this.form.tag.tagList=[]
+            this.form.materials=[]
             this.form.type=""
             this.form.onshow = false
         }
     },
     mounted() {
-
-            this.axios({
+            api({
 				method:'get',
                 url:'/associations/',
                 params: {
                     pageNum:this.assoSearch.pageNum,
-                    pageSize:this.assoSearch.pageSize,
+                    pageSize:this.assoSearch.pageSize-1,
                     keyword:this.assoSearch.keyword,
                     tags:this.tag.tagList.join(),
                     state:this.assoSearch.state
@@ -589,5 +606,4 @@ export default {
 }
 </script>
 <style>
-
 </style>
