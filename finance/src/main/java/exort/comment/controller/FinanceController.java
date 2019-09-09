@@ -62,7 +62,7 @@ public class FinanceController {
         return new ApiResponse<>(financeService.getAssociationFiances(filters, pageQuery));
     }
 
-    @GetMapping(value = "associations/{associationId}/balance")
+    @GetMapping(value = "/associations/{associationId}/balance")
     public ApiResponse<Float> getAssociationBalance(@PathVariable(value = "associationId") String associationId) {
         return new ApiResponse<>(financeService.getAssociationBalance(associationId));
     }
