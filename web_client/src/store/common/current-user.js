@@ -105,6 +105,14 @@ const actions = {
 		}).then(res => {
 			resolve(res);
 		}).catch(err => reject(err));
+	}),
+	getUserInfoById: ({commit},{uid}) => new Promise((resolve,reject) => {
+		api({
+			method:'get',
+			url: '/users/'+uid
+		}).then(res => {
+			resolve(res);
+		}).catch(err => reject(err));
 	})
 }
 

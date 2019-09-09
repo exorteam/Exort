@@ -10,7 +10,7 @@
 			<h5 v-if="msgs.isEmpty">Nothing new here.</h5>
 			<Card v-for="(item,index) in msgs" :key="item.id" :row="item" style="margin-top:10px">
 			<Row type="flex" justify="space-between">
-				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 {{item.senderName?"社团 "+item.senderName:"用户 #"+item.senderId}}</p></Col>
+				<Col span="10"><p style="font-weight:bold">{{item.timestamp}} 来自 {{item.senderName?item.senderName:"用户 #"+item.senderId}}</p></Col>
 				<Col span="1">
 					<Tooltip content="删除信息" placement="top">
 						<Icon @click.native="onClickDropMsg(item.id,index)" type="ios-trash" />
