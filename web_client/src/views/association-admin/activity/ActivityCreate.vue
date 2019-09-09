@@ -25,13 +25,13 @@
                             placeholder="选择日期和时间" style="width: 300px"></DatePicker>
             </FormItem>
 
-            <FormItem label="所属社团:">
-                <!--<b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>-->
-                <Select v-model="associationIndex" style="width:200px">
-                    <Option v-for="item in associationList" :value="item.value" :key="item.value">{{ item.text }}
-                    </Option>
-                </Select>
-            </FormItem>
+            <!--<FormItem label="所属社团:">-->
+                <!--&lt;!&ndash;<b-form-select v-model="associationIndex" :options="associationList" style="width: 200px; height: 40px; "></b-form-select>&ndash;&gt;-->
+                <!--<Select v-model="associationIndex" style="width:200px">-->
+                    <!--<Option v-for="item in associationList" :value="item.value" :key="item.value">{{ item.text }}-->
+                    <!--</Option>-->
+                <!--</Select>-->
+            <!--</FormItem>-->
             <FormItem label="报名是否需要审核:">
                 <Select v-model="formData.ifReview" style="width:200px">
                     <Option v-for="item in ifReviewSelectList" :value="item.value" :key="item.value">{{
@@ -128,6 +128,7 @@
                 ifOnlyMemSelectList: ifOnlyMemSelectLists,
 
                 initdata: {},
+                update:false,
 
                 fileList: [],
                 associationIndex: "",
@@ -144,7 +145,7 @@
                 //     tagList:[],
                 // }
                 formData: {
-                    associationIds: [],
+                    associationIds: [this.$route.params.assoId],
                     title: null,
                     content: null,
                     signupTime: {
@@ -190,7 +191,7 @@
             },
             info_ok() {
                 // console.log(this.form)
-                if (this.initdata) {
+                if (this.update) {
                     //修改
                     this.initdata.signupTime.time[0].start = this.signupTime[0];
                     this.initdata.signupTime.time[0].end = this.signupTime[1];
@@ -268,7 +269,7 @@
                     this.formData.image = initData.image;
                 } else {
                     this.formData = {
-                        associationIds: [],
+                        associationIds: [this.$route.params.assoId ],
                         title: null,
                         content: null,
                         signupTime: {
@@ -301,11 +302,13 @@
         },
         mounted() {
             if (this.$route.params.id) {
+                this.update=true;
                 this.getCurActivity(this.$route.params.id).then(() => {
                     this.initdata = this.curActivity;
                     this.setInitData(this.initdata);
                 });
             } else {
+                this.update=false;
                 this.setInitData(this.initdata);
             }
             // if(this.form.data){

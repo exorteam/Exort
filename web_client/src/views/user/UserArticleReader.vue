@@ -7,12 +7,15 @@
 			<br>
 			<MdEditor ref="md" :value="article.content" read-mode />
 		</Card>
+		<Comment type="article"></Comment>
 	</div>
 </template>
 
 <script>
 import {api} from '@/http'
 import MdEditor from '@/components/MdEditor'
+import Comment from '@/components/Comment'
+
 export default {
 	name: "UserArticleReader",
 	props:['id'],

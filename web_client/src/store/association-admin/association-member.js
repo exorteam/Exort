@@ -189,7 +189,6 @@ const actions = {
         }).catch(err => reject(err))
     }),
     gettree: ({commit}, associationId) => new Promise((resolve, reject) => {
-		console.log(associationId);
         let url = "/associations/" + associationId + "/departments";
         api({
             method: "get",
@@ -197,7 +196,10 @@ const actions = {
         }).then((res) => {
             commit("setDepartments", res.data.data);
             resolve();
-        }).catch(err => reject(err))
+        }).catch(err => {
+            console.log(err);
+            reject(err)
+        })
     }),
     getDepartmentUsers: ({commit}, {associationId, departmentId}) => new Promise((resolve, reject) => {
         let url = "/associations/" + associationId + "/departments/" + departmentId + "/members";

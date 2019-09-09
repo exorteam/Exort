@@ -17,7 +17,7 @@
 					<Icon type="ios-book" />
 					文章列表
 				</MenuItem>
-				<MenuItem name="UsrIndexActivityList">
+				<MenuItem name="UsrIndexActivityList" :to="{name:'UserActivityList'}">
 					<Icon type="md-american-football" />
 					活动列表
 				</MenuItem>

@@ -7,6 +7,8 @@ import UserInfoDetail from '@/views/user/UserInfoDetail'
 import UserInfoEditor from '@/views/user/UserInfoEditor'
 import UserAssociationList from '@/views/user/UserAssociationList'
 import UserAssociationDetail from '@/views/user/UserAssociationDetail'
+import UserActivityList from '@/views/user/Activity'
+import UserActivityDetail from '@/views/user/ActivityDetail'
 
 export default {
     path: '/',
@@ -54,7 +56,17 @@ export default {
 			name: 'UserAssociationDetail',
 			component: UserAssociationDetail,
 			props: true
-		}
+		},
+        {
+            path: 'activities',
+            name: 'UserActivityList',
+            component: UserActivityList
+        },
+        {
+            path: 'activities/:id',
+            name: 'UserActivityDetail',
+            component: UserActivityDetail
+        }
 
     ]
 }

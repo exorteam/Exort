@@ -36,31 +36,18 @@
                     </template>
                 </Table>
             </div>
-            <br/>
-            <div>
-                <activityCreate :onshow="newform.onshow" v-on:close="newform.onshow=false" :initform="newform.data"/>
-                <Button @click="edit" type="primary" style="margin: 10px 10px 20px 40px; ">修改</Button>
-                <Button v-if="this.curActivity.publishState===1" @click="handlePublish" type="warning"
-                        style="margin: 10px 10px 20px 40px; ">发布
-                </Button>
-                <Button v-if="this.curActivity.publishState===2" @click="handleWithdraw" type="warning"
-                        style="margin: 10px 10px 20px 40px; ">撤回
-                </Button>
-            </div>
         </Card>
         <comment type="activity"></comment>
     </div>
 </template>
 
 <script>
-    import expandRow from './ExpandTable'
-    import activityCreate from './ActivityCreate'
-    import comment from '../../../components/Comment'
+    import comment from '../../components/Comment'
     import {mapState, mapActions,mapMutations} from 'vuex'
 
     export default {
         name: "about",
-        components: {expandRow, activityCreate,comment},
+        components: {comment},
         data() {
             return {
                 stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
@@ -151,7 +138,6 @@
             ]),
         },
         created() {
-            console.log(this.$route.params.id);
             this.setCurActivityId(this.$route.params.id);
             this.getCurActivity(this.$route.params.id);
         },

@@ -86,7 +86,8 @@ const actions = {
             method: "get",
             url: "/activities/" + id,
         }).then(res => {
-            commit('updateCurActivity', resdata);
+            console.log(res);
+            commit('updateCurActivity', res.data.data);
             if(state.curActivity.participantIds){
                 dispatch('getParticipants');
             }

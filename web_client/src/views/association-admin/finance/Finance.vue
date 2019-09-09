@@ -52,7 +52,7 @@
                 />
             </div>
             <div>
-                区间消费总额：{{this.totalCost}}元
+                区间收支总额：{{this.totalCost}}元
             </div>
         </Card>
     </div>
@@ -62,6 +62,7 @@
     import {mapActions, mapState} from 'vuex';
     import FinanceCreate from './FinanceCreate'
     import {GChart} from 'vue-google-charts'
+    import {api} from '@/http'
 
     export default {
         components: {FinanceCreate, GChart},
@@ -76,6 +77,7 @@
                 },
                 totalCost: 0,
                 timeRange: null,
+                assoId:this.$route.params.assoId,
                 columns: [
                     {
                         title: "项目名称",
@@ -118,7 +120,7 @@
 
                 ],
                 select: {
-                    associationId: null,
+                    associationId: this.assoId,
                     keyword: null,
                     timeRange: {
                         start: "",
@@ -137,9 +139,6 @@
             }
         },
         computed: {
-            ...mapState("associationAdmin/currentAssociation", {
-                assoId: state => state.id
-            }),
             ...mapState('associationAdmin/finance', [
                 'financeList'
             ]),
@@ -177,7 +176,7 @@
                         total -= this.financeList[item].transactionAmount;
                     }
                 }
-                this.totalCost=total;
+                this.totalCost = total;
             },
             createChart() {
                 let item;
@@ -211,6 +210,8 @@
                 return year + "-" + month + "-" + date + " " + hour + ":" + minute;
             },
             handleSelect() {
+                this.select.associationId=this.assoId;
+
                 if (this.timeRange != null && this.timeRange.length == 2) {
                     if (this.timeRange[0] === "") {
                         this.select.timeRange = null
@@ -241,18 +242,26 @@
                     if (this.financeList.length !== 0) {
                         this.createChart();
                         this.getTotalCost();
-                    }else{
-                        this.totalCost=0;
+                    } else {
+                        this.totalCost = 0;
                     }
                     // console.log(res);
                 });
-            }
-            ,
+            },
             init() {
                 this.handleSelect();
-                this.getAssociationBalance(this.assoId).then((res) => {
-                    this.balance = res;
-                });
+                // this.getAssociationBalance(this.assoId).then((res) => {
+                //     console.log(res);
+                //     this.balance = res;
+                // });
+                api({
+                    method: "get",
+                    url: "/associations/"+this.assoId+"/balance"
+                }).then((res) => {
+                    this.balance = res.data.data;
+                }).catch(err => {
+                    console.log(err)
+                })
             }
         },
         mounted() {

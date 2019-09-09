@@ -3,13 +3,6 @@
         <Card>
             <!-- 搜索方式 -->
             <div>
-                <Row>
-                    <div style="margin-top:15px; margin-left: 20px">
-                        <!-- 新建活动 -->
-                        <Button type="info" label="large" @click="form.onshow=true">新建活动</Button>
-                    </div>
-                </Row>
-                <br/>
                 <Card>
                     <p slot="title">
                         搜索筛选
@@ -68,6 +61,19 @@
                     </div>
                     <div style="margin-top:15px; margin-left: 20px">
                         <Row>
+                            <Col span="12">
+                                发起社团<!-- 直接输入社团名称 -->
+                                <Input v-model="select.associationId" placeholder="请输入社团ID"
+                                       style="width: 300px; margin-right: 40px"/>
+                            </Col>
+                            <Col span="12">
+                                关键词<!-- keyword -->
+                                <Input v-model="select.keyword" placeholder="请输入搜索关键词"
+                                       style="width: 300px; margin-right: 40px"/>
+                            </Col>
+                        </Row>
+                        <br/>
+                        <Row>
                             <Col span="8">
                                 是否需要审核
                                 <!--<b-form-select v-model="select.ifReview" :options="ifReviewSelectList"-->
@@ -100,19 +106,6 @@
                                 </div>
                             </Col>
                         </Row>
-                        <br/>
-                        <Row>
-                            <!--<Col span="12">-->
-                            <!--发起社团&lt;!&ndash; 直接输入社团名称 &ndash;&gt;-->
-                            <!--<Input v-model="select.associationId" placeholder="请输入社团ID"-->
-                            <!--style="width: 300px; margin-right: 40px"/>-->
-                            <!--</Col>-->
-                            <Col span="12">
-                                关键词<!-- keyword -->
-                                <Input v-model="select.keyword" placeholder="请输入搜索关键词"
-                                       style="width: 300px; margin-right: 40px"/>
-                            </Col>
-                        </Row>
                         <Row>
                             <!-- 按照条件进行搜索 -->
                             <Button type="info" label="large" @click="handleSelect"
@@ -121,8 +114,6 @@
                         </Row>
                     </div>
                 </Card>
-
-                <ActivityCreate :onshow="form.onshow" v-on:close="form.onshow=false" :initform="form.data"/>
             </div>
 
             <Divider style="width: 100%;"/>
@@ -242,13 +233,12 @@
         }
     ];
 
-    import ActivityCreate from './ActivityCreate'
-    import TagChoose from '../../../components/TagChoose'
+    import TagChoose from '../../components/TagChoose'
     import {mapMutations, mapState, mapActions} from 'vuex'
 
     export default {
         name: 'activity',
-        components: {ActivityCreate, TagChoose},
+        components: {TagChoose},
         data() {
             return {
                 stateList: ['未发布', '报名未开始', '报名中', '未开始', '进行中', '已结束'],
@@ -270,9 +260,8 @@
                     pageNum: 0,
                     pageSize: 6
                 },
-                assoId:this.$route.params.assoId,
                 select: {
-                    associationId: [this.$route.params.assoId],
+                    associationId: null,
                     keyword: null,
                     createTime: null,
                     signupTime: null,
@@ -296,7 +285,7 @@
         computed: {
             ...mapState('associationAdmin/activity', [
                 'activities'
-            ]),
+            ])
         },
         methods: {
             ...mapActions('associationAdmin/activity', [
@@ -309,7 +298,7 @@
             to_detail(value) {
                 this.getCurActivity(value);
                 this.setCurActivityId(value);
-                this.$router.replace({path: "/association-admin/"+this.assoId+"/activity/"+value})
+                this.$router.replace({path: "/activities/"+value})
             },
             changePage(e){
                 this.page.pageNum=e-1;
@@ -318,6 +307,7 @@
             handleSelect() {
                 let data = this.select;
                 data.tags = this.tag.tagList;
+                this.select.associationId
 
                 if (data.createTime != null && data.createTime.length == 2) {
                     if (data.createTime[0] == "") {
