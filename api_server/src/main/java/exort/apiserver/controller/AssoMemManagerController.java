@@ -31,9 +31,9 @@ public class AssoMemManagerController {
     // adopt and init should not be called by api server
     // get operations are open
     // update, create, delete operations need specific permission
-    public static final String PERM_CREATE = "create-department";
-    public static final String PERM_UPDATE = "update-department";
-    public static final String PERM_DELETE = "delete-department";
+    public static final String PERM_CREATE = "create_department";
+    public static final String PERM_UPDATE = "update_department";
+    public static final String PERM_DELETE = "delete_department";
 
     @Autowired
     private AssoMemService amSvc;
