@@ -1,10 +1,10 @@
 package exort.auth.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,13 +32,17 @@ public class InfoController {
 	@PostMapping("/{id}")
 	public ApiResponse<UserInfo> updateUserInfo(@PathVariable("id") int id,@RequestBody UserInfo info){
 		if(id != info.getId()){
-			throw new ApiError(403,"QueryErr","Id args differ when updating");
+			throw new ApiError(400,"QueryErr","Id args differ when updating");
 		}
 		return service.updateUserInfo(info);
 	}
 
-	@PatchMapping("/{id}")
-	public ApiResponse<Boolean> disableUser(@PathVariable("id") int id,@RequestParam boolean disabled){
+	@PostMapping("/disable/{id}")
+	public ApiResponse<Boolean> disableUser(@PathVariable("id") int id,@RequestBody Map<String,Boolean> args){
+		Boolean disabled = args.get("disabled");
+		if(disabled == null){
+			throw new ApiError(400,"ArgErr","Missing arg \"disable\" when calling \"disableUser\"");
+		}
 		return service.disableUser(id,disabled);
 	}
 
