@@ -21,7 +21,7 @@
 					<Icon type="md-american-football" />
 					活动列表
 				</MenuItem>
-				<MenuItem name="UsrIndexActivityList" @click.native="searchUserModal=true">
+				<MenuItem name="UsrIndexSearchUser" @click.native="searchUserModal=true">
 					<Icon type="ios-search" />
 					搜索用户
 				</MenuItem>

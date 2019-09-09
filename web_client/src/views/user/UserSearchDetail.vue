@@ -38,7 +38,17 @@ export default {
 		}).then((res) => {
 			this.content = res.data.data
 		})
+	},
+	watch: {
+		uid: function() {
+			this.getUserInfoById({
+				uid:this.uid
+			}).then((res) => {
+				this.content = res.data.data
+			})
+		}
 	}
+
 }
 
 </script>
