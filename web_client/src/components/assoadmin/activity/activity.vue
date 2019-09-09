@@ -22,7 +22,7 @@
                 发起社团<!-- 直接输入社团名称 -->
                 <Input v-model="select.association" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
                 关键词<!-- keyword -->
-                <Input v-model="select.keyword" placeholder="请输入社团名称" style="width: 300px; margin-right: 40px"/>
+                <Input v-model="select.keyword" placeholder="请输入搜索关键词" style="width: 300px; margin-right: 40px"/>
                 是否需要审核
                 <Checkbox v-model="select.ifReview" style="margin-right: 40px"/>
                 是否允许非本组织成员参加
@@ -65,7 +65,7 @@
                 </Card>
             </div>
             <div>
-                <Page :total="totalSize" :current="pageNum" :page-size="pageSize" simple @on-change="handlePage" style="text-align: center;"></Page>
+                <Page show-elevator show-total :total="page.totalSize" :current.sync="page.pageNum" :page-size.sync="page.pageSize" simple @on-change="handleSelect" style="text-align: center;"></Page>
             </div>
         </div>
     </div>
@@ -164,94 +164,31 @@
         }
     ]
 
-    import ActivityCreate from './activity_create.vue'
-    import TagChoose from './tag_choose'
-    import axios from 'axios'
-    import image from '../../assets/activity/cover1.jpeg'
+import ActivityCreate from './activity_create.vue'
+import TagChoose from '../../common/tag_choose.vue'
+import axios from 'axios'
+import image from '../../../assets/activity/cover1.jpeg'
 
-    export default {
-        name: 'activity',
-        components: { ActivityCreate, TagChoose },
-        data () {
-            return{
-                currentAvtivityId: 0,
-                publishSelected: null,
-                publishSelectList: publishSelectLists,
-                signupSelected: null,
-                signupSelectList: signupSelectLists,
-                startSelected: null,
-                startSelectList: startSelectLists,
-                cardList: cardLists,
-                form:{
-                    onshow: false,
-                    title: "",
-                    content: "",
-                    signupTime: {
-                        type: 0,
-                        time:[{
-                            start: "",
-                            end: "",
-                        }]
-                    },
-                    time: {
-                        type: 0,
-                        time:[{
-                            start: "",
-                            end: ""
-                        }]
-                    },
-                    ifReview: false,
-                    ifOnlyMem: false,
-                    maxParticipants: '',
-                    materials: [],
-                    tags: []
-                },
-                tag:{
-                    tag_show: false,
-                    tagList:[],
-                },
-                totalSize: 103,
-                pageNum: 2,
+export default {
+    name: 'activity',
+    components: { ActivityCreate, TagChoose },
+    data () {
+        return{
+            currentAvtivityId: 0,
+            publishSelected: null,
+            publishSelectList: publishSelectLists,
+            signupSelected: null,
+            signupSelectList: signupSelectLists,
+            startSelected: null,
+            startSelectList: startSelectLists,
+            cardList: cardLists,
+            page:{
+                totalSize: 9,
+                pageNum: 0,
                 pageSize: 9,
-                    }
-        },
-        methods: {
-            handlePage(){
-
             },
-            to_detail(value){
-                // console.log(value)
-                sessionStorage.setItem('activityid', value)
-                this.$store.dispatch('setStatus')
-
-                this.$router.replace({path: "/admin/activity/about"})
-            },
-            handleSelect(){
-                let data = this.select
-                data.tags = this.tag.tagList
-                axios.
-                get('http://202.120.40.8:30727/activities', {
-                    params:{
-                        pagenum:0,
-                        pagesize:9,
-                        _body: btoa(JSON.stringify({data}))
-                    }
-                })
-                    .then(response => {
-                        this.cardList = response.data.content
-                        this.totalSize = response.data.totalSize
-                        this.pageNum = response.data.pageNum
-                        this.pageSize = response.data.pageSize
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    })
-            }
-        },
-        mounted() {
-            let data = {
-                tagList:[],
-                association: [],
+            select:{
+                association: "",
                 keyword: "",
                 createTime: "",
                 signupTime: "",
@@ -260,13 +197,58 @@
                 signupSelected: null,
                 startSelected: null,
                 ifReview: 0,
-                ifOnlyMem: 0,
+                ifOnlyMem: 0
+            },
+            form:{
+                onshow: false,
+                title: "",
+                content: "",
+                signupTime: {
+                    type: 0,
+                    time:[{
+                        start: "",
+                        end: "",
+                    }]
+                },
+                time: {
+                    type: 0,
+                    time:[{
+                        start: "",
+                        end: ""
+                    }]
+                },
+                ifReview: false,
+                ifOnlyMem: false,
+                maxParticipants: '',
+                materials: [],
+                tags: []
+            },
+            tag:{
+                tag_show: false,
+                tagList:[],
             }
-            axios
-                .get('http://202.120.40.8:30727/activities', {
+        }
+    },
+    methods: {
+        handlePage(){
+
+        },
+        to_detail(value){
+            // console.log(value)
+            sessionStorage.setItem('activityid', value)
+            this.$store.dispatch('setStatus')
+
+            this.$router.replace({path: "/admin/activity/about"})
+        },
+        handleSelect(){
+            let data = this.select
+            data.tags = this.tag.tagList
+            console.log(data)
+            axios.
+                get('http://202.120.40.8:30727/activities', {
                     params:{
-                        pagenum:0,
-                        pagesize:9,
+                        pagenum: this.page.pageNum,
+                        pagesize: this.page.pageSize,
                         _body: btoa(JSON.stringify({data}))
                     }
                 })
@@ -279,9 +261,33 @@
                 .catch(e => {
                     console.log(e)
                 })
-        },
-    }
-</script>
+        }
+    },
+    mounted() {
+        // this.handleSelect()
+        // let data = this.select
+        // data.tagList = this.tag.tagList
 
-<style scoped>
-</style>
+        // this.axios({
+        //     method:"get",
+        //     url:"activities",
+        //     data: {
+        //         // params:{
+        //             pagenum:0,
+        //             pagesize:9,
+        //             _body: btoa(JSON.stringify({data}))
+        //         // }
+        //     }
+        // })
+        // .then(response => {
+        //     this.cardList = response.data.content
+        //     this.totalSize = response.data.totalSize
+        //     this.pageNum = response.data.pageNum
+        //     this.pageSize = response.data.pageSize
+        // })
+        // .catch(e => {
+        //     console.log(e)
+        // })
+    },
+}
+</script>

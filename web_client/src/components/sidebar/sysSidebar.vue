@@ -18,6 +18,12 @@
             <span>文章管理</span>
             <!--</router-link>-->
         </MenuItem>
+            <MenuItem name="1-5">
+            <router-link :to="{name:'SysAssoList'}">
+            <Icon type="ios-navigate"></Icon>
+            <span>社团管理</span>
+            </router-link>
+        </MenuItem>
     </div>
 </template>
 

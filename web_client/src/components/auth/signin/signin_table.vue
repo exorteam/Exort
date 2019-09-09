@@ -67,7 +67,8 @@ export default {
 			}).then((res)=>{
 				console.log(res.data);
 				if(res.data.id){
-					this.axios({
+                    this.axios.defaults.headers.common.Authorization = 'Bearer ' + res.data.token;
+                    this.axios({
 						method:'get',
 						url:'/perm/admin',
 					}).then((res)=>{
