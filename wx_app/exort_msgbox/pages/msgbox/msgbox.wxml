@@ -1,12 +1,12 @@
 <!--pages/msgbox.wxml-->
 <view class="msg-layout">
   <view wx:for="{{msgs}}" wx:key="{{item.id}}" wx:for-index="ii" class="msg">
-    <view bindlongpress="deleteMsg"
+    <view bindlongpress="deleteMsg" 
         data-id="{{item.id}}"
         data-ii="{{ii}}"
         class="msg-container">
       <view>{{item.tt}}</view>
-      <view>来自 {{item.senderAssociation?'社团 '+item.senderName:'用户 #'+item.senderId}}</view>
+      <view>来自 {{item.senderName?item.senderName:'用户 #'+item.senderId}}</view>
       <view style="word-break: break-all;white-space: normal;margin-top:5px">
         {{item.content}}
       </view>
